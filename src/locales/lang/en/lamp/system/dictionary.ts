@@ -1,0 +1,15 @@
+export default {
+  table: { title: 'Dictionary list' },
+  id: 'ID',
+  type: 'type',
+  label: 'label',
+  code: 'code',
+  name: 'name',
+  state: 'state',
+  describe: 'describe',
+  sortValue: 'sortValue',
+  icon: 'icon',
+  cssStyle: 'cssStyle',
+  cssClass: 'cssClass',
+  readonly: 'readonly',
+};

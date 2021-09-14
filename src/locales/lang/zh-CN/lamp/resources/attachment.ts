@@ -1,0 +1,18 @@
+export default {
+  table: { title: '附件列表' },
+  id: '主键',
+  bizId: '业务ID',
+  bizType: '业务类型',
+  fileType: '文件类型',
+  storageType: '存储类型',
+  bucket: 'bucket',
+  path: '文件路径',
+  url: '文件访问链接',
+  uniqueFileName: '唯一文件名',
+  fileMd5: '文件md5值',
+  originalFileName: '原始文件名',
+  contentType: '文件原始类型',
+  ext: '后缀',
+  size: '文件大小',
+  orgId: '组织',
+};

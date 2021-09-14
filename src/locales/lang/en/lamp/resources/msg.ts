@@ -1,0 +1,15 @@
+export default {
+  table: { title: 'Msg list' },
+  id: 'ID',
+  bizId: 'bizId',
+  bizType: 'bizType',
+  msgType: 'msgType',
+  title: 'title',
+  content: 'content',
+  author: 'author',
+  handlerUrl: 'handlerUrl',
+  handlerParams: 'handlerParams',
+  isSingleHandle: 'isSingleHandle',
+  isRead: 'isRead',
+  readTime: 'readTime',
+};
