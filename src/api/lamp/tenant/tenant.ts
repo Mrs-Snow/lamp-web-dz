@@ -11,34 +11,36 @@ import { RequestEnum } from '/@/enums/httpEnum';
 import { ServicePrefixEnum } from '/@/enums/commonEnum';
 import type { AxiosRequestConfig } from 'axios';
 
+const MODULAR = 'defTenant';
+
 export const Api = {
   Page: {
-    url: ServicePrefixEnum.TENANT + '/tenant/page',
+    url: `${ServicePrefixEnum.TENANT}/${MODULAR}/page`,
     method: RequestEnum.POST,
   } as AxiosRequestConfig,
   Save: {
-    url: ServicePrefixEnum.TENANT + '/tenant',
+    url: `${ServicePrefixEnum.TENANT}/${MODULAR}`,
     method: RequestEnum.POST,
   } as AxiosRequestConfig,
   Update: {
-    url: ServicePrefixEnum.TENANT + '/tenant',
+    url: `${ServicePrefixEnum.TENANT}/${MODULAR}`,
     method: RequestEnum.PUT,
   },
   Delete: {
-    url: ServicePrefixEnum.TENANT + '/tenant',
+    url: `${ServicePrefixEnum.TENANT}/${MODULAR}`,
     method: RequestEnum.DELETE,
   } as AxiosRequestConfig,
   Query: {
-    url: ServicePrefixEnum.TENANT + '/tenant/query',
+    url: `${ServicePrefixEnum.TENANT}/${MODULAR}/query`,
     method: RequestEnum.POST,
   } as AxiosRequestConfig,
   InitConnect: {
-    url: ServicePrefixEnum.TENANT + '/tenant/initConnect',
+    url: `${ServicePrefixEnum.TENANT}/${MODULAR}/initConnect`,
     method: RequestEnum.POST,
   } as AxiosRequestConfig,
   Check: function (code: string) {
     return {
-      url: ServicePrefixEnum.TENANT + `/tenant/check/${code}`,
+      url: `${ServicePrefixEnum.TENANT}/${MODULAR}/check/${code}`,
       method: RequestEnum.GET,
     } as AxiosRequestConfig;
   },

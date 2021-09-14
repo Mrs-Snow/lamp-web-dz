@@ -54,7 +54,7 @@ export interface LoginLog {
   operatingSystem: string;
   location: string;
   id: string;
-  createTime: string;
+  createdTime: string;
   createdBy: string;
   echoMap: Recordable;
 }

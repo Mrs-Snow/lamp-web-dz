@@ -42,8 +42,8 @@ export const handleFetchParams = (data: Recordable) => {
   }
   if (data?.createTimeRange) {
     tempData.extra = {
-      createTime_st: data.createTimeRange[0],
-      createTime_ed: data.createTimeRange[1],
+      createdTime_st: data.createTimeRange[0],
+      createdTime_ed: data.createTimeRange[1],
     };
   }
   tempData.model = model;

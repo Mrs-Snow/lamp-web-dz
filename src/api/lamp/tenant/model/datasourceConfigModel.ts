@@ -48,8 +48,8 @@ export interface DatasourceConfig {
   password: string;
   url: string;
   driverClassName: string;
-  createTime: string;
+  createdTime: string;
   createdBy: string;
-  updateTime: string;
+  updatedTime: string;
   updatedBy: string;
 }

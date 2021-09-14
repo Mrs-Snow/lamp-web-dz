@@ -26,8 +26,8 @@ export interface Resource {
   menuId: string;
   id: string;
   createdBy: string;
-  createTime: string;
+  createdTime: string;
   updatedBy: string;
-  updateTime: string;
+  updatedTime: string;
   echoMap: Recordable;
 }

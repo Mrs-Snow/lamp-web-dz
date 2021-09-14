@@ -57,9 +57,9 @@ export interface Menu {
   sortValue: number;
   parentId: string;
   createdBy: string;
-  createTime: string;
+  createdTime: string;
   updatedBy: string;
-  updateTime: string;
+  updatedTime: string;
   echoMap: Recordable;
 }
 

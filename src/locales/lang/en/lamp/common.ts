@@ -1,6 +1,6 @@
 export default {
-  createTime: 'createTime',
-  updateTime: 'updateTime',
+  createdTime: 'createdTime',
+  updatedTime: 'updatedTime',
   updateBy: 'updateBy',
   createeBy: 'createeBy',
   yes: 'yes',

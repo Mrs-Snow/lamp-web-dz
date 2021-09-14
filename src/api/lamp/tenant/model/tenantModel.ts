@@ -39,9 +39,9 @@ export interface Tenant {
   expirationTime: string;
   logo: string;
   describe: string;
-  createTime: string;
+  createdTime: string;
   createdBy: string;
-  updateTime: string;
+  updatedTime: string;
   updatedBy: string;
 }
 

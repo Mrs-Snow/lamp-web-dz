@@ -32,9 +32,9 @@ export interface User {
   education: string;
   positionStatus: string;
   workDescribe: string;
-  createTime: string;
+  createdTime: string;
   createdBy: string;
-  updateTime: string;
+  updatedTime: string;
   updatedBy: string;
 }
 

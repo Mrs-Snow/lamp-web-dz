@@ -1,8 +1,8 @@
 export interface ProcessDefinitionDO {
   id?: string;
-  createTime?: string;
+  createdTime?: string;
   createdBy?: string;
-  updateTime?: string;
+  updatedTime?: string;
   updatedBy?: string;
   name: string;
   key: string;

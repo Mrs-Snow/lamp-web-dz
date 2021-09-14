@@ -2,7 +2,7 @@
   <CollapseContainer title="登录日志" :canExpan="false">
     <a-timeline mode="left">
       <a-timeline-item v-for="(item, index) of loginLogList" :key="index">
-        <Card :title="'登录时间：' + item.createTime">
+        <Card :title="'登录时间：' + item.createdTime">
           <p>
             <Icon icon="ant-design:link-outlined" />
             {{ t('lamp.system.loginLog.requestIp') }}：{{ item.requestIp }}

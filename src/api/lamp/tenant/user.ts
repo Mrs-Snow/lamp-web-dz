@@ -10,13 +10,15 @@ import { defHttp } from '/@/utils/http/axios';
 import { ContentTypeEnum, RequestEnum } from '/@/enums/httpEnum';
 import { ServicePrefixEnum } from '/@/enums/commonEnum';
 
+const MODULAR = 'user';
+
 export const Api = {
-  Page: { url: ServicePrefixEnum.AUTHORITY + '/globalUser/page', method: RequestEnum.POST },
-  Save: { url: ServicePrefixEnum.AUTHORITY + '/globalUser', method: RequestEnum.POST },
-  Update: { url: ServicePrefixEnum.AUTHORITY + '/globalUser', method: RequestEnum.PUT },
-  Delete: { url: ServicePrefixEnum.AUTHORITY + '/globalUser/delete', method: RequestEnum.DELETE },
-  Reset: { url: ServicePrefixEnum.AUTHORITY + '/globalUser/reset', method: RequestEnum.PUT },
-  Check: { url: ServicePrefixEnum.AUTHORITY + '/globalUser/check', method: RequestEnum.GET },
+  Page: { url: `${ServicePrefixEnum.TENANT}/${MODULAR}/page`, method: RequestEnum.POST },
+  Save: { url: `${ServicePrefixEnum.TENANT}/${MODULAR}`, method: RequestEnum.POST },
+  Update: { url: `${ServicePrefixEnum.TENANT}/${MODULAR}`, method: RequestEnum.PUT },
+  Delete: { url: `${ServicePrefixEnum.TENANT}/${MODULAR}/delete`, method: RequestEnum.DELETE },
+  Reset: { url: `${ServicePrefixEnum.TENANT}/${MODULAR}/reset`, method: RequestEnum.PUT },
+  Check: { url: `${ServicePrefixEnum.TENANT}/${MODULAR}/check`, method: RequestEnum.GET },
 };
 
 export const page = (params: PageParams<GlobalUserPageDTO>) =>

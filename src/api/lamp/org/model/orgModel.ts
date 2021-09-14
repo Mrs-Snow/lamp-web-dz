@@ -3,9 +3,9 @@ export interface Org {
   label: string;
   parentId: string;
   sortValue: number;
-  updateTime: string;
+  updatedTime: string;
   updatedBy: string;
-  createTime: string;
+  createdTime: string;
   createdBy: string;
   type: string;
   abbreviation: string;

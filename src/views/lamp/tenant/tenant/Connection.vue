@@ -57,7 +57,7 @@
         });
 
       async function loadUpdateOptions() {
-        if (globSetting.multiTenantType === MultiTenantTypeEnum.DATASOURCE) {
+        if (globSetting.multiTenantType === MultiTenantTypeEnum.DATASOURCE || globSetting.multiTenantType === MultiTenantTypeEnum.DATASOURCE_COLUMN) {
           const configList = await query();
           const optionList = configList.map((item) => {
             return {

@@ -60,7 +60,7 @@ export interface OptLog {
   consumingTime: string;
   ua: string;
   id: string;
-  createTime: string;
+  createdTime: string;
   createdBy: string;
   echoMap: Recordable;
   params: string;

@@ -1,6 +1,6 @@
 export default {
-  createTime: '创建时间',
-  updateTime: '修改时间',
+  createdTime: '创建时间',
+  updatedTime: '修改时间',
   updateBy: '修改人',
   createBy: '创建人',
   yes: '是',

@@ -20,7 +20,7 @@
 
           <template #description>
             <div>
-              <div class="datetime">日期：{{ item.createTime }} 发布者:{{ item.author }}</div>
+              <div class="datetime">日期：{{ item.createdTime }} 发布者:{{ item.author }}</div>
             </div>
           </template>
         </a-list-item-meta>

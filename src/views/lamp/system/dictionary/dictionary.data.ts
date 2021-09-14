@@ -26,8 +26,8 @@ export const columns: BasicColumn[] = [
     },
   },
   {
-    title: t('lamp.common.createTime'),
-    dataIndex: 'createTime',
+    title: t('lamp.common.createdTime'),
+    dataIndex: 'createdTime',
     sorter: true,
     width: 180,
   },

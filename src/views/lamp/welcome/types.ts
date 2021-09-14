@@ -10,7 +10,7 @@ export interface GrowCardItem {
 export interface TaskItem {
   percent: number;
   status: 'success' | 'exception' | 'active';
-  updateTime: string;
+  updatedTime: string;
   title: string;
   desc: string;
 }

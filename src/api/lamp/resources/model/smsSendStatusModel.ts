@@ -11,9 +11,9 @@ export interface SmsSendStatus {
   fee?: number;
   id?: string;
   createdBy?: string;
-  createTime?: string;
+  createdTime?: string;
   updatedBy?: string;
-  updateTime?: string;
+  updatedTime?: string;
   telNumList?: string[];
   echoMap?: Recordable;
 }

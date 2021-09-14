@@ -77,8 +77,8 @@ export const columns = (enumMap?: object, dictMap?: object): BasicColumn[] => {
       filters: dictMap?.['POSITION_STATUS'],
     },
     {
-      title: t('lamp.common.createTime'),
-      dataIndex: 'createTime',
+      title: t('lamp.common.createdTime'),
+      dataIndex: 'createdTime',
       sorter: true,
       width: 180,
     },
@@ -100,7 +100,7 @@ export const searchFormSchema: FormSchema[] = [
   },
   {
     field: 'createTimeRange',
-    label: t('lamp.common.createTime'),
+    label: t('lamp.common.createdTime'),
     component: 'RangePicker',
     colProps: { span: 6 },
   },

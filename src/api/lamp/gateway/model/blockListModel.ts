@@ -34,9 +34,9 @@ export interface BlockList {
   limitEnd?: string;
   state?: boolean;
   id?: string;
-  createTime?: string;
+  createdTime?: string;
   createdBy?: string;
-  updateTime?: string;
+  updatedTime?: string;
   updatedBy?: string;
   echoMap?: Recordable;
 }

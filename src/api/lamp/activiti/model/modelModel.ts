@@ -15,7 +15,7 @@ export interface Model {
   name?: string;
   key?: string;
   category?: string;
-  createTime?: string;
+  createdTime?: string;
   version?: string;
   metaInfo?: string;
   deploymentId?: string;

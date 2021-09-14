@@ -10,17 +10,22 @@ import { defHttp } from '/@/utils/http/axios';
 import { RequestEnum } from '/@/enums/httpEnum';
 import { ServicePrefixEnum } from '/@/enums/commonEnum';
 
+const MODULAR = 'defDatasourceConfig';
+
 export const Api = {
-  Page: { url: ServicePrefixEnum.TENANT + '/datasourceConfig/page', method: RequestEnum.POST },
-  Save: { url: ServicePrefixEnum.TENANT + '/datasourceConfig', method: RequestEnum.POST },
-  Update: { url: ServicePrefixEnum.TENANT + '/datasourceConfig', method: RequestEnum.PUT },
-  Delete: { url: ServicePrefixEnum.TENANT + '/datasourceConfig', method: RequestEnum.DELETE },
+  Page: { url: `${ServicePrefixEnum.TENANT}/${MODULAR}/page`, method: RequestEnum.POST },
+  Save: {
+    url: `${ServicePrefixEnum.TENANT}/${MODULAR}`,
+    method: RequestEnum.POST,
+  },
+  Update: { url: `${ServicePrefixEnum.TENANT}/${MODULAR}`, method: RequestEnum.PUT },
+  Delete: { url: `${ServicePrefixEnum.TENANT}/${MODULAR}`, method: RequestEnum.DELETE },
   TestConnect: {
-    url: ServicePrefixEnum.TENANT + '/datasourceConfig/testConnect',
+    url: `${ServicePrefixEnum.TENANT}/${MODULAR}/testConnect`,
     method: RequestEnum.POST,
   },
   Query: {
-    url: ServicePrefixEnum.TENANT + '/datasourceConfig/query',
+    url: `${ServicePrefixEnum.TENANT}/${MODULAR}/query`,
     method: RequestEnum.POST,
   },
 };

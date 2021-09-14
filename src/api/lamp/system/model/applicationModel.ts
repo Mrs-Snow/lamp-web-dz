@@ -45,8 +45,8 @@ export interface Application {
   state?: boolean;
   id?: string;
   createdBy?: string;
-  createTime?: string;
+  createdTime?: string;
   updatedBy?: string;
-  updateTime?: string;
+  updatedTime?: string;
   echoMap?: Recordable;
 }

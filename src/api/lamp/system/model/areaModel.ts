@@ -50,9 +50,9 @@ export interface Area {
   label: string;
   sortValue: number;
   parentId: string;
-  createTime: string;
+  createdTime: string;
   createdBy: string;
-  updateTime: string;
+  updatedTime: string;
   updatedBy: string;
   echoMap: Recordable;
 }

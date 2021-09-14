@@ -38,9 +38,9 @@ export interface RateLimiter {
   state?: boolean;
   intervalSec?: string;
   id?: string;
-  createTime?: string;
+  createdTime?: string;
   createdBy?: string;
-  updateTime?: string;
+  updatedTime?: string;
   updatedBy?: string;
   echoMap?: Recordable;
 }

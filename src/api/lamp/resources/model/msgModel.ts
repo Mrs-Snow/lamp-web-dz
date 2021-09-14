@@ -55,9 +55,9 @@ export interface Msg {
   handlerParams?: string;
   isSingleHandle?: boolean;
   id: string;
-  createTime?: string;
+  createdTime?: string;
   createdBy?: string;
-  updateTime?: string;
+  updatedTime?: string;
   updatedBy?: string;
   echoMap?: Recordable;
 }

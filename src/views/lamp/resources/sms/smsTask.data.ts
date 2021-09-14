@@ -35,7 +35,7 @@ export const columns: BasicColumn[] = [
     dataIndex: 'sendTime',
     width: 180,
     format: (text: string, record: Recordable) => {
-      return text ? text : record.createTime;
+      return text ? text : record.createdTime;
     },
   },
   {
@@ -53,8 +53,8 @@ export const columns: BasicColumn[] = [
   },
 
   {
-    title: t('lamp.common.createTime'),
-    dataIndex: 'createTime',
+    title: t('lamp.common.createdTime'),
+    dataIndex: 'createdTime',
     sorter: true,
     width: 180,
   },
@@ -86,7 +86,7 @@ export const searchFormSchema: FormSchema[] = [
   },
   {
     field: 'createTimeRange',
-    label: t('lamp.common.createTime'),
+    label: t('lamp.common.createdTime'),
     component: 'RangePicker',
     colProps: { span: 5 },
   },
@@ -247,8 +247,8 @@ export const sendStatusColumns = (enumMap?: object): BasicColumn[] => {
       width: 80,
     },
     {
-      title: t('lamp.common.createTime'),
-      dataIndex: 'createTime',
+      title: t('lamp.common.createdTime'),
+      dataIndex: 'createdTime',
       sorter: true,
       width: 180,
     },
@@ -276,7 +276,7 @@ export const sendStatusSearchFormSchema: FormSchema[] = [
   },
   {
     field: 'createTimeRange',
-    label: t('lamp.common.createTime'),
+    label: t('lamp.common.createdTime'),
     component: 'RangePicker',
     colProps: { span: 5 },
   },

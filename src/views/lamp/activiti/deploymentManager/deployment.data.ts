@@ -31,7 +31,7 @@ export const columns: BasicColumn[] = [
     width: 80,
   },
   {
-    title: t('lamp.common.createTime'),
+    title: t('lamp.common.createdTime'),
     dataIndex: 'deploymentTime',
     sorter: true,
     width: 180,

@@ -20,4 +20,5 @@ export enum MultiTenantTypeEnum {
   COLUMN = 'COLUMN',
   SCHEMA = 'SCHEMA',
   DATASOURCE = 'DATASOURCE',
+  DATASOURCE_COLUMN = 'DATASOURCE_COLUMN',
 }
