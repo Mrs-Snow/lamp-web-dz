@@ -42,7 +42,6 @@ componentMap.set('AutoComplete', AutoComplete);
 
 componentMap.set('Select', Select);
 componentMap.set('ApiSelect', ApiSelect);
-componentMap.set('ApiTreeSelect', ApiTreeSelect);
 componentMap.set('TreeSelect', TreeSelect);
 componentMap.set('ApiTreeSelect', ApiTreeSelect);
 componentMap.set('Switch', Switch);
