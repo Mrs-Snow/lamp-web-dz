@@ -29,10 +29,10 @@
 </template>
 <script lang="ts">
   import { defineComponent, h } from 'vue';
-  import { PlusOutlined, DeleteOutlined } from '@ant-design/icons-vue';
-  import { PageWrapper } from '/@/components/Page';
   import { BasicTree, ActionItem, ContextMenuItem } from '/@/components/Tree/index';
   import { treeData } from './data';
+  import { PlusOutlined, DeleteOutlined } from '@ant-design/icons-vue';
+  import { PageWrapper } from '/@/components/Page';
 
   export default defineComponent({
     components: { BasicTree, PageWrapper },
@@ -72,13 +72,8 @@
           },
         },
         {
-          render: (node) => {
-            return h(DeleteOutlined, {
-              class: 'ml-2',
-              onClick: () => {
-                handlePlus(node);
-              },
-            });
+          render: () => {
+            return h(DeleteOutlined);
           },
         },
       ];

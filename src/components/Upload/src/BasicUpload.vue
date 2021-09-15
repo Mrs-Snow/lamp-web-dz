@@ -87,8 +87,8 @@
       // 上传modal保存操作
       function handleChange(files: AttachmentDTO[]) {
         fileList.value = [...unref(fileList), ...(files || [])];
-        emit('change', fileList.value);
         emit('update:value', fileList.value);
+        emit('change', fileList.value);
       }
 
       // 预览modal保存操作
