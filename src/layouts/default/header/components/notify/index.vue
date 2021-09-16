@@ -79,7 +79,7 @@
       setInterval(() => {
         const { path } = currentRoute.value;
         if (path !== PageEnum.BASE_LOGIN) {
-          loadMyMsg();
+          // loadMyMsg();
         }
       }, 5 * 60000);
 

@@ -111,5 +111,4 @@ export type ComponentType =
   | 'Slider'
   | 'Rate'
   | 'Divider'
-  | 'ApiTreeSelect'
   | 'Transfer';
