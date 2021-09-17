@@ -1,6 +1,6 @@
 import { useMessage } from '/@/hooks/web/useMessage';
 import componentSetting from '/@/settings/componentSetting';
-import { isArray, isFunction } from '/@/utils/is';
+import { isArray, isFunction, isString } from '/@/utils/is';
 import { DictEnum, EnumEnum } from '/@/enums/commonEnum';
 import { asyncFindDictList, asyncFindEnumList } from '/@/api/lamp/common/general';
 
@@ -187,10 +187,16 @@ export const formatFileSize = (value) => {
   return '文件太大';
 };
 
-export const enumComponentProps = (code: EnumEnum) => {
-  return { api: asyncFindEnumList, params: code, resultField: 'data' };
+export const enumComponentProps = (type: EnumEnum, excludes?: string | string[]) => {
+  if (excludes && isString(excludes)) {
+    excludes = [excludes];
+  }
+  return { api: asyncFindEnumList, params: { type, excludes }, resultField: 'data' };
 };
 
-export const dictComponentProps = (code: DictEnum) => {
-  return { api: asyncFindDictList, params: code, resultField: 'data' };
+export const dictComponentProps = (type: DictEnum, excludes?: string | string[]) => {
+  if (excludes && isString(excludes)) {
+    excludes = [excludes];
+  }
+  return { api: asyncFindDictList, params: { type, excludes }, resultField: 'data' };
 };

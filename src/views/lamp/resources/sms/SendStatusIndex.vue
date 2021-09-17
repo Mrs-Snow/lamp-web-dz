@@ -11,7 +11,7 @@
   import { PageWrapper } from '/@/components/Page';
   import { handleFetchParams } from '/@/utils/lamp/common';
   import { EnumEnum } from '/@/enums/commonEnum';
-  import { findEnumList } from '/@/api/lamp/common/general';
+  import { findEnumListByType } from '/@/api/lamp/common/general';
   import { page } from '/@/api/lamp/resources/smsSendStatus';
   import { sendStatusColumns as columns, sendStatusSearchFormSchema } from './smsTask.data';
 
@@ -44,7 +44,7 @@
       });
 
       onMounted(async () => {
-        const enumMap = await findEnumList(EnumEnum.SendStatus);
+        const enumMap = await findEnumListByType([{ type: EnumEnum.SendStatus }]);
         setColumns(columns(enumMap));
 
         const { params } = currentRoute.value;

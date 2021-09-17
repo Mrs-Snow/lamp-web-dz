@@ -22,3 +22,12 @@ export enum MultiTenantTypeEnum {
   DATASOURCE = 'DATASOURCE',
   DATASOURCE_COLUMN = 'DATASOURCE_COLUMN',
 }
+
+// 20-菜单 30-视图 40-功能 50-字段 60-接口
+export enum ResourceTypeEnum {
+  MENU = '20',
+  VIEW = '30',
+  FUNCTION = '40',
+  FIELD = '50',
+  API = '60',
+}

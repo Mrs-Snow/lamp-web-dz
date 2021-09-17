@@ -53,7 +53,7 @@
   import { useModal } from '/@/components/Modal';
   import { handleFetchParams } from '/@/utils/lamp/common';
   import { ActionEnum, EnumEnum } from '/@/enums/commonEnum';
-  import { findEnumList } from '/@/api/lamp/common/general';
+  import { findEnumListByType } from '/@/api/lamp/common/general';
   import { page, remove } from '/@/api/lamp/system/role';
   import { columns, searchFormSchema } from './role.data';
   import EditModal from './Edit.vue';
@@ -96,7 +96,7 @@
       });
 
       onMounted(async () => {
-        const enumMap = await findEnumList(EnumEnum.DataScopeType);
+        const enumMap = await findEnumListByType([{ type: EnumEnum.DataScopeType }]);
 
         setColumns(columns(enumMap));
       });

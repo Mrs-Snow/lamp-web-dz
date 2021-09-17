@@ -72,7 +72,7 @@
   import { ActionEnum, DictEnum, EnumEnum } from '/@/enums/commonEnum';
   import { templateUrl } from '/@/settings/templateSetting';
   import { page, remove, importFile, exportFile, exportPreview } from '/@/api/lamp/org/user';
-  import { findEnumList, findDictList } from '/@/api/lamp/common/general';
+  import { findCodeListByType, findEnumListByType } from '/@/api/lamp/common/general';
   import { columns, searchFormSchema } from './user.data';
   import EditModal from './Edit.vue';
 
@@ -119,11 +119,11 @@
       });
 
       onMounted(async () => {
-        const enumMap = await findEnumList(EnumEnum.Sex);
-        const dictMap = await findDictList([
-          DictEnum.NATION,
-          DictEnum.POSITION_STATUS,
-          DictEnum.EDUCATION,
+        const enumMap = await findEnumListByType([{ type: EnumEnum.Sex }]);
+        const dictMap = await findCodeListByType([
+          { type: DictEnum.NATION },
+          { type: DictEnum.POSITION_STATUS },
+          { type: DictEnum.EDUCATION },
         ]);
 
         setColumns(columns(enumMap, dictMap));

@@ -1,17 +1,17 @@
 import { defHttp } from '/@/utils/http/axios';
 import { ServicePrefixEnum } from '/@/enums/commonEnum';
-import { OptionsGetResultModel } from './model/optionsModel';
+import { OptionsGetResultModel, CodeQueryVO } from './model/optionsModel';
 import { RequestEnum } from '/@/enums/httpEnum';
 import { isString } from '/@/utils/is';
 import { TimeDelayReq, DelayResult } from '/@/utils/lamp/timeDelayReq';
 
 export const Api = {
-  EnumList: {
-    url: `${ServicePrefixEnum.OAUTH}/enumList`,
+  FindEnumListByType: {
+    url: `${ServicePrefixEnum.OAUTH}/enums/findEnumListByType`,
     method: RequestEnum.POST,
   },
-  DictList: {
-    url: `${ServicePrefixEnum.OAUTH}/dictionary/codeList`,
+  FindCodeListByType: {
+    url: `${ServicePrefixEnum.OAUTH}/dictionary/findCodeListByType`,
     method: RequestEnum.POST,
   },
   Params: {
@@ -23,18 +23,15 @@ export const Api = {
 /**
  * @description: Get 字典
  */
-export const findEnumList = (params: string[] | string = []) => {
-  if (isString(params)) {
-    params = [params];
-  }
-  return defHttp.request<OptionsGetResultModel>({ ...Api.EnumList, params });
+export const findEnumListByType = (params: CodeQueryVO[] = []) => {
+  return defHttp.request<OptionsGetResultModel>({ ...Api.FindEnumListByType, params });
 };
 
-export const findDictList = (params: string[] | string = []) => {
-  if (isString(params)) {
-    params = [params];
-  }
-  return defHttp.request<OptionsGetResultModel>({ ...Api.DictList, params });
+export const findCodeListByType = (params: CodeQueryVO[] = []) => {
+  return defHttp.request<OptionsGetResultModel>({
+    ...Api.FindCodeListByType,
+    params,
+  });
 };
 export const findParams = (params: string[] | string = []) => {
   if (isString(params)) {
@@ -49,7 +46,7 @@ export interface AsyncGetVO {
 }
 
 const codeTimeDelayReq = new TimeDelayReq({
-  cacheKey: (param) => `${param}`,
+  cacheKey: (param) => `${param?.type || param}`,
   getErrorData(_param, error, _reject) {
     return {
       code: 400,
@@ -59,11 +56,11 @@ const codeTimeDelayReq = new TimeDelayReq({
   },
   // 实现批量请求
   async service(paramList, cacheKey) {
-    const data = await findDictList(paramList);
+    const data = await findCodeListByType(paramList);
     const resultMap: Map<String, DelayResult> = new Map<String, DelayResult>();
     paramList.forEach((code) => {
       const key = cacheKey(code);
-      const dictList = data[code];
+      const dictList = data[code?.type];
       if (dictList) {
         resultMap.set(key, {
           key,
@@ -79,12 +76,12 @@ const codeTimeDelayReq = new TimeDelayReq({
   },
 });
 
-export async function asyncFindDictList(code: String) {
-  return codeTimeDelayReq.loadByParam(code);
+export async function asyncFindDictList(param: {}) {
+  return codeTimeDelayReq.loadByParam(param);
 }
 
 const enumTimeDelayReq = new TimeDelayReq({
-  cacheKey: (param) => `${param}`,
+  cacheKey: (param) => `${param?.type || param}`,
   getErrorData(_param, error, _reject) {
     return {
       code: 400,
@@ -94,11 +91,11 @@ const enumTimeDelayReq = new TimeDelayReq({
   },
   // 实现批量请求
   async service(paramList, cacheKey) {
-    const data = await findEnumList(paramList);
+    const data = await findEnumListByType(paramList);
     const resultMap: Map<String, DelayResult> = new Map<String, DelayResult>();
     paramList.forEach((code) => {
       const key = cacheKey(code);
-      const dictList = data[code];
+      const dictList = data[code?.type];
       if (dictList) {
         resultMap.set(key, {
           key,

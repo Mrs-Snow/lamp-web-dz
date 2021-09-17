@@ -1,12 +1,12 @@
 <template>
   <PageWrapper dense fixedHeight contentClass="flex">
     <DefResourceTree
-      class="md:w-1/2"
+      class="md:w-1/3"
       @select="handleTreeSelect"
       @add="handleTreeAdd"
       ref="treeRef"
     />
-    <Edit class="md:w-1/2" @success="handleEditSuccess" ref="editRef" />
+    <Edit class="md:w-2/3" @success="handleEditSuccess" ref="editRef" />
   </PageWrapper>
 </template>
 <script lang="ts">

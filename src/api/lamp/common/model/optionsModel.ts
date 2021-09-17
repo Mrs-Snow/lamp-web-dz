@@ -10,3 +10,8 @@ export interface OptionsItem {
  * @description: Request list return value
  */
 export type OptionsGetResultModel = BasicFetchResult<OptionsItem[]>;
+
+export interface CodeQueryVO {
+  type: string;
+  excludes?: string | string[];
+}
