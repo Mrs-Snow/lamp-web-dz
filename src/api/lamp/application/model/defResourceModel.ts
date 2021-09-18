@@ -12,9 +12,6 @@ export interface DefResourcePageQuery {
   subGroup: string;
   fieldIsSecret: boolean;
   fieldIsEdit: boolean;
-  apiController: string;
-  apiSpringApplicationName: string;
-  apiRequestMethod: string;
   metaJson: string;
   label: string;
   parentId: string;
@@ -24,48 +21,44 @@ export interface DefResourcePageQuery {
 export interface DefResourceSaveVO {
   applicationId: string;
   code: string;
-  resourceType: string;
-  describe: string;
-  path: string;
-  component: string;
-  redirect: string;
-  icon: string;
-  isGeneral: boolean;
-  state: boolean;
-  subGroup: string;
-  fieldIsSecret: boolean;
-  fieldIsEdit: boolean;
-  apiController: string;
-  apiSpringApplicationName: string;
-  apiRequestMethod: string;
-  metaJson: string;
   label: string;
-  parentId: string;
-  sortValue: number;
+  resourceType: string;
+  describe?: string;
+  path?: string;
+  component?: string;
+  redirect?: string;
+  icon?: string;
+  isGeneral?: boolean;
+  state?: boolean;
+  subGroup?: string;
+  fieldIsSecret?: boolean;
+  fieldIsEdit?: boolean;
+  metaJson?: string;
+  parentId?: string;
+  sortValue?: number;
+  resourceApiList?: DefResourceApiVO[];
 }
 
 export interface DefResourceUpdateVO {
   id: string;
   applicationId: string;
   code: string;
-  resourceType: string;
-  describe: string;
-  path: string;
-  component: string;
-  redirect: string;
-  icon: string;
-  isGeneral: boolean;
-  state: boolean;
-  subGroup: string;
-  fieldIsSecret: boolean;
-  fieldIsEdit: boolean;
-  apiController: string;
-  apiSpringApplicationName: string;
-  apiRequestMethod: string;
-  metaJson: string;
   label: string;
-  parentId: string;
-  sortValue: number;
+  resourceType: string;
+  describe?: string;
+  path?: string;
+  component?: string;
+  redirect?: string;
+  icon?: string;
+  isGeneral?: boolean;
+  state?: boolean;
+  subGroup?: string;
+  fieldIsSecret?: boolean;
+  fieldIsEdit?: boolean;
+  metaJson?: string;
+  parentId?: string;
+  sortValue?: number;
+  resourceApiList?: DefResourceApiVO[];
 }
 
 export interface DefResourceResultVO {
@@ -82,9 +75,6 @@ export interface DefResourceResultVO {
   subGroup?: string;
   fieldIsSecret?: boolean;
   fieldIsEdit?: boolean;
-  apiController?: string;
-  apiSpringApplicationName?: string;
-  apiRequestMethod?: string;
   metaJson?: string;
   id?: string;
   label?: string;
@@ -95,4 +85,13 @@ export interface DefResourceResultVO {
   updatedBy?: string;
   updatedTime?: string;
   echoMap?: Recordable;
+}
+
+export interface DefResourceApiVO {
+  resourceId: string;
+  name: string;
+  uri: string;
+  apiController: string;
+  apiSpringApplicationName: string;
+  apiRequestMethod: string;
 }

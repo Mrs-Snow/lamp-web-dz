@@ -21,4 +21,5 @@ export default {
   label: 'label',
   parentId: 'parentId',
   sortValue: 'sortValue',
+  apiList: 'apiList',
 };
