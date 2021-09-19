@@ -4,7 +4,8 @@
       <Select
         :options="applicationList"
         showSearch
-        :value="'1'"
+        labelInValue
+        :value="{ value: '1' }"
         placeholder="选择应用"
         style="width: 100%; margin-bottom: 1rem"
         @change="handleChange"
@@ -57,6 +58,7 @@
       const treeData = ref<TreeItem[]>([]);
       const applicationList = ref<object[]>([]);
       const applicationIdRef = ref<string | undefined>('');
+      const applicationNameRef = ref<string | undefined>('');
 
       function getTree() {
         const tree = unref(treeRef);
@@ -76,13 +78,18 @@
         }));
         if (applications && applications.length > 0) {
           applicationIdRef.value = applications[0]?.id;
+          applicationNameRef.value = applications[0]?.name;
           await fetch(applicationIdRef.value);
         }
       });
       // 加载数据
       async function fetch(applicationId?: string) {
         applicationId = applicationId || applicationIdRef.value;
-        treeData.value = (await tree({ applicationId })) as unknown as TreeItem[];
+        if (!!applicationId) {
+          treeData.value = (await tree({ applicationId })) as unknown as TreeItem[];
+        } else {
+          createMessage.warn('请先选择应用');
+        }
       }
 
       // 选择节点
@@ -91,6 +98,7 @@
           const node = findNodeByKey(keys[0], treeData.value);
           const parent = findNodeByKey(node?.parentId, treeData.value);
           node.applicationId = applicationIdRef.value;
+          node.applicationName = applicationNameRef.value;
           emit('select', parent, node);
         }
       }
@@ -106,6 +114,7 @@
                 e?.preventDefault();
                 emit('add', findNodeByKey(node.id, treeData.value), {
                   applicationId: applicationIdRef.value,
+                  applicationName: applicationNameRef.value,
                 });
               },
             });
@@ -133,6 +142,7 @@
             handler: () => {
               emit('add', findNodeByKey(unref(node.$attrs).id, treeData.value), {
                 applicationId: applicationIdRef.value,
+                applicationName: applicationNameRef.value,
               });
             },
             icon: 'bi:plus',
@@ -164,6 +174,7 @@
       function handleAdd() {
         emit('add', findNodeByKey('0', treeData.value), {
           applicationId: applicationIdRef.value,
+          applicationName: applicationNameRef.value,
         });
       }
 
@@ -180,8 +191,9 @@
         batchDelete(checked);
       }
 
-      function handleChange(applicationId: string) {
-        fetch(applicationId);
+      function handleChange({ value, label }) {
+        applicationNameRef.value = label;
+        fetch(value);
       }
 
       return {

@@ -34,7 +34,6 @@
       const confirmLoading = ref(false);
 
       const [register, { setFieldsValue, resetFields, updateSchema, validate }] = useForm({
-        size: 'large',
         labelWidth: 110,
         showActionButtonGroup: false,
         schemas: editFormSchema,

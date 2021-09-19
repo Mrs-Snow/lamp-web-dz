@@ -94,9 +94,6 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       component: 'InputNumber',
       defaultValue: 1000,
       helpMessage: '升序，越小越靠前',
-      componentProps: {
-        size: 'large',
-      },
       colProps: {
         span: 12,
       },

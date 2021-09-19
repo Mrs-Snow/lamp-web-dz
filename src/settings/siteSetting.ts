@@ -1,7 +1,7 @@
 // github repo url
 export const GITHUB_URL = 'https://github.com/zuihou/lamp-web-plus';
 
-// vue-vben-admin-next-doc
+// doc
 export const DOC_URL = 'https://www.kancloud.cn/zuihou/zuihou-admin-cloud';
 
 // site url

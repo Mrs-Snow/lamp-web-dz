@@ -1,6 +1,14 @@
 <template>
   <div class="bg-white m-4 ml-2 overflow-hidden">
-    <a-card :title="t(`common.title.${type}`)" :bordered="false">
+    <a-card :title="title" :bordered="false">
+      <template #extra>
+        <div class="flex justify-center" v-if="show">
+          <a-button @click="resetFields">{{ t('common.resetText') }}</a-button>
+          <a-button class="!ml-4" type="primary" @click="handleSubmit" :loading="confirmLoading">{{
+            t('common.okText')
+          }}</a-button>
+        </div>
+      </template>
       <BasicForm @register="register">
         <template #apiList="{ model, field }"> <a-input v-model:value="model[field]" /> </template>
         <template #metaJson="{ model, field }">
@@ -40,10 +48,10 @@
       const type = ref<ActionEnum>(ActionEnum.ADD);
       const confirmLoading = ref<boolean>(false);
       const show = ref<boolean>(false);
+      const title = ref<string>(t(`common.title.${type.value}`));
 
       const [register, { setFieldsValue, getFieldsValue, resetFields, updateSchema, validate }] =
         useForm({
-          size: 'large',
           labelWidth: 100,
           showActionButtonGroup: false,
           schemas: editFormSchema(type),
@@ -77,8 +85,11 @@
         type.value = data?.type;
 
         let validateApi = unref(type) !== ActionEnum.ADD ? Api.Update : Api.Save;
-
         const { record = {}, parent } = data;
+
+        if (record?.applicationName) {
+          title.value = t(`common.title.${type.value}`) + `【${record?.applicationName}】下的资源`;
+        }
         record['parentName'] = parent?.label;
         record['parentId'] = parent?.id;
         if (unref(type) !== ActionEnum.EDIT) {
@@ -93,7 +104,7 @@
         );
       }
 
-      return { register, resetFields, handleSubmit, setData, t, type, confirmLoading, show };
+      return { register, resetFields, handleSubmit, setData, t, title, confirmLoading, show };
     },
   });
 </script>
