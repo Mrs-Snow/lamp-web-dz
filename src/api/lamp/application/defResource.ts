@@ -37,6 +37,14 @@ export const Api = {
     url: `${ServicePrefixEnum.TENANT}/${MODULAR}/query`,
     method: RequestEnum.POST,
   } as AxiosRequestConfig,
+  Check: {
+    url: `${ServicePrefixEnum.TENANT}/${MODULAR}/check`,
+    method: RequestEnum.GET,
+  } as AxiosRequestConfig,
+  CheckPath: {
+    url: `${ServicePrefixEnum.TENANT}/${MODULAR}/checkPath`,
+    method: RequestEnum.GET,
+  } as AxiosRequestConfig,
 };
 
 export const tree = (params?: DefResourcePageQuery) =>
@@ -55,3 +63,9 @@ export const update = (params: DefResourceUpdateVO) =>
   defHttp.request<DefResourceResultVO>({ ...Api.Update, params });
 
 export const remove = (params: string[]) => defHttp.request<boolean>({ ...Api.Delete, params });
+
+export const check = (code: string, id?: string) =>
+  defHttp.request<boolean>({ ...Api.Check, params: { code, id } });
+
+export const checkPath = (path: string, id?: string) =>
+  defHttp.request<boolean>({ ...Api.CheckPath, params: { id, path } });

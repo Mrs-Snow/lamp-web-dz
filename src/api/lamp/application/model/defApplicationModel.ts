@@ -1,14 +1,14 @@
 export interface DefApplicationPageQuery {
-  appKey: string;
-  appSecret: string;
-  name: string;
-  version: string;
-  type: string;
-  introduce: string;
-  remark: string;
-  url: string;
-  isVisible: boolean;
-  sortValue: number;
+  appKey?: string;
+  appSecret?: string;
+  name?: string;
+  version?: string;
+  type?: string;
+  introduce?: string;
+  remark?: string;
+  url?: string;
+  isVisible?: boolean;
+  sortValue?: number;
 }
 
 export interface DefApplicationSaveVO {

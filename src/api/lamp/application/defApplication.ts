@@ -38,7 +38,7 @@ export const Api = {
 export const page = (params: PageParams<DefApplicationPageQuery>) =>
   defHttp.request<PageResult<DefApplicationResultVO>>({ ...Api.Page, params });
 
-export const query = (params: DefApplicationPageQuery) =>
+export const query = (params?: DefApplicationPageQuery) =>
   defHttp.request<DefApplicationResultVO[]>({ ...Api.Query, params });
 
 export const save = (params: DefApplicationSaveVO) =>

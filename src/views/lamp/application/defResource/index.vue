@@ -1,5 +1,5 @@
 <template>
-  <PageWrapper dense fixedHeight contentClass="flex">
+  <PageWrapper dense contentClass="flex">
     <DefResourceTree
       class="md:w-1/3"
       @select="handleTreeSelect"
@@ -43,8 +43,8 @@
       }
 
       // 点击树的新增按钮
-      function handleTreeAdd(parent = {}) {
-        getEditRef().setData({ type: ActionEnum.ADD, parent });
+      function handleTreeAdd(parent = {}, record = {}) {
+        getEditRef().setData({ type: ActionEnum.ADD, parent, record });
       }
 
       return {

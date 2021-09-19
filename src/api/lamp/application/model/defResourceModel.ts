@@ -1,21 +1,21 @@
 export interface DefResourcePageQuery {
-  applicationId: string;
-  code: string;
-  resourceType: string;
-  describe: string;
-  path: string;
-  component: string;
-  redirect: string;
-  icon: string;
-  isGeneral: boolean;
-  state: boolean;
-  subGroup: string;
-  fieldIsSecret: boolean;
-  fieldIsEdit: boolean;
-  metaJson: string;
-  label: string;
-  parentId: string;
-  sortValue: number;
+  applicationId?: string;
+  code?: string;
+  resourceType?: string;
+  describe?: string;
+  path?: string;
+  component?: string;
+  redirect?: string;
+  icon?: string;
+  isGeneral?: boolean;
+  state?: boolean;
+  subGroup?: string;
+  fieldIsSecret?: boolean;
+  fieldIsEdit?: boolean;
+  metaJson?: string;
+  label?: string;
+  parentId?: string;
+  sortValue?: number;
 }
 
 export interface DefResourceSaveVO {

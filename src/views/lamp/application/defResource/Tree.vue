@@ -1,6 +1,14 @@
 <template>
   <div class="bg-white m-4 mr-2 overflow-hidden">
     <div class="m-4">
+      <Select
+        :options="applicationList"
+        showSearch
+        :value="'1'"
+        placeholder="选择应用"
+        style="width: 100%; margin-bottom: 1rem"
+        @change="handleChange"
+      />
       <a-button @click="handleAdd()" class="mr-2">{{ t('common.title.addRoot') }}</a-button>
       <a-button @click="handleBatchDelete()" class="mr-2">{{ t('common.title.delete') }}</a-button>
     </div>
@@ -22,6 +30,7 @@
 </template>
 <script lang="ts">
   import { defineComponent, onMounted, ref, unref, h } from 'vue';
+  import { Select } from 'ant-design-vue';
   import { PlusOutlined, DeleteOutlined } from '@ant-design/icons-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
@@ -33,12 +42,12 @@
     ContextMenuItem,
   } from '/@/components/Tree';
   import { findNodeByKey } from '/@/utils/lamp/common';
-
+  import { query } from '/@/api/lamp/application/defApplication';
   import { tree, remove } from '/@/api/lamp/application/defResource';
 
   export default defineComponent({
     name: 'DefResourceManagement',
-    components: { BasicTree },
+    components: { BasicTree, Select },
 
     emits: ['select', 'add'],
     setup(_, { emit }) {
@@ -46,6 +55,8 @@
       const { createMessage, createConfirm } = useMessage();
       const treeRef = ref<Nullable<TreeActionType>>(null);
       const treeData = ref<TreeItem[]>([]);
+      const applicationList = ref<object[]>([]);
+      const applicationIdRef = ref<string | undefined>('');
 
       function getTree() {
         const tree = unref(treeRef);
@@ -55,13 +66,23 @@
         return tree;
       }
 
-      onMounted(() => {
-        fetch();
-      });
+      onMounted(async () => {
+        const applications = await query();
 
+        applicationList.value = applications.map((item) => ({
+          label: item.name,
+          value: item.id,
+          key: item.id,
+        }));
+        if (applications && applications.length > 0) {
+          applicationIdRef.value = applications[0]?.id;
+          await fetch(applicationIdRef.value);
+        }
+      });
       // 加载数据
-      async function fetch() {
-        treeData.value = (await tree()) as unknown as TreeItem[];
+      async function fetch(applicationId?: string) {
+        applicationId = applicationId || applicationIdRef.value;
+        treeData.value = (await tree({ applicationId })) as unknown as TreeItem[];
       }
 
       // 选择节点
@@ -69,6 +90,7 @@
         if (keys[0]) {
           const node = findNodeByKey(keys[0], treeData.value);
           const parent = findNodeByKey(node?.parentId, treeData.value);
+          node.applicationId = applicationIdRef.value;
           emit('select', parent, node);
         }
       }
@@ -82,7 +104,9 @@
               onClick: (e) => {
                 e?.stopPropagation();
                 e?.preventDefault();
-                emit('add', findNodeByKey(node.id, treeData.value));
+                emit('add', findNodeByKey(node.id, treeData.value), {
+                  applicationId: applicationIdRef.value,
+                });
               },
             });
           },
@@ -107,7 +131,9 @@
           {
             label: t('common.title.addChildren'),
             handler: () => {
-              emit('add', findNodeByKey(unref(node.$attrs).id, treeData.value));
+              emit('add', findNodeByKey(unref(node.$attrs).id, treeData.value), {
+                applicationId: applicationIdRef.value,
+              });
             },
             icon: 'bi:plus',
           },
@@ -136,7 +162,9 @@
 
       // 点击组织数外面的 新增
       function handleAdd() {
-        emit('add', findNodeByKey('0', treeData.value));
+        emit('add', findNodeByKey('0', treeData.value), {
+          applicationId: applicationIdRef.value,
+        });
       }
 
       // 点击组织数外面的 批量删除
@@ -152,6 +180,10 @@
         batchDelete(checked);
       }
 
+      function handleChange(applicationId: string) {
+        fetch(applicationId);
+      }
+
       return {
         t,
         treeRef,
@@ -162,6 +194,9 @@
         getRightMenuList,
         actionList,
         handleSelect,
+        query,
+        handleChange,
+        applicationList,
       };
     },
   });

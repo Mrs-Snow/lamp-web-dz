@@ -4,9 +4,12 @@
 <template>
   <RadioGroup v-bind="attrs" v-model:value="state" button-style="solid">
     <template v-for="item in getOptions" :key="`${item.value}`">
-      <RadioButton :value="item.value" :disabled="item.disabled">
+      <RadioButton v-if="props.isBtn" :value="item.value" :disabled="item.disabled">
         {{ item.label }}
       </RadioButton>
+      <Radio v-else :value="item.value" :disabled="item.disabled">
+        {{ item.label }}
+      </Radio>
     </template>
   </RadioGroup>
 </template>
@@ -25,10 +28,15 @@
     components: {
       RadioGroup: Radio.Group,
       RadioButton: Radio.Button,
+      Radio,
     },
     props: {
       value: {
         type: [String, Number, Boolean] as PropType<string | number | boolean>,
+      },
+      isBtn: {
+        type: [Boolean] as PropType<boolean>,
+        default: true,
       },
       options: {
         type: Array as PropType<RadioItem[]>,
@@ -51,7 +59,7 @@
         return options.map((item) => ({ label: item, value: item })) as OptionsItem[];
       });
 
-      return { state, getOptions, attrs };
+      return { state, getOptions, attrs, props };
     },
   });
 </script>

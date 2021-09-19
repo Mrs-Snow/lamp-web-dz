@@ -1,14 +1,16 @@
-import { FormSchema } from '/@/components/Table';
+import { Ref } from 'vue';
+import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { dictComponentProps } from '/@/utils/lamp/common';
-import { DictEnum } from '/@/enums/commonEnum';
-import { FormSchemaExt } from '/@/api/lamp/common/formValidateService';
+import { ActionEnum, DictEnum } from '/@/enums/commonEnum';
+import { FormSchemaExt, RuleType } from '/@/api/lamp/common/formValidateService';
 import { ResourceTypeEnum } from '/@/enums/biz/tenant';
+import { check, checkPath } from '/@/api/lamp/application/defResource';
 
 const { t } = useI18n();
 
 // 编辑页字段
-export const editFormSchema = (_): FormSchema[] => {
+export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
   return [
     {
       field: 'id',
@@ -25,7 +27,8 @@ export const editFormSchema = (_): FormSchema[] => {
     {
       label: t('lamp.application.defResource.resourceType'),
       field: 'resourceType',
-      component: 'ApiSelect',
+      component: 'ApiRadioGroup',
+      // component: 'ApiSelect',
       defaultValue: ResourceTypeEnum.MENU,
       componentProps: {
         ...dictComponentProps(DictEnum.RESOURCE_TYPE, ResourceTypeEnum.API),
@@ -64,6 +67,9 @@ export const editFormSchema = (_): FormSchema[] => {
       ],
       colProps: {
         span: 12,
+      },
+      dynamicDisabled: () => {
+        return type.value === ActionEnum.EDIT;
       },
     },
     {
@@ -235,11 +241,13 @@ export const editFormSchema = (_): FormSchema[] => {
       label: t('lamp.application.defResource.apiList'),
       field: 'apiList',
       component: 'Input',
+      slot: 'apiList',
     },
     {
       label: t('lamp.application.defResource.metaJson'),
       field: 'metaJson',
       component: 'Input',
+      slot: 'metaJson',
     },
     {
       label: t('lamp.application.defResource.describe'),
@@ -253,6 +261,110 @@ export const editFormSchema = (_): FormSchema[] => {
 };
 
 // 前端自定义表单验证规则
-export const customFormSchemaRules = (_): Partial<FormSchemaExt>[] => {
-  return [];
+export const customFormSchemaRules = (
+  type: Ref<ActionEnum>,
+  getFieldsValue: () => Recordable,
+): Partial<FormSchemaExt>[] => {
+  return [
+    {
+      field: 'code',
+      type: RuleType.append,
+      rules: [
+        {
+          trigger: 'blur',
+          async validator(_, value) {
+            if (type.value === ActionEnum.EDIT) {
+              return Promise.resolve();
+            }
+            if (value && (await check(value))) {
+              return Promise.reject('编码已经存在');
+            }
+            return Promise.resolve();
+          },
+        },
+      ],
+    },
+    {
+      field: 'path',
+      type: RuleType.append,
+      rules: [
+        {
+          trigger: 'blur',
+          required: true,
+          async validator(_, value) {
+            if (value && (await checkPath(value, getFieldsValue()?.id))) {
+              return Promise.reject(t('lamp.application.defResource.path') + '已经存在');
+            }
+            return Promise.resolve();
+          },
+        },
+      ],
+    },
+    {
+      field: 'component',
+      type: RuleType.append,
+      rules: [
+        {
+          trigger: 'blur',
+          required: true,
+        },
+      ],
+    },
+  ];
+};
+
+export const metaJsonColumns: BasicColumn[] = [
+  {
+    title: 'key',
+    dataIndex: 'key',
+  },
+  {
+    title: 'value',
+    dataIndex: 'value',
+    format: (text: string | number | boolean) => {
+      if (text === true) {
+        return 'true';
+      } else if (text === false) {
+        return 'false';
+      } else {
+        return text;
+      }
+    },
+  },
+];
+export const editMetaFormSchema = (): FormSchema[] => {
+  return [
+    {
+      label: 'key',
+      field: 'key',
+      component: 'AutoComplete',
+      required: true,
+      componentProps: {
+        allowClear: true,
+        filterOption: (input: string, option) => {
+          return option.value.toUpperCase().indexOf(input.toUpperCase()) >= 0;
+        },
+        options: [
+          { value: 'title' },
+          { value: 'ignoreKeepAlive' },
+          { value: 'affix' },
+          { value: 'frameSrc' },
+          { value: 'transitionName' },
+          { value: 'hideBreadcrumb' },
+          { value: 'carryParam' },
+          { value: 'hideChildrenInMenu' },
+          { value: 'currentActiveMenu' },
+          { value: 'hideTab' },
+          { value: 'hideMenu' },
+          { value: 'ignoreRoute' },
+        ],
+      },
+    },
+    {
+      label: 'value',
+      field: 'value',
+      component: 'Input',
+      required: true,
+    },
+  ];
 };
