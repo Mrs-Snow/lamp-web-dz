@@ -147,9 +147,13 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       component: 'Input',
       helpMessage: [
         'http开头表示外链',
+        'Layout表示页面布局',
         'is_frame_src=true时，表示在框架类打开',
         '资源类型=接口时，表示后端接口请求地址.',
       ],
+      itemProps: {
+        extra: 'http开头表示外链，Layout表示页面布局',
+      },
       colProps: {
         span: 12,
       },
@@ -163,7 +167,9 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       label: t('lamp.application.defResource.component'),
       field: 'component',
       component: 'Input',
-      helpMessage: ['前端页面代码在src/views目录下的相对地址.'],
+      itemProps: {
+        extra: '前端页面代码在src/views目录下的相对地址.',
+      },
       colProps: {
         span: 12,
       },
