@@ -24,7 +24,7 @@
   import { useMessage } from '/@/hooks/web/useMessage';
   import { BasicForm, useForm } from '/@/components/Form';
   import { ActionEnum } from '/@/enums/commonEnum';
-  import MetaJson from './MetaJson.vue';
+  import MetaJson from './meta/MetaJson.vue';
 
   import { getValidateRules } from '/@/api/lamp/common/formValidateService';
   import { Api, save, update } from '/@/api/lamp/application/defResource';

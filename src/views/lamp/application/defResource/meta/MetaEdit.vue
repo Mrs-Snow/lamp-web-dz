@@ -12,10 +12,10 @@
 <script lang="ts">
   import { defineComponent, ref } from 'vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
-  import { BasicForm, useForm } from '/@/components/Form/index';
+  import { BasicForm, useForm } from '/@/components/Form';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { ActionEnum } from '/@/enums/commonEnum';
-  import { editMetaFormSchema } from './defResource.data';
+  import { editMetaFormSchema } from '../defResource.data';
 
   export default defineComponent({
     name: 'DatasourceConfigEdit',

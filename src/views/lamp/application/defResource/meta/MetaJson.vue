@@ -35,7 +35,7 @@
   import { useModal } from '/@/components/Modal';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { ActionEnum } from '/@/enums/commonEnum';
-  import { metaJsonColumns } from './defResource.data';
+  import { metaJsonColumns } from '../defResource.data';
   import EditModal from './MetaEdit.vue';
   export default defineComponent({
     name: 'DefResourceMetaJson',
@@ -58,8 +58,8 @@
         columns: metaJsonColumns,
         bordered: true,
         actionColumn: {
-          width: 160,
-          title: 'Action',
+          width: 120,
+          title: t('common.column.action'),
           dataIndex: 'action',
           slots: { customRender: 'action' },
         },
@@ -69,7 +69,6 @@
         () => props.value,
         (value: string) => {
           innerVal.value = JSON.parse(value || '{}');
-          // keys.value = Object.keys(innerVal.value || {});
           const list: Recordable[] = [];
           forEach(innerVal.value, (v, key) => {
             list.push({ key, value: v });
@@ -86,8 +85,6 @@
             list.push({ key, value: v });
           });
           keys.value = list;
-          // keys.value = Object.keys(value || {});
-          // emit('change', JSON.stringify(value));
         },
         { deep: true },
       );
