@@ -1,64 +1,71 @@
 <template>
-  <div class="meta-input">
-    <div class="item-box">
-      <BasicTable @register="registerTable">
-        <template #toolbar>
-          <a-button type="primary" @click="handleAdd">添加</a-button>
-        </template>
-        <template #action="{ record }">
-          <TableAction
-            :actions="[
-              {
-                label: t('common.title.edit'),
-                onClick: handleEdit.bind(null, record),
+  <div class="resource-api">
+    <BasicTable @register="registerTable">
+      <template #toolbar>
+        <a-button type="primary" @click="handleAdd">录入</a-button>
+        <a-button type="primary" @click="handleSelect">选择</a-button>
+      </template>
+      <template #uri="{ record }">
+        <Tag color="processing">
+          {{ record.requestMethod }}
+        </Tag>
+        {{ record.uri }}
+      </template>
+      <template #action="{ record }">
+        <TableAction
+          :actions="[
+            {
+              label: t('common.title.delete'),
+              color: 'error',
+              popConfirm: {
+                title: t('common.tips.confirmDelete'),
+                confirm: handleDelete.bind(null, record),
               },
-              {
-                label: t('common.title.delete'),
-                color: 'error',
-                popConfirm: {
-                  title: t('common.tips.confirmDelete'),
-                  confirm: handleDelete.bind(null, record),
-                },
-              },
-            ]"
-          />
-        </template>
-      </BasicTable>
-    </div>
-    <EditModal @register="registerModal" @success="handleSuccess" />
+            },
+          ]"
+        />
+      </template>
+    </BasicTable>
+
+    <SelectModal @register="registerModal" @success="handleSuccess" />
+    <EditModal @register="registerEditModal" @success="handleEditSuccess" />
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent, ref, watch } from 'vue';
-  import { forEach } from 'lodash-es';
+  import { defineComponent, ref, watch, unref } from 'vue';
   import { BasicTable, TableAction, useTable } from '/@/components/Table';
+  import { Tag } from 'ant-design-vue';
   import { useModal } from '/@/components/Modal';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { ActionEnum } from '/@/enums/commonEnum';
-  import { metaJsonColumns } from '../defResource.data';
-  import EditModal from './MetaEdit.vue';
+  import { useMessage } from '/@/hooks/web/useMessage';
+  import { resourceApiColumns } from '../defResource.data';
+  import SelectModal from './ResourceApiSelect.vue';
+  import EditModal from './ResourceApiEdit.vue';
+  import { DefResourceApiVO } from '/@/api/lamp/application/model/defResourceModel';
   export default defineComponent({
-    name: 'DefResourceMetaJson',
-    components: { BasicTable, TableAction, EditModal },
+    name: 'DefResourceResourceApi',
+    components: { BasicTable, TableAction, SelectModal, EditModal, Tag },
     props: {
       value: {
-        type: [Object, String],
+        type: [Array] as PropType<DefResourceApiVO[]>,
       },
     },
     emits: ['update:value', 'change'],
     setup(props, { emit }) {
       const [registerModal, { openModal }] = useModal();
+      const [registerEditModal, { openModal: openEditModal }] = useModal();
       const { t } = useI18n();
-      const keys = ref<Recordable[]>([]);
-      const innerVal = ref<Recordable>({});
+      const { createMessage } = useMessage();
+      const innerVal = ref<Recordable[]>([]);
 
-      const [registerTable] = useTable({
-        title: '路由的 Meta 配置',
-        dataSource: keys,
-        columns: metaJsonColumns,
+      const [registerTable, { getDataSource, setTableData }] = useTable({
+        title: '资源关联的接口',
+        dataSource: innerVal,
+        maxHeight: 200,
+        columns: resourceApiColumns,
         bordered: true,
         actionColumn: {
-          width: 120,
+          width: 80,
           title: t('common.column.action'),
           dataIndex: 'action',
           slots: { customRender: 'action' },
@@ -67,109 +74,89 @@
 
       watch(
         () => props.value,
-        (value: string) => {
-          innerVal.value = JSON.parse(value || '{}');
-          const list: Recordable[] = [];
-          forEach(innerVal.value, (v, key) => {
-            list.push({ key, value: v });
-          });
-          keys.value = list;
-        },
-        { deep: true },
-      );
-      watch(
-        () => innerVal.value,
-        (value) => {
-          const list: Recordable[] = [];
-          forEach(value, (v, key) => {
-            list.push({ key, value: v });
-          });
-          keys.value = list;
+        (value: DefResourceApiVO[] = []) => {
+          innerVal.value = value;
         },
         { deep: true },
       );
 
+      // 选择
+      function handleSelect() {
+        openModal(true, {
+          selectedData: unref(innerVal),
+        });
+      }
+      // 手工录入
       function handleAdd() {
-        openModal(true, {
-          type: ActionEnum.ADD,
-        });
+        openEditModal(true, {});
       }
-      function handleEdit(record: Recordable, e) {
-        e?.stopPropagation();
-        openModal(true, {
-          record: record,
-          type: ActionEnum.EDIT,
-        });
-      }
+
+      // 删除接口
       function handleDelete(record: Recordable, e) {
         e?.stopPropagation();
-        if (record && record?.key) {
-          delete innerVal.value[record?.key];
 
-          emit('change', JSON.stringify(innerVal.value));
-          emit('update:value', JSON.stringify(innerVal.value));
+        let index = unref(innerVal).findIndex(
+          (selected) =>
+            selected.springApplicationName === record.springApplicationName &&
+            selected.uri === record.uri &&
+            selected.requestMethod === record.requestMethod,
+        );
+
+        if (index > -1) {
+          innerVal.value.splice(index, 1);
+          const data = getDataSource();
+          data.splice(index, 1);
         }
+
+        emit('change', innerVal.value);
+        emit('update:value', innerVal.value);
       }
-      function handleSuccess(metaItem) {
-        const data = { ...innerVal.value };
-        data[metaItem.key] = metaItem.value;
-        for (let key in data) {
-          let value = data[key];
-          if (value === 'false') {
-            value = false;
-          } else if (value === 'true') {
-            value = true;
-          } else if (/^\d+$/.test(value)) {
-            value = parseInt(value);
-          } else if (/^\d+\.\d+$/.test(value)) {
-            value = parseFloat(value);
-          }
-          data[key] = value;
+
+      function handleSuccess(selectedData: DefResourceApiVO[]) {
+        innerVal.value = selectedData;
+        setTableData(selectedData);
+
+        emit('change', selectedData);
+        emit('update:value', selectedData);
+      }
+      function handleEditSuccess(addData: DefResourceApiVO) {
+        const index = unref(innerVal).findIndex(
+          (selected) =>
+            selected.springApplicationName === addData.springApplicationName &&
+            selected.uri === addData.uri &&
+            selected.requestMethod === addData.requestMethod,
+        );
+
+        if (index > -1) {
+          createMessage.warn('已存在该接口，请勿重复录入！');
+        } else {
+          innerVal.value.push(addData);
+          const data = getDataSource();
+          data.push(addData);
         }
 
-        innerVal.value = data;
-        emit('change', JSON.stringify(data));
-        emit('update:value', JSON.stringify(data));
+        emit('change', innerVal.value);
+        emit('update:value', innerVal.value);
       }
 
       return {
-        innerVal,
-        keys,
         handleAdd,
-        handleEdit,
+        handleSelect,
         handleDelete,
         handleSuccess,
         registerModal,
         registerTable,
-        metaJsonColumns,
+        registerEditModal,
+        handleEditSuccess,
         t,
       };
     },
   });
 </script>
 <style lang="less" scoped>
-  .meta-input {
+  .resource-api {
     border: 1px solid #d9d9d9;
-    padding: 10px 20px;
-    display: flex;
-    border-radius: 4px;
-
-    .item-box {
-      flex: 1;
-      margin-right: 20px;
-
-      .item {
-        display: flex;
-
-        .key {
-          font-weight: 500;
-        }
-
-        .value {
-          margin-left: 20px;
-          margin-right: 40px;
-        }
-      }
-    }
+    padding: 10px;
+    //display: flex;
   }
 </style>

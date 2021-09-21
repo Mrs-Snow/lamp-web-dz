@@ -10,7 +10,9 @@
         </div>
       </template>
       <BasicForm @register="register">
-        <template #apiList="{ model, field }"> <a-input v-model:value="model[field]" /> </template>
+        <template #resourceApiList="{ model, field }">
+          <ResourceApi v-model:value="model[field]" />
+        </template>
         <template #metaJson="{ model, field }">
           <MetaJson ref="meta" v-model:value="model[field]" />
         </template>
@@ -33,14 +35,15 @@
   import { BasicForm, useForm } from '/@/components/Form';
   import { ActionEnum } from '/@/enums/commonEnum';
   import MetaJson from './meta/MetaJson.vue';
+  import ResourceApi from './api/ResourceApi.vue';
 
   import { getValidateRules } from '/@/api/lamp/common/formValidateService';
-  import { Api, save, update } from '/@/api/lamp/application/defResource';
+  import { Api, save, update, get } from '/@/api/lamp/application/defResource';
   import { customFormSchemaRules, editFormSchema } from './defResource.data';
 
   export default defineComponent({
     name: 'DefResourceEdit',
-    components: { BasicForm, [Card.name]: Card, MetaJson },
+    components: { BasicForm, [Card.name]: Card, MetaJson, ResourceApi },
     emits: ['success'],
     setup(_, { emit }) {
       const { t } = useI18n();
@@ -52,7 +55,7 @@
 
       const [register, { setFieldsValue, getFieldsValue, resetFields, updateSchema, validate }] =
         useForm({
-          labelWidth: 100,
+          labelWidth: 110,
           showActionButtonGroup: false,
           schemas: editFormSchema(type),
         });
@@ -85,8 +88,12 @@
         type.value = data?.type;
 
         let validateApi = unref(type) !== ActionEnum.ADD ? Api.Update : Api.Save;
-        const { record = {}, parent } = data;
-
+        const { parent } = data;
+        let resourceVO = {};
+        if (unref(type) !== ActionEnum.ADD) {
+          resourceVO = await get(data.record.id);
+        }
+        const record = { ...data.record, ...resourceVO };
         if (record?.applicationName) {
           title.value = t(`common.title.${type.value}`) + `【${record?.applicationName}】下的资源`;
         }
@@ -95,6 +102,7 @@
         if (unref(type) !== ActionEnum.EDIT) {
           record.id = undefined;
         }
+
         await setFieldsValue({ ...record });
 
         getValidateRules(validateApi, customFormSchemaRules(type, getFieldsValue)).then(
@@ -108,3 +116,8 @@
     },
   });
 </script>
+<style lang="less" scoped>
+  #resourceApiList {
+    flex-direction: column;
+  }
+</style>

@@ -91,7 +91,7 @@ export interface DefResourceApiVO {
   resourceId: string;
   name: string;
   uri: string;
-  apiController: string;
-  apiSpringApplicationName: string;
-  apiRequestMethod: string;
+  controller: string;
+  springApplicationName: string;
+  requestMethod: string;
 }

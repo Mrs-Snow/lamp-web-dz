@@ -15,3 +15,11 @@ export interface CodeQueryVO {
   type: string;
   excludes?: string | string[];
 }
+
+export interface SystemApiVO {
+  springApplicationName: string;
+  controller: string;
+  name: string;
+  requestMethod: string;
+  uri: string;
+}

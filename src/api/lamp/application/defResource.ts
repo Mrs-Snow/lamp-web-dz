@@ -21,6 +21,12 @@ export const Api = {
     url: `${ServicePrefixEnum.TENANT}/${MODULAR}/tree`,
     method: RequestEnum.POST,
   } as AxiosRequestConfig,
+  Get: (id: string) => {
+    return {
+      url: `${ServicePrefixEnum.TENANT}/${MODULAR}/${id}`,
+      method: RequestEnum.GET,
+    } as AxiosRequestConfig;
+  },
   Save: {
     url: `${ServicePrefixEnum.TENANT}/${MODULAR}`,
     method: RequestEnum.POST,
@@ -55,6 +61,8 @@ export const page = (params: PageParams<DefResourcePageQuery>) =>
 
 export const query = (params: DefResourcePageQuery) =>
   defHttp.request<DefResourceResultVO[]>({ ...Api.Query, params });
+
+export const get = (id: string) => defHttp.request<DefResourceResultVO[]>({ ...Api.Get(id) });
 
 export const save = (params: DefResourceSaveVO) =>
   defHttp.request<DefResourceResultVO>({ ...Api.Save, params });

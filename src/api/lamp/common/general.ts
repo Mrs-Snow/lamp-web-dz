@@ -1,11 +1,17 @@
 import { defHttp } from '/@/utils/http/axios';
 import { ServicePrefixEnum } from '/@/enums/commonEnum';
-import { OptionsGetResultModel, CodeQueryVO } from './model/optionsModel';
+import { OptionsGetResultModel, CodeQueryVO, SystemApiVO } from './model/optionsModel';
 import { RequestEnum } from '/@/enums/httpEnum';
 import { isString } from '/@/utils/is';
 import { TimeDelayReq, DelayResult } from '/@/utils/lamp/timeDelayReq';
 
 export const Api = {
+  SystemApiScan: (serviceProfix: string) => {
+    return {
+      url: `/${serviceProfix}/systemApiScan`,
+      method: RequestEnum.GET,
+    };
+  },
   FindEnumListByType: {
     url: `${ServicePrefixEnum.OAUTH}/enums/findEnumListByType`,
     method: RequestEnum.POST,
@@ -18,6 +24,10 @@ export const Api = {
     url: `${ServicePrefixEnum.OAUTH}/parameter/value`,
     method: RequestEnum.GET,
   },
+};
+
+export const findSystemApi = (serviceProfix: string) => {
+  return defHttp.request<Map<String, SystemApiVO[]>>({ ...Api.SystemApiScan(serviceProfix) });
 };
 
 /**

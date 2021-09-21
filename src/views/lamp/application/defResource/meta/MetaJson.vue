@@ -1,30 +1,29 @@
 <template>
   <div class="meta-input">
-    <div class="item-box">
-      <BasicTable @register="registerTable">
-        <template #toolbar>
-          <a-button type="primary" @click="handleAdd">添加</a-button>
-        </template>
-        <template #action="{ record }">
-          <TableAction
-            :actions="[
-              {
-                label: t('common.title.edit'),
-                onClick: handleEdit.bind(null, record),
+    <BasicTable @register="registerTable">
+      <template #toolbar>
+        <a-button type="primary" @click="handleAdd">{{ t('common.title.add') }}</a-button>
+      </template>
+      <template #action="{ record }">
+        <TableAction
+          :actions="[
+            {
+              label: t('common.title.edit'),
+              onClick: handleEdit.bind(null, record),
+            },
+            {
+              label: t('common.title.delete'),
+              color: 'error',
+              popConfirm: {
+                title: t('common.tips.confirmDelete'),
+                confirm: handleDelete.bind(null, record),
               },
-              {
-                label: t('common.title.delete'),
-                color: 'error',
-                popConfirm: {
-                  title: t('common.tips.confirmDelete'),
-                  confirm: handleDelete.bind(null, record),
-                },
-              },
-            ]"
-          />
-        </template>
-      </BasicTable>
-    </div>
+            },
+          ]"
+        />
+      </template>
+    </BasicTable>
+
     <EditModal @register="registerModal" @success="handleSuccess" />
   </div>
 </template>
@@ -133,15 +132,12 @@
       }
 
       return {
-        innerVal,
-        keys,
         handleAdd,
         handleEdit,
         handleDelete,
         handleSuccess,
         registerModal,
         registerTable,
-        metaJsonColumns,
         t,
       };
     },
@@ -150,26 +146,7 @@
 <style lang="less" scoped>
   .meta-input {
     border: 1px solid #d9d9d9;
-    padding: 10px 20px;
+    padding: 10px;
     display: flex;
-    border-radius: 4px;
-
-    .item-box {
-      flex: 1;
-      margin-right: 20px;
-
-      .item {
-        display: flex;
-
-        .key {
-          font-weight: 500;
-        }
-
-        .value {
-          margin-left: 20px;
-          margin-right: 40px;
-        }
-      }
-    }
   }
 </style>

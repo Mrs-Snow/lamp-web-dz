@@ -2,7 +2,7 @@
   <BasicModal
     v-bind="$attrs"
     @register="registerModal"
-    :title="t(`common.title.${type}`)"
+    title="录入接口"
     :maskClosable="false"
     @ok="handleSubmit"
   >
@@ -10,24 +10,22 @@
   </BasicModal>
 </template>
 <script lang="ts">
-  import { defineComponent, ref } from 'vue';
+  import { defineComponent } from 'vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, useForm } from '/@/components/Form';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { ActionEnum } from '/@/enums/commonEnum';
-  import { editMetaFormSchema } from '../defResource.data';
+  import { editResourceApiFormSchema } from '../defResource.data';
 
   export default defineComponent({
-    name: 'DefResourceMetaEdit',
+    name: 'DefResourceApiEdit',
     components: { BasicModal, BasicForm },
     emits: ['success', 'register'],
     setup(_, { emit }) {
       const { t } = useI18n();
-      const type = ref(ActionEnum.ADD);
 
       const [registerForm, { setFieldsValue, resetFields, validate }] = useForm({
         labelWidth: 100,
-        schemas: editMetaFormSchema(),
+        schemas: editResourceApiFormSchema(),
         showActionButtonGroup: false,
         actionColOptions: {
           span: 23,
@@ -37,14 +35,9 @@
       const [registerModal, { setModalProps, closeModal }] = useModalInner(async (data) => {
         await resetFields();
         setModalProps({ confirmLoading: false, minHeight: 300 });
-        type.value = data?.type;
 
-        const { record = {} } = data;
-        if (type.value === ActionEnum.ADD) {
-          record.key = undefined;
-        }
         await setFieldsValue({
-          ...record,
+          ...data.record,
         });
       });
 
@@ -60,7 +53,7 @@
         }
       }
 
-      return { t, type, registerModal, registerForm, handleSubmit };
+      return { t, registerModal, registerForm, handleSubmit };
     },
   });
 </script>

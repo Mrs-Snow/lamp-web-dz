@@ -25,10 +25,14 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       show: false,
     },
     {
+      field: 'divider-selects1',
+      component: 'Divider',
+      label: '基础信息',
+    },
+    {
       label: t('lamp.application.defResource.resourceType'),
       field: 'resourceType',
       component: 'ApiRadioGroup',
-      // component: 'ApiSelect',
       defaultValue: ResourceTypeEnum.MENU,
       componentProps: {
         ...dictComponentProps(DictEnum.RESOURCE_TYPE, ResourceTypeEnum.API),
@@ -137,7 +141,17 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
         span: 12,
       },
     },
-
+    {
+      field: 'divider-selects2',
+      component: 'Divider',
+      label: '特性信息',
+      helpMessage: ['每种类型拥有不同的字段'],
+      ifShow: ({ values }) => {
+        return [ResourceTypeEnum.MENU, ResourceTypeEnum.VIEW, ResourceTypeEnum.FIELD].includes(
+          values.resourceType,
+        );
+      },
+    },
     {
       label: t('lamp.application.defResource.path'),
       field: 'path',
@@ -242,9 +256,18 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
     },
     {
       label: t('lamp.application.defResource.apiList'),
-      field: 'apiList',
+      field: 'resourceApiList',
       component: 'Input',
-      slot: 'apiList',
+      slot: 'resourceApiList',
+      ifShow: ({ values }) => {
+        return [ResourceTypeEnum.MENU, ResourceTypeEnum.VIEW].includes(values.resourceType);
+      },
+    },
+    {
+      field: 'divider-selects3',
+      component: 'Divider',
+      label: '扩展信息',
+      helpMessage: ['两个Select共用数据源', '但不可选择对方已选中的项目'],
     },
     {
       label: t('lamp.application.defResource.metaJson'),
@@ -316,6 +339,7 @@ export const customFormSchemaRules = (
   ];
 };
 
+// 元数据 表格
 export const metaJsonColumns: BasicColumn[] = [
   {
     title: 'key',
@@ -335,6 +359,8 @@ export const metaJsonColumns: BasicColumn[] = [
     },
   },
 ];
+
+// 元数据 编辑表单
 export const editMetaFormSchema = (): FormSchema[] => {
   return [
     {
@@ -366,6 +392,145 @@ export const editMetaFormSchema = (): FormSchema[] => {
     {
       label: 'value',
       field: 'value',
+      component: 'Input',
+      required: true,
+    },
+  ];
+};
+
+// 资源接口 表格
+export const resourceApiColumns: BasicColumn[] = [
+  {
+    title: 'resourceId',
+    dataIndex: 'resourceId',
+    ifShow: false,
+  },
+  {
+    title: t('lamp.application.defResourceApi.springApplicationName'),
+    dataIndex: 'springApplicationName',
+    ifShow: false,
+  },
+  {
+    title: t('lamp.application.defResourceApi.controller'),
+    dataIndex: 'controller',
+    ifShow: false,
+  },
+  {
+    title: t('lamp.application.defResourceApi.name'),
+    dataIndex: 'name',
+    ifShow: false,
+  },
+  {
+    title: t('lamp.application.defResourceApi.uri'),
+    dataIndex: 'uri',
+    slots: { customRender: 'uri' },
+    // format: (text, record: Recordable) => {
+    //   return text + record.requestMethod;
+    // },
+  },
+];
+
+// 资源接口 选择表单
+export const selectResourceApiFormSchema = (
+  handleServiceChange: Fn,
+  handleControllerChange: Fn,
+  handleUriChange: Fn,
+  handleUriDeselect: Fn,
+): FormSchema[] => {
+  return [
+    {
+      label: t('lamp.application.defResourceApi.springApplicationName'),
+      field: 'service',
+      component: 'Select',
+      componentProps: () => {
+        return {
+          onChange: handleServiceChange,
+          options: [
+            { value: 'base', label: '基础服务' },
+            { value: 'oauth', label: '认证服务' },
+            { value: 'tenant', label: '租户服务' },
+            { value: 'msg', label: '消息服务' },
+            { value: 'file', label: '文件服务' },
+            { value: 'gateway', label: '网关服务' },
+          ],
+        };
+      },
+    },
+    {
+      label: t('lamp.application.defResourceApi.controller'),
+      field: 'controller',
+      component: 'Select',
+      componentProps: {
+        onChange: handleControllerChange,
+      },
+    },
+    {
+      label: t('lamp.application.defResourceApi.uri'),
+      field: 'uri',
+      component: 'Select',
+      componentProps: {
+        onChange: handleUriChange,
+        onDeselect: handleUriDeselect,
+        mode: 'multiple',
+        'option-label-prop': 'label',
+      },
+    },
+  ];
+};
+
+// 资源接口 编辑表单
+export const editResourceApiFormSchema = (): FormSchema[] => {
+  return [
+    {
+      label: t('lamp.application.defResourceApi.springApplicationName'),
+      field: 'springApplicationName',
+      component: 'Select',
+      componentProps: () => {
+        return {
+          options: [
+            { value: 'lamp-base-server', label: '基础服务' },
+            { value: 'lamp-oauth-server', label: '认证服务' },
+            { value: 'lamp-tenant-server', label: '租户服务' },
+            { value: 'lamp-msg-server', label: '消息服务' },
+            { value: 'lamp-file-server', label: '文件服务' },
+            { value: 'lamp-gateway-server', label: '网关服务' },
+          ],
+        };
+      },
+      required: true,
+    },
+    {
+      label: t('lamp.application.defResourceApi.controller'),
+      field: 'controller',
+      component: 'Input',
+      required: true,
+    },
+    {
+      label: t('lamp.application.defResourceApi.uri'),
+      field: 'uri',
+      component: 'Input',
+      required: true,
+    },
+    {
+      label: t('lamp.application.defResourceApi.requestMethod'),
+      field: 'requestMethod',
+      component: 'Select',
+      required: true,
+      componentProps: () => {
+        return {
+          options: [
+            { value: 'ALL', label: '所有' },
+            { value: 'GET', label: 'GET' },
+            { value: 'POST', label: 'POST' },
+            { value: 'PUT', label: 'PUT' },
+            { value: 'DELETE', label: 'DELETE' },
+          ],
+        };
+      },
+    },
+    {
+      label: t('lamp.application.defResourceApi.name'),
+      field: 'name',
       component: 'Input',
       required: true,
     },
