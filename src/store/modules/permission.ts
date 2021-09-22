@@ -220,8 +220,7 @@ export const usePermissionStore = defineStore({
           routeList = filter([...routeList, ...VbenRoutes], routeRemoveIgnoreFilter);
           routeList = routeList.filter(routeRemoveIgnoreFilter);
 
-          // routeList = flatMultiLevelRoutes(routeList);
-          routeList = flatMultiLevelRoutes([...routeList, ...VbenRoutes]);
+          routeList = flatMultiLevelRoutes(routeList);
           routes = [PAGE_NOT_FOUND_ROUTE, ...ConstRouter, ...routeList];
           break;
       }

@@ -1,7 +1,7 @@
 import type { AppRouteModule, AppRouteRecordRaw } from '/@/router/types';
 import type { Router, RouteRecordNormalized } from 'vue-router';
 
-import { getParentLayout, LAYOUT } from '/@/router/constant';
+import { getParentLayout, LAYOUT, EXCEPTION_COMPONENT } from '/@/router/constant';
 import { cloneDeep, omit } from 'lodash-es';
 import { warn } from '/@/utils/log';
 import { createRouter, createWebHashHistory } from 'vue-router';
@@ -30,7 +30,7 @@ function asyncImportRoute(routes: AppRouteRecordRaw[] | undefined) {
     if (path && isUrl(path)) {
       item.component = 'IFRAME';
     } else if (component) {
-      const layoutFound = LayoutMap.get(component as string);
+      const layoutFound = LayoutMap.get(component.toUpperCase());
       if (layoutFound) {
         item.component = layoutFound;
       } else {
@@ -58,12 +58,14 @@ function dynamicImport(
   if (matchKeys?.length === 1) {
     const matchKey = matchKeys[0];
     return dynamicViewsModules[matchKey];
-  }
-  if (matchKeys?.length > 1) {
+  } else if (matchKeys?.length > 1) {
     warn(
       'Please do not create `.vue` and `.TSX` files with the same file name in the same hierarchical directory under the views folder. This will cause dynamic introduction failure',
     );
     return;
+  } else {
+    warn('在src/views/下找不到' + component + '`.vue` 或 `.TSX`,请自行创建');
+    return EXCEPTION_COMPONENT;
   }
 }
 
@@ -72,6 +74,7 @@ export function transformObjToRoute<T = AppRouteModule>(routeList: AppRouteModul
   routeList.forEach((route) => {
     const component = route.component as string;
     if (component) {
+      // TODO 如果有子菜单，但没有设置为layout ？
       if (component.toUpperCase() === 'LAYOUT') {
         route.component = LayoutMap.get(component.toUpperCase());
       } else {

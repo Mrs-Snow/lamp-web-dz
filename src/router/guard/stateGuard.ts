@@ -8,12 +8,12 @@ import { removeTabChangeListener } from '/@/logics/mitt/routeChange';
 
 export function createStateGuard(router: Router) {
   router.afterEach((to) => {
-    const tabStore = useMultipleTabStore();
-    const userStore = useUserStore();
-    const appStore = useAppStore();
-    const permissionStore = usePermissionStore();
     // Just enter the login page and clear the authentication information
     if (to.path === PageEnum.BASE_LOGIN) {
+      const tabStore = useMultipleTabStore();
+      const userStore = useUserStore();
+      const appStore = useAppStore();
+      const permissionStore = usePermissionStore();
       console.log('createStateGuard 进入login页面，清理缓存');
       appStore.resetAllState();
       permissionStore.resetState();

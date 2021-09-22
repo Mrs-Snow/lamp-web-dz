@@ -44,11 +44,10 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
         ...dictComponentProps(DictEnum.RESOURCE_TYPE, ResourceTypeEnum.API),
       },
       helpMessage: [
-        '菜单即左侧显示的菜单',
-        '视图即隐藏的菜单(需要配置在路由中)和页面上点击后需要通过路由打开的页面',
-        '功能即页面上的非视图的按钮',
-        '字段即列表页或编辑页的字段',
-        '接口即后台的访问接口',
+        '菜单：即左侧显示的菜单(肉眼可见的菜单)(包括N级菜单)',
+        '视图：即需要配置在路由中，但需要隐藏的菜单, 如 资源维护',
+        '功能：即页面上的非视图的按钮',
+        '字段：即列表页或编辑页的字段',
       ],
       colProps: {
         span: 12,

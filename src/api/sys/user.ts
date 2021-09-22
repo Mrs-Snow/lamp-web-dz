@@ -15,8 +15,8 @@ import { ErrorMessageMode } from '/#/axios';
 enum Api {
   getUserInfo = '/getUserInfoById',
   GetPermCodeByUserId = '/oauth/resource/visible',
-  Login = '/oauth/noToken/login',
-  Logout = '/oauth/noToken/logout',
+  Login = '/oauth/anyUser/login',
+  Logout = '/oauth/anyUser/logout',
   LoadCaptcha = '/oauth/anno/captcha',
 }
 
