@@ -40,9 +40,6 @@
         type.value = data?.type;
 
         const { record = {} } = data;
-        if (type.value === ActionEnum.ADD) {
-          record.key = undefined;
-        }
         await setFieldsValue({
           ...record,
         });

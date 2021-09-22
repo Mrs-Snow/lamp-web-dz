@@ -1,12 +1,13 @@
 <template>
   <PageWrapper dense contentClass="flex">
     <DefResourceTree
-      class="md:w-1/3"
+      class="md:w-1/4"
       @select="handleTreeSelect"
       @add="handleTreeAdd"
+      @change="handlerApplicationChange"
       ref="treeRef"
     />
-    <Edit class="md:w-2/3" @success="handleEditSuccess" ref="editRef" />
+    <Edit class="md:w-3/4" @success="handleEditSuccess" ref="editRef" />
   </PageWrapper>
 </template>
 <script lang="ts">
@@ -47,12 +48,16 @@
         getEditRef().setData({ type: ActionEnum.ADD, parent, record });
       }
 
+      function handlerApplicationChange(_, label) {
+        getEditRef().resetForm({ applicationName: label });
+      }
       return {
         editRef,
         treeRef,
         handleEditSuccess,
         handleTreeSelect,
         handleTreeAdd,
+        handlerApplicationChange,
       };
     },
   });

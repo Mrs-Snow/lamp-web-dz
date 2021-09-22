@@ -54,6 +54,7 @@
       const [registerTable] = useTable({
         title: '路由的 Meta 配置',
         dataSource: keys,
+        scroll: { y: 250 },
         columns: metaJsonColumns,
         bordered: true,
         actionColumn: {

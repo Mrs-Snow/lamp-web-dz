@@ -61,11 +61,11 @@
       const [registerTable, { getDataSource, setTableData }] = useTable({
         title: '资源关联的接口',
         dataSource: innerVal,
-        maxHeight: 200,
+        scroll: { y: 250 },
         columns: resourceApiColumns,
         bordered: true,
         actionColumn: {
-          width: 80,
+          width: 100,
           title: t('common.column.action'),
           dataIndex: 'action',
           slots: { customRender: 'action' },
@@ -157,6 +157,6 @@
   .resource-api {
     border: 1px solid #d9d9d9;
     padding: 10px;
-    //display: flex;
+    display: flex;
   }
 </style>

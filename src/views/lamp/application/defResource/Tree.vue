@@ -50,7 +50,7 @@
     name: 'DefResourceManagement',
     components: { BasicTree, Select },
 
-    emits: ['select', 'add'],
+    emits: ['select', 'add', 'change'],
     setup(_, { emit }) {
       const { t } = useI18n();
       const { createMessage, createConfirm } = useMessage();
@@ -87,6 +87,9 @@
         applicationId = applicationId || applicationIdRef.value;
         if (!!applicationId) {
           treeData.value = (await tree({ applicationId })) as unknown as TreeItem[];
+          setTimeout(() => {
+            getTree().filterByLevel(2);
+          }, 0);
         } else {
           createMessage.warn('请先选择应用');
         }
@@ -194,6 +197,7 @@
       function handleChange({ value, label }) {
         applicationNameRef.value = label;
         fetch(value);
+        emit('change', value, label);
       }
 
       return {

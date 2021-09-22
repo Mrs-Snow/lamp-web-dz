@@ -81,6 +81,14 @@
         }
       }
 
+      async function resetForm(record) {
+        await resetFields();
+
+        if (record?.applicationName) {
+          title.value = t(`common.title.view`) + `【${record?.applicationName}】下的资源`;
+        }
+      }
+
       // 设置回显数据
       async function setData(data: Recordable) {
         show.value = true;
@@ -112,7 +120,17 @@
         );
       }
 
-      return { register, resetFields, handleSubmit, setData, t, title, confirmLoading, show };
+      return {
+        register,
+        resetFields,
+        handleSubmit,
+        setData,
+        t,
+        title,
+        confirmLoading,
+        show,
+        resetForm,
+      };
     },
   });
 </script>

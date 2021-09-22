@@ -25,6 +25,12 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       show: false,
     },
     {
+      label: t('lamp.application.defResource.parentId'),
+      field: 'parentId',
+      component: 'Input',
+      show: false,
+    },
+    {
       field: 'divider-selects1',
       component: 'Divider',
       label: '基础信息',
@@ -88,6 +94,9 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       label: t('lamp.application.defResource.icon'),
       field: 'icon',
       component: 'IconPicker',
+      componentProps: {
+        copy: true,
+      },
       colProps: {
         span: 12,
       },
@@ -157,13 +166,12 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       field: 'path',
       component: 'Input',
       helpMessage: [
-        'http开头表示外链',
-        'Layout表示页面布局',
-        'is_frame_src=true时，表示在框架类打开',
+        'http开头表示外链网页',
+        '相对地址表示页面布局',
         '资源类型=接口时，表示后端接口请求地址.',
       ],
       itemProps: {
-        extra: 'http开头表示外链，Layout表示页面布局',
+        extra: 'http开头表示外链网页，相对地址表示页面布局',
       },
       colProps: {
         span: 12,
@@ -179,8 +187,9 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       field: 'component',
       component: 'Input',
       itemProps: {
-        extra: '前端页面代码在src/views目录下的相对地址.',
+        extra: '前端页面代码在src/views目录下的相对地址. Layout表示页面布局.',
       },
+      helpMessage: ['http开头表示内嵌网页'],
       colProps: {
         span: 12,
       },
@@ -377,7 +386,6 @@ export const editMetaFormSchema = (): FormSchema[] => {
           { value: 'title' },
           { value: 'ignoreKeepAlive' },
           { value: 'affix' },
-          { value: 'frameSrc' },
           { value: 'transitionName' },
           { value: 'hideBreadcrumb' },
           { value: 'carryParam' },
@@ -408,25 +416,20 @@ export const resourceApiColumns: BasicColumn[] = [
   {
     title: t('lamp.application.defResourceApi.springApplicationName'),
     dataIndex: 'springApplicationName',
-    ifShow: false,
+    width: 150,
   },
   {
     title: t('lamp.application.defResourceApi.controller'),
     dataIndex: 'controller',
-    ifShow: false,
   },
   {
     title: t('lamp.application.defResourceApi.name'),
     dataIndex: 'name',
-    ifShow: false,
   },
   {
     title: t('lamp.application.defResourceApi.uri'),
     dataIndex: 'uri',
     slots: { customRender: 'uri' },
-    // format: (text, record: Recordable) => {
-    //   return text + record.requestMethod;
-    // },
   },
 ];
 

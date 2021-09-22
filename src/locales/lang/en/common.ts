@@ -33,6 +33,7 @@ export default {
     import: 'Import',
     export: 'Export',
     view: 'View',
+    details: 'Details',
     download: 'Download',
     upload: 'Upload',
   },

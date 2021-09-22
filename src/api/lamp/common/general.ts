@@ -8,7 +8,7 @@ import { TimeDelayReq, DelayResult } from '/@/utils/lamp/timeDelayReq';
 export const Api = {
   SystemApiScan: (serviceProfix: string) => {
     return {
-      url: `/${serviceProfix}/systemApiScan`,
+      url: `/${serviceProfix}/anyone/systemApiScan`,
       method: RequestEnum.GET,
     };
   },
