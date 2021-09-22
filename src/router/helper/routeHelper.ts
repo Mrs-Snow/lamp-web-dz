@@ -74,7 +74,6 @@ export function transformObjToRoute<T = AppRouteModule>(routeList: AppRouteModul
   routeList.forEach((route) => {
     const component = route.component as string;
     if (component) {
-      // TODO 如果有子菜单，但没有设置为layout ？
       if (component.toUpperCase() === 'LAYOUT') {
         route.component = LayoutMap.get(component.toUpperCase());
       } else {

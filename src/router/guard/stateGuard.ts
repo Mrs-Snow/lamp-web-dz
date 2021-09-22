@@ -14,7 +14,6 @@ export function createStateGuard(router: Router) {
       const userStore = useUserStore();
       const appStore = useAppStore();
       const permissionStore = usePermissionStore();
-      console.log('createStateGuard 进入login页面，清理缓存');
       appStore.resetAllState();
       permissionStore.resetState();
       tabStore.resetState();
