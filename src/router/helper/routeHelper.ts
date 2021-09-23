@@ -5,7 +5,6 @@ import { getParentLayout, LAYOUT, EXCEPTION_COMPONENT } from '/@/router/constant
 import { cloneDeep, omit } from 'lodash-es';
 import { warn } from '/@/utils/log';
 import { createRouter, createWebHashHistory } from 'vue-router';
-import { isUrl } from '/@/utils/is';
 
 export type LayoutMapKey = 'LAYOUT';
 const IFRAME = () => import('/@/views/sys/iframe/FrameBlank.vue');
@@ -22,14 +21,12 @@ function asyncImportRoute(routes: AppRouteRecordRaw[] | undefined) {
   dynamicViewsModules = dynamicViewsModules || import.meta.glob('../../views/**/*.{vue,tsx}');
   if (!routes) return;
   routes.forEach((item) => {
-    if (!item.component && item.meta?.frameSrc) {
+    if (item.meta?.frameSrc) {
       item.component = 'IFRAME';
     }
-    const { path, component, name } = item;
+    const { component, name } = item;
     const { children } = item;
-    if (path && isUrl(path)) {
-      item.component = 'IFRAME';
-    } else if (component) {
+    if (component) {
       const layoutFound = LayoutMap.get(component.toUpperCase());
       if (layoutFound) {
         item.component = layoutFound;
@@ -50,10 +47,11 @@ function dynamicImport(
   const keys = Object.keys(dynamicViewsModules);
   const matchKeys = keys.filter((key) => {
     const k = key.replace('../../views', '');
-    const tempComponent = `${component.startsWith('/') ? '' : '/'}${component}${
-      component.endsWith('.vue') ? '' : '.vue'
-    }`;
-    return k === tempComponent;
+    const startFlag = component.startsWith('/');
+    const endFlag = component.endsWith('.vue') || component.endsWith('.tsx');
+    const startIndex = startFlag ? 0 : 1;
+    const lastIndex = endFlag ? k.length : k.lastIndexOf('.');
+    return k.substring(startIndex, lastIndex) === component;
   });
   if (matchKeys?.length === 1) {
     const matchKey = matchKeys[0];
@@ -64,7 +62,7 @@ function dynamicImport(
     );
     return;
   } else {
-    warn('在src/views/下找不到' + component + '`.vue` 或 `.TSX`,请自行创建');
+    warn('在src/views/下找不到`' + component + '.vue` 或 `' + component + '.TSX`, 请自行创建!');
     return EXCEPTION_COMPONENT;
   }
 }
