@@ -31,6 +31,12 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       show: false,
     },
     {
+      label: t('lamp.application.defResource.parentId'),
+      field: 'parentResourceType',
+      component: 'Input',
+      show: false,
+    },
+    {
       field: 'divider-selects1',
       component: 'Divider',
       label: '基础信息',
@@ -296,6 +302,31 @@ export const customFormSchemaRules = (
   getFieldsValue: () => Recordable,
 ): Partial<FormSchemaExt>[] => {
   return [
+    {
+      field: 'resourceType',
+      type: RuleType.append,
+      rules: [
+        {
+          trigger: ['change', 'blur'],
+          async validator(_, value) {
+            if (getFieldsValue()?.parentResourceType === ResourceTypeEnum.VIEW) {
+              if (value === ResourceTypeEnum.MENU) {
+                return Promise.reject('资源下不能添加菜单');
+              }
+            } else if (getFieldsValue()?.parentResourceType === ResourceTypeEnum.FUNCTION) {
+              if (value === ResourceTypeEnum.MENU) {
+                return Promise.reject('资源下不能添加菜单');
+              } else if (value === ResourceTypeEnum.VIEW) {
+                return Promise.reject('资源下不能添加视图');
+              }
+            } else if (getFieldsValue()?.parentResourceType === ResourceTypeEnum.FIELD) {
+              return Promise.reject('字段下不能添加子资源');
+            }
+            return Promise.resolve();
+          },
+        },
+      ],
+    },
     {
       field: 'code',
       type: RuleType.append,

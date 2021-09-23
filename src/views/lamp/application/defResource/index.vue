@@ -15,7 +15,9 @@
   import { PageWrapper } from '/@/components/Page';
   import { ActionEnum } from '/@/enums/commonEnum';
   import DefResourceTree from './Tree.vue';
+  import { useMessage } from '/@/hooks/web/useMessage';
   import Edit from './Edit.vue';
+  import { ResourceTypeEnum } from '/@/enums/biz/tenant';
 
   export default defineComponent({
     name: 'DefResourceManage',
@@ -23,6 +25,7 @@
     setup() {
       const editRef = ref<any>(null);
       const treeRef = ref<any>(null);
+      const { createMessage } = useMessage();
 
       // 获取编辑表单
       function getEditRef() {
@@ -44,8 +47,13 @@
       }
 
       // 点击树的新增按钮
-      function handleTreeAdd(parent = {}, record = {}) {
-        getEditRef().setData({ type: ActionEnum.ADD, parent, record });
+      function handleTreeAdd(parent = {} as { resourceType: string }, record = {}) {
+        if (parent?.resourceType === ResourceTypeEnum.FIELD) {
+          createMessage.warn('字段下不能添加子资源');
+          getEditRef().resetForm(record);
+        } else {
+          getEditRef().setData({ type: ActionEnum.ADD, parent, record });
+        }
       }
 
       function handlerApplicationChange(_, label) {

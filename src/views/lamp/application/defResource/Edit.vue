@@ -51,7 +51,7 @@
       const type = ref<ActionEnum>(ActionEnum.ADD);
       const confirmLoading = ref<boolean>(false);
       const show = ref<boolean>(false);
-      const title = ref<string>(t(`common.title.${type.value}`));
+      const title = ref<string>('未选中任何资源');
 
       const [register, { setFieldsValue, getFieldsValue, resetFields, updateSchema, validate }] =
         useForm({
@@ -84,8 +84,9 @@
       async function resetForm(record) {
         await resetFields();
 
+        show.value = false;
         if (record?.applicationName) {
-          title.value = t(`common.title.view`) + `【${record?.applicationName}】下的资源`;
+          title.value = '未选中任何资源';
         }
       }
 
@@ -103,14 +104,23 @@
         }
         const record = { ...data.record, ...resourceVO };
         if (record?.applicationName) {
-          title.value = t(`common.title.${type.value}`) + `【${record?.applicationName}】下的资源`;
+          if (unref(type) === ActionEnum.ADD) {
+            title.value =
+              t(`common.title.${type.value}`) +
+              `【${record?.applicationName}】中【${parent?.label}】的子资源`;
+          } else {
+            title.value =
+              t(`common.title.${type.value}`) +
+              `【${record?.applicationName}】中的【${record?.label}】`;
+          }
         }
         record['parentName'] = parent?.label;
         record['parentId'] = parent?.id;
+        record['parentResourceType'] = parent?.resourceType;
         if (unref(type) !== ActionEnum.EDIT) {
           record.id = undefined;
         }
-
+        console.log(record['parentResourceType']);
         await setFieldsValue({ ...record });
 
         getValidateRules(validateApi, customFormSchemaRules(type, getFieldsValue)).then(

@@ -173,7 +173,7 @@
         });
       }
 
-      // 点击组织数外面的 新增
+      // 点击树外面的 新增
       function handleAdd() {
         emit('add', findNodeByKey('0', treeData.value), {
           applicationId: applicationIdRef.value,
@@ -181,7 +181,7 @@
         });
       }
 
-      // 点击组织数外面的 批量删除
+      // 点击树外面的 批量删除
       function handleBatchDelete() {
         const { checked } = getTree().getCheckedKeys() as {
           checked: string[];
