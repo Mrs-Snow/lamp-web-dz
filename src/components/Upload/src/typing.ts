@@ -1,4 +1,4 @@
-import { AttachmentDTO } from '/@/api/lamp/file/model/uploadModel';
+import { FileResultVO } from '/@/api/lamp/file/model/uploadModel';
 
 export enum UploadResultStatus {
   SUCCESS = 'success',
@@ -14,7 +14,7 @@ export interface FileItem {
   percent: number;
   file: File;
   status?: UploadResultStatus;
-  responseData?: AttachmentDTO;
+  responseData?: FileResultVO;
   uuid: string;
 }
 

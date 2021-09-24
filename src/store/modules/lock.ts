@@ -31,6 +31,7 @@ export const useLockStore = defineStore({
     },
     // Unlock
     async unLock(password?: string) {
+      debugger;
       const userStore = useUserStore();
       if (this.lockInfo?.pwd === password) {
         this.resetLockInfo();

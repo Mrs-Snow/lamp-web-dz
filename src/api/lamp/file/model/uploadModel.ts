@@ -1,10 +1,9 @@
 import { Enum } from '/@/api/model/baseModel';
 
-export interface AttachmentDTO {
+export interface FileResultVO {
   id: string;
   bizType: string;
   fileType: Enum;
-  storageType?: Enum;
   bucket: string;
   path: string;
   url: string;
@@ -14,6 +13,20 @@ export interface AttachmentDTO {
   contentType: string;
   suffix: string;
   size: string;
+  storageType?: Enum;
+}
+
+export interface AppendixResultVO {
+  id: string;
+  bizId: string;
+  bizType: string;
+  fileType: Enum;
+  bucket: string;
+  path: string;
+  originalFileName: string;
+  contentType: string;
+  size: string;
+  createdTime: string;
 }
 
 export interface AppendixSaveVO {

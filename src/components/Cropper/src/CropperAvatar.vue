@@ -39,11 +39,11 @@
   import type { ButtonProps } from '/@/components/Button';
   import Icon from '/@/components/Icon';
   import { asyncGetUrls } from '/@/api/lamp/file/upload';
+  import { FileResultVO } from '/@/api/lamp/file/model/uploadModel';
 
   const props = {
     width: { type: [String, Number], default: '200px' },
-    value: { type: String },
-    fileId: { type: [String, Number] },
+    value: { type: Object as PropType<FileResultVO>, default: {} },
     showBtn: { type: Boolean, default: true },
     btnProps: { type: Object as PropType<ButtonProps> },
     btnText: { type: String, default: '' },
@@ -64,8 +64,6 @@
     props,
     emits: ['update:value', 'change'],
     setup(props, { emit, expose }) {
-      // const sourceValue = ref(props.value || '');
-      const fileValue = ref({});
       const realSrc = ref<string>('');
 
       const { prefixCls } = useDesign('cropper-avatar');
@@ -88,20 +86,8 @@
       watch(
         () => props.value,
         () => {
-          if (props.value && props.value.startsWith('http')) {
-            realSrc.value = props.value;
-          } else if (props.value && props.value.startsWith('data:')) {
-            realSrc.value = props.value;
-          }
-        },
-        { immediate: true },
-      );
-
-      watch(
-        () => props.fileId,
-        () => {
-          if (props.fileId) {
-            realSrc.value = '';
+          realSrc.value = '';
+          if (props.value && props.value.id) {
             loadSrc();
           }
         },
@@ -109,32 +95,20 @@
       );
 
       function loadSrc() {
-        if (!props.fileId) {
+        if (!props.value.id) {
           return;
         }
-        asyncGetUrls(props.fileId).then((res) => {
+        asyncGetUrls(props.value.id).then((res) => {
           if (res.code === 0) {
             realSrc.value = res.url;
           }
         });
       }
 
-      // watchEffect(() => {
-      //   sourceValue.value = props.value || '';
-      // });
-
-      watch(
-        () => realSrc.value,
-        (v: string) => {
-          emit('update:value', v);
-        },
-      );
-
-      function handleUploadSuccess(result) {
-        // sourceValue.value = result?.source;
-        fileValue.value = result?.data;
-        emit('change', result);
+      function handleUploadSuccess({ data }) {
         createMessage.success(t('component.cropper.uploadSuccess'));
+        emit('update:value', data);
+        emit('change', data);
       }
 
       expose({ openModal: openModal.bind(null, true), closeModal });
@@ -145,7 +119,6 @@
         register,
         openModal: openModal as any,
         getIconWidth,
-        fileValue,
         realSrc,
         getClass,
         getImageWrapperStyle,

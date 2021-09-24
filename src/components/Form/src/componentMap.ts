@@ -27,6 +27,7 @@ import ApiSelect from './components/ApiSelect.vue';
 import ApiTreeSelect from './components/ApiTreeSelect.vue';
 import RadioButtonGroup from './components/RadioButtonGroup.vue';
 import { BasicUpload } from '/@/components/Upload';
+import { CropperAvatar } from '/@/components/Cropper';
 import { StrengthMeter } from '/@/components/StrengthMeter';
 import { IconPicker } from '/@/components/Icon';
 import { CountdownInput } from '/@/components/CountDown';
@@ -66,6 +67,7 @@ componentMap.set('IconPicker', IconPicker);
 componentMap.set('InputCountDown', CountdownInput);
 
 componentMap.set('Upload', BasicUpload);
+componentMap.set('CropperAvatar', CropperAvatar);
 componentMap.set('Divider', Divider);
 
 export function add(compName: ComponentType, component: Component) {

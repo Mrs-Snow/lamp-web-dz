@@ -17,9 +17,10 @@
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { ActionEnum } from '/@/enums/commonEnum';
+  import { ActionEnum, ServicePrefixEnum, FileBizTypeEnum } from '/@/enums/commonEnum';
   import { Api, save, update } from '/@/api/lamp/application/defApplication';
   import { getValidateRules } from '/@/api/lamp/common/formValidateService';
+  import { listByBizId } from '/@/api/lamp/file/upload';
   import { customFormSchemaRules, editFormSchema } from './defApplication.data';
 
   export default defineComponent({
@@ -48,6 +49,12 @@
         if (unref(type) !== ActionEnum.ADD) {
           // 赋值
           const record = { ...data?.record };
+          const appendixIcons = await listByBizId(
+            ServicePrefixEnum.TENANT,
+            record.id,
+            FileBizTypeEnum.DEF_APPLICATION_LOGO,
+          );
+          record.appendixIcon = appendixIcons?.[0];
           await setFieldsValue({ ...record });
         }
 

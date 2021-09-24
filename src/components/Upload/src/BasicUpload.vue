@@ -47,7 +47,7 @@
   import { omit } from 'lodash-es';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { isArray } from '/@/utils/is';
-  import { AttachmentDTO } from '/@/api/lamp/file/model/uploadModel';
+  import { FileResultVO } from '/@/api/lamp/file/model/uploadModel';
 
   export default defineComponent({
     name: 'BasicUpload',
@@ -63,7 +63,7 @@
       //   预览modal
       const [registerPreviewModal, { openModal: openPreviewModal }] = useModal();
 
-      const fileList = ref<AttachmentDTO[]>([]);
+      const fileList = ref<FileResultVO[]>([]);
 
       const showPreview = computed(() => {
         const { emptyHidePreview } = props;
@@ -85,14 +85,14 @@
       );
 
       // 上传modal保存操作
-      function handleChange(files: AttachmentDTO[]) {
+      function handleChange(files: FileResultVO[]) {
         fileList.value = [...unref(fileList), ...(files || [])];
         emit('update:value', fileList.value);
         emit('change', fileList.value);
       }
 
       // 预览modal保存操作
-      function handlePreviewChange(files: AttachmentDTO[]) {
+      function handlePreviewChange(files: FileResultVO[]) {
         fileList.value = [...(files || [])];
         emit('update:value', fileList.value);
         emit('change', fileList.value);

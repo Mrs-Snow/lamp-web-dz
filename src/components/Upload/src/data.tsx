@@ -5,7 +5,7 @@ import TableAction from '/@/components/Table/src/components/TableAction.vue';
 import ThumbUrl from './ThumbUrl.vue';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { formatFileSize } from '/@/utils/lamp/common';
-import { AttachmentDTO } from '/@/api/lamp/file/model/uploadModel';
+import { FileResultVO } from '/@/api/lamp/file/model/uploadModel';
 
 const { t } = useI18n();
 
@@ -108,7 +108,7 @@ export function createPreviewColumns(): BasicColumn[] {
       title: t('component.upload.legend'),
       width: 100,
       customRender: ({ record }) => {
-        const { id, fileType } = (record as AttachmentDTO) || {};
+        const { id, fileType } = (record as FileResultVO) || {};
         return fileType?.code === 'IMAGE' && <ThumbUrl fileId={id} />;
       },
     },

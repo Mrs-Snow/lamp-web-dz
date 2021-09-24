@@ -40,6 +40,8 @@ export enum ActionEnum {
 export enum FileBizTypeEnum {
   // 默认库 租户logo
   DEF_TENANT_LOGO = 'DEF_TENANT_LOGO',
+  // 默认库 应用logo
+  DEF_APPLICATION_LOGO = 'DEF_APPLICATION_LOGO',
   // 基础库 用户头像
   BASE_USER_AVATAR = 'BASE_USER_AVATAR',
   // 基础库 文件中心

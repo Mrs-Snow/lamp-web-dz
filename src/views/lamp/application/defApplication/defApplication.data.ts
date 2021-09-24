@@ -1,8 +1,9 @@
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { dictComponentProps } from '/@/utils/lamp/common';
-import { DictEnum } from '/@/enums/commonEnum';
+import { DictEnum, FileBizTypeEnum } from '/@/enums/commonEnum';
 import { FormSchemaExt } from '/@/api/lamp/common/formValidateService';
+import { uploadApi } from '/@/api/sys/upload';
 
 const { t } = useI18n();
 // 列表页字段
@@ -89,6 +90,15 @@ export const editFormSchema = (_): FormSchema[] => {
       show: false,
     },
     {
+      label: t('lamp.application.defApplication.logo'),
+      field: 'appendixIcon',
+      component: 'CropperAvatar',
+      componentProps: {
+        uploadApi: uploadApi,
+        uploadParams: { bizType: FileBizTypeEnum.DEF_APPLICATION_LOGO },
+      },
+    },
+    {
       label: t('lamp.application.defApplication.name'),
       field: 'name',
       component: 'Input',
@@ -131,6 +141,7 @@ export const editFormSchema = (_): FormSchema[] => {
           { label: t('lamp.common.no'), value: false },
         ],
       },
+      defaultValue: true,
     },
     {
       label: t('lamp.application.defApplication.sortValue'),

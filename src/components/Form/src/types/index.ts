@@ -112,4 +112,5 @@ export type ComponentType =
   | 'Slider'
   | 'Rate'
   | 'Divider'
-  | 'Transfer';
+  | 'Transfer'
+  | 'CropperAvatar';

@@ -27,7 +27,7 @@
   </BasicModal>
 </template>
 <script lang="ts">
-  import { defineComponent, computed, ref, onMounted, watch } from 'vue';
+  import { defineComponent, computed, ref, watch } from 'vue';
   import { Avatar } from 'ant-design-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useDesign } from '/@/hooks/web/useDesign';
@@ -60,6 +60,9 @@
             label: t('layout.header.lockScreenPassword'),
             component: 'InputPassword',
             required: true,
+            componentProps: {
+              autocomplete: 'off',
+            },
           },
         ],
       });
@@ -76,10 +79,10 @@
         await resetFields();
       }
 
-      onMounted(async () => {
-        const user = userStore.getUserInfo;
-        await loadAvatarUrl(user.avatarId as string);
-      });
+      // onMounted(async () => {
+      //   const user = userStore.getUserInfo;
+      //   await loadAvatarUrl(user.avatarId as string);
+      // });
 
       async function loadAvatarUrl(avatarId: string) {
         const res = await asyncGetUrls(avatarId);
@@ -93,7 +96,7 @@
         (v: string) => {
           loadAvatarUrl(v);
         },
-        { immediate: true }
+        { immediate: true },
       );
 
       // const getAvatar = computed(() => {

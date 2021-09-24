@@ -59,14 +59,14 @@
   import { warn } from '/@/utils/log';
   import FileList from './FileList.vue';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { AttachmentDTO } from '/@/api/lamp/file/model/uploadModel';
+  import { FileResultVO } from '/@/api/lamp/file/model/uploadModel';
 
   export default defineComponent({
     components: { BasicModal, Upload, Alert, FileList },
     props: {
       ...basicProps,
       previewFileList: {
-        type: Array as PropType<AttachmentDTO[]>,
+        type: Array as PropType<FileResultVO[]>,
         default: () => [],
       },
     },
@@ -255,7 +255,7 @@
         if (isUploadingRef.value) {
           return createMessage.warning(t('component.upload.saveWarn'));
         }
-        const fileList: AttachmentDTO[] = [];
+        const fileList: FileResultVO[] = [];
 
         for (const item of fileListRef.value) {
           const { status, responseData } = item;

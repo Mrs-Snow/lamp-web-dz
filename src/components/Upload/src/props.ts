@@ -1,6 +1,6 @@
 import type { PropType } from 'vue';
 import { FileBasicColumn } from './typing';
-import { AttachmentDTO } from '/@/api/lamp/file/model/uploadModel';
+import { FileResultVO } from '/@/api/lamp/file/model/uploadModel';
 
 export const basicProps = {
   helpText: {
@@ -39,7 +39,7 @@ export const basicProps = {
 
 export const uploadContainerProps = {
   value: {
-    type: Array as PropType<AttachmentDTO[]>,
+    type: Array as PropType<FileResultVO[]>,
     default: () => [],
   },
   ...basicProps,
@@ -59,7 +59,7 @@ export const uploadContainerProps = {
 
 export const previewProps = {
   value: {
-    type: Array as PropType<AttachmentDTO[]>,
+    type: Array as PropType<FileResultVO[]>,
     default: () => [],
   },
 };

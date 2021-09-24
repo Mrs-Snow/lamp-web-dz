@@ -1,4 +1,4 @@
-import { AttachmentDTO } from './model/uploadModel';
+import { FileResultVO } from './model/uploadModel';
 import { defHttp } from '/@/utils/http/axios';
 import { UploadFileParams } from '/#/axios';
 import { useGlobSetting } from '/@/hooks/setting';
@@ -12,14 +12,14 @@ const { uploadUrl = '' } = useGlobSetting();
  */
 export function uploadApi(
   params: UploadFileParams,
-  onUploadProgress: (progressEvent: ProgressEvent) => void
+  onUploadProgress: (progressEvent: ProgressEvent) => void,
 ) {
-  return defHttp.uploadFile<AttachmentDTO>(
+  return defHttp.uploadFile<FileResultVO>(
     {
       url: uploadUrl,
       onUploadProgress,
     },
-    params
+    params,
   );
 }
 
@@ -31,7 +31,7 @@ export const download = (params: string[] | number[]) =>
       responseType: 'blob',
       params,
     },
-    { isReturnNativeResponse: true }
+    { isReturnNativeResponse: true },
   );
 
 export const getUrls = (params: string[] | number[]) => {
@@ -43,7 +43,7 @@ export const getUrls = (params: string[] | number[]) => {
 };
 
 export const listByBizId = (prefix: ServicePrefixEnum, bizId: string, bizType?: string) => {
-  return defHttp.request<AttachmentDTO[]>({
+  return defHttp.request<FileResultVO[]>({
     url: prefix + '/anyone/appendix/listByBizId',
     method: RequestEnum.POST,
     params: { bizId, bizType },

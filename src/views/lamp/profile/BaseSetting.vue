@@ -10,7 +10,7 @@
           <CropperAvatar
             :uploadApi="uploadApi"
             :uploadParams="{ bizType: FileBizTypeEnum.BASE_USER_AVATAR }"
-            :fileId="avatarId"
+            :value="avatar"
             btnText="更换头像"
             :btnProps="{ preIcon: 'ant-design:cloud-upload-outlined' }"
             @change="handleUpdateAvatar"
@@ -38,6 +38,7 @@
   import { useUserStore } from '/@/store/modules/user';
   import { uploadApi } from '/@/api/lamp/file/upload';
   import { UserUpdateAvatarDTO } from '/@/api/lamp/org/model/userModel';
+  import { Enum } from '/@/api/model/baseModel';
 
   export default defineComponent({
     components: {
@@ -62,13 +63,13 @@
       onMounted(async () => {
         const { id } = userStore.getUserInfo;
         const data = await get(id);
-        data.sex = data?.sex?.code;
+        data.sex = (data?.sex as Enum)?.code as string;
         setFieldsValue(data);
       });
 
-      const avatarId = computed(() => {
+      const avatar = computed(() => {
         const { avatarId } = userStore.getUserInfo;
-        return avatarId;
+        return { id: avatarId };
       });
 
       async function handleUpdateAvatar({ data }) {
@@ -78,7 +79,6 @@
 
         const params = { id: userinfo.id, appendixAvatar: data } as UserUpdateAvatarDTO;
         await updateAvatar(params);
-        // createMessage.success(t(`common.tips.updateSuccess`));
       }
 
       async function handleSubmit() {
@@ -97,7 +97,7 @@
         }
       }
       return {
-        avatarId,
+        avatar,
         register,
         uploadApi,
         handleUpdateAvatar,

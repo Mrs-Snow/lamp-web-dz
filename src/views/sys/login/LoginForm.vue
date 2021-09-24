@@ -33,6 +33,7 @@
       <InputPassword
         size="large"
         visibilityToggle
+        autocomplete="off"
         v-model:value="formData.password"
         :placeholder="t('sys.login.password')"
       />

@@ -21,7 +21,7 @@
   import { isArray } from '/@/utils/is';
   import { downloadFile } from '/@/utils/lamp/common';
   import { download } from '/@/api/lamp/file/upload';
-  import { AttachmentDTO } from '/@/api/lamp/file/model/uploadModel';
+  import { FileResultVO } from '/@/api/lamp/file/model/uploadModel';
 
   export default defineComponent({
     components: { BasicModal, FileList },
@@ -31,7 +31,7 @@
       const [register, { closeModal }] = useModalInner();
       const { t } = useI18n();
 
-      const fileListRef = ref<AttachmentDTO[]>([]);
+      const fileListRef = ref<FileResultVO[]>([]);
       watch(
         () => props.value,
         (value) => {
@@ -42,7 +42,7 @@
       );
 
       // 删除
-      function handleRemove(record: AttachmentDTO) {
+      function handleRemove(record: FileResultVO) {
         const index = fileListRef.value.findIndex((item) => item.id === record.id);
         if (index !== -1) {
           const removed = fileListRef.value.splice(index, 1);
@@ -60,7 +60,7 @@
       // }
 
       // 下载
-      async function handleDownload(record: AttachmentDTO) {
+      async function handleDownload(record: FileResultVO) {
         const { id } = record;
         const response = await download([id]);
         downloadFile(response);

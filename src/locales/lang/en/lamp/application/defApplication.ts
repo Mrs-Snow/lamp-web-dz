@@ -11,4 +11,5 @@ export default {
   url: 'url',
   isVisible: 'isVisible',
   sortValue: 'sortValue',
+  logo: 'logo',
 };

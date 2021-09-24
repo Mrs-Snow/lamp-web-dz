@@ -127,6 +127,7 @@
    * @description: unLock
    */
   async function unLock() {
+    debugger;
     if (!password.value) {
       return;
     }
