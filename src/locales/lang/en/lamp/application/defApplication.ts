@@ -1,5 +1,5 @@
 export default {
-  table: { title: 'DefApplication list' },
+  table: { title: 'DefApplication list', resource: 'resource' },
   id: 'ID',
   appKey: 'appKey',
   appSecret: 'appSecret',

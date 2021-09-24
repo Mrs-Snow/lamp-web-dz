@@ -75,7 +75,7 @@
           type.value = ActionEnum.ADD;
           await resetFields();
           show.value = false;
-          emit('success');
+          emit('success', params.applicationId);
         } finally {
           confirmLoading.value = false;
         }
@@ -120,7 +120,7 @@
         if (unref(type) !== ActionEnum.EDIT) {
           record.id = undefined;
         }
-        console.log(record['parentResourceType']);
+
         await setFieldsValue({ ...record });
 
         getValidateRules(validateApi, customFormSchemaRules(type, getFieldsValue)).then(

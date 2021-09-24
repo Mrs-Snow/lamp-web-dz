@@ -2,10 +2,11 @@
   <div class="bg-white m-4 mr-2 overflow-hidden">
     <div class="m-4">
       <Select
-        :options="applicationList"
+        :options="data.applicationList"
         showSearch
         labelInValue
-        :value="{ value: '1' }"
+        :disabled="data.appDisabled"
+        v-model:value="applicationRef"
         placeholder="选择应用"
         style="width: 100%; margin-bottom: 1rem"
         @change="handleChange"
@@ -30,8 +31,9 @@
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent, onMounted, ref, unref, h } from 'vue';
+  import { defineComponent, onMounted, ref, unref, h, reactive } from 'vue';
   import { Select } from 'ant-design-vue';
+  import { useRouter } from 'vue-router';
   import { PlusOutlined, DeleteOutlined } from '@ant-design/icons-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
@@ -54,11 +56,14 @@
     setup(_, { emit }) {
       const { t } = useI18n();
       const { createMessage, createConfirm } = useMessage();
+      const { currentRoute } = useRouter();
       const treeRef = ref<Nullable<TreeActionType>>(null);
       const treeData = ref<TreeItem[]>([]);
-      const applicationList = ref<object[]>([]);
-      const applicationIdRef = ref<string | undefined>('');
-      const applicationNameRef = ref<string | undefined>('');
+      const data = reactive<Recordable>({
+        applicationList: [],
+        appDisabled: false,
+      });
+      const applicationRef = reactive<Recordable>({ value: '', label: '' });
 
       function getTree() {
         const tree = unref(treeRef);
@@ -69,22 +74,25 @@
       }
 
       onMounted(async () => {
-        const applications = await query();
+        const params = currentRoute.value?.params;
+        applicationRef.value = params?.id as string;
+        const applications = await query({ id: params?.id as string });
+        data.appDisabled = params?.id ? true : false;
 
-        applicationList.value = applications.map((item) => ({
+        data.applicationList = applications.map((item) => ({
           label: item.name,
           value: item.id,
           key: item.id,
         }));
         if (applications && applications.length > 0) {
-          applicationIdRef.value = applications[0]?.id;
-          applicationNameRef.value = applications[0]?.name;
-          await fetch(applicationIdRef.value);
+          applicationRef.value = applications[0]?.id;
+          applicationRef.label = applications[0]?.name;
+          await fetch(applicationRef.value);
         }
       });
       // 加载数据
       async function fetch(applicationId?: string) {
-        applicationId = applicationId || applicationIdRef.value;
+        applicationId = applicationId || applicationRef.value;
         if (!!applicationId) {
           treeData.value = (await tree({ applicationId })) as unknown as TreeItem[];
           setTimeout(() => {
@@ -100,8 +108,8 @@
         if (keys[0]) {
           const node = findNodeByKey(keys[0], treeData.value);
           const parent = findNodeByKey(node?.parentId, treeData.value);
-          node.applicationId = applicationIdRef.value;
-          node.applicationName = applicationNameRef.value;
+          node.applicationId = applicationRef.value;
+          node.applicationName = applicationRef.label;
           emit('select', parent, node);
         }
       }
@@ -112,12 +120,12 @@
           render: (node) => {
             return h(PlusOutlined, {
               class: 'ml-2',
-              onClick: (e) => {
+              onClick: (e: Event) => {
                 e?.stopPropagation();
                 e?.preventDefault();
                 emit('add', findNodeByKey(node.id, treeData.value), {
-                  applicationId: applicationIdRef.value,
-                  applicationName: applicationNameRef.value,
+                  applicationId: applicationRef.value,
+                  applicationName: applicationRef.label,
                 });
               },
             });
@@ -127,7 +135,7 @@
           render: (node) => {
             return h(DeleteOutlined, {
               class: 'ml-2',
-              onClick: (e) => {
+              onClick: (e: Event) => {
                 e?.stopPropagation();
                 e?.preventDefault();
                 batchDelete([node.id]);
@@ -144,8 +152,8 @@
             label: t('common.title.addChildren'),
             handler: () => {
               emit('add', findNodeByKey(unref(node.$attrs).id, treeData.value), {
-                applicationId: applicationIdRef.value,
-                applicationName: applicationNameRef.value,
+                applicationId: applicationRef.value,
+                applicationName: applicationRef.label,
               });
             },
             icon: 'bi:plus',
@@ -176,8 +184,8 @@
       // 点击树外面的 新增
       function handleAdd() {
         emit('add', findNodeByKey('0', treeData.value), {
-          applicationId: applicationIdRef.value,
-          applicationName: applicationNameRef.value,
+          applicationId: applicationRef.value,
+          applicationName: applicationRef.label,
         });
       }
 
@@ -195,7 +203,8 @@
       }
 
       function handleChange({ value, label }) {
-        applicationNameRef.value = label;
+        applicationRef.label = label;
+        applicationRef.value = value;
         fetch(value);
         emit('change', value, label);
       }
@@ -212,7 +221,8 @@
         handleSelect,
         query,
         handleChange,
-        applicationList,
+        data,
+        applicationRef,
       };
     },
   });

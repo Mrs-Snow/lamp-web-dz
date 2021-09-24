@@ -6,6 +6,7 @@ import { ActionEnum, DictEnum } from '/@/enums/commonEnum';
 import { FormSchemaExt, RuleType } from '/@/api/lamp/common/formValidateService';
 import { ResourceTypeEnum } from '/@/enums/biz/tenant';
 import { check, checkPath } from '/@/api/lamp/application/defResource';
+import { isUrl } from '/@/utils/is';
 
 const { t } = useI18n();
 
@@ -22,6 +23,10 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       label: t('lamp.application.defResource.applicationId'),
       field: 'applicationId',
       component: 'Input',
+      defaultValue: '0',
+      colProps: {
+        span: 12,
+      },
       show: false,
     },
     {
@@ -29,6 +34,10 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       field: 'parentId',
       component: 'Input',
       show: false,
+      defaultValue: '0',
+      colProps: {
+        span: 12,
+      },
     },
     {
       label: t('lamp.application.defResource.parentId'),
@@ -277,13 +286,13 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       field: 'divider-selects3',
       component: 'Divider',
       label: '扩展信息',
-      helpMessage: ['两个Select共用数据源', '但不可选择对方已选中的项目'],
     },
     {
       label: t('lamp.application.defResource.metaJson'),
       field: 'metaJson',
       component: 'Input',
       slot: 'metaJson',
+      helpMessage: ['在元数据中可以配置路由meta参数中的特殊参数'],
     },
     {
       label: t('lamp.application.defResource.describe'),
@@ -352,9 +361,27 @@ export const customFormSchemaRules = (
         {
           trigger: 'blur',
           required: true,
+        },
+        {
+          trigger: 'blur',
           async validator(_, value) {
-            if (value && (await checkPath(value, getFieldsValue()?.id))) {
-              return Promise.reject(t('lamp.application.defResource.path') + '已经存在');
+            if (value) {
+              if (await checkPath(value, getFieldsValue()?.id)) {
+                return Promise.reject(t('lamp.application.defResource.path') + '已经存在');
+              }
+              if (isUrl(value) && isUrl(getFieldsValue()?.component)) {
+                return Promise.reject(
+                  t('lamp.application.defResource.path') +
+                    '和' +
+                    t('lamp.application.defResource.component') +
+                    '不能同时配置成连接',
+                );
+              }
+              if (getFieldsValue()?.parentId === '0' && !value.startsWith('/')) {
+                return Promise.reject(
+                  '1级资源的' + t('lamp.application.defResource.path') + '必须以/开头',
+                );
+              }
             }
             return Promise.resolve();
           },
@@ -368,6 +395,22 @@ export const customFormSchemaRules = (
         {
           trigger: 'blur',
           required: true,
+        },
+        {
+          trigger: 'blur',
+          async validator(_, value) {
+            if (value) {
+              if (isUrl(value) && isUrl(getFieldsValue()?.path)) {
+                return Promise.reject(
+                  t('lamp.application.defResource.path') +
+                    '和' +
+                    t('lamp.application.defResource.component') +
+                    '不能同时配置成连接',
+                );
+              }
+            }
+            return Promise.resolve();
+          },
         },
       ],
     },

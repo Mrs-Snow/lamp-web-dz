@@ -1,5 +1,5 @@
 <template>
-  <PageWrapper dense contentFullHeight fixedHeight>
+  <PageWrapper dense contentFullHeight>
     <BasicTable @register="registerTable">
       <template #toolbar>
         <a-button type="primary" @click="handleBatchDelete">{{
@@ -11,16 +11,25 @@
         <TableAction
           :actions="[
             {
-              label: t('common.title.edit'),
+              icon: 'ant-design:edit-outlined',
+              tooltip: t('common.title.edit'),
               onClick: handleEdit.bind(null, record),
             },
             {
+              icon: 'ant-design:menu-unfold-outlined',
+              tooltip: t('lamp.application.defApplication.table.resource'),
+              onClick: handleResource.bind(null, record),
+            },
+          ]"
+          :dropDownActions="[
+            {
               label: t('common.title.copy'),
+              icon: 'ant-design:copy-outlined',
               onClick: handleCopy.bind(null, record),
             },
             {
               label: t('common.title.delete'),
-              color: 'error',
+              icon: 'ant-design:delete-outlined',
               popConfirm: {
                 title: t('common.tips.confirmDelete'),
                 confirm: handleDelete.bind(null, record),
@@ -35,6 +44,7 @@
 </template>
 <script lang="ts">
   import { defineComponent } from 'vue';
+  import { useRouter } from 'vue-router';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
@@ -47,13 +57,14 @@
   import EditModal from './Edit.vue';
 
   export default defineComponent({
-    name: 'DefApplicationManagement',
+    name: '应用维护',
     components: { BasicTable, PageWrapper, EditModal, TableAction },
     setup() {
       const { t } = useI18n();
       const { createMessage, createConfirm } = useMessage();
       // 编辑页弹窗
       const [registerDrawer, { openDrawer }] = useDrawer();
+      const { replace } = useRouter();
 
       // 表格
       const [registerTable, { reload, getSelectRowKeys }] = useTable({
@@ -81,8 +92,8 @@
       });
 
       // 弹出复制页面
-      function handleCopy(record: Recordable, e) {
-        e.stopPropagation();
+      function handleCopy(record: Recordable, e: Event) {
+        e?.stopPropagation();
         openDrawer(true, {
           record,
           type: ActionEnum.COPY,
@@ -97,8 +108,8 @@
       }
 
       // 弹出编辑页面
-      function handleEdit(record: Recordable, e) {
-        e.stopPropagation();
+      function handleEdit(record: Recordable, e: Event) {
+        e?.stopPropagation();
         openDrawer(true, {
           record,
           type: ActionEnum.EDIT,
@@ -117,8 +128,8 @@
       }
 
       // 点击单行删除
-      function handleDelete(record: Recordable, e) {
-        e.stopPropagation();
+      function handleDelete(record: Recordable, e: Event) {
+        e?.stopPropagation();
         if (record?.id) {
           batchDelete([record.id]);
         }
@@ -140,6 +151,14 @@
         });
       }
 
+      function handleResource(record: Recordable, e: Event) {
+        e?.stopPropagation();
+        replace({
+          name: '应用资源维护',
+          params: { id: record.id },
+        });
+      }
+
       return {
         t,
         registerTable,
@@ -150,6 +169,7 @@
         handleDelete,
         handleSuccess,
         handleBatchDelete,
+        handleResource,
       };
     },
   });

@@ -20,7 +20,7 @@
   import { ResourceTypeEnum } from '/@/enums/biz/tenant';
 
   export default defineComponent({
-    name: 'DefResourceManage',
+    name: '应用授权记录',
     components: { Edit, DefResourceTree, PageWrapper },
     setup() {
       const editRef = ref<any>(null);
@@ -37,8 +37,8 @@
       }
 
       // 编辑成功回调
-      function handleEditSuccess() {
-        getTreeRef().fetch();
+      function handleEditSuccess(applicationId: string) {
+        getTreeRef().fetch(applicationId);
       }
 
       // 选中树的节点
@@ -56,8 +56,8 @@
         }
       }
 
-      function handlerApplicationChange(_, label) {
-        getEditRef().resetForm({ applicationName: label });
+      function handlerApplicationChange(applicationId: string, applicationName: string) {
+        getEditRef().resetForm({ applicationId, applicationName });
       }
       return {
         editRef,

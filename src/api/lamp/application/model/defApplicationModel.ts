@@ -9,6 +9,7 @@ export interface DefApplicationPageQuery {
   url?: string;
   isVisible?: boolean;
   sortValue?: number;
+  id?: string;
 }
 
 export interface DefApplicationSaveVO {
