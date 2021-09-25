@@ -20,7 +20,7 @@ import type {
   GetCaptchaByKeyParams,
 } from '/@/api/sys/model/userModel';
 
-import { loginApi, loadCaptcha, doLogout } from '/@/api/sys/user';
+import { loginApi, loadCaptcha, doLogout, getUserInfoById } from '/@/api/sys/user';
 
 import { useI18n } from '/@/hooks/web/useI18n';
 import { useMessage } from '/@/hooks/web/useMessage';
@@ -203,15 +203,11 @@ export const useUserStore = defineStore({
       return userInfo;
     },
 
-    // 刷新时加载用户信息、资源和角色信息等
+    // 刷新时加载用户信息
     async getUserInfoAction(): Promise<UserInfo> {
-      // const userInfo = await getUserInfo();
-      // const { roles } = userInfo;
-      // const roleList = roles.map((item) => item.value) as RoleEnum[];
-      // this.setUserInfo(userInfo);
-      // this.setRoleList(roleList);
-      // return userInfo;
-      return {} as UserInfo;
+      const userInfo = await getUserInfoById();
+      this.setUserInfo(userInfo);
+      return userInfo;
     },
 
     async loadCaptcha({ key }: GetCaptchaByKeyParams): Promise<string | ''> {

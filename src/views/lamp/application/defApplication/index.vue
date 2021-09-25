@@ -2,10 +2,15 @@
   <PageWrapper dense contentFullHeight>
     <BasicTable @register="registerTable">
       <template #toolbar>
-        <a-button type="primary" @click="handleBatchDelete">{{
-          t('common.title.delete')
+        <a-button
+          type="primary"
+          @click="handleBatchDelete"
+          v-hasPermission="RoleEnum.APPLICATION_DELETE"
+          >{{ t('common.title.delete') }}</a-button
+        >
+        <a-button type="primary" @click="handleAdd" v-hasPermission="[RoleEnum.APPLICATION_ADD]">{{
+          t('common.title.add')
         }}</a-button>
-        <a-button type="primary" @click="handleAdd">{{ t('common.title.add') }}</a-button>
       </template>
       <template #action="{ record }">
         <TableAction
@@ -14,11 +19,13 @@
               icon: 'ant-design:edit-outlined',
               tooltip: t('common.title.edit'),
               onClick: handleEdit.bind(null, record),
+              auth: RoleEnum.APPLICATION_EDIT,
             },
             {
               icon: 'ant-design:menu-unfold-outlined',
               tooltip: t('lamp.application.defApplication.table.resource'),
               onClick: handleResource.bind(null, record),
+              auth: RoleEnum.APPLICATION_RESOURCE,
             },
           ]"
           :dropDownActions="[
@@ -26,10 +33,12 @@
               label: t('common.title.copy'),
               icon: 'ant-design:copy-outlined',
               onClick: handleCopy.bind(null, record),
+              auth: RoleEnum.APPLICATION_COPY,
             },
             {
               label: t('common.title.delete'),
               icon: 'ant-design:delete-outlined',
+              auth: RoleEnum.APPLICATION_DELETE,
               popConfirm: {
                 title: t('common.tips.confirmDelete'),
                 confirm: handleDelete.bind(null, record),
@@ -46,6 +55,7 @@
   import { defineComponent } from 'vue';
   import { useRouter } from 'vue-router';
   import { useI18n } from '/@/hooks/web/useI18n';
+  import { RoleEnum } from '/@/enums/roleEnum';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
   import { PageWrapper } from '/@/components/Page';
@@ -170,6 +180,7 @@
         handleSuccess,
         handleBatchDelete,
         handleResource,
+        RoleEnum,
       };
     },
   });

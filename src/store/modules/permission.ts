@@ -18,18 +18,15 @@ import { ERROR_LOG_ROUTE, PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
 
 import { filter } from '/@/utils/helper/treeHelper';
 
-import { getMenuList } from '/@/api/sys/menu';
-import { getPermCode } from '/@/api/sys/user';
+import { getMenuList, getResourceByUserId } from '/@/api/sys/menu';
+import { VisibleResourceVO } from '/@/api/sys/model/menuModel';
 
 import { useMessage } from '/@/hooks/web/useMessage';
 import { PageEnum } from '/@/enums/pageEnum';
 
 import { ConstRouter } from '/@/router/routes/index';
-import { GetAuthorityResourceByUserIdModel } from '/@/api/sys/model/userModel';
 
 interface PermissionState {
-  // Permission code list
-  permCodeList: string[] | number[];
   // Whether the route has been dynamically added
   isDynamicAddedRoute: boolean;
   // To trigger a menu update
@@ -38,12 +35,11 @@ interface PermissionState {
   backMenuList: Menu[];
   frontMenuList: Menu[];
   // 权限
-  perm: GetAuthorityResourceByUserIdModel;
+  visibleResource: VisibleResourceVO;
 }
 export const usePermissionStore = defineStore({
   id: 'app-permission',
   state: (): PermissionState => ({
-    permCodeList: [],
     // Whether the route has been dynamically added
     isDynamicAddedRoute: false,
     // To trigger a menu update
@@ -53,12 +49,12 @@ export const usePermissionStore = defineStore({
     // menu List
     frontMenuList: [],
     // 权限
-    perm: {} as GetAuthorityResourceByUserIdModel,
+    visibleResource: {} as VisibleResourceVO,
   }),
   getters: {
-    getPermCodeList(): string[] | number[] {
-      return this.permCodeList;
-    },
+    // getPermCodeList(): string[] | number[] {
+    //   return this.permCodeList;
+    // },
     getBackMenuList(): Menu[] {
       return this.backMenuList;
     },
@@ -71,14 +67,14 @@ export const usePermissionStore = defineStore({
     getIsDynamicAddedRoute(): boolean {
       return this.isDynamicAddedRoute;
     },
-    getPerm(): GetAuthorityResourceByUserIdModel {
-      return this.perm;
+    getVisibleResource(): VisibleResourceVO {
+      return this.visibleResource;
     },
   },
   actions: {
-    setPermCodeList(codeList: string[]) {
-      this.permCodeList = codeList;
-    },
+    // setPermCodeList(codeList: string[]) {
+    //   this.permCodeList = codeList;
+    // },
 
     setBackMenuList(list: Menu[]) {
       this.backMenuList = list;
@@ -97,22 +93,19 @@ export const usePermissionStore = defineStore({
       this.isDynamicAddedRoute = added;
     },
 
-    setPerm(perm: GetAuthorityResourceByUserIdModel) {
-      this.perm = perm;
+    setVisibleResource(visibleResource: VisibleResourceVO) {
+      this.visibleResource = visibleResource;
     },
 
     resetState(): void {
       this.isDynamicAddedRoute = false;
-      this.permCodeList = [];
       this.backMenuList = [];
       this.lastBuildMenuTime = 0;
-      this.perm = {} as GetAuthorityResourceByUserIdModel;
+      this.visibleResource = {} as VisibleResourceVO;
     },
     async changePermissionCode() {
-      const perm = await getPermCode();
-      this.setPerm(perm);
-      const { resourceList } = perm;
-      this.setPermCodeList(resourceList);
+      const visibleResource = await getResourceByUserId();
+      this.setVisibleResource(visibleResource);
     },
     async buildRoutesAction(): Promise<AppRouteRecordRaw[]> {
       const { t } = useI18n();

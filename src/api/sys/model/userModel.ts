@@ -1,3 +1,5 @@
+import { Enum } from '../../model/baseModel';
+
 /**
  * @description: Login interface parameters
  */
@@ -33,11 +35,6 @@ export interface GetCaptchaByKeyParams {
  */
 export interface GetUserInfoByUserIdParams {
   userId: string | number;
-}
-
-export interface GetAuthorityResourceByUserIdParams {
-  userId: string | number;
-  menuId: string | number;
 }
 
 export interface RoleInfo {
@@ -77,18 +74,14 @@ export interface GetUserInfoModel {
   avatarId?: string;
   // 介绍
   workDescribe?: string;
-}
 
-/**
- * @description: 获取用户的资源和角色
- */
-export interface GetAuthorityResourceByUserIdModel {
-  // 是否启用
-  enabled: boolean;
-  // 区分大小写
-  caseSensitive: boolean;
-  // 拥有的资源编码
-  resourceList: string[];
-  // 用用的角色编码
-  roleList: string[];
+  username?: string;
+  email?: string;
+  mobile?: string;
+  idCard?: string;
+  wxOpenId?: string;
+  ddOpenId?: string;
+  sex?: Enum;
+  state?: boolean;
+  employeeId?: string;
 }

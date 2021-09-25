@@ -3,7 +3,7 @@
     <Alert message="刷新后会还原" show-icon />
 
     <p>
-      当前拥有的code列表: <a> {{ permissionStore.getPermCodeListState }} </a>
+      当前拥有的code列表: <a> {{ permissionStore.getVisibleResource }} </a>
     </p>
     <Divider />
     <Alert class="mt-4" type="info" message="点击后请查看按钮变化" show-icon />

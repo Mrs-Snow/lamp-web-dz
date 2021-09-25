@@ -20,7 +20,7 @@
   import { ResourceTypeEnum } from '/@/enums/biz/tenant';
 
   export default defineComponent({
-    name: '应用授权记录',
+    name: '资源维护',
     components: { Edit, DefResourceTree, PageWrapper },
     setup() {
       const editRef = ref<any>(null);

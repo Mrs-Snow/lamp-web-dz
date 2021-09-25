@@ -1,8 +1,13 @@
 import { defHttp } from '/@/utils/http/axios';
-import { getMenuListByIdParams, getMenuListResultModel } from './model/menuModel';
+import {
+  getMenuListByIdParams,
+  getMenuListResultModel,
+  VisibleResourceVO,
+} from './model/menuModel';
 
 enum Api {
-  GetMenuList = '/oauth/menu/router',
+  GetMenuList = '/oauth/anyone/visible/router',
+  GetResourceByUserId = '/oauth/anyone/visible/resource',
 }
 
 /**
@@ -12,3 +17,14 @@ enum Api {
 export const getMenuList = (params?: getMenuListByIdParams) => {
   return defHttp.get<getMenuListResultModel>({ url: Api.GetMenuList, params });
 };
+
+/**
+ * 根据
+ * @param params
+ */
+export function getResourceByUserId(params?) {
+  return defHttp.get<VisibleResourceVO>({
+    url: Api.GetResourceByUserId,
+    params,
+  });
+}

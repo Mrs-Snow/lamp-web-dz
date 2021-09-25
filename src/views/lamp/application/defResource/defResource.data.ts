@@ -341,14 +341,21 @@ export const customFormSchemaRules = (
       type: RuleType.append,
       rules: [
         {
-          trigger: 'blur',
+          trigger: ['change', 'blur'],
           async validator(_, value) {
             if (type.value === ActionEnum.EDIT) {
               return Promise.resolve();
             }
-            if (value && (await check(value))) {
-              return Promise.reject('编码已经存在');
+
+            if (value) {
+              if (!/^[a-zA-Z0-9_:,;]*$/.test(value)) {
+                return Promise.reject('编码只能包括: [英文大小写][数字][_][;][,][:]');
+              }
+              if (await check(value)) {
+                return Promise.reject('编码已经存在');
+              }
             }
+
             return Promise.resolve();
           },
         },
@@ -363,12 +370,9 @@ export const customFormSchemaRules = (
           required: true,
         },
         {
-          trigger: 'blur',
+          trigger: ['change', 'blur'],
           async validator(_, value) {
             if (value) {
-              if (await checkPath(value, getFieldsValue()?.id)) {
-                return Promise.reject(t('lamp.application.defResource.path') + '已经存在');
-              }
               if (isUrl(value) && isUrl(getFieldsValue()?.component)) {
                 return Promise.reject(
                   t('lamp.application.defResource.path') +
@@ -382,6 +386,9 @@ export const customFormSchemaRules = (
                   '1级资源的' + t('lamp.application.defResource.path') + '必须以/开头',
                 );
               }
+              if (await checkPath(value, getFieldsValue()?.id)) {
+                return Promise.reject(t('lamp.application.defResource.path') + '已经存在');
+              }
             }
             return Promise.resolve();
           },
@@ -393,11 +400,11 @@ export const customFormSchemaRules = (
       type: RuleType.append,
       rules: [
         {
-          trigger: 'blur',
+          trigger: ['change', 'blur'],
           required: true,
         },
         {
-          trigger: 'blur',
+          trigger: ['change', 'blur'],
           async validator(_, value) {
             if (value) {
               if (isUrl(value) && isUrl(getFieldsValue()?.path)) {

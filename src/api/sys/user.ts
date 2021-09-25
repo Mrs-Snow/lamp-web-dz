@@ -1,20 +1,11 @@
 import { defHttp } from '/@/utils/http/axios';
-import {
-  LoginParams,
-  LogoutParams,
-  LoginResultModel,
-  GetUserInfoByUserIdParams,
-  GetUserInfoModel,
-  GetAuthorityResourceByUserIdParams,
-  GetAuthorityResourceByUserIdModel,
-} from './model/userModel';
+import { LoginParams, LogoutParams, LoginResultModel, GetUserInfoModel } from './model/userModel';
 import { ContentTypeEnum } from '/@/enums/httpEnum';
 
 import { ErrorMessageMode } from '/#/axios';
 
 enum Api {
-  getUserInfo = '/getUserInfoById',
-  GetPermCodeByUserId = '/oauth/resource/visible',
+  getUserInfoById = '/oauth/anyone/getUserInfoById',
   Login = '/oauth/anyUser/login',
   Logout = '/oauth/anyUser/logout',
   LoadCaptcha = '/oauth/anno/captcha',
@@ -42,25 +33,14 @@ export function loginApi(params: LoginParams, mode: ErrorMessageMode = 'modal') 
 /**
  * @description: getUserInfo
  */
-export function getUserInfo(params: GetUserInfoByUserIdParams) {
+export function getUserInfoById(userId?: string) {
   return defHttp.get<GetUserInfoModel>(
     {
-      url: Api.getUserInfo,
-      params,
+      url: Api.getUserInfoById,
+      params: { userId },
     },
     { errorMessageMode: 'none' },
   );
-}
-
-/**
- * 根据
- * @param params
- */
-export function getPermCode(params?: GetAuthorityResourceByUserIdParams) {
-  return defHttp.get<GetAuthorityResourceByUserIdModel>({
-    url: Api.GetPermCodeByUserId,
-    params,
-  });
 }
 
 /**

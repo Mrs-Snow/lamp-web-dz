@@ -4,7 +4,7 @@
 <script lang="ts">
   import type { PropType } from 'vue';
   import { defineComponent } from 'vue';
-  import { RoleEnum } from '/@/enums/roleEnum';
+  import { PermMode, RoleEnum } from '/@/enums/roleEnum';
   import { usePermission } from '/@/hooks/web/usePermission';
   import { getSlot } from '/@/utils/helper/tsxHelper';
 
@@ -21,19 +21,23 @@
         type: [Number, Array, String] as PropType<RoleEnum | RoleEnum[] | string | string[]>,
         default: '',
       },
+      mode: {
+        type: String as PropType<PermMode>,
+        default: PermMode.Has,
+      },
     },
     setup(props, { slots }) {
-      const { hasPermission } = usePermission();
+      const { isPermission } = usePermission();
 
       /**
        * Render role button
        */
       function renderAuth() {
-        const { value } = props;
+        const { value, mode } = props;
         if (!value) {
           return getSlot(slots);
         }
-        return hasPermission(value) ? getSlot(slots) : null;
+        return isPermission(value, true, mode) ? getSlot(slots) : null;
       }
 
       return () => {

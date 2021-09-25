@@ -2,7 +2,7 @@
   <PageWrapper contentBackground title="按钮权限控制" contentClass="p-4">
     <CurrentPermissionMode />
     <p>
-      当前拥有的code列表: <a> {{ permissionStore.getPermCodeList }} </a>
+      当前拥有的code列表: <a> {{ permissionStore.getVisibleResource }} </a>
     </p>
     <Divider />
     <Alert
