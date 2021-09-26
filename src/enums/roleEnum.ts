@@ -10,6 +10,7 @@ export enum RoleEnum {
   APPLICATION_EDIT = 'tenant:application:application:edit',
   APPLICATION_COPY = 'tenant:application:application:copy',
   APPLICATION_RESOURCE = 'tenant:application:application:resource',
+  APPLICATION_IS_VISIBLE = 'tenant:application:application:isVisible',
 }
 
 export enum PermMode {

@@ -4,6 +4,7 @@ import { dictComponentProps } from '/@/utils/lamp/common';
 import { DictEnum, FileBizTypeEnum } from '/@/enums/commonEnum';
 import { FormSchemaExt } from '/@/api/lamp/common/formValidateService';
 import { uploadApi } from '/@/api/sys/upload';
+import { RoleEnum } from '/@/enums/roleEnum';
 
 const { t } = useI18n();
 // 列表页字段
@@ -32,6 +33,7 @@ export const columns = (): BasicColumn[] => {
     {
       title: t('lamp.application.defApplication.isVisible'),
       dataIndex: 'isVisible',
+      auth: RoleEnum.APPLICATION_IS_VISIBLE,
       // width: 180,
     },
     {
