@@ -191,6 +191,21 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
           values.resourceType,
         );
       },
+      componentProps: ({ formActionType }) => {
+        return {
+          onChange: (e: ChangeEvent) => {
+            const value = e.target.value;
+            if (value) {
+              if (isUrl(value)) {
+                const { setFieldsValue } = formActionType;
+                setFieldsValue({
+                  component: 'IFRAME',
+                });
+              }
+            }
+          },
+        };
+      },
     },
     {
       label: t('lamp.application.defResource.component'),
@@ -381,7 +396,7 @@ export const customFormSchemaRules = (
                     '不能同时配置成连接',
                 );
               }
-              if (getFieldsValue()?.parentId === '0' && !value.startsWith('/')) {
+              if (getFieldsValue()?.parentId === '0' && !isUrl(value) && !value.startsWith('/')) {
                 return Promise.reject(
                   '1级资源的' + t('lamp.application.defResource.path') + '必须以/开头',
                 );

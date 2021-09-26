@@ -11,7 +11,7 @@ import { router, resetRouter } from '/@/router';
 
 import projectSetting from '/@/settings/projectSetting';
 import { PermissionModeEnum } from '/@/enums/appEnum';
-import { RoleEnum, PermMode } from '/@/enums/roleEnum';
+import { RoleEnum, PermModeEnum } from '/@/enums/roleEnum';
 
 import { intersection } from 'lodash-es';
 import { isArray } from '/@/utils/is';
@@ -141,13 +141,13 @@ export function usePermission() {
    * 必须包含列出的所有权限，元素才显示
    */
   function hasPermission(value?: RoleEnum | RoleEnum[] | string | string[], def = true): boolean {
-    return isPermission(value, def, PermMode.Has);
+    return isPermission(value, def, PermModeEnum.Has);
   }
   /**
    * 当不包含列出的权限时，渲染该元素
    */
   function hasNoPermission(value?: RoleEnum | RoleEnum[] | string | string[], def = true): boolean {
-    return isPermission(value, def, PermMode.HasNo);
+    return isPermission(value, def, PermModeEnum.HasNo);
   }
   /**
    * 只要包含列出的任意一个权限，元素就会显示
@@ -156,7 +156,7 @@ export function usePermission() {
     value?: RoleEnum | RoleEnum[] | string | string[],
     def = true,
   ): boolean {
-    return isPermission(value, def, PermMode.HasAny);
+    return isPermission(value, def, PermModeEnum.HasAny);
   }
   /**
    * 判断权限
@@ -164,7 +164,7 @@ export function usePermission() {
   function isPermission(
     value?: RoleEnum | RoleEnum[] | string | string[],
     def = true,
-    mode = PermMode.Has,
+    mode = PermModeEnum.Has,
   ): boolean {
     // Visible by default
     if (!value) {
@@ -188,7 +188,7 @@ export function usePermission() {
       }
 
       let flag = true;
-      if (mode === PermMode.HasAny) {
+      if (mode === PermModeEnum.HasAny) {
         flag = false;
       }
       const resourceList = visibleResource.resourceList;
@@ -218,15 +218,15 @@ export function usePermission() {
           } else {
             toBeVerified = new WildcardPermission(strPerm, caseSensitive);
           }
-          if (mode === PermMode.Has) {
+          if (mode === PermModeEnum.Has) {
             if (!isPermitted(permissionsOwns, toBeVerified)) {
               flag = false;
             }
-          } else if (mode === PermMode.HasNo) {
+          } else if (mode === PermModeEnum.HasNo) {
             if (isPermitted(permissionsOwns, toBeVerified)) {
               flag = false;
             }
-          } else if (mode === PermMode.HasAny) {
+          } else if (mode === PermModeEnum.HasAny) {
             if (isPermitted(permissionsOwns, toBeVerified)) {
               flag = true;
             }

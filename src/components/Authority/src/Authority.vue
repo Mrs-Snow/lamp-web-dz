@@ -4,7 +4,7 @@
 <script lang="ts">
   import type { PropType } from 'vue';
   import { defineComponent } from 'vue';
-  import { PermMode, RoleEnum } from '/@/enums/roleEnum';
+  import { PermModeEnum, RoleEnum } from '/@/enums/roleEnum';
   import { usePermission } from '/@/hooks/web/usePermission';
   import { getSlot } from '/@/utils/helper/tsxHelper';
 
@@ -22,8 +22,8 @@
         default: '',
       },
       mode: {
-        type: String as PropType<PermMode>,
-        default: PermMode.Has,
+        type: String as PropType<PermModeEnum>,
+        default: PermModeEnum.Has,
       },
     },
     setup(props, { slots }) {

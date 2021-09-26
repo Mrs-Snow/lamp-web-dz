@@ -32,6 +32,7 @@
   import { Card } from 'ant-design-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
+  import { usePermission } from '/@/hooks/web/usePermission';
   import { BasicForm, useForm } from '/@/components/Form';
   import { ActionEnum } from '/@/enums/commonEnum';
   import MetaJson from './meta/MetaJson.vue';
@@ -40,6 +41,7 @@
   import { getValidateRules } from '/@/api/lamp/common/formValidateService';
   import { Api, save, update, get } from '/@/api/lamp/application/defResource';
   import { customFormSchemaRules, editFormSchema } from './defResource.data';
+  import { RoleEnum } from '/@/enums/roleEnum';
 
   export default defineComponent({
     name: 'DefResourceEdit',
@@ -52,6 +54,7 @@
       const confirmLoading = ref<boolean>(false);
       const show = ref<boolean>(false);
       const title = ref<string>('未选中任何资源');
+      const { hasAnyPermission } = usePermission();
 
       const [register, { setFieldsValue, getFieldsValue, resetFields, updateSchema, validate }] =
         useForm({
@@ -92,9 +95,17 @@
 
       // 设置回显数据
       async function setData(data: Recordable) {
-        show.value = true;
         await resetFields();
         type.value = data?.type;
+
+        show.value = true;
+        if (unref(type) === ActionEnum.EDIT) {
+          if (hasAnyPermission([RoleEnum.RESOURCE_EDIT, RoleEnum.APPLICATION_RESOURCE_EDIT])) {
+            show.value = true;
+          } else {
+            show.value = false;
+          }
+        }
 
         let validateApi = unref(type) !== ActionEnum.ADD ? Api.Update : Api.Save;
         const { parent } = data;

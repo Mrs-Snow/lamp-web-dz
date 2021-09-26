@@ -141,7 +141,7 @@ export function useColumns(
     }
     return isIfShow;
   }
-  const { hasPermission } = usePermission();
+  const { isPermission } = usePermission();
 
   const getViewColumns = computed(() => {
     const viewColumns = sortFixedColumn(unref(getColumnsRef));
@@ -149,7 +149,7 @@ export function useColumns(
     const columns = cloneDeep(viewColumns);
     return columns
       .filter((column) => {
-        return hasPermission(column.auth) && isIfShow(column);
+        return isPermission(column.auth, true, column.authMode) && isIfShow(column);
       })
       .map((column) => {
         const { slots, dataIndex, customRender, format, edit, editRow, flag } = column;

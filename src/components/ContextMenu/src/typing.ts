@@ -1,3 +1,5 @@
+import { PermModeEnum, RoleEnum } from '/@/enums/roleEnum';
+
 export interface Axis {
   x: number;
   y: number;
@@ -10,6 +12,8 @@ export interface ContextMenuItem {
   handler?: Fn;
   divider?: boolean;
   children?: ContextMenuItem[];
+  auth?: string | string[] | RoleEnum | RoleEnum[];
+  authMode?: PermModeEnum;
 }
 export interface CreateContextOptions {
   event: MouseEvent;

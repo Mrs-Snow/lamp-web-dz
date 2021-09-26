@@ -68,7 +68,7 @@
         table = useTableContext();
       }
 
-      const { hasPermission } = usePermission();
+      const { isPermission } = usePermission();
       function isIfShow(action: ActionItem): boolean {
         const ifShow = action.ifShow;
 
@@ -86,7 +86,7 @@
       const getActions = computed(() => {
         return (toRaw(props.actions) || [])
           .filter((action) => {
-            return hasPermission(action.auth) && isIfShow(action);
+            return isPermission(action.auth, true, action.authMode) && isIfShow(action);
           })
           .map((action) => {
             const { popConfirm } = action;
@@ -106,7 +106,7 @@
       const getDropdownList = computed((): any[] => {
         return (toRaw(props.dropDownActions) || [])
           .filter((action) => {
-            return hasPermission(action.auth) && isIfShow(action);
+            return isPermission(action.auth, true, action.authMode) && isIfShow(action);
           })
           .map((action, index) => {
             const { label, popConfirm } = action;

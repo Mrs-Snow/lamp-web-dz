@@ -1,8 +1,11 @@
 import type { TreeDataItem, CheckEvent as CheckEventOrigin } from 'ant-design-vue/es/tree/Tree';
+import { PermModeEnum, RoleEnum } from '/@/enums/roleEnum';
 import { ContextMenuItem } from '/@/hooks/web/useContextMenu';
 export interface ActionItem {
   render: (record: Recordable) => any;
   show?: boolean | ((record: Recordable) => boolean);
+  auth?: string | string[] | RoleEnum | RoleEnum[];
+  authMode?: PermModeEnum;
 }
 
 export interface TreeItem extends TreeDataItem {

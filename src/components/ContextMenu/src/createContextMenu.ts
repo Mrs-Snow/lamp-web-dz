@@ -2,6 +2,7 @@ import contextMenuVue from './ContextMenu.vue';
 import { isClient } from '/@/utils/is';
 import { CreateContextOptions, ContextMenuProps } from './typing';
 import { createVNode, render } from 'vue';
+import { usePermission } from '/@/hooks/web/usePermission';
 
 const menuManager: {
   domList: Element[];
@@ -29,7 +30,10 @@ export const createContextMenu = function (options: CreateContextOptions) {
     }
 
     if (options.items) {
-      propsData.items = options.items;
+      const { isPermission } = usePermission();
+      propsData.items = options.items.filter((item) => {
+        return isPermission(item.auth, true, item.authMode);
+      });
     }
 
     if (options.event) {

@@ -25,6 +25,7 @@
 
   import { useTree } from './useTree';
   import { useContextMenu } from '/@/hooks/web/useContextMenu';
+  import { usePermission } from '/@/hooks/web/usePermission';
   import { useDesign } from '/@/hooks/web/useDesign';
 
   import { basicProps } from './props';
@@ -360,6 +361,7 @@
 
       expose(instance);
 
+      const { isPermission } = usePermission();
       function renderAction(node: TreeItem) {
         const { actionList } = props;
         if (!actionList || actionList.length === 0) return;
@@ -372,6 +374,10 @@
           }
 
           if (!nodeShow) return null;
+
+          if (!isPermission(item.auth, true, item.authMode)) {
+            return null;
+          }
 
           return (
             <span key={index} class={`${prefixCls}__action`}>

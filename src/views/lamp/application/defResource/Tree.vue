@@ -11,8 +11,18 @@
         style="width: 100%; margin-bottom: 1rem"
         @change="handleChange"
       />
-      <a-button @click="handleAdd()" class="mr-2">{{ t('common.title.addRoot') }}</a-button>
-      <a-button @click="handleBatchDelete()" class="mr-2">{{ t('common.title.delete') }}</a-button>
+      <a-button
+        @click="handleAdd()"
+        v-hasAnyPermission="[RoleEnum.RESOURCE_ADD, RoleEnum.APPLICATION_RESOURCE_ADD]"
+        class="mr-2"
+        >{{ t('common.title.addRoot') }}</a-button
+      >
+      <a-button
+        @click="handleBatchDelete()"
+        v-hasAnyPermission="[RoleEnum.RESOURCE_DELETE, RoleEnum.APPLICATION_RESOURCE_DELETE]"
+        class="mr-2"
+        >{{ t('common.title.delete') }}</a-button
+      >
     </div>
     <BasicTree
       :title="t('lamp.application.defResource.table.title')"
@@ -37,6 +47,7 @@
   import { PlusOutlined, DeleteOutlined } from '@ant-design/icons-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
+  import { PermModeEnum, RoleEnum } from '/@/enums/roleEnum';
   import {
     BasicTree,
     TreeItem,
@@ -117,6 +128,8 @@
       // 悬停图标
       const actionList: ActionItem[] = [
         {
+          auth: [RoleEnum.RESOURCE_ADD, RoleEnum.APPLICATION_RESOURCE_ADD],
+          authMode: PermModeEnum.HasAny,
           render: (node) => {
             return h(PlusOutlined, {
               class: 'ml-2',
@@ -132,6 +145,8 @@
           },
         },
         {
+          auth: [RoleEnum.RESOURCE_DELETE, RoleEnum.APPLICATION_RESOURCE_DELETE],
+          authMode: PermModeEnum.HasAny,
           render: (node) => {
             return h(DeleteOutlined, {
               class: 'ml-2',
@@ -149,6 +164,8 @@
       function getRightMenuList(node: any): ContextMenuItem[] {
         return [
           {
+            auth: [RoleEnum.RESOURCE_ADD, RoleEnum.APPLICATION_RESOURCE_ADD],
+            authMode: PermModeEnum.HasAny,
             label: t('common.title.addChildren'),
             handler: () => {
               emit('add', findNodeByKey(unref(node.$attrs).id, treeData.value), {
@@ -156,14 +173,16 @@
                 applicationName: applicationRef.label,
               });
             },
-            icon: 'bi:plus',
+            icon: 'ant-design:plus-square-outlined',
           },
           {
             label: t('common.title.delete'),
             handler: () => {
               batchDelete([unref(node.$attrs).id]);
             },
-            icon: 'bx:bxs-folder-open',
+            icon: 'ant-design:delete-outlined',
+            auth: [RoleEnum.RESOURCE_DELETE, RoleEnum.APPLICATION_RESOURCE_DELETE],
+            authMode: PermModeEnum.HasAny,
           },
         ];
       }
@@ -223,6 +242,7 @@
         handleChange,
         data,
         applicationRef,
+        RoleEnum,
       };
     },
   });
