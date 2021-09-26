@@ -212,7 +212,12 @@ export function usePermission() {
         }
 
         for (const strPerm of permissions) {
-          const toBeVerified = new WildcardPermission(strPerm, caseSensitive);
+          let toBeVerified;
+          if (map[strPerm]) {
+            toBeVerified = map[strPerm];
+          } else {
+            toBeVerified = new WildcardPermission(strPerm, caseSensitive);
+          }
           if (mode === PermMode.Has) {
             if (!isPermitted(permissionsOwns, toBeVerified)) {
               flag = false;
