@@ -146,8 +146,11 @@ export function usePermission() {
   /**
    * 当不包含列出的权限时，渲染该元素
    */
-  function hasNoPermission(value?: RoleEnum | RoleEnum[] | string | string[], def = true): boolean {
-    return isPermission(value, def, PermModeEnum.HasNo);
+  function withoutPermission(
+    value?: RoleEnum | RoleEnum[] | string | string[],
+    def = true,
+  ): boolean {
+    return isPermission(value, def, PermModeEnum.Without);
   }
   /**
    * 只要包含列出的任意一个权限，元素就会显示
@@ -222,7 +225,7 @@ export function usePermission() {
             if (!isPermitted(permissionsOwns, toBeVerified)) {
               flag = false;
             }
-          } else if (mode === PermModeEnum.HasNo) {
+          } else if (mode === PermModeEnum.Without) {
             if (isPermitted(permissionsOwns, toBeVerified)) {
               flag = false;
             }
@@ -268,7 +271,7 @@ export function usePermission() {
     changeRole,
     isPermission,
     hasPermission,
-    hasNoPermission,
+    withoutPermission,
     hasAnyPermission,
     togglePermissionMode,
     refreshMenu,

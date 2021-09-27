@@ -27,12 +27,12 @@ function hasPermission(el: Element, binding: any) {
   }
 }
 
-function hasNoPermission(el: Element, binding: any) {
-  const { hasNoPermission } = usePermission();
+function withoutPermission(el: Element, binding: any) {
+  const { withoutPermission } = usePermission();
 
   const value = binding.value;
   if (!value) return;
-  if (!hasNoPermission(value)) {
+  if (!withoutPermission(value)) {
     el.parentNode?.removeChild(el);
   }
 }
@@ -60,11 +60,11 @@ const hasPermissionMounted = (el: Element, binding: DirectiveBinding<any>) => {
 export const hasPermissionDirective: Directive = {
   mounted: hasPermissionMounted,
 };
-const hasNoPermissionMounted = (el: Element, binding: DirectiveBinding<any>) => {
-  hasNoPermission(el, binding);
+const withoutPermissionMounted = (el: Element, binding: DirectiveBinding<any>) => {
+  withoutPermission(el, binding);
 };
-export const hasNoPermissionDirective: Directive = {
-  mounted: hasNoPermissionMounted,
+export const withoutPermissionDirective: Directive = {
+  mounted: withoutPermissionMounted,
 };
 const hasAnyPermissionMounted = (el: Element, binding: DirectiveBinding<any>) => {
   hasAnyPermission(el, binding);
@@ -76,7 +76,7 @@ export const hasAnyPermissionDirective: Directive = {
 export function setupPermissionDirective(app: App) {
   app.directive('auth', authDirective);
   app.directive('hasPermission', hasPermissionDirective);
-  app.directive('hasNoPermission', hasNoPermissionDirective);
+  app.directive('withoutPermission', withoutPermissionDirective);
   app.directive('hasAnyPermission', hasAnyPermissionDirective);
 }
 

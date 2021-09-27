@@ -23,7 +23,10 @@ export enum RoleEnum {
 }
 
 export enum PermModeEnum {
+  // 拥有所有
   Has = 'Has',
+  // 拥有任意
   HasAny = 'HasAny',
-  HasNo = 'HasNo',
+  // 没有
+  Without = 'Without',
 }
