@@ -33,10 +33,11 @@ function isPermitted(permissionsOwns: WildcardPermission[], toBeVerified: Wildca
   return false;
 }
 
+const WILDCARD_TOKEN = '*';
+const PART_DIVIDER_TOKEN = ':';
+const SUBPART_DIVIDER_TOKEN = ',';
+
 class WildcardPermission {
-  WILDCARD_TOKEN = '*';
-  PART_DIVIDER_TOKEN = ':';
-  SUBPART_DIVIDER_TOKEN = ',';
   parts: string[][];
   constructor(wildcardString: string, caseSensitive: boolean) {
     this.parts = [];
@@ -48,10 +49,10 @@ class WildcardPermission {
       throw new Error('权限编码通配符字符串不能为null或空。确保权限字符串的格式正确。');
     }
     wildcardString = wildcardString.trim();
-    const parts: string[] = wildcardString.split(this.PART_DIVIDER_TOKEN);
+    const parts: string[] = wildcardString.split(PART_DIVIDER_TOKEN);
     this.parts = [];
     for (const part of parts) {
-      let subParts: string[] = part.split(this.SUBPART_DIVIDER_TOKEN);
+      let subParts: string[] = part.split(SUBPART_DIVIDER_TOKEN);
       if (!caseSensitive) {
         const lowerSubParts: string[] = [];
         for (const subPart of subParts) {
@@ -81,7 +82,7 @@ class WildcardPermission {
         return false;
       } else {
         const part = this.parts[i];
-        if (!part.includes(this.WILDCARD_TOKEN) && !containsAll(part, toBeVerifiedPart)) {
+        if (!part.includes(WILDCARD_TOKEN) && !containsAll(part, toBeVerifiedPart)) {
           return false;
         }
         i++;
@@ -91,7 +92,7 @@ class WildcardPermission {
     // 如果此权限的部分多于其他部分，则仅当所有其他部分都是通配符时才暗示它
     for (; i < this.parts.length; i++) {
       const part = this.parts[i];
-      if (!part.includes(this.WILDCARD_TOKEN)) {
+      if (!part.includes(WILDCARD_TOKEN)) {
         return false;
       }
     }
