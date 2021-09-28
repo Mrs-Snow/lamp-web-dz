@@ -1,10 +1,10 @@
 import { Enum } from '/@/api/model/baseModel';
 
 export interface TenantPageQuery {
-  name: string;
-  code: string;
-  type: Enum;
-  status: Enum;
+  name?: string;
+  code?: string;
+  registerType?: Enum | string;
+  status?: Enum | string;
 }
 export interface TenantSaveDTO {
   name: string;
@@ -19,7 +19,7 @@ export interface TenantUpdateDTO {
   id: number;
   name: string;
   code: string;
-  type: Enum;
+  registerType: Enum;
   connectType: Enum;
   status: Enum;
   duty: string;
@@ -32,7 +32,7 @@ export interface Tenant {
   id: number;
   name: string;
   code: string;
-  type: Enum;
+  registerType: Enum;
   connectType: Enum;
   status: Enum;
   duty: string;

@@ -49,7 +49,8 @@ export const Api = {
 export const page = (params: PageParams<TenantPageQuery>) =>
   defHttp.request<PageResult<Tenant>>({ ...Api.Page, params });
 
-export const query = (params: Tenant) => defHttp.request<Tenant[]>({ ...Api.Query, params });
+export const query = (params: TenantPageQuery) =>
+  defHttp.request<Tenant[]>({ ...Api.Query, params });
 
 export const save = (params: TenantSaveDTO) => defHttp.request<Tenant>({ ...Api.Save, params });
 

@@ -8,16 +8,16 @@
         <TableAction
           :actions="[
             {
-              label: t('common.title.edit'),
-              onClick: handleEdit.bind(null, record),
-            },
-            {
               label: t('common.title.delete'),
               color: 'error',
               popConfirm: {
                 title: t('common.tips.confirmDelete'),
                 confirm: handleDelete.bind(null, record),
               },
+            },
+            {
+              label: t('common.title.edit'),
+              onClick: handleEdit.bind(null, record),
             },
           ]"
         />
@@ -94,14 +94,14 @@
           type: ActionEnum.ADD,
         });
       }
-      function handleEdit(record: Recordable, e) {
+      function handleEdit(record: Recordable, e: Event) {
         e?.stopPropagation();
         openModal(true, {
           record: record,
           type: ActionEnum.EDIT,
         });
       }
-      function handleDelete(record: Recordable, e) {
+      function handleDelete(record: Recordable, e: Event) {
         e?.stopPropagation();
         if (record && record?.key) {
           delete innerVal.value[record?.key];
@@ -110,7 +110,7 @@
           emit('update:value', JSON.stringify(innerVal.value));
         }
       }
-      function handleSuccess(metaItem) {
+      function handleSuccess(metaItem: any) {
         const data = { ...innerVal.value };
         data[metaItem.key] = metaItem.value;
         for (let key in data) {

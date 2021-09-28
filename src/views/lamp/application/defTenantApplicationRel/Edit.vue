@@ -3,36 +3,35 @@
     v-bind="$attrs"
     @register="registerDrawer"
     showFooter
-    width="50%"
+    width="30%"
     :maskClosable="false"
-    :title="t(`common.title.${type}`)"
+    title="续期"
     @ok="handleSubmit"
   >
     <BasicForm @register="registerForm" />
   </BasicDrawer>
 </template>
 <script lang="ts">
-  import { defineComponent, ref, unref } from 'vue';
+  import { defineComponent, ref } from 'vue';
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { ActionEnum, ServicePrefixEnum, FileBizTypeEnum } from '/@/enums/commonEnum';
-  import { Api, save, update } from '/@/api/lamp/tenant/tenant';
+  import { ActionEnum } from '/@/enums/commonEnum';
+  import { Api, renewal } from '/@/api/lamp/application/defTenantApplicationRel';
   import { getValidateRules } from '/@/api/lamp/common/formValidateService';
-  import { listByBizId } from '/@/api/lamp/file/upload';
-  import { customFormSchemaRules, editFormSchema } from './tenant.data';
+  import { customFormSchemaRules, editFormSchema } from './defTenantApplicationRel.data';
 
   export default defineComponent({
-    name: 'TenantEdit',
+    name: 'DefTenantApplicationRelEdit',
     components: { BasicDrawer, BasicForm },
     emits: ['success', 'register'],
     setup(_, { emit }) {
       const { t } = useI18n();
-      const type = ref(ActionEnum.ADD);
+      const type = ref<ActionEnum>(ActionEnum.ADD);
       const { createMessage } = useMessage();
       const [registerForm, { setFieldsValue, resetFields, updateSchema, validate }] = useForm({
-        labelWidth: 120,
+        labelWidth: 100,
         schemas: editFormSchema(type),
         showActionButtonGroup: false,
         actionColOptions: {
@@ -45,28 +44,14 @@
         setDrawerProps({ confirmLoading: false });
         type.value = data?.type;
 
-        let validateApi = Api.Save;
+        let validateApi = Api.Renewal;
 
-        if (unref(type) !== ActionEnum.ADD) {
-          const record = data.record;
-          // if (record.logo) {
-          //   record.logos = [record.logo];
-          // }
+        // 赋值
+        const record = { ...data?.record };
+        await setFieldsValue({ ...record });
 
-          const logos = await listByBizId(
-            ServicePrefixEnum.TENANT,
-            record.id,
-            FileBizTypeEnum.DEF_TENANT_LOGO,
-          );
-          record.logos = logos;
-          await setFieldsValue({
-            ...record,
-          });
-          validateApi = Api.Update;
-        }
-
-        getValidateRules(validateApi, customFormSchemaRules(type)).then(async (formSchemaRules) => {
-          await updateSchema(formSchemaRules);
+        getValidateRules(validateApi, customFormSchemaRules(type)).then(async (rules) => {
+          rules && rules.length > 0 && (await updateSchema(rules));
         });
       });
 
@@ -74,17 +59,9 @@
         try {
           const params = await validate();
           setDrawerProps({ confirmLoading: true });
+          await renewal(params);
 
-          // if (params.logos && params.logos.length > 0) {
-          //   params.logo = params.logos[0];
-          // }
-
-          if (unref(type) === ActionEnum.EDIT) {
-            await update(params);
-          } else {
-            await save(params);
-          }
-          createMessage.success(t(`common.tips.${type.value}Success`));
+          createMessage.success('续期成功');
           closeDrawer();
           emit('success');
         } finally {

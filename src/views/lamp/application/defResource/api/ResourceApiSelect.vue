@@ -243,6 +243,7 @@
       const [registerForm, { setFieldsValue, getFieldsValue, resetFields, updateSchema }] = useForm(
         {
           labelWidth: 80,
+          layout: 'vertical',
           schemas: selectResourceApiFormSchema(
             handleServiceChange,
             handleControllerChange,
@@ -258,10 +259,24 @@
 
       const [registerModal, { setModalProps, closeModal }] = useModalInner(async (data) => {
         await resetFields();
+        await updateSchema([
+          {
+            field: 'controller',
+            componentProps: {
+              options: undefined,
+            },
+          },
+          {
+            field: 'uri',
+            componentProps: {
+              options: undefined,
+            },
+          },
+        ]);
+
         setModalProps({ confirmLoading: false, minHeight: 300 });
-        if (data?.selectedData) {
-          selectedData.value = data?.selectedData;
-        }
+
+        selectedData.value = data?.selectedData;
       });
 
       async function handleSubmit() {

@@ -24,8 +24,8 @@ export const columns: BasicColumn[] = [
     dataIndex: 'name',
   },
   {
-    title: t('lamp.tenant.tenant.type'),
-    dataIndex: 'type.desc',
+    title: t('lamp.tenant.tenant.registerType'),
+    dataIndex: 'registerType.desc',
     width: 120,
   },
   {
@@ -75,6 +75,11 @@ export const searchFormSchema: FormSchema[] = [
 export const editFormSchema = (type): FormSchema[] => {
   return [
     {
+      field: 'divider-selects1',
+      component: 'Divider',
+      label: '基础信息',
+    },
+    {
       field: 'id',
       label: 'ID',
       component: 'Input',
@@ -88,23 +93,33 @@ export const editFormSchema = (type): FormSchema[] => {
       dynamicDisabled: (_) => {
         return unref(type) !== ActionEnum.ADD;
       },
+      colProps: {
+        span: 12,
+      },
     },
     {
       field: 'name',
       label: t('lamp.tenant.tenant.name'),
       component: 'Input',
+      colProps: {
+        span: 12,
+      },
     },
     {
-      field: 'duty',
-      label: t('lamp.tenant.tenant.duty'),
+      field: 'abbreviation',
+      label: t('lamp.tenant.tenant.abbreviation'),
       component: 'Input',
-      show: true,
+      colProps: {
+        span: 12,
+      },
     },
     {
       field: 'expirationTime',
       label: t('lamp.tenant.tenant.expirationTime'),
       component: 'DatePicker',
-      show: true,
+      colProps: {
+        span: 12,
+      },
       componentProps: {
         format: 'YYYY-MM-DD HH:mm:ss',
         valueFormat: 'YYYY-MM-DD HH:mm:ss',
@@ -114,6 +129,7 @@ export const editFormSchema = (type): FormSchema[] => {
         showTime: { defaultValue: moment('00:00:00', 'HH:mm:ss') },
       },
     },
+
     {
       field: 'logos',
       label: t('lamp.tenant.tenant.logo'),
@@ -126,11 +142,79 @@ export const editFormSchema = (type): FormSchema[] => {
         multiple: false,
         maxNumber: 1,
       },
+      colProps: {
+        span: 12,
+      },
+    },
+    {
+      field: 'divider-selects2',
+      component: 'Divider',
+      label: '联系人信息',
+    },
+    {
+      field: 'contactPerson',
+      label: t('lamp.tenant.tenant.contactPerson'),
+      component: 'Input',
+      colProps: {
+        span: 12,
+      },
+    },
+    {
+      field: 'contactPhone',
+      label: t('lamp.tenant.tenant.contactPhone'),
+      component: 'Input',
+      colProps: {
+        span: 12,
+      },
+    },
+    {
+      field: 'contactEmail',
+      label: t('lamp.tenant.tenant.contactEmail'),
+      component: 'Input',
+      colProps: {
+        span: 12,
+      },
+    },
+    {
+      field: 'divider-selects3',
+      component: 'Divider',
+      label: '地区信息',
+    },
+    {
+      field: 'provinceId',
+      label: t('lamp.tenant.tenant.provinceId'),
+      component: 'Input',
+    },
+    {
+      field: 'address',
+      label: t('lamp.tenant.tenant.address'),
+      component: 'Input',
+    },
+    {
+      field: 'divider-selects4',
+      component: 'Divider',
+      label: '其他信息',
+    },
+    {
+      field: 'creditCode',
+      label: t('lamp.tenant.tenant.creditCode'),
+      component: 'Input',
+      colProps: {
+        span: 12,
+      },
+    },
+    {
+      field: 'duty',
+      label: t('lamp.tenant.tenant.duty'),
+      component: 'Input',
+      colProps: {
+        span: 12,
+      },
     },
     {
       field: 'describe',
       label: t('lamp.tenant.tenant.describe'),
-      component: 'Input',
+      component: 'InputTextArea',
     },
   ];
 };

@@ -83,7 +83,7 @@
       // 选择
       function handleSelect() {
         openModal(true, {
-          selectedData: unref(innerVal),
+          selectedData: [...unref(innerVal)],
         });
       }
       // 手工录入
@@ -92,7 +92,7 @@
       }
 
       // 删除接口
-      function handleDelete(record: Recordable, e) {
+      function handleDelete(record: Recordable, e: Event) {
         e?.stopPropagation();
 
         let index = unref(innerVal).findIndex(

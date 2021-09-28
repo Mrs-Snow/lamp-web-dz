@@ -1,3 +1,9 @@
+import { DefResourceResultVO } from './defResourceModel';
+
+export interface ApplicationResourceResultVO {
+  defApplication: DefApplicationResultVO;
+  resourceList: DefResourceResultVO[];
+}
 export interface DefApplicationPageQuery {
   appKey?: string;
   appSecret?: string;

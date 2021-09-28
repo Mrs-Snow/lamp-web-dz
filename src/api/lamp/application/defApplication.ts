@@ -3,6 +3,7 @@ import {
   DefApplicationUpdateVO,
   DefApplicationResultVO,
   DefApplicationPageQuery,
+  ApplicationResourceResultVO,
 } from './model/defApplicationModel';
 import { PageParams, PageResult } from '/@/api/model/baseModel';
 import { defHttp } from '/@/utils/http/axios';
@@ -33,6 +34,10 @@ export const Api = {
     url: `${ServicePrefixEnum.TENANT}/${MODULAR}/query`,
     method: RequestEnum.POST,
   } as AxiosRequestConfig,
+  FindApplicationResourceList: {
+    url: `${ServicePrefixEnum.TENANT}/${MODULAR}/findApplicationResourceList`,
+    method: RequestEnum.GET,
+  } as AxiosRequestConfig,
 };
 
 export const page = (params: PageParams<DefApplicationPageQuery>) =>
@@ -40,6 +45,9 @@ export const page = (params: PageParams<DefApplicationPageQuery>) =>
 
 export const query = (params?: DefApplicationPageQuery) =>
   defHttp.request<DefApplicationResultVO[]>({ ...Api.Query, params });
+
+export const findApplicationResourceList = () =>
+  defHttp.request<ApplicationResourceResultVO[]>({ ...Api.FindApplicationResourceList });
 
 export const save = (params: DefApplicationSaveVO) =>
   defHttp.request<DefApplicationResultVO>({ ...Api.Save, params });
