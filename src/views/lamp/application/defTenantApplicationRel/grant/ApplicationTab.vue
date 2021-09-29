@@ -1,5 +1,5 @@
 <template>
-  <CollapseContainer class="m-4 appResource">
+  <CollapseContainer class="mb-4 appResource">
     <template #title>
       <Checkbox
         :value="application.id"
@@ -28,7 +28,6 @@
   import { BasicTree, TreeActionType } from '/@/components/Tree';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { forEach } from '/@/utils/helper/treeHelper';
-  import { findApplicationResourceList } from '/@/api/lamp/application/defApplication';
   import { isArray } from '/@/utils/is';
 
   export default defineComponent({
@@ -63,7 +62,6 @@
       const state = reactive({
         indeterminate: false,
         checkAll: false,
-        applicationResourceList: [] as any[],
         allKeys: [] as string[],
       });
       function getTree() {
@@ -75,10 +73,7 @@
       }
 
       onMounted(async () => {
-        state.applicationResourceList = await findApplicationResourceList();
-
         const keys = [] as string[];
-
         forEach(props.resourceList, (item) => {
           keys.push(item.id);
         });

@@ -3,9 +3,6 @@
     <TenantList class="md:w-1/4" ref="tenantListRef" />
     <ApplicationTabs class="md:w-3/4" ref="applicationTabsRef" />
     <template #rightFooter>
-      <!-- <a-button type="primary" color="warning" @click="resetFields">
-        {{ t('common.resetText') }}
-      </a-button> -->
       <a-button type="primary" @click="handleSubmit" class="ml-4">
         {{ t('common.saveText') }}
       </a-button>
@@ -13,30 +10,29 @@
   </PageWrapper>
 </template>
 <script lang="ts">
-  import { defineComponent, ref, unref, onMounted, reactive } from 'vue';
+  import { defineComponent, ref, unref } from 'vue';
   import { PageWrapper } from '/@/components/Page';
+  import { useRouter } from 'vue-router';
+  import { useTabs } from '/@/hooks/web/useTabs';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
   import TenantList from './grant/TenantList.vue';
   import ApplicationTabs from './grant/ApplicationTabs.vue';
-  import { query } from '/@/api/lamp/tenant/tenant';
-  import { TenantStatusEnum } from '/@/enums/biz/tenant';
+  import { grant } from '/@/api/lamp/application/defTenantApplicationRel';
 
   export default defineComponent({
-    name: '授权',
+    name: '应用授权',
     components: {
       PageWrapper,
       TenantList,
       ApplicationTabs,
     },
-    emits: ['success', 'register'],
     setup() {
       const { t } = useI18n();
       const { createMessage } = useMessage();
-      const formData = reactive<Recordable>({
-        tenantList: [],
-        checkedList: [],
-      });
+      const { replace } = useRouter();
+      const { closeCurrent } = useTabs();
+
       const tenantListRef = ref<any>(null);
       const applicationTabsRef = ref<any>(null);
       function getTenantList() {
@@ -53,21 +49,24 @@
         }
         return tree;
       }
-      onMounted(async () => {
-        formData.tenantList = await query({ status: TenantStatusEnum.NORMAL });
-      });
 
       async function handleSubmit() {
         try {
-          console.log(getTenantList());
+          const tenantIdList = getTenantList().checkedKeys;
           const data = getApplicationTabs().getData();
-          console.log(data);
-          createMessage.success('success');
+          data['tenantIdList'] = tenantIdList;
+
+          await grant(data);
+          await closeCurrent();
+          replace({
+            name: '应用授权管理',
+          });
+          createMessage.success('授权成功');
         } finally {
         }
       }
 
-      return { t, handleSubmit, formData, tenantListRef, applicationTabsRef };
+      return { t, handleSubmit, tenantListRef, applicationTabsRef };
     },
   });
 </script>

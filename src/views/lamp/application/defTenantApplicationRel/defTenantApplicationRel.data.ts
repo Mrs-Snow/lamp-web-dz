@@ -41,6 +41,21 @@ export const columns = (): BasicColumn[] => {
   ];
 };
 
+export const getTenantColumns = (): BasicColumn[] => {
+  return [
+    {
+      title: t('lamp.tenant.tenant.code'),
+      dataIndex: 'code',
+      // width: 180,
+    },
+    {
+      title: t('lamp.tenant.tenant.name'),
+      dataIndex: 'name',
+      // width: 180,
+    },
+  ];
+};
+
 export const searchFormSchema = (): FormSchema[] => {
   return [
     {

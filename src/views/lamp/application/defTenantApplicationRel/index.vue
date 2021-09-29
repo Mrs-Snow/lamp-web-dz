@@ -36,6 +36,7 @@
   import { Tag } from 'ant-design-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
+  import { useRouter } from 'vue-router';
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
   import { PageWrapper } from '/@/components/Page';
   import { useDrawer } from '/@/components/Drawer';
@@ -47,13 +48,14 @@
 
   export default defineComponent({
     // 若需要开启页面缓存，请将此参数跟菜单名保持一致
-    name: 'DefTenantApplicationRelManagement',
+    name: '应用授权管理',
     components: { BasicTable, PageWrapper, EditModal, TableAction, Tag },
     setup() {
       const { t } = useI18n();
       const { createMessage } = useMessage();
       // 编辑页弹窗
       const [registerDrawer, { openDrawer }] = useDrawer();
+      const { replace } = useRouter();
 
       // 表格
       const [registerTable, { reload }] = useTable({
@@ -90,7 +92,11 @@
       }
 
       // 弹出授权
-      function handleAuthorize() {}
+      function handleAuthorize() {
+        replace({
+          name: '应用授权',
+        });
+      }
 
       // 点击取消授权
       function handleCancelAuthorize(record: Recordable, e: Event) {

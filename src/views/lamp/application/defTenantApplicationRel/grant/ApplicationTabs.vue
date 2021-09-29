@@ -1,27 +1,32 @@
 <template>
-  <div class="bg-white m-4 ml-2 overflow-hidden">
-    <DatePicker
-      v-model:value="formData.expirationTime"
-      format="YYYY-MM-DD HH:mm:ss"
-      placeholder="有效期"
-      valueFormat="YYYY-MM-DD HH:mm:ss"
-      :showTime="{ defaultValue: moment('00:00:00', 'HH:mm:ss') }"
-    />
-
-    <ApplicationTab
-      v-for="item in applicationResourceList"
-      :key="item.defApplication.id"
-      :application="item.defApplication"
-      :resourceList="item.resourceList"
-      :ref="(el) => (itemRefs[item.defApplication.id] = el)"
-    />
+  <div class="bg-white m-4 ml-2 p-4 overflow-hidden">
+    <Form class="enter-x" ref="formRef" :labelCol="{ span: 2 }">
+      <FormItem label="有效期">
+        <DatePicker
+          v-model:value="formData.expirationTime"
+          format="YYYY-MM-DD HH:mm:ss"
+          placeholder="有效期"
+          valueFormat="YYYY-MM-DD HH:mm:ss"
+          :showTime="{ defaultValue: moment('00:00:00', 'HH:mm:ss') }"
+          :disabled-date="disabledDate"
+        />
+      </FormItem>
+      <FormItem label="应用-资源">
+        <ApplicationTab
+          v-for="item in applicationResourceList"
+          :key="item.defApplication.id"
+          :application="item.defApplication"
+          :resourceList="item.resourceList"
+          :ref="(el) => (itemRefs[item.defApplication.id] = el)"
+        />
+      </FormItem>
+    </Form>
   </div>
 </template>
 <script lang="ts">
   import { defineComponent, onMounted, toRefs, reactive } from 'vue';
-  import { DatePicker } from 'ant-design-vue';
-  import moment from 'moment';
-
+  import { DatePicker, Form } from 'ant-design-vue';
+  import moment, { Moment } from 'moment';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { findApplicationResourceList } from '/@/api/lamp/application/defApplication';
   import ApplicationTab from './ApplicationTab.vue';
@@ -31,6 +36,8 @@
     components: {
       DatePicker,
       ApplicationTab,
+      Form,
+      FormItem: Form.Item,
     },
 
     emits: ['select'],
@@ -70,10 +77,15 @@
         return formData;
       }
 
+      const disabledDate = (current: Moment) => {
+        return current && current < moment().endOf('day');
+      };
+
       return {
         ...toRefs(state),
         t,
         moment,
+        disabledDate,
         formData,
         itemRefs,
         getData,

@@ -1,58 +1,70 @@
 <template>
   <div class="bg-white m-4 mr-2 overflow-hidden">
-    <BasicTree
-      :title="t('lamp.tenant.tenant.table.title')"
-      checkable
-      search
-      checkStrictly
-      :treeData="treeData"
-      :replaceFields="{ key: 'id', title: 'name' }"
-      @select="handleSelect"
-      ref="treeRef"
-    />
+    <BasicTable
+      @register="registerTable"
+      :rowSelection="{
+        type: 'checkbox',
+        selectedRowKeys: checkedKeys,
+        onChange: onSelectChange,
+      }"
+    >
+      <template #headerTop>
+        <Alert type="info" show-icon>
+          <template #message>
+            <template v-if="checkedKeys.length > 0">
+              <span>已选中{{ checkedKeys.length }}条记录(可跨页)</span>
+              <a-button type="link" @click="checkedKeys = []" size="small">清空</a-button>
+            </template>
+            <template v-else>
+              <span>未选中任何项目</span>
+            </template>
+          </template>
+        </Alert>
+      </template>
+    </BasicTable>
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent, onMounted, ref } from 'vue';
+  import { defineComponent, ref } from 'vue';
+  import { Alert } from 'ant-design-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { BasicTree, TreeItem, TreeActionType } from '/@/components/Tree';
-  import { query } from '/@/api/lamp/tenant/tenant';
+  import { BasicTable, useTable } from '/@/components/Table';
+
+  import { page } from '/@/api/lamp/tenant/tenant';
   import { TenantStatusEnum } from '/@/enums/biz/tenant';
+  import { handleFetchParams } from '/@/utils/lamp/common';
+  import { getTenantColumns } from '../defTenantApplicationRel.data';
 
   export default defineComponent({
     name: 'TenantList',
-    components: { BasicTree },
+    components: { BasicTable, Alert },
 
     emits: ['select'],
-    setup(_, { emit }) {
+    setup(_) {
       const { t } = useI18n();
-      const treeRef = ref<Nullable<TreeActionType>>(null);
-      const treeData = ref<TreeItem[]>([]);
-
-      onMounted(async () => {
-        await fetch();
-      });
-      // 加载数据
-      async function fetch() {
-        treeData.value = (await query({
+      const checkedKeys = ref<Array<string | number>>([]);
+      const [registerTable, { getForm }] = useTable({
+        title: t('lamp.tenant.tenant.table.title'),
+        api: page,
+        columns: getTenantColumns(),
+        beforeFetch: handleFetchParams,
+        searchInfo: {
           status: TenantStatusEnum.NORMAL,
-        })) as unknown as TreeItem[];
-      }
+        },
+        showIndexColumn: false,
+        rowKey: 'id',
+      });
 
-      // 选择节点
-      function handleSelect(keys: string[]) {
-        if (keys[0]) {
-          emit('select', keys[0]);
-        }
+      function onSelectChange(selectedRowKeys: (string | number)[]) {
+        checkedKeys.value = selectedRowKeys;
       }
 
       return {
         t,
-        treeRef,
-        treeData,
-        fetch,
-        handleSelect,
-        query,
+        checkedKeys,
+        registerTable,
+        onSelectChange,
+        getForm,
       };
     },
   });
