@@ -69,6 +69,10 @@ export const searchFormSchema = (): FormSchema[] => {
         params: {
           status: TenantStatusEnum.NORMAL,
         },
+        showSearch: true,
+        filterOption: (input: string, option: any) => {
+          return option.label.toUpperCase().indexOf(input.toUpperCase()) >= 0;
+        },
       },
       colProps: { span: 6 },
     },
@@ -76,7 +80,15 @@ export const searchFormSchema = (): FormSchema[] => {
       field: 'applicationId',
       label: t('lamp.application.defTenantApplicationRel.applicationId'),
       component: 'ApiSelect',
-      componentProps: { api: queryApplication, labelField: 'name', valueField: 'id' },
+      componentProps: {
+        api: queryApplication,
+        labelField: 'name',
+        valueField: 'id',
+        showSearch: true,
+        filterOption: (input: string, option: any) => {
+          return option.label.toUpperCase().indexOf(input.toUpperCase()) >= 0;
+        },
+      },
       colProps: { span: 6 },
     },
     {

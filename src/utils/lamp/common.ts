@@ -191,12 +191,28 @@ export const enumComponentProps = (type: EnumEnum, excludes?: string | string[])
   if (excludes && isString(excludes)) {
     excludes = [excludes];
   }
-  return { api: asyncFindEnumList, params: { type, excludes }, resultField: 'data' };
+  return {
+    api: asyncFindEnumList,
+    params: { type, excludes },
+    resultField: 'data',
+    showSearch: true,
+    filterOption: (input: string, option: any) => {
+      return option.label.toUpperCase().indexOf(input.toUpperCase()) >= 0;
+    },
+  };
 };
 
 export const dictComponentProps = (type: DictEnum, excludes?: string | string[]) => {
   if (excludes && isString(excludes)) {
     excludes = [excludes];
   }
-  return { api: asyncFindDictList, params: { type, excludes }, resultField: 'data' };
+  return {
+    api: asyncFindDictList,
+    params: { type, excludes },
+    resultField: 'data',
+    showSearch: true,
+    filterOption: (input: string, option: any) => {
+      return option.label.toUpperCase().indexOf(input.toUpperCase()) >= 0;
+    },
+  };
 };

@@ -42,9 +42,9 @@ export const query = (params: DefTenantApplicationRelPageQuery) =>
   defHttp.request<DefTenantApplicationRelResultVO[]>({ ...Api.Query, params });
 
 export const grant = (params: DefTenantApplicationRelSaveVO) =>
-  defHttp.request<DefTenantApplicationRelResultVO>({ ...Api.Grant, params });
+  defHttp.request<boolean>({ ...Api.Grant, params });
 
-export const cancel = (params: DefTenantApplicationRelUpdateVO) =>
-  defHttp.request<DefTenantApplicationRelResultVO>({ ...Api.Cancel, params });
+export const renewal = (params: DefTenantApplicationRelUpdateVO) =>
+  defHttp.request<boolean>({ ...Api.Renewal, params });
 
-export const renewal = (params: string[]) => defHttp.request<boolean>({ ...Api.Renewal, params });
+export const cancel = (params: string[]) => defHttp.request<boolean>({ ...Api.Cancel, params });

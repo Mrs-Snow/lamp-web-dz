@@ -187,3 +187,77 @@ export function treeMapEach(
     };
   }
 }
+
+// 根据父id查找子节点
+export function getChildrenByParentId<T = string | number, N = Recordable>(
+  nodeKey: T,
+  treeData: N[],
+  config: Partial<TreeHelperConfig> = {},
+): T[] {
+  const keys: T[] = [];
+  config = getConfig(config);
+  const { children: childrenField, id: keyField } = config;
+  if (!keyField || !childrenField) return keys;
+  for (let index = 0; index < treeData.length; index++) {
+    const node = treeData[index];
+    const children = node[childrenField];
+    if (nodeKey === node[keyField]) {
+      keys.push(node[keyField]!);
+      if (children && children.length) {
+        keys.push(...(getAllKeys(children, config) as T[]));
+      }
+    } else {
+      if (children && children.length) {
+        keys.push(...getChildrenByParentId(nodeKey, children));
+      }
+    }
+  }
+  return keys;
+}
+
+export function getAllKeys<N = Recordable>(treeData: N[], config: Partial<TreeHelperConfig> = {}) {
+  const keys: any[] = [];
+  config = getConfig(config);
+  const { children: childrenField, id: keyField } = config;
+  if (!keyField || !childrenField) return keys;
+
+  for (let index = 0; index < treeData.length; index++) {
+    const node = treeData[index];
+    keys.push(node[keyField]!);
+    const children = node[childrenField];
+    if (children && children.length) {
+      keys.push(...(getAllKeys(children) as any[]));
+    }
+  }
+  return keys as any[];
+}
+
+// 根据父id查找子节点
+export function getById<T = string | number, N = Recordable>(
+  nodeKey: T,
+  treeData: N[],
+  config: Partial<TreeHelperConfig> = {},
+): N {
+  config = getConfig(config);
+  const { children: childrenField, id: keyField } = config;
+  if (!keyField || !childrenField) return {} as N;
+  const list: N[] = [...treeData];
+  for (let i = 0; i < list.length; i++) {
+    //func 返回true就终止遍历，避免大量节点场景下无意义循环，引起浏览器卡顿
+    if (nodeKey === list[i][keyField]) {
+      return list[i];
+    }
+    childrenField && list[i][childrenField] && list.splice(i + 1, 0, ...list[i][childrenField]);
+  }
+  return {} as N;
+}
+
+// 遍历树结构
+export function eachTree(treeDatas: any[], callBack: Fn, parentNode = {}) {
+  treeDatas.forEach((element) => {
+    const newNode = callBack(element, parentNode) || element;
+    if (element.children) {
+      eachTree(element.children, callBack, newNode);
+    }
+  });
+}

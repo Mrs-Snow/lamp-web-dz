@@ -2,6 +2,7 @@
   <PageWrapper dense contentFullHeight fixedHeight>
     <BasicTable @register="registerTable">
       <template #toolbar>
+        <a-button type="error" @click="handleBatchCancelAuthorize">取消授权</a-button>
         <a-button type="primary" @click="handleAuthorize">授权</a-button>
       </template>
       <template #expired="{ record }">
@@ -42,23 +43,23 @@
   import { useDrawer } from '/@/components/Drawer';
   import { handleFetchParams } from '/@/utils/lamp/common';
   import { ActionEnum } from '/@/enums/commonEnum';
-  import { page } from '/@/api/lamp/application/defTenantApplicationRel';
+  import { page, cancel } from '/@/api/lamp/application/defTenantApplicationRel';
   import { columns, searchFormSchema } from './defTenantApplicationRel.data';
   import EditModal from './Edit.vue';
 
   export default defineComponent({
     // 若需要开启页面缓存，请将此参数跟菜单名保持一致
-    name: '应用授权管理',
+    name: 'DefTenantApplicationRelManager',
     components: { BasicTable, PageWrapper, EditModal, TableAction, Tag },
     setup() {
       const { t } = useI18n();
-      const { createMessage } = useMessage();
+      const { createMessage, createConfirm } = useMessage();
       // 编辑页弹窗
       const [registerDrawer, { openDrawer }] = useDrawer();
       const { replace } = useRouter();
 
       // 表格
-      const [registerTable, { reload }] = useTable({
+      const [registerTable, { reload, getSelectRowKeys }] = useTable({
         title: t('lamp.application.defTenantApplicationRel.table.title'),
         api: page,
         columns: columns(),
@@ -99,22 +100,37 @@
       }
 
       // 点击取消授权
-      function handleCancelAuthorize(record: Recordable, e: Event) {
+      async function handleCancelAuthorize(record: Recordable, e: Event) {
         e?.stopPropagation();
         if (record?.id) {
-          batchDelete([record.id]);
+          await batchCancelAuthorize([record.id]);
         }
+      }
+
+      async function batchCancelAuthorize(ids: string[]) {
+        await cancel(ids);
+        createMessage.success('取消成功');
+        handleSuccess();
+      }
+
+      function handleBatchCancelAuthorize() {
+        const ids = getSelectRowKeys();
+        if (!ids || ids.length <= 0) {
+          createMessage.warning(t('common.tips.pleaseSelectTheData'));
+          return;
+        }
+        createConfirm({
+          iconType: 'warning',
+          content: '是否确认要取消授权',
+          onOk: async () => {
+            await batchCancelAuthorize(ids);
+          },
+        });
       }
 
       // 授权成功回调
       function handleSuccess() {
         reload();
-      }
-
-      async function batchDelete(ids: any[]) {
-        console.log(ids);
-        createMessage.success(t('common.tips.deleteSuccess'));
-        handleSuccess();
       }
 
       return {
@@ -124,6 +140,7 @@
         handleAuthorize,
         handleRenewal,
         handleCancelAuthorize,
+        handleBatchCancelAuthorize,
         handleSuccess,
       };
     },
