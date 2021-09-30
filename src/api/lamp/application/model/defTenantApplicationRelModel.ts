@@ -1,3 +1,5 @@
+import { DefResourceResultVO } from './defResourceModel';
+
 export interface DefTenantApplicationRelPageQuery {
   tenantId?: string;
   applicationId?: string;
@@ -27,4 +29,7 @@ export interface DefTenantApplicationRelResultVO {
   updatedBy?: string;
   updatedTime?: string;
   echoMap?: Recordable;
+  expired?: boolean;
+  resourceList?: DefResourceResultVO[];
+  checkedList?: string[];
 }

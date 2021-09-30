@@ -8,28 +8,43 @@
     title="续期"
     @ok="handleSubmit"
   >
-    <BasicForm @register="registerForm" />
+    <BasicForm @register="registerForm">
+      <template #resourceIdList="{ model, field }">
+        <BasicTree
+          v-model:value="model[field]"
+          :treeData="treeData"
+          :replaceFields="{ title: 'label', key: 'id' }"
+          :checkedKeys="checkedKeys"
+          checkable
+          toolbar
+          title="资源分配"
+        />
+      </template>
+    </BasicForm>
   </BasicDrawer>
 </template>
 <script lang="ts">
   import { defineComponent, ref } from 'vue';
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
+  import { BasicTree, TreeItem } from '/@/components/Tree';
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { ActionEnum } from '/@/enums/commonEnum';
-  import { Api, renewal } from '/@/api/lamp/application/defTenantApplicationRel';
+  import { Api, renewal, detail } from '/@/api/lamp/application/defTenantApplicationRel';
   import { getValidateRules } from '/@/api/lamp/common/formValidateService';
   import { customFormSchemaRules, editFormSchema } from './defTenantApplicationRel.data';
 
   export default defineComponent({
     name: 'DefTenantApplicationRelEdit',
-    components: { BasicDrawer, BasicForm },
+    components: { BasicDrawer, BasicForm, BasicTree },
     emits: ['success', 'register'],
     setup(_, { emit }) {
       const { t } = useI18n();
       const type = ref<ActionEnum>(ActionEnum.ADD);
       const { createMessage } = useMessage();
+      const treeData = ref<TreeItem[]>([]);
+      const checkedKeys = ref<string[]>([]);
       const [registerForm, { setFieldsValue, resetFields, updateSchema, validate }] = useForm({
         labelWidth: 100,
         schemas: editFormSchema(type),
@@ -40,19 +55,23 @@
       });
 
       const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(async (data) => {
-        await resetFields();
-        setDrawerProps({ confirmLoading: false });
-        type.value = data?.type;
+        try {
+          setDrawerProps({ confirmLoading: true });
+          await resetFields();
+          type.value = data?.type;
 
-        let validateApi = Api.Renewal;
+          let validateApi = Api.Renewal;
 
-        // 赋值
-        const record = { ...data?.record };
-        await setFieldsValue({ ...record });
-
-        getValidateRules(validateApi, customFormSchemaRules(type)).then(async (rules) => {
-          rules && rules.length > 0 && (await updateSchema(rules));
-        });
+          const record = await detail(data?.record.id);
+          treeData.value = record.resourceList as TreeItem[];
+          checkedKeys.value = record.checkedList as string[];
+          await setFieldsValue({ ...record });
+          getValidateRules(validateApi, customFormSchemaRules(type)).then(async (rules) => {
+            rules && rules.length > 0 && (await updateSchema(rules));
+          });
+        } finally {
+          setDrawerProps({ confirmLoading: false });
+        }
       });
 
       async function handleSubmit() {
@@ -69,7 +88,7 @@
         }
       }
 
-      return { t, registerDrawer, registerForm, type, handleSubmit };
+      return { t, registerDrawer, registerForm, type, handleSubmit, treeData, checkedKeys };
     },
   });
 </script>

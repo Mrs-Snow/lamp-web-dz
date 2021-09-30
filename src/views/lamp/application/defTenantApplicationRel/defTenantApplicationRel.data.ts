@@ -134,13 +134,18 @@ export const editFormSchema = (_): FormSchema[] => {
       label: t('lamp.application.defTenantApplicationRel.expirationTime'),
       field: 'expirationTime',
       component: 'DatePicker',
-
       componentProps: {
         style: { width: '100%' },
         format: 'YYYY-MM-DD HH:mm:ss',
         valueFormat: 'YYYY-MM-DD HH:mm:ss',
         showTime: { defaultValue: moment('00:00:00', 'HH:mm:ss') },
       },
+    },
+    {
+      label: ' ',
+      field: 'resourceIdList',
+      slot: 'resourceIdList',
+      component: 'Input',
     },
   ];
 };

@@ -188,10 +188,10 @@ export function treeMapEach(
   }
 }
 
-// 根据父id查找子节点
-export function getChildrenByParentId<T = string | number, N = Recordable>(
+// 根据父id查找子节点的id
+export function findChildrenByParentId<T = string | number, N = Recordable>(
   nodeKey: T,
-  treeData: N[],
+  treeData: N[] = [],
   config: Partial<TreeHelperConfig> = {},
 ): T[] {
   const keys: T[] = [];
@@ -204,18 +204,18 @@ export function getChildrenByParentId<T = string | number, N = Recordable>(
     if (nodeKey === node[keyField]) {
       keys.push(node[keyField]!);
       if (children && children.length) {
-        keys.push(...(getAllKeys(children, config) as T[]));
+        keys.push(...(findAllKeys(children, config) as T[]));
       }
     } else {
       if (children && children.length) {
-        keys.push(...getChildrenByParentId(nodeKey, children));
+        keys.push(...findChildrenByParentId(nodeKey, children));
       }
     }
   }
   return keys;
 }
 
-export function getAllKeys<N = Recordable>(treeData: N[], config: Partial<TreeHelperConfig> = {}) {
+export function findAllKeys<N = Recordable>(treeData: N[], config: Partial<TreeHelperConfig> = {}) {
   const keys: any[] = [];
   config = getConfig(config);
   const { children: childrenField, id: keyField } = config;
@@ -226,7 +226,7 @@ export function getAllKeys<N = Recordable>(treeData: N[], config: Partial<TreeHe
     keys.push(node[keyField]!);
     const children = node[childrenField];
     if (children && children.length) {
-      keys.push(...(getAllKeys(children) as any[]));
+      keys.push(...(findAllKeys(children) as any[]));
     }
   }
   return keys as any[];

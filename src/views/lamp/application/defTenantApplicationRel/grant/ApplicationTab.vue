@@ -40,11 +40,11 @@
   import type { TreeDataItem } from 'ant-design-vue/es/tree/Tree';
   import { CollapseContainer } from '/@/components/Container/index';
   import { BasicTree, TreeActionType, TreeIcon, ReplaceFields } from '/@/components/Tree';
-
-  import { useI18n } from '/@/hooks/web/useI18n';
-  import { eachTree, getChildrenByParentId, getById } from '/@/utils/helper/treeHelper';
   import { isArray } from '/@/utils/is';
-  import { uniq } from 'lodash-es';
+  import { uniq, intersection, difference } from 'lodash-es';
+  import { useI18n } from '/@/hooks/web/useI18n';
+
+  import { eachTree, findChildrenByParentId, getById } from '/@/utils/helper/treeHelper';
   const replaceFields: ReplaceFields = { key: 'id', title: 'label' };
   export default defineComponent({
     name: 'ApplicationTab',
@@ -71,11 +71,12 @@
     setup(props) {
       const { t } = useI18n();
       const treeRef = ref<Nullable<TreeActionType>>(null);
-
+      // 表单数据
       const formData = reactive<Recordable>({
         expirationTime: '',
         applicationList: [],
       });
+      // 临时数据
       const state = reactive({
         indeterminate: false,
         checkAll: false,
@@ -95,9 +96,9 @@
 
         eachTree(
           props.resourceList,
-          (item, parant) => {
+          (item, parent) => {
             keys.push(item.id);
-            item.keyLinks = [...(parant.keyLinks || []), item.id];
+            item.keyLinks = [...(parent.keyLinks || []), item.id];
             item.slots = { title: 'title' };
             return item;
           },
@@ -107,74 +108,111 @@
         state.allKeys = keys;
       });
 
+      // 获取 树当前选中的节点key
       function getCheckedKeys(): string[] {
         const checkedKeys = getTree().getCheckedKeys();
         return (isArray(checkedKeys) ? checkedKeys : checkedKeys.checked) as string[];
       }
 
+      // 计算 半选状态
+      function computedIndeterminate() {
+        const checkedKeys = getCheckedKeys();
+        state.indeterminate = checkedKeys.length > 0 && checkedKeys.length < state.allKeys.length;
+      }
+      // 计算 选中状态
+      function computedCheckAll() {
+        state.checkAll =
+          state.allKeys.length > 0 && state.allKeys.length === getCheckedKeys().length;
+      }
+
+      /**
+       * 全选应用
+       * @param e
+       */
       function onCheckAllChange(e: any) {
         e?.stopPropagation();
         e?.preventDefault();
         getTree()?.checkAll(e.target.checked);
 
-        const checkeds = getCheckedKeys();
-        state.indeterminate = checkeds.length > 0 && checkeds.length < state.allKeys.length;
+        computedIndeterminate();
       }
 
+      /**
+       * 选中tree的复选框
+       * 1. 选中某个节点，将其所有的父节点都选中
+       * 2. 取消某个节点，将其所有子节点全部取消
+       *
+       * @param checkedKeys 已选中的key
+       * @param checked 选中还是取消
+       * @param node 当前节点
+       */
       function checkNode(checkedKeys, { checked, node }) {
         const checkeds = isArray(checkedKeys) ? checkedKeys : checkedKeys.checked;
         if (checked) {
+          // 查找当前节点
           const item = getById(node?.eventKey, props.resourceList);
-          // 选中父节点
+          // 查找当前节点的所有父Id
           let parentKeys = item?.keyLinks?.filter((item) => !checkeds.includes(item));
           if (parentKeys) {
+            // 同时勾选上所有的父节点
             const newKeys = getCheckedKeys().concat(parentKeys);
             getTree().setCheckedKeys(uniq(newKeys));
           }
         } else {
-          // 取消子节点
-          const childrenIds = getChildrenByParentId(node?.eventKey, props.resourceList);
-          const newKeys = getCheckedKeys().filter((item) => !childrenIds.includes(item));
+          // 查找当前节点的所有子节点
+          const childrenIds = findChildrenByParentId(node?.eventKey, props.resourceList);
+          // 将所有子节点取消勾选
+          // const newKeys = getCheckedKeys().filter((item) => !childrenIds.includes(item));
+          const newKeys = difference(getCheckedKeys(), childrenIds);
           getTree().setCheckedKeys(uniq(newKeys));
         }
 
-        state.checkAll =
-          state.allKeys.length > 0 && state.allKeys.length === getCheckedKeys().length;
-        state.indeterminate =
-          getCheckedKeys().length > 0 && getCheckedKeys().length < state.allKeys.length;
-        debugger;
+        computedCheckAll();
+        computedIndeterminate();
       }
 
+      /**
+       * 全选或取消其子节点
+       * @param id 节点id
+       * @param e 事件
+       */
       function selectAll(id: string, e: any) {
         e?.stopPropagation();
         e?.preventDefault();
-        const keys = getChildrenByParentId(id, props.resourceList);
-        if (isAllChecked(keys)) {
-          const newKeys = getCheckedKeys().filter((item) => !keys.includes(item));
+        const childrenIds = findChildrenByParentId(id, props.resourceList);
+        if (containsAll(childrenIds)) {
+          // const newKeys = getCheckedKeys().filter((item) => !childrenIds.includes(item));
+          const newKeys = difference(getCheckedKeys(), childrenIds);
           getTree().setCheckedKeys(newKeys);
         } else {
-          const newKeys = getCheckedKeys().concat(keys);
+          const newKeys = getCheckedKeys().concat(childrenIds);
           getTree().setCheckedKeys(uniq(newKeys));
         }
 
-        state.checkAll =
-          state.allKeys.length > 0 && state.allKeys.length === getCheckedKeys().length;
-        state.indeterminate =
-          getCheckedKeys().length > 0 && getCheckedKeys().length < state.allKeys.length;
+        computedCheckAll();
+        computedIndeterminate();
       }
 
+      /**
+       * 某个节点是 全选 还是 全部取消
+       * @param id
+       */
       function isAllCheckedByKey(id: string) {
-        const keys = getChildrenByParentId(id, props.resourceList);
-
-        return isAllChecked(keys);
+        const childrenIds = findChildrenByParentId(id, props.resourceList);
+        return containsAll(childrenIds);
       }
 
-      function isAllChecked(ids: string[]) {
+      /**
+       * 指定的 节点id 是否全部被选中
+       * @param ids
+       */
+      function containsAll(ids: string[]) {
         if (!ids || !ids.length) {
           return false;
         }
-        const checkedKeyts = getCheckedKeys().filter((item) => ids.includes(item));
-        return checkedKeyts.length === ids.length;
+        // const checkedKeys = getCheckedKeys().filter((item) => ids.includes(item));
+        // return checkedKeys.length === ids.length;
+        return intersection(getCheckedKeys(), ids).length == ids.length;
       }
 
       return {

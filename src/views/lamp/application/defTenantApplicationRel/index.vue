@@ -1,8 +1,8 @@
 <template>
-  <PageWrapper dense contentFullHeight fixedHeight>
+  <PageWrapper dense contentFullHeight>
     <BasicTable @register="registerTable">
       <template #toolbar>
-        <a-button type="error" @click="handleBatchCancelAuthorize">取消授权</a-button>
+        <a-button color="error" @click="handleBatchCancelAuthorize">取消授权</a-button>
         <a-button type="primary" @click="handleAuthorize">授权</a-button>
       </template>
       <template #expired="{ record }">

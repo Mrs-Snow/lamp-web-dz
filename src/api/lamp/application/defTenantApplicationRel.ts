@@ -33,6 +33,10 @@ export const Api = {
     url: `${ServicePrefixEnum.TENANT}/${MODULAR}/query`,
     method: RequestEnum.POST,
   } as AxiosRequestConfig,
+  Detail: {
+    url: `${ServicePrefixEnum.TENANT}/${MODULAR}/detail`,
+    method: RequestEnum.GET,
+  } as AxiosRequestConfig,
 };
 
 export const page = (params: PageParams<DefTenantApplicationRelPageQuery>) =>
@@ -48,3 +52,6 @@ export const renewal = (params: DefTenantApplicationRelUpdateVO) =>
   defHttp.request<boolean>({ ...Api.Renewal, params });
 
 export const cancel = (params: string[]) => defHttp.request<boolean>({ ...Api.Cancel, params });
+
+export const detail = (id: string) =>
+  defHttp.request<DefTenantApplicationRelResultVO>({ ...Api.Detail, params: { id } });
