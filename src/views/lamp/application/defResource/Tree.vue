@@ -30,6 +30,7 @@
       checkable
       search
       checkStrictly
+      highlight
       :actionList="actionList"
       :beforeRightClick="getRightMenuList"
       :clickRowToExpand="true"

@@ -5,11 +5,11 @@
     showFooter
     width="30%"
     :maskClosable="false"
-    title="续期"
+    :title="t(`common.title.${type}`)"
     @ok="handleSubmit"
   >
-    <BasicForm @register="registerForm">
-      <template #resourceIdList="{ model, field }">
+    <BasicForm @register="registerForm"
+      ><template #resourceIdList="{ model, field }">
         <BasicTree
           v-model:value="model[field]"
           :treeData="treeData"
@@ -31,21 +31,20 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { ActionEnum } from '/@/enums/commonEnum';
-  import { Api, renewal, detail } from '/@/api/lamp/application/defTenantApplicationRel';
-  import { getValidateRules } from '/@/api/lamp/common/formValidateService';
-  import { customFormSchemaRules, editFormSchema } from './defTenantApplicationRel.data';
+  import { detail } from '/@/api/lamp/application/defTenantApplicationRel';
+  import { editFormSchema } from './defTenantApplicationRecord.data';
 
   export default defineComponent({
-    name: 'DefTenantApplicationRelEdit',
+    name: 'DefTenantApplicationRecordEdit',
     components: { BasicDrawer, BasicForm, BasicTree },
     emits: ['success', 'register'],
     setup(_, { emit }) {
       const { t } = useI18n();
-      const type = ref<ActionEnum>(ActionEnum.ADD);
+      const type = ref<ActionEnum>(ActionEnum.VIEW);
       const { createMessage } = useMessage();
       const treeData = ref<TreeItem[]>([]);
       const checkedKeys = ref<string[]>([]);
-      const [registerForm, { setFieldsValue, resetFields, updateSchema, validate }] = useForm({
+      const [registerForm, { setFieldsValue, resetFields }] = useForm({
         labelWidth: 100,
         schemas: editFormSchema(type),
         showActionButtonGroup: false,
@@ -60,15 +59,12 @@
           await resetFields();
           type.value = data?.type;
 
-          let validateApi = Api.Renewal;
+          // 赋值
+          const result = await detail(data?.record.tenantApplicationRelId);
 
-          const record = await detail(data?.record.id);
-          treeData.value = record.resourceList as TreeItem[];
-          checkedKeys.value = record.checkedList as string[];
-          await setFieldsValue({ ...record });
-          getValidateRules(validateApi, customFormSchemaRules(type)).then(async (rules) => {
-            rules && rules.length > 0 && (await updateSchema(rules));
-          });
+          treeData.value = result.resourceList as TreeItem[];
+          checkedKeys.value = result.checkedList as string[];
+          await setFieldsValue({ ...data?.record });
         } finally {
           setDrawerProps({ confirmLoading: false });
         }
@@ -76,11 +72,9 @@
 
       async function handleSubmit() {
         try {
-          const params = await validate();
           setDrawerProps({ confirmLoading: true });
-          await renewal(params);
 
-          createMessage.success('续期成功');
+          createMessage.success(t(`common.tips.${type.value}Success`));
           closeDrawer();
           emit('success');
         } finally {

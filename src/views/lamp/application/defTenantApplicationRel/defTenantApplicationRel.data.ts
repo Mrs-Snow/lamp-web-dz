@@ -142,7 +142,7 @@ export const editFormSchema = (_): FormSchema[] => {
       },
     },
     {
-      label: ' ',
+      label: '分配的资源',
       field: 'resourceIdList',
       slot: 'resourceIdList',
       component: 'Input',
