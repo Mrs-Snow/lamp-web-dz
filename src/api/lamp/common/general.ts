@@ -17,7 +17,7 @@ export const Api = {
     method: RequestEnum.POST,
   },
   FindCodeListByType: {
-    url: `${ServicePrefixEnum.OAUTH}/dictionary/findCodeListByType`,
+    url: `${ServicePrefixEnum.OAUTH}/dict/findDictMapItemListByKey`,
     method: RequestEnum.POST,
   },
   Params: {

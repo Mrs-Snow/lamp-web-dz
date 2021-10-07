@@ -1,8 +1,8 @@
 <template>
-  <PageWrapper dense contentFullHeight fixedHeight>
+  <PageWrapper dense contentFullHeight>
     <BasicTable @register="registerTable">
       <template #toolbar>
-        <a-button type="primary" @click="handleBatchDelete">{{
+        <a-button type="primary" color="error" @click="handleBatchDelete">{{
           t('common.title.delete')
         }}</a-button>
         <a-button type="primary" @click="handleAdd">{{ t('common.title.add') }}</a-button>
@@ -100,7 +100,7 @@
       // 弹出复制页面
       function handleCopy(record: Recordable, e: Event) {
         e?.stopPropagation();
-        record.parendId = dictId.value;
+        record.parentId = dictId.value;
         openDrawer(true, {
           record,
           type: ActionEnum.COPY,
@@ -111,14 +111,14 @@
       function handleAdd() {
         openDrawer(true, {
           type: ActionEnum.ADD,
-          record: { parendId: dictId.value },
+          record: { parentId: dictId.value },
         });
       }
 
       // 弹出编辑页面
       function handleEdit(record: Recordable, e: Event) {
         e?.stopPropagation();
-        record.parendId = dictId.value;
+        record.parentId = dictId.value;
         openDrawer(true, {
           record,
           type: ActionEnum.EDIT,

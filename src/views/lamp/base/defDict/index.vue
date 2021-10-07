@@ -1,8 +1,8 @@
 <template>
-  <PageWrapper dense contentFullHeight fixedHeight>
+  <PageWrapper dense contentFullHeight>
     <BasicTable @register="registerTable">
       <template #toolbar>
-        <a-button type="primary" @click="handleBatchDelete">{{
+        <a-button type="primary" color="error" @click="handleBatchDelete">{{
           t('common.title.delete')
         }}</a-button>
         <a-button type="primary" @click="handleAdd">{{ t('common.title.add') }}</a-button>
@@ -81,7 +81,7 @@
           type: 'checkbox',
         },
         actionColumn: {
-          width: 150,
+          width: 220,
           title: t('common.column.action'),
           dataIndex: 'action',
           slots: { customRender: 'action' },

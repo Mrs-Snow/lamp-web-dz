@@ -3,7 +3,8 @@ import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { ActionEnum, DictEnum } from '/@/enums/commonEnum';
 import { dictComponentProps, stateFilters, stateComponentProps } from '/@/utils/lamp/common';
-import { FormSchemaExt } from '/@/api/lamp/common/formValidateService';
+import { FormSchemaExt, RuleType } from '/@/api/lamp/common/formValidateService';
+import { check } from '/@/api/lamp/base/defDictItem';
 
 const { t } = useI18n();
 // 列表页字段
@@ -51,6 +52,7 @@ export const searchFormSchema = (): FormSchema[] => {
       colProps: { span: 6 },
       componentProps: {
         ...dictComponentProps(DictEnum.DICT_CLASSIFY),
+        mode: 'multiple',
       },
     },
     {
@@ -160,6 +162,28 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
 };
 
 // 前端自定义表单验证规则
-export const customFormSchemaRules = (_): Partial<FormSchemaExt>[] => {
-  return [];
+export const customFormSchemaRules = (
+  type: Ref<ActionEnum>,
+  getFieldsValue: () => Recordable,
+): Partial<FormSchemaExt>[] => {
+  return [
+    {
+      field: 'key',
+      type: RuleType.append,
+      rules: [
+        {
+          trigger: ['change', 'blur'],
+          async validator(_, value) {
+            if (type.value === ActionEnum.EDIT) {
+              return Promise.resolve();
+            }
+            if (await check(value, getFieldsValue()?.parentId)) {
+              return Promise.reject(t('lamp.base.defDict.key') + '已经存在');
+            }
+            return Promise.resolve();
+          },
+        },
+      ],
+    },
+  ];
 };

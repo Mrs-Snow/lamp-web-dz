@@ -33,6 +33,10 @@ export const Api = {
     url: `${ServicePrefixEnum.TENANT}/${MODULAR}/query`,
     method: RequestEnum.POST,
   } as AxiosRequestConfig,
+  Check: {
+    url: `${ServicePrefixEnum.TENANT}/${MODULAR}/check`,
+    method: RequestEnum.GET,
+  } as AxiosRequestConfig,
 };
 
 export const page = (params: PageParams<DefDictItemPageQuery>) =>
@@ -48,3 +52,6 @@ export const update = (params: DefDictItemUpdateVO) =>
   defHttp.request<DefDictItemResultVO>({ ...Api.Update, params });
 
 export const remove = (params: string[]) => defHttp.request<boolean>({ ...Api.Delete, params });
+
+export const check = (key: string, dictId: string, id?: string) =>
+  defHttp.request<boolean>({ ...Api.Check, params: { key, dictId, id } });

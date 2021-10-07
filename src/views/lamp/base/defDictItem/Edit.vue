@@ -31,7 +31,10 @@
       const { t } = useI18n();
       const type = ref<ActionEnum>(ActionEnum.ADD);
       const { createMessage } = useMessage();
-      const [registerForm, { setFieldsValue, resetFields, updateSchema, validate }] = useForm({
+      const [
+        registerForm,
+        { setFieldsValue, getFieldsValue, resetFields, updateSchema, validate },
+      ] = useForm({
         labelWidth: 100,
         schemas: editFormSchema(type),
         showActionButtonGroup: false,
@@ -48,11 +51,11 @@
         // 赋值
         const record = { ...data?.record };
 
-        if (!record.parendId) {
+        if (!record.parentId) {
           createMessage.warn('请先创建字典');
           return;
         } else {
-          const parent = await get(record.parendId);
+          const parent = await get(record.parentId);
           record.parentId = parent.id;
           record.parentKey = parent.key;
           record.parentName = parent.name;
@@ -60,9 +63,11 @@
         await setFieldsValue({ ...record });
 
         let validateApi = unref(type) !== ActionEnum.ADD ? Api.Update : Api.Save;
-        getValidateRules(validateApi, customFormSchemaRules(type)).then(async (rules) => {
-          rules && rules.length > 0 && (await updateSchema(rules));
-        });
+        getValidateRules(validateApi, customFormSchemaRules(type, getFieldsValue)).then(
+          async (rules) => {
+            rules && rules.length > 0 && (await updateSchema(rules));
+          },
+        );
       });
 
       async function handleSubmit() {

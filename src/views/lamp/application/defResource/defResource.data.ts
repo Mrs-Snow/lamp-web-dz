@@ -320,6 +320,8 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
   ];
 };
 
+const CODE_REG = /^[a-zA-Z0-9_:,;*]*$/;
+
 // 前端自定义表单验证规则
 export const customFormSchemaRules = (
   type: Ref<ActionEnum>,
@@ -363,7 +365,7 @@ export const customFormSchemaRules = (
             }
 
             if (value) {
-              if (!/^[a-zA-Z0-9_:,;*]*$/.test(value)) {
+              if (!CODE_REG.test(value)) {
                 return Promise.reject('编码只能包括: [英文大小写][数字][_][;][,][:][*]');
               }
               if (await check(value)) {
