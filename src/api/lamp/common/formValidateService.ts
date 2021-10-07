@@ -21,7 +21,7 @@ export interface FormSchemaExt extends FormSchema {
  * @param timeType 时间类型
  * @param compareType 比较类型
  */
-function compareDate2Now(dateStr, timeType, compareType) {
+function compareDate2Now(dateStr: string, timeType = 'YYYY-MM-DD HH:mm:ss', compareType = 'Past') {
   if (dateStr) {
     const now = moment();
     let nowStr = '';
@@ -41,6 +41,23 @@ function compareDate2Now(dateStr, timeType, compareType) {
     }
   }
   return true;
+}
+
+function getMessage(attrs: Recordable) {
+  if (attrs && attrs.message) {
+    const reg = /({([a-zA-Z0-9]*)})/g;
+    let result;
+    let message = '';
+    while ((result = reg.exec(attrs.message)) !== null) {
+      console.log(result);
+      const place = result[0];
+      const field = result[2];
+      message = attrs.message.replaceAll(place, attrs[field]);
+    }
+
+    return message;
+  }
+  return '输入不符合规则';
 }
 
 /**
@@ -63,37 +80,37 @@ function decodeRules(fieldRules: Rule[], constraints: ConstraintInfo[], fieldTyp
         case 'Max':
           fieldRules.push({
             type: 'method',
-            validator(_rule: RuleObject, value, callback) {
+            validator(_rule: RuleObject, value, _) {
               if (parseInt(value) > attrs.value) {
-                callback(attrs.message);
+                return Promise.reject(attrs.message);
               } else {
-                callback();
+                return Promise.resolve();
               }
             },
-            message: attrs.message,
+            message: getMessage(attrs),
           });
           break;
         case 'Min':
           fieldRules.push({
             type: 'method',
-            validator(_rule: RuleObject, value, callback) {
+            validator(_rule: RuleObject, value, _) {
               if (parseInt(value) < attrs.value) {
-                callback(attrs.message);
+                return Promise.reject(attrs.message);
               } else {
-                callback();
+                return Promise.resolve();
               }
             },
-            message: attrs.message,
+            message: getMessage(attrs),
           });
           break;
         case 'DecimalMax':
           fieldRules.push({
             type: 'method',
-            validator(_rule: RuleObject, value, callback) {
+            validator(_rule: RuleObject, value, _) {
               if (parseFloat(value) > attrs.value) {
-                callback(attrs.message);
+                return Promise.reject(attrs.message);
               } else {
-                callback();
+                return Promise.resolve();
               }
             },
             message: attrs.message,
@@ -102,11 +119,11 @@ function decodeRules(fieldRules: Rule[], constraints: ConstraintInfo[], fieldTyp
         case 'DecimalMin':
           fieldRules.push({
             type: 'method',
-            validator(_rule: RuleObject, value, callback) {
+            validator(_rule: RuleObject, value, _) {
               if (parseFloat(value) < attrs.value) {
-                callback(attrs.message);
+                return Promise.reject(attrs.message);
               } else {
-                callback();
+                return Promise.resolve();
               }
             },
             message: attrs.message,
@@ -115,11 +132,11 @@ function decodeRules(fieldRules: Rule[], constraints: ConstraintInfo[], fieldTyp
         case 'Null':
           fieldRules.push({
             type: 'method',
-            validator(_rule: RuleObject, value, callback) {
+            validator(_rule: RuleObject, value, _) {
               if (value.length !== 0) {
-                callback(attrs.message);
+                return Promise.reject(attrs.message);
               } else {
-                callback();
+                return Promise.resolve();
               }
             },
             message: attrs.message,
@@ -136,17 +153,17 @@ function decodeRules(fieldRules: Rule[], constraints: ConstraintInfo[], fieldTyp
           fieldRules.push({
             max: attrs.max,
             min: attrs.min,
-            message: attrs.message,
+            message: getMessage(attrs),
           });
           break;
         case 'AssertTrue':
           fieldRules.push({
             type: 'method',
-            validator(_rule: RuleObject, value, callback) {
+            validator(_rule: RuleObject, value, _) {
               if (value === 'true' || value === true) {
-                callback();
+                return Promise.resolve();
               } else {
-                callback(attrs.message);
+                return Promise.reject(attrs.message);
               }
             },
             message: attrs.message,
@@ -155,11 +172,11 @@ function decodeRules(fieldRules: Rule[], constraints: ConstraintInfo[], fieldTyp
         case 'AssertFalse':
           fieldRules.push({
             type: 'method',
-            validator(_rule: RuleObject, value, callback) {
+            validator(_rule: RuleObject, value, _) {
               if (value === 'false' || value === false) {
-                callback();
+                return Promise.resolve();
               } else {
-                callback(attrs.message);
+                return Promise.reject(attrs.message);
               }
             },
             message: attrs.message,
@@ -168,11 +185,11 @@ function decodeRules(fieldRules: Rule[], constraints: ConstraintInfo[], fieldTyp
         case 'Past':
           fieldRules.push({
             type: 'method',
-            validator(_rule: RuleObject, value, callback) {
+            validator(_rule: RuleObject, value, _) {
               if (compareDate2Now(value, fieldType, 'Past')) {
-                callback();
+                return Promise.resolve();
               } else {
-                callback(attrs.message);
+                return Promise.reject(attrs.message);
               }
             },
             message: attrs.message,
@@ -181,11 +198,11 @@ function decodeRules(fieldRules: Rule[], constraints: ConstraintInfo[], fieldTyp
         case 'Future':
           fieldRules.push({
             type: 'method',
-            validator(_rule: RuleObject, value, callback) {
+            validator(_rule: RuleObject, value, _) {
               if (compareDate2Now(value, fieldType, 'Future')) {
-                callback();
+                return Promise.resolve();
               } else {
-                callback(attrs.message);
+                return Promise.reject(attrs.message);
               }
             },
             message: attrs.message,
@@ -236,7 +253,7 @@ function transformationRules(data: FieldValidatorDesc[]): Partial<FormSchema>[] 
 
 function enhanceCustomRules(
   formSchemaRules: Partial<FormSchema>[],
-  customFormSchemaRules?: Partial<FormSchemaExt>[]
+  customFormSchemaRules?: Partial<FormSchemaExt>[],
 ): Partial<FormSchema>[] {
   if (!customFormSchemaRules) {
     return formSchemaRules;
@@ -277,7 +294,7 @@ function enhanceCustomRules(
  */
 export const getValidateRules = async (
   Api: AxiosRequestConfig,
-  customRules?: Partial<FormSchemaExt>[]
+  customRules?: Partial<FormSchemaExt>[],
 ): Promise<Partial<FormSchema>[]> => {
   const formValidateApi = { url: '', method: Api.method };
   for (const sp in ServicePrefixEnum) {
@@ -286,7 +303,7 @@ export const getValidateRules = async (
       // @ts-ignore
       formValidateApi.url = Api.url.replace(
         ServicePrefixEnum[sp],
-        `${ServicePrefixEnum[sp]}/form/validator`
+        `${ServicePrefixEnum[sp]}/form/validator`,
       );
     }
   }

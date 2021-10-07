@@ -1,28 +1,33 @@
 <template>
-  <PageWrapper dense contentFullHeight>
+  <PageWrapper dense contentFullHeight fixedHeight>
     <BasicTable @register="registerTable">
       <template #toolbar>
-        <a-button color="error" @click="handleBatchCancelAuthorize">取消授权</a-button>
-        <a-button type="primary" @click="handleAuthorize">授权</a-button>
-      </template>
-      <template #expired="{ record }">
-        <Tag :color="record.expired ? 'warning' : 'success'">{{
-          record.expired ? '已过期' : '未过期'
-        }}</Tag>
+        <a-button type="primary" @click="handleBatchDelete">{{
+          t('common.title.delete')
+        }}</a-button>
+        <a-button type="primary" @click="handleAdd">{{ t('common.title.add') }}</a-button>
       </template>
       <template #action="{ record }">
         <TableAction
           :actions="[
             {
-              label: '续期',
-              onClick: handleRenewal.bind(null, record),
+              label: '字典项',
+              onClick: handleViewItem.bind(null, record),
             },
             {
-              label: '取消授权',
+              label: t('common.title.edit'),
+              onClick: handleEdit.bind(null, record),
+            },
+            {
+              label: t('common.title.copy'),
+              onClick: handleCopy.bind(null, record),
+            },
+            {
+              label: t('common.title.delete'),
               color: 'error',
               popConfirm: {
-                title: '是否确认取消授权？',
-                confirm: handleCancelAuthorize.bind(null, record),
+                title: t('common.tips.confirmDelete'),
+                confirm: handleDelete.bind(null, record),
               },
             },
           ]"
@@ -34,24 +39,23 @@
 </template>
 <script lang="ts">
   import { defineComponent } from 'vue';
-  import { Tag } from 'ant-design-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { useMessage } from '/@/hooks/web/useMessage';
   import { useRouter } from 'vue-router';
+  import { useMessage } from '/@/hooks/web/useMessage';
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
   import { PageWrapper } from '/@/components/Page';
   import { useDrawer } from '/@/components/Drawer';
   import { handleFetchParams } from '/@/utils/lamp/common';
   import { ActionEnum } from '/@/enums/commonEnum';
-  import { page, cancel } from '/@/api/lamp/application/defTenantApplicationRel';
-  import { columns, searchFormSchema } from './defTenantApplicationRel.data';
+  import { page, remove } from '/@/api/lamp/base/defDict';
+  import { columns, searchFormSchema } from './defDict.data';
   import EditModal from './Edit.vue';
   import { RouteEnum } from '/@/enums/biz/tenant';
 
   export default defineComponent({
     // 若需要开启页面缓存，请将此参数跟菜单名保持一致
-    name: 'DefTenantApplicationRelManager',
-    components: { BasicTable, PageWrapper, EditModal, TableAction, Tag },
+    name: 'DefDictManagement',
+    components: { BasicTable, PageWrapper, EditModal, TableAction },
     setup() {
       const { t } = useI18n();
       const { createMessage, createConfirm } = useMessage();
@@ -61,7 +65,7 @@
 
       // 表格
       const [registerTable, { reload, getSelectRowKeys }] = useTable({
-        title: t('lamp.application.defTenantApplicationRel.table.title'),
+        title: t('lamp.base.defDict.table.title'),
         api: page,
         columns: columns(),
         formConfig: {
@@ -77,15 +81,31 @@
           type: 'checkbox',
         },
         actionColumn: {
-          width: 160,
+          width: 150,
           title: t('common.column.action'),
           dataIndex: 'action',
           slots: { customRender: 'action' },
         },
       });
 
-      // 弹出续期页面
-      function handleRenewal(record: Recordable, e: Event) {
+      // 弹出复制页面
+      function handleCopy(record: Recordable, e: Event) {
+        e?.stopPropagation();
+        openDrawer(true, {
+          record,
+          type: ActionEnum.COPY,
+        });
+      }
+
+      // 弹出新增页面
+      function handleAdd() {
+        openDrawer(true, {
+          type: ActionEnum.ADD,
+        });
+      }
+
+      // 弹出编辑页面
+      function handleEdit(record: Recordable, e: Event) {
         e?.stopPropagation();
         openDrawer(true, {
           record,
@@ -93,28 +113,27 @@
         });
       }
 
-      // 弹出授权
-      function handleAuthorize() {
-        replace({
-          name: RouteEnum.APPLICATION_GRANT,
-        });
+      // 新增或编辑成功回调
+      function handleSuccess() {
+        reload();
       }
 
-      // 点击取消授权
-      async function handleCancelAuthorize(record: Recordable, e: Event) {
-        e?.stopPropagation();
-        if (record?.id) {
-          await batchCancelAuthorize([record.id]);
-        }
-      }
-
-      async function batchCancelAuthorize(ids: string[]) {
-        await cancel(ids);
-        createMessage.success('取消成功');
+      async function batchDelete(ids: any[]) {
+        await remove(ids);
+        createMessage.success(t('common.tips.deleteSuccess'));
         handleSuccess();
       }
 
-      function handleBatchCancelAuthorize() {
+      // 点击单行删除
+      function handleDelete(record: Recordable, e: Event) {
+        e?.stopPropagation();
+        if (record?.id) {
+          batchDelete([record.id]);
+        }
+      }
+
+      // 点击批量删除
+      function handleBatchDelete() {
         const ids = getSelectRowKeys();
         if (!ids || ids.length <= 0) {
           createMessage.warning(t('common.tips.pleaseSelectTheData'));
@@ -122,27 +141,34 @@
         }
         createConfirm({
           iconType: 'warning',
-          content: '是否确认要取消授权',
+          content: t('common.tips.confirmDelete'),
           onOk: async () => {
-            await batchCancelAuthorize(ids);
+            await batchDelete(ids);
           },
         });
       }
 
-      // 授权成功回调
-      function handleSuccess() {
-        reload();
+      // 查看字典项
+      function handleViewItem(record: Recordable, e: Event) {
+        e.stopPropagation();
+        replace({
+          name: RouteEnum.DICT_ITEM,
+          params: { dictId: record.id },
+          query: { name: record.name },
+        });
       }
 
       return {
         t,
         registerTable,
         registerDrawer,
-        handleAuthorize,
-        handleRenewal,
-        handleCancelAuthorize,
-        handleBatchCancelAuthorize,
+        handleAdd,
+        handleCopy,
+        handleEdit,
+        handleDelete,
         handleSuccess,
+        handleBatchDelete,
+        handleViewItem,
       };
     },
   });

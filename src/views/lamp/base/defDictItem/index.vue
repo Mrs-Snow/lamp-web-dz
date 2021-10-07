@@ -1,44 +1,26 @@
 <template>
-  <PageWrapper dense contentFullHeight>
+  <PageWrapper dense contentFullHeight fixedHeight>
     <BasicTable @register="registerTable">
       <template #toolbar>
-        <a-button
-          type="primary"
-          @click="handleBatchDelete"
-          v-hasPermission="RoleEnum.APPLICATION_DELETE"
-          >{{ t('common.title.delete') }}</a-button
-        >
-        <a-button type="primary" @click="handleAdd" v-hasPermission="[RoleEnum.APPLICATION_ADD]">{{
-          t('common.title.add')
+        <a-button type="primary" @click="handleBatchDelete">{{
+          t('common.title.delete')
         }}</a-button>
+        <a-button type="primary" @click="handleAdd">{{ t('common.title.add') }}</a-button>
       </template>
       <template #action="{ record }">
         <TableAction
           :actions="[
             {
-              icon: 'ant-design:edit-outlined',
-              tooltip: t('common.title.edit'),
+              label: t('common.title.edit'),
               onClick: handleEdit.bind(null, record),
-              auth: RoleEnum.APPLICATION_EDIT,
             },
-            {
-              icon: 'ant-design:menu-unfold-outlined',
-              tooltip: t('lamp.application.defApplication.table.resource'),
-              onClick: handleResource.bind(null, record),
-              auth: RoleEnum.APPLICATION_RESOURCE,
-            },
-          ]"
-          :dropDownActions="[
             {
               label: t('common.title.copy'),
-              icon: 'ant-design:copy-outlined',
               onClick: handleCopy.bind(null, record),
-              auth: RoleEnum.APPLICATION_COPY,
             },
             {
               label: t('common.title.delete'),
-              icon: 'ant-design:delete-outlined',
-              auth: RoleEnum.APPLICATION_DELETE,
+              color: 'error',
               popConfirm: {
                 title: t('common.tips.confirmDelete'),
                 confirm: handleDelete.bind(null, record),
@@ -52,34 +34,37 @@
   </PageWrapper>
 </template>
 <script lang="ts">
-  import { defineComponent } from 'vue';
+  import { defineComponent, ref, onMounted } from 'vue';
   import { useRouter } from 'vue-router';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { RoleEnum } from '/@/enums/roleEnum';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
   import { PageWrapper } from '/@/components/Page';
   import { useDrawer } from '/@/components/Drawer';
   import { handleFetchParams } from '/@/utils/lamp/common';
   import { ActionEnum } from '/@/enums/commonEnum';
-  import { page, remove } from '/@/api/lamp/application/defApplication';
-  import { columns, searchFormSchema } from './defApplication.data';
+  import { page, remove } from '/@/api/lamp/base/defDictItem';
+  import { columns, searchFormSchema } from './defDictItem.data';
   import EditModal from './Edit.vue';
-  import { RouteEnum } from '/@/enums/biz/tenant';
 
   export default defineComponent({
-    name: '应用维护',
+    // 若需要开启页面缓存，请将此参数跟菜单名保持一致
+    name: 'DefDictItemManagement',
     components: { BasicTable, PageWrapper, EditModal, TableAction },
     setup() {
       const { t } = useI18n();
       const { createMessage, createConfirm } = useMessage();
       // 编辑页弹窗
       const [registerDrawer, { openDrawer }] = useDrawer();
-      const { replace } = useRouter();
+      const { currentRoute } = useRouter();
+      const dictId = ref<string>('');
+      const dictName = ref<string>('');
 
       // 表格
       const [registerTable, { reload, getSelectRowKeys }] = useTable({
-        title: t('lamp.application.defApplication.table.title'),
+        title: () => {
+          return `【${dictName.value}】的字典项列表`;
+        },
         api: page,
         columns: columns(),
         formConfig: {
@@ -87,6 +72,9 @@
           schemas: searchFormSchema(),
         },
         beforeFetch: handleFetchParams,
+        searchInfo: {
+          parentId: dictId,
+        },
         useSearchForm: true,
         showTableSetting: true,
         bordered: true,
@@ -102,9 +90,17 @@
         },
       });
 
+      onMounted(() => {
+        const { params, query } = currentRoute.value;
+        dictId.value = params?.dictId as string;
+        dictName.value = (query?.name || '') as string;
+        // reload();
+      });
+
       // 弹出复制页面
       function handleCopy(record: Recordable, e: Event) {
         e?.stopPropagation();
+        record.parendId = dictId.value;
         openDrawer(true, {
           record,
           type: ActionEnum.COPY,
@@ -115,12 +111,14 @@
       function handleAdd() {
         openDrawer(true, {
           type: ActionEnum.ADD,
+          record: { parendId: dictId.value },
         });
       }
 
       // 弹出编辑页面
       function handleEdit(record: Recordable, e: Event) {
         e?.stopPropagation();
+        record.parendId = dictId.value;
         openDrawer(true, {
           record,
           type: ActionEnum.EDIT,
@@ -162,14 +160,6 @@
         });
       }
 
-      function handleResource(record: Recordable, e: Event) {
-        e?.stopPropagation();
-        replace({
-          name: RouteEnum.APPLICATION_RESOURCE,
-          params: { id: record.id },
-        });
-      }
-
       return {
         t,
         registerTable,
@@ -180,8 +170,6 @@
         handleDelete,
         handleSuccess,
         handleBatchDelete,
-        handleResource,
-        RoleEnum,
       };
     },
   });

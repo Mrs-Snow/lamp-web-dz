@@ -31,3 +31,10 @@ export enum ResourceTypeEnum {
   FIELD = '50',
   API = '60',
 }
+
+export enum RouteEnum {
+  DICT_ITEM = '字典项维护',
+  APPLICATION_RESOURCE = '应用资源维护',
+  APPLICATION_GRANT_MANAGE = '应用授权管理',
+  APPLICATION_GRANT = '应用授权',
+}

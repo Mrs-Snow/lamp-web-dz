@@ -1,0 +1,127 @@
+import { Ref } from 'vue';
+import { BasicColumn, FormSchema } from '/@/components/Table';
+import { useI18n } from '/@/hooks/web/useI18n';
+import { ActionEnum, DictEnum } from '/@/enums/commonEnum';
+import { FormSchemaExt } from '/@/api/lamp/common/formValidateService';
+import { dictComponentProps, stateFilters, stateComponentProps } from '/@/utils/lamp/common';
+
+const { t } = useI18n();
+// 列表页字段
+export const columns = (): BasicColumn[] => {
+  return [
+    {
+      title: t('lamp.base.defDict.key'),
+      dataIndex: 'key',
+      // width: 180,
+    },
+    {
+      title: t('lamp.base.defDict.name'),
+      dataIndex: 'name',
+      // width: 180,
+    },
+    {
+      title: t('lamp.base.defDict.classify'),
+      dataIndex: 'echoMap.classify',
+      width: 120,
+    },
+    {
+      title: t('lamp.base.defDict.state'),
+      dataIndex: 'state',
+      width: 100,
+      filters: [...stateFilters()],
+      format: (text) => {
+        return text ? t('lamp.common.enable') : t('lamp.common.disable');
+      },
+    },
+    {
+      title: t('lamp.common.createdTime'),
+      dataIndex: 'createdTime',
+      sorter: true,
+      width: 180,
+    },
+  ];
+};
+
+export const searchFormSchema = (): FormSchema[] => {
+  return [
+    {
+      label: t('lamp.base.defDictItem.classify'),
+      field: 'classify',
+      component: 'ApiSelect',
+      colProps: { span: 6 },
+      componentProps: {
+        ...dictComponentProps(DictEnum.DICT_CLASSIFY),
+      },
+    },
+    {
+      label: t('lamp.base.defDict.key'),
+      field: 'key',
+      component: 'Input',
+      colProps: { span: 6 },
+    },
+    {
+      label: t('lamp.base.defDict.name'),
+      field: 'name',
+      component: 'Input',
+      colProps: { span: 6 },
+    },
+    {
+      field: 'createTimeRange',
+      label: t('lamp.common.createdTime'),
+      component: 'RangePicker',
+      colProps: { span: 6 },
+    },
+  ];
+};
+
+// 编辑页字段
+export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
+  return [
+    {
+      field: 'id',
+      label: 'ID',
+      component: 'Input',
+      show: false,
+    },
+    {
+      label: t('lamp.base.defDict.classify'),
+      field: 'classify',
+      component: 'ApiSelect',
+      componentProps: {
+        ...dictComponentProps(DictEnum.DICT_CLASSIFY),
+      },
+    },
+    {
+      label: t('lamp.base.defDict.key'),
+      field: 'key',
+      component: 'Input',
+      dynamicDisabled: () => {
+        return type.value === ActionEnum.EDIT;
+      },
+    },
+    {
+      label: t('lamp.base.defDict.name'),
+      field: 'name',
+      component: 'Input',
+    },
+    {
+      label: t('lamp.base.defDict.state'),
+      field: 'state',
+      component: 'RadioButtonGroup',
+      componentProps: {
+        ...stateComponentProps(),
+      },
+      defaultValue: true,
+    },
+    {
+      label: t('lamp.base.defDict.remark'),
+      field: 'remark',
+      component: 'InputTextArea',
+    },
+  ];
+};
+
+// 前端自定义表单验证规则
+export const customFormSchemaRules = (_): Partial<FormSchemaExt>[] => {
+  return [];
+};

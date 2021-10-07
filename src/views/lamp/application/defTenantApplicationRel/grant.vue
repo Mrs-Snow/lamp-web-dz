@@ -19,6 +19,7 @@
   import TenantList from './grant/TenantList.vue';
   import ApplicationTabs from './grant/ApplicationTabs.vue';
   import { grant } from '/@/api/lamp/application/defTenantApplicationRel';
+  import { RouteEnum } from '/@/enums/biz/tenant';
 
   export default defineComponent({
     name: '应用授权',
@@ -59,7 +60,7 @@
           await grant(data);
           await closeCurrent();
           replace({
-            name: '应用授权管理',
+            name: RouteEnum.APPLICATION_GRANT_MANAGE,
           });
           createMessage.success('授权成功');
         } finally {

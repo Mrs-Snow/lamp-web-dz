@@ -3,7 +3,9 @@ import componentSetting from '/@/settings/componentSetting';
 import { isArray, isFunction, isString } from '/@/utils/is';
 import { DictEnum, EnumEnum } from '/@/enums/commonEnum';
 import { asyncFindDictList, asyncFindEnumList } from '/@/api/lamp/common/general';
+import { useI18n } from '/@/hooks/web/useI18n';
 
+const { t } = useI18n();
 const { createMessage } = useMessage();
 
 const PAGE_PARAMS = Object.values(componentSetting.table.fetchSetting);
@@ -215,4 +217,36 @@ export const dictComponentProps = (type: DictEnum, excludes?: string | string[])
       return option.label.toUpperCase().indexOf(input.toUpperCase()) >= 0;
     },
   };
+};
+
+export const stateComponentProps = () => {
+  return {
+    options: [
+      { label: t('lamp.common.enable'), value: true },
+      { label: t('lamp.common.disable'), value: false },
+    ],
+  };
+};
+
+export const yesNoComponentProps = () => {
+  return {
+    options: [
+      { label: t('lamp.common.yes'), value: true },
+      { label: t('lamp.common.no'), value: false },
+    ],
+  };
+};
+
+export const stateFilters = () => {
+  return [
+    { text: t('lamp.common.enable'), value: 'true' },
+    { text: t('lamp.common.disable'), value: 'false' },
+  ];
+};
+
+export const yesNoFilters = () => {
+  return [
+    { text: t('lamp.common.yes'), value: 'true' },
+    { text: t('lamp.common.no'), value: 'false' },
+  ];
 };
