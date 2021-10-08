@@ -86,14 +86,6 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       show: false,
     },
     {
-      label: t('lamp.base.defDict.classify'),
-      field: 'classify',
-      component: 'ApiSelect',
-      componentProps: {
-        ...dictComponentProps(DictEnum.DICT_CLASSIFY),
-      },
-    },
-    {
       label: t('lamp.base.defDict.key'),
       field: 'key',
       component: 'Input',
