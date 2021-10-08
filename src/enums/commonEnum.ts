@@ -4,6 +4,8 @@
 export enum ServicePrefixEnum {
   // 租户服务
   TENANT = '/tenant',
+  // 基础服务
+  BASE = '/base',
   // 认证服务
   OAUTH = '/oauth',
   // 文件服务

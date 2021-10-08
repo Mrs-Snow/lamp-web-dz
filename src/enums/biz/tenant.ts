@@ -37,4 +37,6 @@ export enum RouteEnum {
   APPLICATION_RESOURCE = '应用资源维护',
   APPLICATION_GRANT_MANAGE = '应用授权管理',
   APPLICATION_GRANT = '应用授权',
+
+  BASIC_DICT_ITEM = '字典项维护',
 }
