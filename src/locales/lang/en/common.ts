@@ -47,6 +47,8 @@ export default {
     copySuccess: 'Copy Success',
     deleteSuccess: 'Delete Success',
     downloadSuccess: 'Download Success',
+    importSuccess: 'Import Success',
+    exportSuccess: 'Export Success',
     addFail: 'Add Fail',
     editFail: 'Edit Fail',
     copyFail: 'Copy Fail',

@@ -47,6 +47,8 @@ export default {
     updateSuccess: '修改成功',
     copySuccess: '复制成功',
     deleteSuccess: '删除成功',
+    importSuccess: '导入成功',
+    exportSuccess: '导出成功',
     addFail: '新增失败',
     editFail: '编辑失败',
     copyFail: '复制失败',

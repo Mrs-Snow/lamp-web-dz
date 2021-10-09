@@ -1,10 +1,10 @@
 import { Ref } from 'vue';
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
-import { ActionEnum, DictEnum } from '/@/enums/commonEnum';
+import { ActionEnum } from '/@/enums/commonEnum';
 import { FormSchemaExt, RuleType } from '/@/api/lamp/common/formValidateService';
 import { check } from '/@/api/devOperation/base/defDict';
-import { dictComponentProps, stateFilters, stateComponentProps } from '/@/utils/lamp/common';
+import { stateFilters, stateComponentProps } from '/@/utils/lamp/common';
 
 const { t } = useI18n();
 // 列表页字段
@@ -13,17 +13,10 @@ export const columns = (): BasicColumn[] => {
     {
       title: t('devOperation.base.defDict.key'),
       dataIndex: 'key',
-      // width: 180,
     },
     {
       title: t('devOperation.base.defDict.name'),
       dataIndex: 'name',
-      // width: 180,
-    },
-    {
-      title: t('devOperation.base.defDict.classify'),
-      dataIndex: 'echoMap.classify',
-      width: 120,
     },
     {
       title: t('devOperation.base.defDict.state'),
@@ -45,16 +38,6 @@ export const columns = (): BasicColumn[] => {
 
 export const searchFormSchema = (): FormSchema[] => {
   return [
-    {
-      label: t('devOperation.base.defDictItem.classify'),
-      field: 'classify',
-      component: 'ApiSelect',
-      colProps: { span: 6 },
-      componentProps: {
-        ...dictComponentProps(DictEnum.DICT_CLASSIFY),
-        mode: 'multiple',
-      },
-    },
     {
       label: t('devOperation.base.defDict.key'),
       field: 'key',

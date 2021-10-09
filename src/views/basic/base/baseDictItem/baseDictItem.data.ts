@@ -1,32 +1,34 @@
 import { Ref } from 'vue';
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
-import { ActionEnum } from '/@/enums/commonEnum';
-import { stateFilters, stateComponentProps } from '/@/utils/lamp/common';
+import { ActionEnum, DictEnum } from '/@/enums/commonEnum';
+import { dictComponentProps, stateFilters, stateComponentProps } from '/@/utils/lamp/common';
 import { FormSchemaExt, RuleType } from '/@/api/lamp/common/formValidateService';
-import { check } from '/@/api/devOperation/base/defDictItem';
+import { check } from '/@/api/basic/base/baseDictItem';
 
 const { t } = useI18n();
 // 列表页字段
 export const columns = (): BasicColumn[] => {
   return [
     {
-      title: t('devOperation.base.defDictItem.key'),
+      title: t('basic.base.baseDictItem.key'),
       dataIndex: 'key',
+      // width: 180,
     },
     {
-      title: t('devOperation.base.defDictItem.name'),
+      title: t('basic.base.baseDictItem.name'),
       dataIndex: 'name',
+      // width: 180,
     },
     {
-      title: t('devOperation.base.defDictItem.classify'),
+      title: t('basic.base.baseDictItem.classify'),
       dataIndex: 'echoMap.classify',
       width: 120,
     },
     {
-      title: t('devOperation.base.defDict.state'),
+      title: t('basic.base.baseDictItem.state'),
       dataIndex: 'state',
-      width: 100,
+      width: 120,
       filters: [...stateFilters()],
       format: (text) => {
         return text ? t('lamp.common.enable') : t('lamp.common.disable');
@@ -44,13 +46,23 @@ export const columns = (): BasicColumn[] => {
 export const searchFormSchema = (): FormSchema[] => {
   return [
     {
-      label: t('devOperation.base.defDictItem.key'),
+      label: t('basic.base.baseDictItem.classify'),
+      field: 'classify',
+      component: 'ApiSelect',
+      colProps: { span: 6 },
+      componentProps: {
+        ...dictComponentProps(DictEnum.DICT_CLASSIFY),
+        mode: 'multiple',
+      },
+    },
+    {
+      label: t('basic.base.baseDictItem.key'),
       field: 'key',
       component: 'Input',
       colProps: { span: 6 },
     },
     {
-      label: t('devOperation.base.defDictItem.name'),
+      label: t('basic.base.baseDictItem.name'),
       field: 'name',
       component: 'Input',
       colProps: { span: 6 },
@@ -74,25 +86,25 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       show: false,
     },
     {
-      label: t('devOperation.base.defDictItem.parentId'),
+      label: t('basic.base.baseDictItem.parentId'),
       field: 'parentId',
       component: 'Input',
       show: false,
     },
     {
-      label: t('devOperation.base.defDictItem.parentKey'),
+      label: t('basic.base.baseDictItem.parentKey'),
       field: 'parentKey',
       component: 'Input',
       dynamicDisabled: true,
     },
     {
-      label: t('devOperation.base.defDictItem.label'),
+      label: t('basic.base.baseDictItem.name'),
       field: 'parentName',
       component: 'Input',
       dynamicDisabled: true,
     },
     {
-      label: t('devOperation.base.defDictItem.key'),
+      label: t('basic.base.baseDictItem.key'),
       field: 'key',
       component: 'Input',
       dynamicDisabled: () => {
@@ -100,12 +112,12 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       },
     },
     {
-      label: t('devOperation.base.defDictItem.name'),
+      label: t('basic.base.baseDictItem.name'),
       field: 'name',
       component: 'Input',
     },
     {
-      label: t('devOperation.base.defDictItem.state'),
+      label: t('basic.base.baseDictItem.state'),
       field: 'state',
       component: 'RadioButtonGroup',
       componentProps: {
@@ -114,27 +126,27 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       defaultValue: true,
     },
     {
-      label: t('devOperation.base.defDictItem.remark'),
+      label: t('basic.base.baseDictItem.remark'),
       field: 'remark',
       component: 'InputTextArea',
     },
     {
-      label: t('devOperation.base.defDictItem.sortValue'),
+      label: t('basic.base.baseDictItem.sortValue'),
       field: 'sortValue',
       component: 'InputNumber',
     },
     {
-      label: t('devOperation.base.defDictItem.icon'),
+      label: t('basic.base.baseDictItem.icon'),
       field: 'icon',
       component: 'IconPicker',
     },
     {
-      label: t('devOperation.base.defDictItem.cssStyle'),
+      label: t('basic.base.baseDictItem.cssStyle'),
       field: 'cssStyle',
       component: 'Input',
     },
     {
-      label: t('devOperation.base.defDictItem.cssClass'),
+      label: t('basic.base.baseDictItem.cssClass'),
       field: 'cssClass',
       component: 'Input',
     },
@@ -158,7 +170,7 @@ export const customFormSchemaRules = (
               return Promise.resolve();
             }
             if (await check(value, getFieldsValue()?.parentId)) {
-              return Promise.reject(t('devOperation.base.defDict.key') + '已经存在');
+              return Promise.reject(t('basic.base.baseDict.key') + '已经存在');
             }
             return Promise.resolve();
           },

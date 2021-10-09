@@ -5,6 +5,7 @@
     :title="t(`common.title.${type}`)"
     :maskClosable="false"
     @ok="handleSubmit"
+    :keyboard="true"
   >
     <BasicForm @register="registerForm" />
   </BasicModal>

@@ -2,29 +2,26 @@ import { Ref } from 'vue';
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { ActionEnum } from '/@/enums/commonEnum';
-import { stateFilters, stateComponentProps } from '/@/utils/lamp/common';
 import { FormSchemaExt, RuleType } from '/@/api/lamp/common/formValidateService';
-import { check } from '/@/api/devOperation/base/defDictItem';
+import { check } from '/@/api/basic/base/baseDict';
+import { stateFilters, stateComponentProps } from '/@/utils/lamp/common';
 
 const { t } = useI18n();
 // 列表页字段
 export const columns = (): BasicColumn[] => {
   return [
     {
-      title: t('devOperation.base.defDictItem.key'),
+      title: t('basic.base.baseDict.key'),
       dataIndex: 'key',
+      // width: 180,
     },
     {
-      title: t('devOperation.base.defDictItem.name'),
+      title: t('basic.base.baseDict.name'),
       dataIndex: 'name',
+      // width: 180,
     },
     {
-      title: t('devOperation.base.defDictItem.classify'),
-      dataIndex: 'echoMap.classify',
-      width: 120,
-    },
-    {
-      title: t('devOperation.base.defDict.state'),
+      title: t('basic.base.baseDict.state'),
       dataIndex: 'state',
       width: 100,
       filters: [...stateFilters()],
@@ -43,14 +40,24 @@ export const columns = (): BasicColumn[] => {
 
 export const searchFormSchema = (): FormSchema[] => {
   return [
+    // {
+    //   label: t('basic.base.baseDictItem.classify'),
+    //   field: 'classify',
+    //   component: 'ApiSelect',
+    //   colProps: { span: 6 },
+    //   componentProps: {
+    //     ...dictComponentProps(DictEnum.DICT_CLASSIFY),
+    //     mode: 'multiple',
+    //   },
+    // },
     {
-      label: t('devOperation.base.defDictItem.key'),
+      label: t('basic.base.baseDict.key'),
       field: 'key',
       component: 'Input',
       colProps: { span: 6 },
     },
     {
-      label: t('devOperation.base.defDictItem.name'),
+      label: t('basic.base.baseDict.name'),
       field: 'name',
       component: 'Input',
       colProps: { span: 6 },
@@ -74,78 +81,46 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       show: false,
     },
     {
-      label: t('devOperation.base.defDictItem.parentId'),
-      field: 'parentId',
-      component: 'Input',
-      show: false,
-    },
-    {
-      label: t('devOperation.base.defDictItem.parentKey'),
-      field: 'parentKey',
-      component: 'Input',
-      dynamicDisabled: true,
-    },
-    {
-      label: t('devOperation.base.defDictItem.label'),
-      field: 'parentName',
-      component: 'Input',
-      dynamicDisabled: true,
-    },
-    {
-      label: t('devOperation.base.defDictItem.key'),
+      label: t('basic.base.baseDict.key'),
       field: 'key',
       component: 'Input',
       dynamicDisabled: () => {
-        return type.value === ActionEnum.EDIT;
+        return [ActionEnum.EDIT, ActionEnum.VIEW].includes(type.value);
       },
     },
     {
-      label: t('devOperation.base.defDictItem.name'),
+      label: t('basic.base.baseDict.name'),
       field: 'name',
       component: 'Input',
+      dynamicDisabled: () => {
+        return [ActionEnum.VIEW].includes(type.value);
+      },
     },
     {
-      label: t('devOperation.base.defDictItem.state'),
+      label: t('basic.base.baseDict.state'),
       field: 'state',
       component: 'RadioButtonGroup',
       componentProps: {
         ...stateComponentProps(),
       },
       defaultValue: true,
+      dynamicDisabled: () => {
+        return [ActionEnum.VIEW].includes(type.value);
+      },
     },
     {
-      label: t('devOperation.base.defDictItem.remark'),
+      label: t('basic.base.baseDict.remark'),
       field: 'remark',
       component: 'InputTextArea',
-    },
-    {
-      label: t('devOperation.base.defDictItem.sortValue'),
-      field: 'sortValue',
-      component: 'InputNumber',
-    },
-    {
-      label: t('devOperation.base.defDictItem.icon'),
-      field: 'icon',
-      component: 'IconPicker',
-    },
-    {
-      label: t('devOperation.base.defDictItem.cssStyle'),
-      field: 'cssStyle',
-      component: 'Input',
-    },
-    {
-      label: t('devOperation.base.defDictItem.cssClass'),
-      field: 'cssClass',
-      component: 'Input',
+      dynamicDisabled: () => {
+        return [ActionEnum.VIEW].includes(type.value);
+      },
     },
   ];
 };
 
 // 前端自定义表单验证规则
-export const customFormSchemaRules = (
-  type: Ref<ActionEnum>,
-  getFieldsValue: () => Recordable,
-): Partial<FormSchemaExt>[] => {
+export const customFormSchemaRules = (type: Ref<ActionEnum>): Partial<FormSchemaExt>[] => {
   return [
     {
       field: 'key',
@@ -157,8 +132,8 @@ export const customFormSchemaRules = (
             if (type.value === ActionEnum.EDIT) {
               return Promise.resolve();
             }
-            if (await check(value, getFieldsValue()?.parentId)) {
-              return Promise.reject(t('devOperation.base.defDict.key') + '已经存在');
+            if (await check(value)) {
+              return Promise.reject(t('basic.base.baseDict.key') + '已经存在');
             }
             return Promise.resolve();
           },
