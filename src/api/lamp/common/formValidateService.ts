@@ -47,14 +47,13 @@ function getMessage(attrs: Recordable) {
   if (attrs && attrs.message) {
     const reg = /({([a-zA-Z0-9]*)})/g;
     let result;
-    let message = '';
+    let message = attrs.message;
     while ((result = reg.exec(attrs.message)) !== null) {
       console.log(result);
       const place = result[0];
       const field = result[2];
-      message = attrs.message.replaceAll(place, attrs[field]);
+      message = message.replaceAll(place, attrs[field]);
     }
-
     return message;
   }
   return '输入不符合规则';
@@ -72,8 +71,15 @@ function decodeRules(fieldRules: Rule[], constraints: ConstraintInfo[], fieldTyp
       switch (type) {
         case 'RegEx':
           fieldRules.push({
-            type: 'regexp',
-            pattern: new RegExp(attrs.regexp),
+            type: 'method',
+            validator(_rule: RuleObject, value, _) {
+              const regexp = new RegExp(attrs.regexp);
+              if (!regexp.test(value)) {
+                return Promise.reject(attrs.message);
+              } else {
+                return Promise.resolve();
+              }
+            },
             message: attrs.message,
           });
           break;

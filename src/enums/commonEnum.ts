@@ -84,13 +84,17 @@ export enum EnumEnum {
   HttpMethod = 'HttpMethod',
 }
 export enum DictEnum {
-  // authority
+  // 全局
+  GLOBAL_SEX = 'GLOBAL_SEX',
+
+  // base
   POSITION_STATUS = 'POSITION_STATUS',
   ORG_TYPE = 'ORG_TYPE',
   NATION = 'NATION',
   EDUCATION = 'EDUCATION',
   AREA_LEVEL = 'TENANT_AREA_LEVEL',
   AREA_SOURCE = 'TENANT_AREA_SOURCE',
+  // tenant
   RESOURCE_TYPE = 'TENANT_RESOURCE_TYPE',
   RESOURCE_TRANSITION_NAME = 'TENANT_RESOURCE_TRANSITION_NAME',
   DICT_TYPE = 'TENANT_DICT_TYPE',

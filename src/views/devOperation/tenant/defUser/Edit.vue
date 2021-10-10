@@ -1,95 +1,85 @@
 <template>
-  <BasicModal
+  <BasicDrawer
     v-bind="$attrs"
-    @register="registerModal"
-    :title="t(`common.title.${type}`)"
+    @register="registerDrawer"
+    showFooter
+    width="50%"
     :maskClosable="false"
+    :title="t(`common.title.${type}`)"
     @ok="handleSubmit"
   >
     <BasicForm @register="registerForm" />
-  </BasicModal>
+  </BasicDrawer>
 </template>
 <script lang="ts">
   import { defineComponent, ref, unref } from 'vue';
-  import { BasicModal, useModalInner } from '/@/components/Modal';
+  import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
   import { BasicForm, useForm } from '/@/components/Form/index';
-  import { useMessage } from '/@/hooks/web/useMessage';
   import { useI18n } from '/@/hooks/web/useI18n';
+  import { useMessage } from '/@/hooks/web/useMessage';
   import { ActionEnum } from '/@/enums/commonEnum';
+  import { Api, save, update } from '/@/api/devOperation/tenant/defUser';
   import { getValidateRules } from '/@/api/lamp/common/formValidateService';
-  import { Api, save, update } from '/@/api/devOperation/tenant/user';
-  import { editFormSchema, customFormSchemaRules } from './user.data';
+  import { customFormSchemaRules, editFormSchema } from './defUser.data';
 
   export default defineComponent({
-    name: 'GlobalUserEdit',
-    components: { BasicModal, BasicForm },
+    name: 'DefUserEdit',
+    components: { BasicDrawer, BasicForm },
     emits: ['success', 'register'],
     setup(_, { emit }) {
       const { t } = useI18n();
-      const type = ref(ActionEnum.ADD);
+      const type = ref<ActionEnum>(ActionEnum.ADD);
       const { createMessage } = useMessage();
-
-      const [
-        registerForm,
-        { setFieldsValue, resetFields, updateSchema, validate, getFieldsValue, validateFields },
-      ] = useForm({
+      const [registerForm, { setFieldsValue, resetFields, updateSchema, validate }] = useForm({
         labelWidth: 100,
-        schemas: editFormSchema(type, (value) => {
-          if (value) {
-            validateFields(['account']);
-          }
-        }),
+        schemas: editFormSchema(type),
         showActionButtonGroup: false,
         actionColOptions: {
           span: 23,
         },
       });
 
-      const [registerModal, { setModalProps, closeModal }] = useModalInner(async (data) => {
+      const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(async (data) => {
         await resetFields();
-        setModalProps({ confirmLoading: false });
+        setDrawerProps({ confirmLoading: false });
         type.value = data?.type;
 
-        let validateApi = Api.Save;
         if (unref(type) !== ActionEnum.ADD) {
-          const record = { ...data.record };
-          record.sex = record?.sex?.code;
-          record.tenantCode = data?.tenantCode;
-          await setFieldsValue({
-            ...record,
-          });
-          validateApi = Api.Update;
-        }
-        if (unref(type) === ActionEnum.COPY) {
-          validateApi = Api.Save;
+          // 赋值
+          const record = { ...data?.record };
+          await setFieldsValue({ ...record });
         }
 
-        getValidateRules(validateApi, customFormSchemaRules(type, getFieldsValue)).then((rules) => {
-          updateSchema(rules);
-        });
+        if (unref(type) !== ActionEnum.VIEW) {
+          let validateApi = unref(type) !== ActionEnum.ADD ? Api.Update : Api.Save;
+          getValidateRules(validateApi, customFormSchemaRules(type)).then(async (rules) => {
+            rules && rules.length > 0 && (await updateSchema(rules));
+          });
+        }
       });
 
       async function handleSubmit() {
         try {
           const params = await validate();
-          setModalProps({ confirmLoading: true });
+          setDrawerProps({ confirmLoading: true });
 
-          if (unref(type) === ActionEnum.EDIT) {
-            await update(params);
-          } else {
-            params.id = null;
-            await save(params);
+          if (unref(type) !== ActionEnum.VIEW) {
+            if (unref(type) === ActionEnum.EDIT) {
+              await update(params);
+            } else {
+              params.id = null;
+              await save(params);
+            }
+            createMessage.success(t(`common.tips.${type.value}Success`));
           }
-
-          createMessage.success(t(`common.tips.${type.value}Success`));
-          closeModal();
+          closeDrawer();
           emit('success');
         } finally {
-          setModalProps({ confirmLoading: false });
+          setDrawerProps({ confirmLoading: false });
         }
       }
 
-      return { t, type, registerModal, registerForm, handleSubmit };
+      return { t, registerDrawer, registerForm, type, handleSubmit };
     },
   });
 </script>
