@@ -40,16 +40,6 @@ export const columns = (): BasicColumn[] => {
 
 export const searchFormSchema = (): FormSchema[] => {
   return [
-    // {
-    //   label: t('basic.base.baseDictItem.classify'),
-    //   field: 'classify',
-    //   component: 'ApiSelect',
-    //   colProps: { span: 6 },
-    //   componentProps: {
-    //     ...dictComponentProps(DictEnum.DICT_CLASSIFY),
-    //     mode: 'multiple',
-    //   },
-    // },
     {
       label: t('basic.base.baseDict.key'),
       field: 'key',

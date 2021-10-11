@@ -19,11 +19,6 @@ export const columns = (): BasicColumn[] => {
       dataIndex: 'name',
     },
     {
-      title: t('devOperation.base.defDictItem.classify'),
-      dataIndex: 'echoMap.classify',
-      width: 120,
-    },
-    {
       title: t('devOperation.base.defDict.state'),
       dataIndex: 'state',
       width: 100,
