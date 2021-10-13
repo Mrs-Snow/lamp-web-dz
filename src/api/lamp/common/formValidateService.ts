@@ -73,6 +73,9 @@ function decodeRules(fieldRules: Rule[], constraints: ConstraintInfo[], fieldTyp
           fieldRules.push({
             type: 'method',
             validator(_rule: RuleObject, value, _) {
+              if (!value) {
+                return Promise.resolve();
+              }
               const regexp = new RegExp(attrs.regexp);
               if (!regexp.test(value)) {
                 return Promise.reject(attrs.message);
