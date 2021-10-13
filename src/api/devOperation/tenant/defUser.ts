@@ -33,6 +33,22 @@ export const Api = {
     url: `${ServicePrefixEnum.TENANT}/${MODULAR}/query`,
     method: RequestEnum.POST,
   } as AxiosRequestConfig,
+  CheckUsername: {
+    url: `${ServicePrefixEnum.TENANT}/${MODULAR}/checkUsername`,
+    method: RequestEnum.GET,
+  } as AxiosRequestConfig,
+  CheckEmail: {
+    url: `${ServicePrefixEnum.TENANT}/${MODULAR}/checkEmail`,
+    method: RequestEnum.GET,
+  } as AxiosRequestConfig,
+  CheckIdCard: {
+    url: `${ServicePrefixEnum.TENANT}/${MODULAR}/checkIdCard`,
+    method: RequestEnum.GET,
+  } as AxiosRequestConfig,
+  CheckMobile: {
+    url: `${ServicePrefixEnum.TENANT}/${MODULAR}/checkMobile`,
+    method: RequestEnum.GET,
+  } as AxiosRequestConfig,
 };
 
 export const page = (params: PageParams<DefUserPageQuery>) =>
@@ -48,3 +64,15 @@ export const update = (params: DefUserUpdateVO) =>
   defHttp.request<DefUserResultVO>({ ...Api.Update, params });
 
 export const remove = (params: string[]) => defHttp.request<boolean>({ ...Api.Delete, params });
+
+export const checkUsername = (username: string, id?: string) =>
+  defHttp.request<boolean>({ ...Api.CheckUsername, params: { username, id } });
+
+export const checkEmail = (email: string, id?: string) =>
+  defHttp.request<boolean>({ ...Api.CheckEmail, params: { email, id } });
+
+export const checkIdCard = (idCard: string, id?: string) =>
+  defHttp.request<boolean>({ ...Api.CheckIdCard, params: { idCard, id } });
+
+export const checkMobile = (mobile: string, id?: string) =>
+  defHttp.request<boolean>({ ...Api.CheckMobile, params: { mobile, id } });

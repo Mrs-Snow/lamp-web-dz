@@ -45,27 +45,29 @@
       const { createMessage } = useMessage();
       const treeData = ref<TreeItem[]>([]);
       const checkedKeys = ref<string[]>([]);
-      const [registerForm, { setFieldsValue, resetFields, updateSchema, validate }] = useForm({
-        labelWidth: 100,
-        schemas: editFormSchema(type),
-        showActionButtonGroup: false,
-        actionColOptions: {
-          span: 23,
-        },
-      });
+      const [registerForm, { setFieldsValue, resetFields, updateSchema, validate, resetSchema }] =
+        useForm({
+          labelWidth: 100,
+          schemas: editFormSchema(type),
+          showActionButtonGroup: false,
+          actionColOptions: {
+            span: 23,
+          },
+        });
 
       const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(async (data) => {
         try {
           setDrawerProps({ confirmLoading: true });
+          await resetSchema(editFormSchema(type));
           await resetFields();
           type.value = data?.type;
-
-          let validateApi = Api.Renewal;
 
           const record = await detail(data?.record.id);
           treeData.value = record.resourceList as TreeItem[];
           checkedKeys.value = record.checkedList as string[];
           await setFieldsValue({ ...record });
+
+          let validateApi = Api.Renewal;
           getValidateRules(validateApi, customFormSchemaRules(type)).then(async (rules) => {
             rules && rules.length > 0 && (await updateSchema(rules));
           });

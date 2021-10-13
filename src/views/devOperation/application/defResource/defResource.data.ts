@@ -383,7 +383,7 @@ export const customFormSchemaRules = (
       type: RuleType.append,
       rules: [
         {
-          trigger: 'blur',
+          trigger: ['change', 'blur'],
           required: true,
         },
         {

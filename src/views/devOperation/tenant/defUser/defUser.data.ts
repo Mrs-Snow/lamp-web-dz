@@ -1,9 +1,15 @@
-import { Ref } from 'vue';
+import { Ref, unref } from 'vue';
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { dictComponentProps, stateFilters } from '/@/utils/lamp/common';
 import { ActionEnum, DictEnum } from '/@/enums/commonEnum';
-import { FormSchemaExt } from '/@/api/lamp/common/formValidateService';
+import { FormSchemaExt, RuleType } from '/@/api/lamp/common/formValidateService';
+import {
+  checkUsername,
+  checkEmail,
+  checkIdCard,
+  checkMobile,
+} from '/@/api/devOperation/tenant/defUser';
 
 const { t } = useI18n();
 // 列表页字段
@@ -150,7 +156,7 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
         span: 12,
       },
       dynamicDisabled: () => {
-        return [ActionEnum.VIEW, ActionEnum.EDIT].includes(type.value);
+        return [ActionEnum.VIEW].includes(type.value);
       },
     },
     {
@@ -159,7 +165,7 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       component: 'Input',
       dynamicDisabled: true,
       ifShow: () => {
-        return [ActionEnum.VIEW, ActionEnum.EDIT].includes(type.value);
+        return [ActionEnum.VIEW].includes(type.value);
       },
       colProps: {
         span: 12,
@@ -195,7 +201,6 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       field: 'sex',
       component: 'ApiRadioGroup',
       componentProps: {
-        // ...enumComponentProps(EnumEnum.Sex),
         ...dictComponentProps(DictEnum.GLOBAL_SEX),
       },
       defaultValue: 'M',
@@ -292,6 +297,79 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
 };
 
 // 前端自定义表单验证规则
-export const customFormSchemaRules = (_): Partial<FormSchemaExt>[] => {
-  return [];
+export const customFormSchemaRules = (type: Ref<ActionEnum>): Partial<FormSchemaExt>[] => {
+  return [
+    {
+      field: 'username',
+      type: RuleType.append,
+      rules: [
+        {
+          trigger: ['change', 'blur'],
+          async validator(_, value) {
+            if (unref(type) === ActionEnum.EDIT) {
+              return Promise.resolve();
+            }
+            if (value && (await checkUsername(value))) {
+              return Promise.reject('账号已经存在');
+            }
+            return Promise.resolve();
+          },
+        },
+      ],
+    },
+    {
+      field: 'email',
+      type: RuleType.append,
+      rules: [
+        {
+          trigger: ['change', 'blur'],
+          async validator(_, value) {
+            if (unref(type) === ActionEnum.EDIT) {
+              return Promise.resolve();
+            }
+            if (value && (await checkEmail(value))) {
+              return Promise.reject('邮箱已经存在');
+            }
+            return Promise.resolve();
+          },
+        },
+      ],
+    },
+    {
+      field: 'idCard',
+      type: RuleType.append,
+      rules: [
+        {
+          trigger: ['change', 'blur'],
+          async validator(_, value) {
+            if (unref(type) === ActionEnum.EDIT) {
+              return Promise.resolve();
+            }
+            if (value && (await checkIdCard(value))) {
+              return Promise.reject('身份证已经存在');
+            }
+            return Promise.resolve();
+          },
+        },
+      ],
+    },
+    {
+      field: 'mobile',
+      type: RuleType.append,
+      rules: [
+        {
+          trigger: ['change', 'blur'],
+          async validator(_, value) {
+            if (unref(type) === ActionEnum.EDIT) {
+              return Promise.resolve();
+            }
+            if (value && (await checkMobile(value))) {
+              return Promise.reject('手机号已经存在');
+            }
+            return Promise.resolve();
+          },
+        },
+      ],
+    },
+  ];
 };

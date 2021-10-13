@@ -17,7 +17,12 @@
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { ActionEnum, ServicePrefixEnum, FileBizTypeEnum } from '/@/enums/commonEnum';
+  import {
+    ActionEnum,
+    ServicePrefixEnum,
+    FileBizTypeEnum,
+    VALIDATE_API,
+  } from '/@/enums/commonEnum';
   import { Api, save, update } from '/@/api/devOperation/tenant/tenant';
   import { getValidateRules } from '/@/api/lamp/common/formValidateService';
   import { listByBizId } from '/@/api/lamp/file/upload';
@@ -31,27 +36,24 @@
       const { t } = useI18n();
       const type = ref(ActionEnum.ADD);
       const { createMessage } = useMessage();
-      const [registerForm, { setFieldsValue, resetFields, updateSchema, validate }] = useForm({
-        labelWidth: 120,
-        schemas: editFormSchema(type),
-        showActionButtonGroup: false,
-        actionColOptions: {
-          span: 23,
-        },
-      });
+      const [registerForm, { setFieldsValue, resetFields, updateSchema, validate, resetSchema }] =
+        useForm({
+          labelWidth: 120,
+          schemas: editFormSchema(type),
+          showActionButtonGroup: false,
+          actionColOptions: {
+            span: 23,
+          },
+        });
 
       const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(async (data) => {
+        await resetSchema(editFormSchema(type));
         await resetFields();
         setDrawerProps({ confirmLoading: false });
         type.value = data?.type;
 
-        let validateApi = Api.Save;
-
         if (unref(type) !== ActionEnum.ADD) {
-          const record = data.record;
-          // if (record.logo) {
-          //   record.logos = [record.logo];
-          // }
+          const record = { ...data?.record };
 
           const logos = await listByBizId(
             ServicePrefixEnum.TENANT,
@@ -59,32 +61,31 @@
             FileBizTypeEnum.DEF_TENANT_LOGO,
           );
           record.logos = logos;
-          await setFieldsValue({
-            ...record,
-          });
-          validateApi = Api.Update;
+          await setFieldsValue(record);
         }
 
-        getValidateRules(validateApi, customFormSchemaRules(type)).then(async (formSchemaRules) => {
-          await updateSchema(formSchemaRules);
-        });
+        if (unref(type) !== ActionEnum.VIEW) {
+          let validateApi = Api[VALIDATE_API[unref(type)]];
+          await getValidateRules(validateApi, customFormSchemaRules(type)).then(async (rules) => {
+            rules && rules.length > 0 && (await updateSchema(rules));
+          });
+        }
       });
 
       async function handleSubmit() {
         try {
-          const params = await validate();
           setDrawerProps({ confirmLoading: true });
+          const params = await validate();
 
-          // if (params.logos && params.logos.length > 0) {
-          //   params.logo = params.logos[0];
-          // }
-
-          if (unref(type) === ActionEnum.EDIT) {
-            await update(params);
-          } else {
-            await save(params);
+          if (unref(type) !== ActionEnum.VIEW) {
+            if (unref(type) === ActionEnum.EDIT) {
+              await update(params);
+            } else {
+              await save(params);
+            }
+            createMessage.success(t(`common.tips.${type.value}Success`));
           }
-          createMessage.success(t(`common.tips.${type.value}Success`));
+
           closeDrawer();
           emit('success');
         } finally {

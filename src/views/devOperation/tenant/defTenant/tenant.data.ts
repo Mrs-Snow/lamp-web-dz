@@ -1,4 +1,4 @@
-import { unref } from 'vue';
+import { Ref, unref } from 'vue';
 import moment, { Moment } from 'moment';
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
@@ -72,7 +72,7 @@ export const searchFormSchema: FormSchema[] = [
   },
 ];
 
-export const editFormSchema = (type): FormSchema[] => {
+export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
   return [
     {
       field: 'divider-selects1',
@@ -219,14 +219,14 @@ export const editFormSchema = (type): FormSchema[] => {
   ];
 };
 
-export const customFormSchemaRules = (type): Partial<FormSchemaExt>[] => {
+export const customFormSchemaRules = (type: Ref<ActionEnum>): Partial<FormSchemaExt>[] => {
   return [
     {
       field: 'code',
       type: RuleType.append,
       rules: [
         {
-          trigger: 'blur',
+          trigger: ['change', 'blur'],
           async validator(_, value) {
             if (unref(type) !== ActionEnum.ADD) {
               return Promise.resolve();
@@ -275,7 +275,7 @@ export const customConnectionFormSchemaRules = (required: boolean): Partial<Form
         {
           required: required,
           message: t('common.rules.require'),
-          trigger: 'blur',
+          trigger: ['change', 'blur'],
         },
       ],
       type: RuleType.cover,
@@ -286,7 +286,7 @@ export const customConnectionFormSchemaRules = (required: boolean): Partial<Form
         {
           required: required,
           message: t('common.rules.require'),
-          trigger: 'blur',
+          trigger: ['change', 'blur'],
         },
       ],
       type: RuleType.cover,
@@ -297,7 +297,7 @@ export const customConnectionFormSchemaRules = (required: boolean): Partial<Form
         {
           required: required,
           message: t('common.rules.require'),
-          trigger: 'blur',
+          trigger: ['change', 'blur'],
         },
       ],
       type: RuleType.cover,
@@ -308,7 +308,7 @@ export const customConnectionFormSchemaRules = (required: boolean): Partial<Form
         {
           required: required,
           message: t('common.rules.require'),
-          trigger: 'blur',
+          trigger: ['change', 'blur'],
         },
       ],
       type: RuleType.cover,
@@ -319,7 +319,7 @@ export const customConnectionFormSchemaRules = (required: boolean): Partial<Form
         {
           required: required,
           message: t('common.rules.require'),
-          trigger: 'blur',
+          trigger: ['change', 'blur'],
         },
       ],
       type: RuleType.cover,
@@ -327,7 +327,7 @@ export const customConnectionFormSchemaRules = (required: boolean): Partial<Form
   ];
 };
 
-export const connectionFormSchema = (onChange): FormSchema[] => {
+export const connectionFormSchema = (onChange: Fn): FormSchema[] => {
   return [
     {
       field: 'id',
@@ -405,7 +405,7 @@ export const connectionFormSchema = (onChange): FormSchema[] => {
   ];
 };
 
-export const getUpdateOptions = (selectList) => {
+export const getUpdateOptions = (selectList: any[]) => {
   return [
     {
       field: 'authorityDatasource',

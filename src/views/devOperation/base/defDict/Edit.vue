@@ -17,7 +17,7 @@
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { ActionEnum } from '/@/enums/commonEnum';
+  import { ActionEnum, VALIDATE_API } from '/@/enums/commonEnum';
   import { Api, save, update } from '/@/api/devOperation/base/defDict';
   import { getValidateRules } from '/@/api/lamp/common/formValidateService';
   import { customFormSchemaRules, editFormSchema } from './defDict.data';
@@ -30,44 +30,50 @@
       const { t } = useI18n();
       const type = ref<ActionEnum>(ActionEnum.ADD);
       const { createMessage } = useMessage();
-      const [registerForm, { setFieldsValue, resetFields, updateSchema, validate }] = useForm({
-        labelWidth: 100,
-        schemas: editFormSchema(type),
-        showActionButtonGroup: false,
-        actionColOptions: {
-          span: 23,
-        },
-      });
+      const [registerForm, { setFieldsValue, resetFields, updateSchema, validate, resetSchema }] =
+        useForm({
+          labelWidth: 100,
+          schemas: editFormSchema(type),
+          showActionButtonGroup: false,
+          actionColOptions: {
+            span: 23,
+          },
+        });
 
       const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(async (data) => {
+        await resetSchema(editFormSchema(type));
         await resetFields();
         setDrawerProps({ confirmLoading: false });
         type.value = data?.type;
 
-        let validateApi = unref(type) !== ActionEnum.ADD ? Api.Update : Api.Save;
         if (unref(type) !== ActionEnum.ADD) {
           // 赋值
           const record = { ...data?.record };
           await setFieldsValue({ ...record });
         }
 
-        getValidateRules(validateApi, customFormSchemaRules(type)).then(async (rules) => {
-          rules && rules.length > 0 && (await updateSchema(rules));
-        });
+        if (unref(type) !== ActionEnum.VIEW) {
+          let validateApi = Api[VALIDATE_API[unref(type)]];
+          await getValidateRules(validateApi, customFormSchemaRules(type)).then(async (rules) => {
+            rules && rules.length > 0 && (await updateSchema(rules));
+          });
+        }
       });
 
       async function handleSubmit() {
         try {
-          const params = await validate();
           setDrawerProps({ confirmLoading: true });
+          const params = await validate();
 
-          if (unref(type) === ActionEnum.EDIT) {
-            await update(params);
-          } else {
-            params.id = null;
-            await save(params);
+          if (unref(type) !== ActionEnum.VIEW) {
+            if (unref(type) === ActionEnum.EDIT) {
+              await update(params);
+            } else {
+              params.id = null;
+              await save(params);
+            }
+            createMessage.success(t(`common.tips.${type.value}Success`));
           }
-          createMessage.success(t(`common.tips.${type.value}Success`));
           closeDrawer();
           emit('success');
         } finally {

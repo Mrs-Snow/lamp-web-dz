@@ -36,6 +36,12 @@ export enum ActionEnum {
   VIEW = 'view',
 }
 
+export const VALIDATE_API = {
+  [ActionEnum.ADD]: 'Save',
+  [ActionEnum.EDIT]: 'Update',
+  [ActionEnum.COPY]: 'Save',
+};
+
 /**
  * 文件的业务 类型
  */

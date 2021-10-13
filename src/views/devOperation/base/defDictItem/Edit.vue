@@ -17,7 +17,7 @@
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { ActionEnum } from '/@/enums/commonEnum';
+  import { ActionEnum, VALIDATE_API } from '/@/enums/commonEnum';
   import { get } from '/@/api/devOperation/base/defDict';
   import { Api, save, update } from '/@/api/devOperation/base/defDictItem';
   import { getValidateRules } from '/@/api/lamp/common/formValidateService';
@@ -33,7 +33,7 @@
       const { createMessage } = useMessage();
       const [
         registerForm,
-        { setFieldsValue, getFieldsValue, resetFields, updateSchema, validate },
+        { setFieldsValue, getFieldsValue, resetFields, updateSchema, validate, resetSchema },
       ] = useForm({
         labelWidth: 100,
         schemas: editFormSchema(type),
@@ -44,6 +44,7 @@
       });
 
       const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(async (data) => {
+        await resetSchema(editFormSchema(type));
         await resetFields();
         setDrawerProps({ confirmLoading: false });
         type.value = data?.type;
@@ -62,26 +63,30 @@
         }
         await setFieldsValue({ ...record });
 
-        let validateApi = unref(type) !== ActionEnum.ADD ? Api.Update : Api.Save;
-        getValidateRules(validateApi, customFormSchemaRules(type, getFieldsValue)).then(
-          async (rules) => {
-            rules && rules.length > 0 && (await updateSchema(rules));
-          },
-        );
+        if (unref(type) !== ActionEnum.VIEW) {
+          let validateApi = Api[VALIDATE_API[unref(type)]];
+          await getValidateRules(validateApi, customFormSchemaRules(type, getFieldsValue)).then(
+            async (rules) => {
+              rules && rules.length > 0 && (await updateSchema(rules));
+            },
+          );
+        }
       });
 
       async function handleSubmit() {
         try {
-          const params = await validate();
           setDrawerProps({ confirmLoading: true });
+          const params = await validate();
 
-          if (unref(type) === ActionEnum.EDIT) {
-            await update(params);
-          } else {
-            params.id = null;
-            await save(params);
+          if (unref(type) !== ActionEnum.VIEW) {
+            if (unref(type) === ActionEnum.EDIT) {
+              await update(params);
+            } else {
+              params.id = null;
+              await save(params);
+            }
+            createMessage.success(t(`common.tips.${type.value}Success`));
           }
-          createMessage.success(t(`common.tips.${type.value}Success`));
           closeDrawer();
           emit('success');
         } finally {

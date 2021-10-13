@@ -16,7 +16,7 @@
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { ActionEnum } from '/@/enums/commonEnum';
+  import { ActionEnum, VALIDATE_API } from '/@/enums/commonEnum';
   import { getValidateRules } from '/@/api/lamp/common/formValidateService';
   import { Api, save, update } from '/@/api/devOperation/tenant/datasourceConfig';
   import { editFormSchema } from './datasourceConfig.data';
@@ -29,46 +29,51 @@
       const { t } = useI18n();
       const type = ref(ActionEnum.ADD);
       const { createMessage } = useMessage();
-      const [registerForm, { setFieldsValue, resetFields, updateSchema, validate }] = useForm({
-        labelWidth: 100,
-        schemas: editFormSchema,
-        showActionButtonGroup: false,
-        actionColOptions: {
-          span: 23,
-        },
-      });
+      const [registerForm, { setFieldsValue, resetFields, updateSchema, validate, resetSchema }] =
+        useForm({
+          labelWidth: 100,
+          schemas: editFormSchema,
+          showActionButtonGroup: false,
+          actionColOptions: {
+            span: 23,
+          },
+        });
 
       const [registerModal, { setModalProps, closeModal }] = useModalInner(async (data) => {
+        await resetSchema(editFormSchema);
         await resetFields();
         setModalProps({ confirmLoading: false });
         type.value = data?.type;
 
-        let validateApi = Api.Save;
         if (unref(type) !== ActionEnum.ADD) {
-          await setFieldsValue({
-            ...data.record,
-          });
-          validateApi = Api.Update;
+          // 赋值
+          const record = { ...data?.record };
+          await setFieldsValue(record);
         }
 
-        getValidateRules(validateApi).then((rules) => {
-          rules && rules.length > 0 && updateSchema(rules);
-        });
+        if (unref(type) !== ActionEnum.VIEW) {
+          let validateApi = Api[VALIDATE_API[unref(type)]];
+          await getValidateRules(validateApi, []).then(async (rules) => {
+            rules && rules.length > 0 && (await updateSchema(rules));
+          });
+        }
       });
 
       async function handleSubmit() {
         try {
-          const params = await validate();
           setModalProps({ confirmLoading: true });
+          const params = await validate();
 
-          if (unref(type) === ActionEnum.EDIT) {
-            await update(params);
-          } else {
-            params.id = null;
-            await save(params);
+          if (unref(type) !== ActionEnum.VIEW) {
+            if (unref(type) === ActionEnum.EDIT) {
+              await update(params);
+            } else {
+              params.id = null;
+              await save(params);
+            }
+            createMessage.success(t(`common.tips.${type.value}Success`));
           }
 
-          createMessage.success(t(`common.tips.${type.value}Success`));
           closeModal();
           emit('success');
         } finally {
