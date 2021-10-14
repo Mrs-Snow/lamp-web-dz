@@ -14,11 +14,11 @@
 <script lang="ts">
   import { defineComponent, ref, unref } from 'vue';
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
-  import { BasicForm, useForm } from '/@/components/Form/index';
+  import { BasicForm, useForm } from '/@/components/Form';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { ActionEnum, VALIDATE_API } from '/@/enums/commonEnum';
-  import { Api, save, update } from '/@/api/devOperation/base/defDict';
+  import { Api, save, update } from '/@/api/devOperation/system/defDict';
   import { getValidateRules } from '/@/api/lamp/common/formValidateService';
   import { customFormSchemaRules, editFormSchema } from './defDict.data';
 

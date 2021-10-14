@@ -11,10 +11,6 @@
         <TableAction
           :actions="[
             {
-              label: '字典项',
-              onClick: handleViewItem.bind(null, record),
-            },
-            {
               label: t('common.title.edit'),
               onClick: handleEdit.bind(null, record),
             },
@@ -38,34 +34,37 @@
   </PageWrapper>
 </template>
 <script lang="ts">
-  import { defineComponent } from 'vue';
-  import { useI18n } from '/@/hooks/web/useI18n';
+  import { defineComponent, ref, onMounted } from 'vue';
   import { useRouter } from 'vue-router';
+  import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
   import { PageWrapper } from '/@/components/Page';
   import { useDrawer } from '/@/components/Drawer';
   import { handleFetchParams } from '/@/utils/lamp/common';
   import { ActionEnum } from '/@/enums/commonEnum';
-  import { page, remove } from '/@/api/devOperation/base/defDict';
-  import { columns, searchFormSchema } from './defDict.data';
+  import { page, remove } from '/@/api/devOperation/system/defDictItem';
+  import { columns, searchFormSchema } from './defDictItem.data';
   import EditModal from './Edit.vue';
-  import { RouteEnum } from '/@/enums/biz/tenant';
 
   export default defineComponent({
     // 若需要开启页面缓存，请将此参数跟菜单名保持一致
-    name: 'DefDictManagement',
+    name: 'DefDictItemManagement',
     components: { BasicTable, PageWrapper, EditModal, TableAction },
     setup() {
       const { t } = useI18n();
       const { createMessage, createConfirm } = useMessage();
       // 编辑页弹窗
       const [registerDrawer, { openDrawer }] = useDrawer();
-      const { replace } = useRouter();
+      const { currentRoute } = useRouter();
+      const dictId = ref<string>('');
+      const dictName = ref<string>('');
 
       // 表格
       const [registerTable, { reload, getSelectRowKeys }] = useTable({
-        title: t('devOperation.base.defDict.table.title'),
+        title: () => {
+          return `【${dictName.value}】的字典项列表`;
+        },
         api: page,
         columns: columns(),
         formConfig: {
@@ -73,6 +72,9 @@
           schemas: searchFormSchema(),
         },
         beforeFetch: handleFetchParams,
+        searchInfo: {
+          parentId: dictId,
+        },
         useSearchForm: true,
         showTableSetting: true,
         bordered: true,
@@ -81,16 +83,24 @@
           type: 'checkbox',
         },
         actionColumn: {
-          width: 220,
+          width: 160,
           title: t('common.column.action'),
           dataIndex: 'action',
           slots: { customRender: 'action' },
         },
       });
 
+      onMounted(() => {
+        const { params, query } = currentRoute.value;
+        dictId.value = params?.dictId as string;
+        dictName.value = (query?.name || '') as string;
+        // reload();
+      });
+
       // 弹出复制页面
       function handleCopy(record: Recordable, e: Event) {
         e?.stopPropagation();
+        record.parentId = dictId.value;
         openDrawer(true, {
           record,
           type: ActionEnum.COPY,
@@ -101,12 +111,14 @@
       function handleAdd() {
         openDrawer(true, {
           type: ActionEnum.ADD,
+          record: { parentId: dictId.value },
         });
       }
 
       // 弹出编辑页面
       function handleEdit(record: Recordable, e: Event) {
         e?.stopPropagation();
+        record.parentId = dictId.value;
         openDrawer(true, {
           record,
           type: ActionEnum.EDIT,
@@ -148,16 +160,6 @@
         });
       }
 
-      // 查看字典项
-      function handleViewItem(record: Recordable, e: Event) {
-        e.stopPropagation();
-        replace({
-          name: RouteEnum.DICT_ITEM,
-          params: { dictId: record.id },
-          query: { name: record.name },
-        });
-      }
-
       return {
         t,
         registerTable,
@@ -168,7 +170,6 @@
         handleDelete,
         handleSuccess,
         handleBatchDelete,
-        handleViewItem,
       };
     },
   });

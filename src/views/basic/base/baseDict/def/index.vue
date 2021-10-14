@@ -23,7 +23,7 @@
   import { PageWrapper } from '/@/components/Page';
   import { handleFetchParams } from '/@/utils/lamp/common';
   import { RouteEnum } from '/@/enums/biz/tenant';
-  import { page } from '/@/api/devOperation/base/defDict';
+  import { page } from '/@/api/devOperation/system/defDict';
   import { importDict } from '/@/api/basic/base/baseDict';
   import { columns, searchFormSchema } from '../baseDict.data';
 

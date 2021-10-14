@@ -4,22 +4,22 @@ import { useI18n } from '/@/hooks/web/useI18n';
 import { ActionEnum } from '/@/enums/commonEnum';
 import { stateFilters, stateComponentProps } from '/@/utils/lamp/common';
 import { FormSchemaExt, RuleType } from '/@/api/lamp/common/formValidateService';
-import { check } from '/@/api/devOperation/base/defDictItem';
+import { check } from '/@/api/devOperation/system/defDictItem';
 
 const { t } = useI18n();
 // 列表页字段
 export const columns = (): BasicColumn[] => {
   return [
     {
-      title: t('devOperation.base.defDictItem.key'),
+      title: t('devOperation.system.defDictItem.key'),
       dataIndex: 'key',
     },
     {
-      title: t('devOperation.base.defDictItem.name'),
+      title: t('devOperation.system.defDictItem.name'),
       dataIndex: 'name',
     },
     {
-      title: t('devOperation.base.defDict.state'),
+      title: t('devOperation.system.defDict.state'),
       dataIndex: 'state',
       width: 100,
       filters: [...stateFilters()],
@@ -39,13 +39,13 @@ export const columns = (): BasicColumn[] => {
 export const searchFormSchema = (): FormSchema[] => {
   return [
     {
-      label: t('devOperation.base.defDictItem.key'),
+      label: t('devOperation.system.defDictItem.key'),
       field: 'key',
       component: 'Input',
       colProps: { span: 6 },
     },
     {
-      label: t('devOperation.base.defDictItem.name'),
+      label: t('devOperation.system.defDictItem.name'),
       field: 'name',
       component: 'Input',
       colProps: { span: 6 },
@@ -69,25 +69,25 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       show: false,
     },
     {
-      label: t('devOperation.base.defDictItem.parentId'),
+      label: t('devOperation.system.defDictItem.parentId'),
       field: 'parentId',
       component: 'Input',
       show: false,
     },
     {
-      label: t('devOperation.base.defDictItem.parentKey'),
+      label: t('devOperation.system.defDictItem.parentKey'),
       field: 'parentKey',
       component: 'Input',
       dynamicDisabled: true,
     },
     {
-      label: t('devOperation.base.defDictItem.label'),
+      label: t('devOperation.system.defDictItem.label'),
       field: 'parentName',
       component: 'Input',
       dynamicDisabled: true,
     },
     {
-      label: t('devOperation.base.defDictItem.key'),
+      label: t('devOperation.system.defDictItem.key'),
       field: 'key',
       component: 'Input',
       dynamicDisabled: () => {
@@ -95,12 +95,12 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       },
     },
     {
-      label: t('devOperation.base.defDictItem.name'),
+      label: t('devOperation.system.defDictItem.name'),
       field: 'name',
       component: 'Input',
     },
     {
-      label: t('devOperation.base.defDictItem.state'),
+      label: t('devOperation.system.defDictItem.state'),
       field: 'state',
       component: 'RadioButtonGroup',
       componentProps: {
@@ -109,27 +109,27 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       defaultValue: true,
     },
     {
-      label: t('devOperation.base.defDictItem.remark'),
+      label: t('devOperation.system.defDictItem.remark'),
       field: 'remark',
       component: 'InputTextArea',
     },
     {
-      label: t('devOperation.base.defDictItem.sortValue'),
+      label: t('devOperation.system.defDictItem.sortValue'),
       field: 'sortValue',
       component: 'InputNumber',
     },
     {
-      label: t('devOperation.base.defDictItem.icon'),
+      label: t('devOperation.system.defDictItem.icon'),
       field: 'icon',
       component: 'IconPicker',
     },
     {
-      label: t('devOperation.base.defDictItem.cssStyle'),
+      label: t('devOperation.system.defDictItem.cssStyle'),
       field: 'cssStyle',
       component: 'Input',
     },
     {
-      label: t('devOperation.base.defDictItem.cssClass'),
+      label: t('devOperation.system.defDictItem.cssClass'),
       field: 'cssClass',
       component: 'Input',
     },
@@ -153,7 +153,7 @@ export const customFormSchemaRules = (
               return Promise.resolve();
             }
             if (await check(value, getFieldsValue()?.parentId)) {
-              return Promise.reject(t('devOperation.base.defDict.key') + '已经存在');
+              return Promise.reject(t('devOperation.system.defDict.key') + '已经存在');
             }
             return Promise.resolve();
           },

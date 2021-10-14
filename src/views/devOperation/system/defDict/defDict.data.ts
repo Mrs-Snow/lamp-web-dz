@@ -3,7 +3,7 @@ import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { ActionEnum } from '/@/enums/commonEnum';
 import { FormSchemaExt, RuleType } from '/@/api/lamp/common/formValidateService';
-import { check } from '/@/api/devOperation/base/defDict';
+import { check } from '/@/api/devOperation/system/defDict';
 import { stateFilters, stateComponentProps } from '/@/utils/lamp/common';
 
 const { t } = useI18n();
@@ -11,15 +11,15 @@ const { t } = useI18n();
 export const columns = (): BasicColumn[] => {
   return [
     {
-      title: t('devOperation.base.defDict.key'),
+      title: t('devOperation.system.defDict.key'),
       dataIndex: 'key',
     },
     {
-      title: t('devOperation.base.defDict.name'),
+      title: t('devOperation.system.defDict.name'),
       dataIndex: 'name',
     },
     {
-      title: t('devOperation.base.defDict.state'),
+      title: t('devOperation.system.defDict.state'),
       dataIndex: 'state',
       width: 100,
       filters: [...stateFilters()],
@@ -39,13 +39,13 @@ export const columns = (): BasicColumn[] => {
 export const searchFormSchema = (): FormSchema[] => {
   return [
     {
-      label: t('devOperation.base.defDict.key'),
+      label: t('devOperation.system.defDict.key'),
       field: 'key',
       component: 'Input',
       colProps: { span: 6 },
     },
     {
-      label: t('devOperation.base.defDict.name'),
+      label: t('devOperation.system.defDict.name'),
       field: 'name',
       component: 'Input',
       colProps: { span: 6 },
@@ -69,7 +69,7 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       show: false,
     },
     {
-      label: t('devOperation.base.defDict.key'),
+      label: t('devOperation.system.defDict.key'),
       field: 'key',
       component: 'Input',
       dynamicDisabled: () => {
@@ -77,12 +77,12 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       },
     },
     {
-      label: t('devOperation.base.defDict.name'),
+      label: t('devOperation.system.defDict.name'),
       field: 'name',
       component: 'Input',
     },
     {
-      label: t('devOperation.base.defDict.state'),
+      label: t('devOperation.system.defDict.state'),
       field: 'state',
       component: 'RadioButtonGroup',
       componentProps: {
@@ -91,7 +91,7 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       defaultValue: true,
     },
     {
-      label: t('devOperation.base.defDict.remark'),
+      label: t('devOperation.system.defDict.remark'),
       field: 'remark',
       component: 'InputTextArea',
     },
@@ -112,7 +112,7 @@ export const customFormSchemaRules = (type: Ref<ActionEnum>): Partial<FormSchema
               return Promise.resolve();
             }
             if (await check(value)) {
-              return Promise.reject(t('devOperation.base.defDict.key') + '已经存在');
+              return Promise.reject(t('devOperation.system.defDict.key') + '已经存在');
             }
             return Promise.resolve();
           },
