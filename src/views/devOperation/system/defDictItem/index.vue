@@ -112,14 +112,6 @@
           sort: 'sortValue',
           order: 'ascend',
         },
-        // sortFn: (_) => {
-        //   return {
-        //     // 排序字段
-        //     sort: 'id',
-        //     // 排序方式 asc/desc
-        //     order: 'asc',
-        //   };
-        // },
         useSearchForm: true,
         showTableSetting: true,
         bordered: true,

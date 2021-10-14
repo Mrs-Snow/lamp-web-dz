@@ -55,7 +55,7 @@
   </PageWrapper>
 </template>
 <script lang="ts">
-  import { defineComponent, reactive, onMounted } from 'vue';
+  import { defineComponent, reactive, ref, onMounted } from 'vue';
   import { Descriptions, Tag } from 'ant-design-vue';
   import { useRouter } from 'vue-router';
   import { useI18n } from '/@/hooks/web/useI18n';
@@ -88,6 +88,7 @@
       // 编辑页弹窗
       const [registerDrawer, { openDrawer }] = useDrawer();
       const { currentRoute } = useRouter();
+      const dictId = ref<string>('');
       const dict = reactive<Recordable>({
         id: '',
         name: '',
@@ -108,7 +109,11 @@
         },
         beforeFetch: handleFetchParams,
         searchInfo: {
-          parentId: dict.id,
+          parentId: dictId,
+        },
+        defSort: {
+          sort: 'sortValue',
+          order: 'ascend',
         },
         useSearchForm: true,
         showTableSetting: true,
@@ -127,6 +132,7 @@
 
       onMounted(() => {
         const { params, query } = currentRoute.value;
+        dictId.value = params?.dictId as string;
         dict.id = params?.dictId as string;
         dict.name = (query?.name || '') as string;
         dict.key = (query?.key || '') as string;
