@@ -1,11 +1,29 @@
 <template>
   <PageWrapper dense contentFullHeight>
+    <template #headerContent>
+      <a-descriptions size="small" :column="3" :title="'字典【' + dict.name + '】的基本信息'">
+        <a-descriptions-item :label="t('devOperation.system.defDict.key')">
+          {{ dict.key }}
+        </a-descriptions-item>
+        <a-descriptions-item :label="t('devOperation.system.defDict.name')">
+          {{ dict.name }}
+        </a-descriptions-item>
+        <a-descriptions-item :label="t('devOperation.system.defDict.remark')">
+          {{ dict.remark }}
+        </a-descriptions-item>
+      </a-descriptions>
+    </template>
     <BasicTable @register="registerTable">
       <template #toolbar>
         <a-button type="primary" color="error" @click="handleBatchDelete">{{
           t('common.title.delete')
         }}</a-button>
         <a-button type="primary" @click="handleAdd">{{ t('common.title.add') }}</a-button>
+      </template>
+      <template #state="{ record }">
+        <Tag :color="record.state ? 'success' : 'error'">
+          {{ record.state ? t('lamp.common.enable') : t('lamp.common.disable') }}
+        </Tag>
       </template>
       <template #action="{ record }">
         <TableAction
@@ -37,7 +55,8 @@
   </PageWrapper>
 </template>
 <script lang="ts">
-  import { defineComponent, ref, onMounted } from 'vue';
+  import { defineComponent, reactive, onMounted } from 'vue';
+  import { Descriptions, Tag } from 'ant-design-vue';
   import { useRouter } from 'vue-router';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
@@ -54,20 +73,32 @@
   export default defineComponent({
     // 若需要开启页面缓存，请将此参数跟菜单名保持一致
     name: 'BaseDictItemManagement',
-    components: { BasicTable, PageWrapper, EditModal, TableAction },
+    components: {
+      BasicTable,
+      PageWrapper,
+      EditModal,
+      TableAction,
+      Tag,
+      [Descriptions.name]: Descriptions,
+      [Descriptions.Item.name]: Descriptions.Item,
+    },
     setup() {
       const { t } = useI18n();
       const { createMessage, createConfirm } = useMessage();
       // 编辑页弹窗
       const [registerDrawer, { openDrawer }] = useDrawer();
       const { currentRoute } = useRouter();
-      const dictId = ref<string>('');
-      const dictName = ref<string>('');
+      const dict = reactive<Recordable>({
+        id: '',
+        name: '',
+        key: '',
+        remark: '',
+      });
 
       // 表格
       const [registerTable, { reload, getSelectRowKeys }] = useTable({
         title: () => {
-          return `【${dictName.value}】的字典项列表`;
+          return `【${dict.name}】的字典项列表`;
         },
         api: page,
         columns: columns(),
@@ -77,7 +108,7 @@
         },
         beforeFetch: handleFetchParams,
         searchInfo: {
-          parentId: dictId,
+          parentId: dict.id,
         },
         useSearchForm: true,
         showTableSetting: true,
@@ -96,15 +127,17 @@
 
       onMounted(() => {
         const { params, query } = currentRoute.value;
-        dictId.value = params?.dictId as string;
-        dictName.value = (query?.name || '') as string;
+        dict.id = params?.dictId as string;
+        dict.name = (query?.name || '') as string;
+        dict.key = (query?.key || '') as string;
+        dict.remark = (query?.remark || '') as string;
         // reload();
       });
 
       // 弹出复制页面
       function handleCopy(record: Recordable, e: Event) {
         e?.stopPropagation();
-        record.parentId = dictId.value;
+        record.parentId = dict.id;
         openDrawer(true, {
           record,
           type: ActionEnum.COPY,
@@ -115,14 +148,14 @@
       function handleAdd() {
         openDrawer(true, {
           type: ActionEnum.ADD,
-          record: { parentId: dictId.value },
+          record: { parentId: dict.id },
         });
       }
 
       // 弹出编辑页面
       function handleEdit(record: Recordable, e: Event) {
         e?.stopPropagation();
-        record.parentId = dictId.value;
+        record.parentId = dict.id;
         openDrawer(true, {
           record,
           type: ActionEnum.EDIT,

@@ -7,6 +7,11 @@
         }}</a-button>
         <a-button type="primary" @click="handleAdd">{{ t('common.title.add') }}</a-button>
       </template>
+      <template #state="{ record }">
+        <Tag :color="record.state ? 'success' : 'error'">
+          {{ record.state ? t('lamp.common.enable') : t('lamp.common.disable') }}
+        </Tag>
+      </template>
       <template #action="{ record }">
         <TableAction
           :actions="[
@@ -39,6 +44,7 @@
 </template>
 <script lang="ts">
   import { defineComponent } from 'vue';
+  import { Tag } from 'ant-design-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useRouter } from 'vue-router';
   import { useMessage } from '/@/hooks/web/useMessage';
@@ -55,7 +61,7 @@
   export default defineComponent({
     // 若需要开启页面缓存，请将此参数跟菜单名保持一致
     name: 'DefDictManagement',
-    components: { BasicTable, PageWrapper, EditModal, TableAction },
+    components: { BasicTable, PageWrapper, EditModal, TableAction, Tag },
     setup() {
       const { t } = useI18n();
       const { createMessage, createConfirm } = useMessage();
@@ -154,7 +160,7 @@
         replace({
           name: RouteEnum.DICT_ITEM,
           params: { dictId: record.id },
-          query: { name: record.name },
+          query: { name: record.name, key: record.key, remark: record.remark },
         });
       }
 

@@ -23,9 +23,16 @@ export const columns = (): BasicColumn[] => {
       dataIndex: 'state',
       width: 100,
       filters: [...stateFilters()],
-      format: (text) => {
-        return text ? t('lamp.common.enable') : t('lamp.common.disable');
-      },
+      slots: { customRender: 'state' },
+      // format: (text) => {
+      //   return text ? t('lamp.common.enable') : t('lamp.common.disable');
+      // },
+    },
+    {
+      title: t('devOperation.system.defDictItem.sortValue'),
+      dataIndex: 'sortValue',
+      sorter: true,
+      width: 100,
     },
     {
       title: t('lamp.common.createdTime'),

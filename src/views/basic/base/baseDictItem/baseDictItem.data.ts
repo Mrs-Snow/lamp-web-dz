@@ -30,9 +30,10 @@ export const columns = (): BasicColumn[] => {
       dataIndex: 'state',
       width: 120,
       filters: [...stateFilters()],
-      format: (text) => {
-        return text ? t('lamp.common.enable') : t('lamp.common.disable');
-      },
+      slots: { customRender: 'state' },
+      // format: (text) => {
+      //   return text ? t('lamp.common.enable') : t('lamp.common.disable');
+      // },
     },
     {
       title: t('lamp.common.createdTime'),
