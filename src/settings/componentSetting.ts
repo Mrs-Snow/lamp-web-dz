@@ -31,12 +31,16 @@ export default {
     // 默认排序方法
     defaultSortFn: (sortInfo: SorterResult) => {
       const { field, order } = sortInfo;
-      return {
-        // 排序字段
-        [SORT_FIELD]: field,
-        // 排序方式 asc/desc
-        [ORDER_FIELD]: order,
-      };
+      if (field && order) {
+        return {
+          // 排序字段
+          [SORT_FIELD]: field,
+          // 排序方式 asc/desc
+          [ORDER_FIELD]: order,
+        };
+      } else {
+        return {};
+      }
     },
     // 自定义过滤方法
     defaultFilterFn: (data: Partial<Recordable<string[]>>) => {

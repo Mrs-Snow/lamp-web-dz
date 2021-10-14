@@ -64,6 +64,11 @@ export const basicProps = {
   // 立即请求接口
   immediate: propTypes.bool.def(true),
   emptyDataIsShowTable: propTypes.bool.def(true),
+  // 默认的排序参数
+  defSort: {
+    type: Object as PropType<Recordable>,
+    default: null,
+  },
   // 额外的请求参数
   searchInfo: {
     type: Object as PropType<Recordable>,
