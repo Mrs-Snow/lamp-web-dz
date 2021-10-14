@@ -8,7 +8,7 @@ type ProxyItem = [string, string];
 
 type ProxyList = ProxyItem[];
 
-type ProxyTargetList = Record<string, ProxyOptions & { rewrite: (path: string) => string }>;
+type ProxyTargetList = Record<string, ProxyOptions>;
 
 const httpsRE = /^https:\/\//;
 
@@ -37,7 +37,7 @@ export function createProxy(list: ProxyList = []) {
       proxyKey,
       rewriteBefore,
       rewriteAfter,
-      target
+      target,
     );
 
     // https://github.com/http-party/node-http-proxy#options

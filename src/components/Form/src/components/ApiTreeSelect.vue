@@ -62,7 +62,7 @@
       watch(
         () => props.params,
         () => {
-          isFirstLoaded.value && fetch();
+          !unref(isFirstLoaded) && fetch();
         },
         { deep: true },
       );

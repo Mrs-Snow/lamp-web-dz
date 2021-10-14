@@ -15,6 +15,7 @@ import { setObjToUrlParams, deepMerge } from '/@/utils';
 import { useErrorLogStoreWithOut } from '/@/store/modules/errorLog';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { joinTimestamp, formatRequestDate } from './helper';
+import { useUserStoreWithOut } from '/@/store/modules/user';
 import { Base64 } from 'js-base64';
 
 const globSetting = useGlobSetting();
@@ -62,6 +63,9 @@ const transform: AxiosTransform = {
     switch (code) {
       case ResultEnum.TIMEOUT:
         timeoutMsg = t('sys.api.timeoutMessage');
+        const userStore = useUserStoreWithOut();
+        userStore.setToken(undefined);
+        userStore.logout(true);
         break;
       default:
         if (msg) {
@@ -138,7 +142,7 @@ const transform: AxiosTransform = {
 
     const token = getToken();
     if (token && (config as Recordable)?.requestOptions?.withToken !== false) {
-      config.headers[tokenName] = options.authenticationScheme
+      (config as Recordable).headers[tokenName] = options.authenticationScheme
         ? `${options.authenticationScheme} ${token}`
         : token;
     }
@@ -148,11 +152,13 @@ const transform: AxiosTransform = {
       (config as Recordable)?.requestOptions?.withTenant !== false &&
       multiTenantType !== 'NONE'
     ) {
-      config.headers.tenant = getTenant();
+      (config as Recordable).headers.tenant = getTenant();
     }
 
     // 添加客户端信息
-    config.headers['Authorization'] = `Basic ${Base64.encode(`${clientId}:${clientSecret}`)}`;
+    (config as Recordable).headers['Authorization'] = `Basic ${Base64.encode(
+      `${clientId}:${clientSecret}`,
+    )}`;
 
     return config;
   },
@@ -194,7 +200,7 @@ const transform: AxiosTransform = {
         return Promise.reject(error);
       }
     } catch (error) {
-      throw new Error(error);
+      throw new Error(error as unknown as string);
     }
 
     checkStatus(error?.response?.status, msg, errorMessageMode);
