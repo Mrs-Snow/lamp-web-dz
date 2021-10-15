@@ -24,9 +24,6 @@ export const columns = (): BasicColumn[] => {
       width: 100,
       filters: [...stateFilters()],
       slots: { customRender: 'state' },
-      // format: (text) => {
-      //   return text ? t('lamp.common.enable') : t('lamp.common.disable');
-      // },
     },
     {
       title: t('devOperation.system.defDictItem.sortValue'),
@@ -67,7 +64,7 @@ export const searchFormSchema = (): FormSchema[] => {
 };
 
 // 编辑页字段
-export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
+export const editFormSchema = (_): FormSchema[] => {
   return [
     {
       field: 'id',
@@ -97,9 +94,9 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       label: t('devOperation.system.defDictItem.key'),
       field: 'key',
       component: 'Input',
-      dynamicDisabled: () => {
-        return type.value === ActionEnum.EDIT;
-      },
+      // dynamicDisabled: () => {
+      //   return type.value === ActionEnum.EDIT;
+      // },
     },
     {
       label: t('devOperation.system.defDictItem.name'),
