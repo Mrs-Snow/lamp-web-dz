@@ -1,0 +1,16 @@
+export default {
+  table: { title: 'DefArea list' },
+  id: 'ID',
+  code: 'code',
+  fullName: 'fullName',
+  longitude: 'longitude',
+  latitude: 'latitude',
+  level: 'level',
+  source: 'source',
+  state: 'state',
+  grade: 'grade',
+  path: 'path',
+  label: 'label',
+  parentId: 'parentId',
+  sortValue: 'sortValue',
+};

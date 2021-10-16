@@ -49,7 +49,6 @@ function getMessage(attrs: Recordable) {
     let result;
     let message = attrs.message;
     while ((result = reg.exec(attrs.message)) !== null) {
-      console.log(result);
       const place = result[0];
       const field = result[2];
       message = message.replaceAll(place, attrs[field]);
