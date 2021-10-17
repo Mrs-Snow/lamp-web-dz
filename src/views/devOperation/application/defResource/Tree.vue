@@ -33,7 +33,7 @@
       highlight
       :actionList="actionList"
       :beforeRightClick="getRightMenuList"
-      :clickRowToExpand="true"
+      :clickRowToExpand="false"
       :treeData="treeData"
       :replaceFields="{ key: 'id', title: 'label' }"
       @select="handleSelect"
@@ -109,6 +109,7 @@
           treeData.value = (await tree({ applicationId })) as unknown as TreeItem[];
           setTimeout(() => {
             getTree().filterByLevel(2);
+            getTree().setCheckedKeys({ checked: [], halfChecked: [] });
           }, 0);
         } else {
           createMessage.warn('请先选择应用');
@@ -194,9 +195,11 @@
           iconType: 'warning',
           content: '选中节点及其子结点将被永久删除, 是否确定删除？',
           onOk: async () => {
-            await remove(ids);
-            createMessage.success(t('common.tips.deleteSuccess'));
-            fetch();
+            try {
+              await remove(ids);
+              createMessage.success(t('common.tips.deleteSuccess'));
+              fetch();
+            } catch (e) {}
           },
         });
       }
