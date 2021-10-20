@@ -18,7 +18,7 @@ export default {
   apiSpringApplicationName: '服务名',
   apiRequestMethod: '请求类型',
   metaJson: '元数据',
-  label: '名称',
+  name: '名称',
   parentId: '父ID',
   parentName: '父资源',
   sortValue: '排序',

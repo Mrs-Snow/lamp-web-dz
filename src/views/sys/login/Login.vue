@@ -26,6 +26,10 @@
             </div>
             <div class="mt-5 font-normal text-white text-md dark:text-gray-500 -enter-x">
               {{ t('sys.login.signInDesc') }}
+              运营管理员账号： 0000/pt_lamp/lamp <br />
+              租户管理员账号：0000/lamp/lamp <br />
+              普通管理员账号：0000/general/lamp <br />
+              普通用户账号：0000/normal/lamp <br />
             </div>
           </div>
         </div>

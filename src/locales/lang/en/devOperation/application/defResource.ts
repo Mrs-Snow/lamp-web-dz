@@ -18,7 +18,7 @@ export default {
   apiSpringApplicationName: 'apiSpringApplicationName',
   apiRequestMethod: 'apiRequestMethod',
   metaJson: 'metaJson',
-  label: 'label',
+  name: 'name',
   parentId: 'parentId',
   sortValue: 'sortValue',
   apiList: 'apiList',

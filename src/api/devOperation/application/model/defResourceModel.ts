@@ -13,7 +13,7 @@ export interface DefResourcePageQuery {
   fieldIsSecret?: boolean;
   fieldIsEdit?: boolean;
   metaJson?: string;
-  label?: string;
+  name?: string;
   parentId?: string;
   sortValue?: number;
 }
@@ -21,7 +21,7 @@ export interface DefResourcePageQuery {
 export interface DefResourceSaveVO {
   applicationId: string;
   code: string;
-  label: string;
+  name: string;
   resourceType: string;
   describe?: string;
   path?: string;
@@ -43,7 +43,7 @@ export interface DefResourceUpdateVO {
   id: string;
   applicationId: string;
   code: string;
-  label: string;
+  name: string;
   resourceType: string;
   describe?: string;
   path?: string;
@@ -77,7 +77,7 @@ export interface DefResourceResultVO {
   fieldIsEdit?: boolean;
   metaJson?: string;
   id?: string;
-  label?: string;
+  name?: string;
   parentId?: string;
   sortValue?: number;
   createdBy?: string;

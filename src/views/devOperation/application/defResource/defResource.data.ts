@@ -97,8 +97,8 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       },
     },
     {
-      label: t('devOperation.application.defResource.label'),
-      field: 'label',
+      label: t('devOperation.application.defResource.name'),
+      field: 'name',
       component: 'Input',
       colProps: {
         span: 12,
