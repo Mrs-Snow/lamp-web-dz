@@ -28,6 +28,8 @@ export default {
     pageSizeOptions: ['20', '50', '80', '100'],
     // 默认每页显示多少条
     defaultPageSize: 20,
+    // Default Size
+    defaultSize: 'middle',
     // 默认排序方法
     defaultSortFn: (sortInfo: SorterResult) => {
       const { field, order } = sortInfo;
