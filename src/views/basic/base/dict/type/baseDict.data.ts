@@ -102,7 +102,7 @@ export const customFormSchemaRules = (type: Ref<ActionEnum>): Partial<FormSchema
             if (type.value === ActionEnum.EDIT) {
               return Promise.resolve();
             }
-            if (await check(value)) {
+            if (value && (await check(value))) {
               return Promise.reject(t('basic.base.baseDict.key') + '已经存在');
             }
             return Promise.resolve();

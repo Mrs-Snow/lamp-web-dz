@@ -2,7 +2,7 @@ export default {
   table: { title: 'DefUser list' },
   id: 'ID',
   username: 'username',
-  name: 'name',
+  nickName: 'nickName',
   email: 'email',
   mobile: 'mobile',
   idCard: 'idCard',

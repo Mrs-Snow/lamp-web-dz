@@ -364,9 +364,9 @@
       }
     }
 
-    .ant-tag {
-      margin-right: 0;
-    }
+    //.ant-tag {
+    //  margin-right: 0;
+    //}
 
     .ant-table-wrapper {
       padding: 6px;

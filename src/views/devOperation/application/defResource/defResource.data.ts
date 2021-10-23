@@ -1,7 +1,7 @@
 import { Ref } from 'vue';
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
-import { dictComponentProps } from '/@/utils/lamp/common';
+import { dictComponentProps, stateComponentProps, yesNoComponentProps } from '/@/utils/lamp/common';
 import { ActionEnum, DictEnum } from '/@/enums/commonEnum';
 import { FormSchemaExt, RuleType } from '/@/api/lamp/common/formValidateService';
 import { ResourceTypeEnum } from '/@/enums/biz/tenant';
@@ -131,11 +131,8 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       component: 'Switch',
       defaultValue: true,
       componentProps: {
+        ...stateComponentProps(),
         size: 'default',
-        options: [
-          { label: t('lamp.common.enable'), value: true },
-          { label: t('lamp.common.disable'), value: false },
-        ],
         'checked-children': t('lamp.common.enable'),
         'un-checked-children': t('lamp.common.disable'),
       },
@@ -151,11 +148,8 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       component: 'Switch',
       defaultValue: false,
       componentProps: {
-        size: 'default',
-        options: [
-          { label: t('lamp.common.yes'), value: true },
-          { label: t('lamp.common.no'), value: false },
-        ],
+        // size: 'default',
+        ...yesNoComponentProps(),
         'checked-children': t('lamp.common.yes'),
         'un-checked-children': t('lamp.common.no'),
       },
@@ -252,11 +246,8 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       component: 'Switch',
       defaultValue: false,
       componentProps: {
-        size: 'default',
-        options: [
-          { label: t('lamp.common.yes'), value: true },
-          { label: t('lamp.common.no'), value: false },
-        ],
+        // size: 'default',
+        ...yesNoComponentProps(),
         'checked-children': t('lamp.common.yes'),
         'un-checked-children': t('lamp.common.no'),
       },
@@ -273,11 +264,8 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       component: 'Switch',
       defaultValue: true,
       componentProps: {
-        size: 'default',
-        options: [
-          { label: t('lamp.common.yes'), value: true },
-          { label: t('lamp.common.no'), value: false },
-        ],
+        // size: 'default',
+        ...yesNoComponentProps(),
         'checked-children': t('lamp.common.yes'),
         'un-checked-children': t('lamp.common.no'),
       },

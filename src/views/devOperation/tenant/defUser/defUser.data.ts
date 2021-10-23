@@ -1,7 +1,7 @@
 import { Ref, unref } from 'vue';
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
-import { dictComponentProps, stateFilters } from '/@/utils/lamp/common';
+import { dictComponentProps, stateComponentProps, stateFilters } from '/@/utils/lamp/common';
 import { ActionEnum, DictEnum } from '/@/enums/commonEnum';
 import { FormSchemaExt, RuleType } from '/@/api/lamp/common/formValidateService';
 import {
@@ -21,8 +21,8 @@ export const columns = (): BasicColumn[] => {
       width: 180,
     },
     {
-      title: t('devOperation.tenant.defUser.name'),
-      dataIndex: 'name',
+      title: t('devOperation.tenant.defUser.nickName'),
+      dataIndex: 'nickName',
       width: 180,
     },
     {
@@ -68,8 +68,8 @@ export const searchFormSchema = (): FormSchema[] => {
       colProps: { span: 6 },
     },
     {
-      label: t('devOperation.tenant.defUser.name'),
-      field: 'name',
+      label: t('devOperation.tenant.defUser.nickName'),
+      field: 'nickName',
       component: 'Input',
       colProps: { span: 6 },
     },
@@ -189,8 +189,8 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       label: '基础信息',
     },
     {
-      label: t('devOperation.tenant.defUser.name'),
-      field: 'name',
+      label: t('devOperation.tenant.defUser.nickName'),
+      field: 'nickName',
       component: 'Input',
       dynamicDisabled: () => {
         return [ActionEnum.VIEW].includes(type.value);
@@ -216,10 +216,7 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       field: 'state',
       component: 'RadioButtonGroup',
       componentProps: {
-        options: [
-          { label: t('lamp.common.enable'), value: true },
-          { label: t('lamp.common.disable'), value: false },
-        ],
+        ...stateComponentProps(),
       },
       defaultValue: true,
       colProps: {

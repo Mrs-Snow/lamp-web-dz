@@ -1,8 +1,8 @@
 export default {
   table: { title: '用户列表' },
   id: '主键',
-  username: '账号',
-  name: '姓名',
+  username: '用户名',
+  nickName: '昵称',
   email: '邮箱',
   mobile: '手机',
   idCard: '身份证',

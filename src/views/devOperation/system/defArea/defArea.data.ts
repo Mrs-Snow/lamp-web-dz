@@ -3,7 +3,7 @@ import { FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { ActionEnum, DictEnum } from '/@/enums/commonEnum';
 import { FormSchemaExt } from '/@/api/lamp/common/formValidateService';
-import { dictComponentProps } from '/@/utils/lamp/common';
+import { dictComponentProps, stateComponentProps } from '/@/utils/lamp/common';
 
 const { t } = useI18n();
 
@@ -111,10 +111,7 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
         return [ActionEnum.VIEW].includes(type.value);
       },
       componentProps: {
-        options: [
-          { label: t('lamp.common.enable'), value: true },
-          { label: t('lamp.common.disable'), value: false },
-        ],
+        ...stateComponentProps(),
       },
       colProps: {
         span: 12,

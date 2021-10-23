@@ -150,7 +150,7 @@ export const customFormSchemaRules = (
             if (type.value === ActionEnum.EDIT) {
               return Promise.resolve();
             }
-            if (await check(value, getFieldsValue()?.parentId)) {
+            if (value && (await check(value, getFieldsValue()?.parentId))) {
               return Promise.reject(t('devOperation.system.defDict.key') + '已经存在');
             }
             return Promise.resolve();

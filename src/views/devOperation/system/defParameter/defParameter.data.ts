@@ -1,7 +1,7 @@
 import { Ref, unref } from 'vue';
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
-import { stateFilters } from '/@/utils/lamp/common';
+import { stateComponentProps, stateFilters } from '/@/utils/lamp/common';
 import { ActionEnum } from '/@/enums/commonEnum';
 import { FormSchemaExt, RuleType } from '/@/api/lamp/common/formValidateService';
 import { check } from '/@/api/devOperation/system/defParameter';
@@ -125,10 +125,7 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       },
       defaultValue: true,
       componentProps: {
-        options: [
-          { label: t('lamp.common.enable'), value: true },
-          { label: t('lamp.common.disable'), value: false },
-        ],
+        ...stateComponentProps(),
       },
     },
   ];

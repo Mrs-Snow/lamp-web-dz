@@ -1,6 +1,6 @@
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
-import { dictComponentProps } from '/@/utils/lamp/common';
+import { dictComponentProps, yesNoComponentProps } from '/@/utils/lamp/common';
 import { DictEnum, FileBizTypeEnum } from '/@/enums/commonEnum';
 import { FormSchemaExt } from '/@/api/lamp/common/formValidateService';
 import { uploadApi } from '/@/api/sys/upload';
@@ -138,10 +138,7 @@ export const editFormSchema = (_): FormSchema[] => {
       field: 'isVisible',
       component: 'RadioButtonGroup',
       componentProps: {
-        options: [
-          { label: t('lamp.common.yes'), value: true },
-          { label: t('lamp.common.no'), value: false },
-        ],
+        ...yesNoComponentProps(),
       },
       defaultValue: true,
     },
