@@ -1,0 +1,15 @@
+export default {
+  table: { title: 'BaseEmployee list' },
+  id: 'ID',
+  isDefault: 'isDefault',
+  mobile: 'mobile',
+  userId: 'userId',
+  positionId: 'positionId',
+  orgId: 'orgId',
+  mainOrgId: 'mainOrgId',
+  realName: 'realName',
+  nation: 'nation',
+  education: 'education',
+  positionStatus: 'positionStatus',
+  state: 'state',
+};
