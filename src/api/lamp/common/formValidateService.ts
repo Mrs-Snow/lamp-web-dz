@@ -295,6 +295,8 @@ function enhanceCustomRules(
   return newRules;
 }
 
+const ruleMap = new Map();
+
 /**
  * 从后端获取某个接口基于 Hibernate Validator 注解生成的参数校验规则
  * @param Api url和method
@@ -316,11 +318,17 @@ export const getValidateRules = async (
     }
   }
   try {
+    const key = formValidateApi.url + formValidateApi.method;
+    if (ruleMap.has(key)) {
+      return ruleMap.get(key);
+    }
+
     const res = await defHttp.request<FieldValidatorDesc[]>({ ...formValidateApi });
     if (res) {
       const formSchemaRules = transformationRules(res);
-
-      return enhanceCustomRules(formSchemaRules, customRules);
+      const allRules = enhanceCustomRules(formSchemaRules, customRules);
+      ruleMap.set(key, allRules);
+      return allRules;
     }
   } catch (error) {}
   return [];
