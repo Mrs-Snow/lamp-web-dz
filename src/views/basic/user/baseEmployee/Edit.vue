@@ -8,7 +8,12 @@
     :title="t(`common.title.${type}`)"
     @ok="handleSubmit"
   >
-    <BasicForm @register="registerForm" />
+    <CollapseContainer title="员工信息">
+      <BasicForm @register="registerForm" />
+    </CollapseContainer>
+    <CollapseContainer title="用户信息" v-if="type === ActionEnum.VIEW">
+      <BasicForm @register="registerUserForm" />
+    </CollapseContainer>
   </BasicDrawer>
 </template>
 <script lang="ts">
@@ -17,14 +22,15 @@
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
+  import { CollapseContainer } from '/@/components/Container/index';
   import { ActionEnum, VALIDATE_API } from '/@/enums/commonEnum';
-  import { Api, save, update } from '/@/api/basic/user/baseEmployee';
+  import { Api, save, update, get } from '/@/api/basic/user/baseEmployee';
   import { getValidateRules } from '/@/api/lamp/common/formValidateService';
-  import { customFormSchemaRules, editFormSchema } from './baseEmployee.data';
+  import { customFormSchemaRules, editFormSchema, userEditFormSchema } from './baseEmployee.data';
 
   export default defineComponent({
     name: 'BaseEmployeeEdit',
-    components: { BasicDrawer, BasicForm },
+    components: { BasicDrawer, BasicForm, CollapseContainer },
     emits: ['success', 'register'],
     setup(_, { emit }) {
       const { t } = useI18n();
@@ -40,16 +46,35 @@
           },
         });
 
+      const [
+        registerUserForm,
+        { setFieldsValue: setFieldsValueByUser, resetFields: resetFieldsByUser },
+      ] = useForm({
+        labelWidth: 100,
+        schemas: userEditFormSchema(type),
+        disabled: true,
+        showActionButtonGroup: false,
+        actionColOptions: {
+          span: 23,
+        },
+      });
+
       const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(async (data) => {
         setDrawerProps({ confirmLoading: false });
         await resetSchema(editFormSchema(type));
         await resetFields();
+        await resetFieldsByUser();
         type.value = data?.type || ActionEnum.ADD;
 
         if (unref(type) !== ActionEnum.ADD) {
-          // 赋值
-          const record = { ...data?.record };
-          await setFieldsValue(record);
+          if (unref(type) === ActionEnum.VIEW) {
+            const record = await get(data.record.id);
+            await setFieldsValue(record);
+            await setFieldsValueByUser(record.defUser);
+          } else {
+            const record = { ...data.record };
+            await setFieldsValue(record);
+          }
         }
 
         if (unref(type) !== ActionEnum.VIEW) {
@@ -62,10 +87,11 @@
 
       async function handleSubmit() {
         try {
-          const params = await validate();
           setDrawerProps({ confirmLoading: true });
 
           if (unref(type) !== ActionEnum.VIEW) {
+            const params = await validate();
+
             if (unref(type) === ActionEnum.EDIT) {
               await update(params);
             } else {
@@ -81,7 +107,7 @@
         }
       }
 
-      return { type, t, registerDrawer, registerForm, handleSubmit };
+      return { type, t, ActionEnum, registerDrawer, registerForm, handleSubmit, registerUserForm };
     },
   });
 </script>

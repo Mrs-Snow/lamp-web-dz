@@ -1,7 +1,12 @@
 import { Ref, unref } from 'vue';
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
-import { dictComponentProps, stateComponentProps, stateFilters } from '/@/utils/lamp/common';
+import {
+  dictComponentProps,
+  stateComponentProps,
+  stateFilters,
+  yesNoComponentProps,
+} from '/@/utils/lamp/common';
 import { ActionEnum, DictEnum } from '/@/enums/commonEnum';
 import { FormSchemaExt, RuleType } from '/@/api/lamp/common/formValidateService';
 import {
@@ -284,6 +289,21 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       component: 'Input',
       colProps: {
         span: 12,
+      },
+      dynamicDisabled: true,
+      ifShow: () => {
+        return type.value === ActionEnum.VIEW;
+      },
+    },
+    {
+      label: t('devOperation.tenant.defUser.locked'),
+      field: 'locked',
+      colProps: {
+        span: 12,
+      },
+      component: 'RadioButtonGroup',
+      componentProps: {
+        ...yesNoComponentProps(),
       },
       dynamicDisabled: true,
       ifShow: () => {

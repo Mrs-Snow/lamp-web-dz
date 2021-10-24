@@ -23,11 +23,8 @@
         <TableAction
           :actions="[
             {
-              label: '用户信息',
-              onClick: handleViewUser.bind(null, record),
-            },
-            {
-              label: '员工信息',
+              label: t('common.title.view'),
+              icon: 'ant-design:search-outlined',
               onClick: handleView.bind(null, record),
             },
           ]"
@@ -99,7 +96,7 @@
           type: 'checkbox',
         },
         actionColumn: {
-          width: 240,
+          width: 120,
           title: t('common.column.action'),
           dataIndex: 'action',
           slots: { customRender: 'action' },
@@ -131,14 +128,6 @@
         });
       }
 
-      // 查看用户信息
-      function handleViewUser(record: Recordable, e: Event) {
-        e?.stopPropagation();
-        openDrawer(true, {
-          record,
-          type: ActionEnum.VIEW,
-        });
-      }
       // 弹出编辑页面
       function handleEdit(record: Recordable, e: Event) {
         e?.stopPropagation();
@@ -193,7 +182,6 @@
         handleAdd,
         handleCopy,
         handleEdit,
-        handleViewUser,
         handleDelete,
         handleSuccess,
         handleBatchDelete,

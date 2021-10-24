@@ -47,4 +47,7 @@ export interface BaseEmployeeResultVO {
   updatedBy?: string;
   updatedTime?: string;
   echoMap?: Recordable;
+  activeStatus?: string;
+  orgIdList?: string[];
+  defUser: Recordable;
 }

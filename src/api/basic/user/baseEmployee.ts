@@ -33,6 +33,12 @@ export const Api = {
     url: `${ServicePrefixEnum.BASE}/${MODULAR}/query`,
     method: RequestEnum.POST,
   } as AxiosRequestConfig,
+  Get: (id: string | number) => {
+    return {
+      url: `${ServicePrefixEnum.BASE}/${MODULAR}/${id}`,
+      method: RequestEnum.GET,
+    } as AxiosRequestConfig;
+  },
 };
 
 export const page = (params: PageParams<BaseEmployeePageQuery>) =>
@@ -40,6 +46,8 @@ export const page = (params: PageParams<BaseEmployeePageQuery>) =>
 
 export const query = (params: BaseEmployeePageQuery) =>
   defHttp.request<BaseEmployeeResultVO[]>({ ...Api.Query, params });
+export const get = (id: string | number) =>
+  defHttp.request<BaseEmployeeResultVO>({ ...Api.Get(id) });
 
 export const save = (params: BaseEmployeeSaveVO) =>
   defHttp.request<BaseEmployeeResultVO>({ ...Api.Save, params });

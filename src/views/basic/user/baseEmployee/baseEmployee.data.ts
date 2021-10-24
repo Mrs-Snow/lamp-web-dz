@@ -5,7 +5,7 @@ import { ActionEnum, DictEnum } from '/@/enums/commonEnum';
 import { FormSchemaExt, RuleType } from '/@/api/lamp/common/formValidateService';
 import { tree } from '/@/api/basic/user/baseOrg';
 import { query } from '/@/api/basic/user/basePosition';
-import { dictComponentProps, stateComponentProps } from '/@/utils/lamp/common';
+import { dictComponentProps, stateComponentProps, yesNoComponentProps } from '/@/utils/lamp/common';
 import { checkMobile } from '/@/api/devOperation/tenant/defUser';
 
 const { t } = useI18n();
@@ -117,17 +117,37 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       },
     },
     {
-      label: t('basic.user.baseEmployee.mobile'),
+      field: 'divider-selects2',
+      component: 'Divider',
+      label: '用户信息',
+      show: () => {
+        return [ActionEnum.ADD, ActionEnum.COPY].includes(type.value);
+      },
+    },
+    {
+      label: t('devOperation.tenant.defUser.mobile'),
       field: 'mobile',
       component: 'Input',
-      dynamicDisabled: () => {
-        return [ActionEnum.VIEW, ActionEnum.EDIT].includes(type.value);
+      colProps: {
+        span: 12,
       },
       show: () => {
         return [ActionEnum.ADD, ActionEnum.COPY].includes(type.value);
       },
+    },
+    {
+      label: t('devOperation.tenant.defUser.sex'),
+      field: 'sex',
+      component: 'ApiRadioGroup',
+      componentProps: {
+        ...dictComponentProps(DictEnum.GLOBAL_SEX),
+      },
+      defaultValue: 'M',
       colProps: {
         span: 12,
+      },
+      show: () => {
+        return [ActionEnum.ADD, ActionEnum.COPY].includes(type.value);
       },
     },
     {
@@ -146,6 +166,9 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
         allowClear: true,
         multiple: true,
       },
+      // dynamicDisabled: () => {
+      //   return [ActionEnum.VIEW].includes(type.value);
+      // },
       colProps: {
         span: 12,
       },
@@ -217,29 +240,14 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
 };
 
 // 用户信息字段
-export const userViewFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
+export const userEditFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
   return [
-    {
-      field: 'id',
-      label: 'ID',
-      component: 'Input',
-      show: false,
-    },
-    {
-      field: 'divider-selects1',
-      component: 'Divider',
-      label: '登录信息',
-      helpMessage: ['均可可用于登录'],
-    },
     {
       label: t('devOperation.tenant.defUser.username'),
       field: 'username',
       component: 'Input',
       colProps: {
         span: 12,
-      },
-      dynamicDisabled: () => {
-        return [ActionEnum.VIEW, ActionEnum.EDIT].includes(type.value);
       },
     },
     {
@@ -249,9 +257,6 @@ export const userViewFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       colProps: {
         span: 12,
       },
-      dynamicDisabled: () => {
-        return [ActionEnum.VIEW, ActionEnum.EDIT].includes(type.value);
-      },
     },
     {
       label: t('devOperation.tenant.defUser.mobile'),
@@ -260,9 +265,6 @@ export const userViewFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       colProps: {
         span: 12,
       },
-      dynamicDisabled: () => {
-        return [ActionEnum.VIEW, ActionEnum.EDIT].includes(type.value);
-      },
     },
     {
       label: t('devOperation.tenant.defUser.idCard'),
@@ -270,9 +272,6 @@ export const userViewFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       component: 'Input',
       colProps: {
         span: 12,
-      },
-      dynamicDisabled: () => {
-        return [ActionEnum.VIEW].includes(type.value);
       },
     },
     {
@@ -305,12 +304,9 @@ export const userViewFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       label: '基础信息',
     },
     {
-      label: t('devOperation.tenant.defUser.name'),
-      field: 'name',
+      label: t('devOperation.tenant.defUser.nickName'),
+      field: 'nickName',
       component: 'Input',
-      dynamicDisabled: () => {
-        return [ActionEnum.VIEW].includes(type.value);
-      },
     },
     {
       label: t('devOperation.tenant.defUser.sex'),
@@ -322,9 +318,6 @@ export const userViewFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       defaultValue: 'M',
       colProps: {
         span: 12,
-      },
-      dynamicDisabled: () => {
-        return [ActionEnum.VIEW].includes(type.value);
       },
     },
     {
@@ -338,17 +331,11 @@ export const userViewFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       colProps: {
         span: 12,
       },
-      dynamicDisabled: () => {
-        return [ActionEnum.VIEW].includes(type.value);
-      },
     },
     {
       label: t('devOperation.tenant.defUser.workDescribe'),
       field: 'workDescribe',
       component: 'InputTextArea',
-      dynamicDisabled: () => {
-        return [ActionEnum.VIEW].includes(type.value);
-      },
     },
     {
       field: 'divider-selects3',
@@ -400,6 +387,21 @@ export const userViewFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       component: 'Input',
       colProps: {
         span: 12,
+      },
+      dynamicDisabled: true,
+      ifShow: () => {
+        return type.value === ActionEnum.VIEW;
+      },
+    },
+    {
+      label: t('devOperation.tenant.defUser.locked'),
+      field: 'locked',
+      colProps: {
+        span: 12,
+      },
+      component: 'RadioButtonGroup',
+      componentProps: {
+        ...yesNoComponentProps(),
       },
       dynamicDisabled: true,
       ifShow: () => {

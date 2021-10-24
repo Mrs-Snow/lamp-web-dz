@@ -11,6 +11,7 @@ export default {
   readonly: 'readonly',
   sex: 'sex',
   state: 'state',
+  locked: 'locked',
   workDescribe: 'workDescribe',
   passwordErrorLastTime: 'passwordErrorLastTime',
   passwordErrorNum: 'passwordErrorNum',
