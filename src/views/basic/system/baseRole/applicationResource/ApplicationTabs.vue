@@ -2,9 +2,14 @@
   <div class="appResTabs bg-white m-4 ml-2 overflow-hidden">
     <Card :title="title">
       <template #extra>
-        <a-button class="!ml-4" type="primary" @click="handleSubmit" :loading="confirmLoading">{{
-          t('common.saveText')
-        }}</a-button>
+        <a-button
+          class="!ml-4"
+          v-if="formData.roleId"
+          type="primary"
+          @click="handleSubmit"
+          :loading="confirmLoading"
+          >{{ t('common.saveText') }}</a-button
+        >
       </template>
 
       <ApplicationTab
@@ -90,6 +95,7 @@
 
       async function handleSubmit() {
         try {
+          state.confirmLoading = true;
           const params = getData();
           if (params.roleId) {
             await saveRoleResource(params);
@@ -99,6 +105,7 @@
             createMessage.warn('请选择角色');
           }
         } finally {
+          state.confirmLoading = false;
         }
       }
       return {
