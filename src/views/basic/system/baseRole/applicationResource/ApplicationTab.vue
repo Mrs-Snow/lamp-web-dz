@@ -16,8 +16,10 @@
       :clickRowToExpand="false"
       :treeData="resourceList"
       :replaceFields="replaceFields"
+      :checkedKeys="checkedKeys"
       ref="treeRef"
       @check="checkNode"
+      @change="changeHandler"
     >
       <template #title="item">
         <TreeIcon :icon="item.icon" v-if="item.icon" />
@@ -39,7 +41,13 @@
   import { Checkbox } from 'ant-design-vue';
   import type { TreeDataItem } from 'ant-design-vue/es/tree/Tree';
   import { CollapseContainer } from '/@/components/Container/index';
-  import { BasicTree, TreeActionType, TreeIcon, ReplaceFields } from '/@/components/Tree';
+  import {
+    BasicTree,
+    TreeActionType,
+    TreeIcon,
+    ReplaceFields,
+    CheckKeys,
+  } from '/@/components/Tree';
   import { isArray } from '/@/utils/is';
   import { uniq, intersection, difference } from 'lodash-es';
   import { useI18n } from '/@/hooks/web/useI18n';
@@ -47,7 +55,7 @@
   import { eachTree, findChildrenByParentId, getById } from '/@/utils/helper/treeHelper';
   const replaceFields: ReplaceFields = { key: 'id', title: 'name' };
   export default defineComponent({
-    name: 'ApplicationTab',
+    name: 'ApplicationResourceTab',
     components: {
       BasicTree,
       Checkbox,
@@ -67,15 +75,17 @@
           return [] as TreeDataItem[];
         },
       },
+      checkedKeys: {
+        type: Array as PropType<CheckKeys>,
+        default: () => [],
+      },
     },
     setup(props) {
       const { t } = useI18n();
       const treeRef = ref<Nullable<TreeActionType>>(null);
       // 表单数据
-      const formData = reactive<Recordable>({
-        expirationTime: '',
-        applicationList: [],
-      });
+      const formData = reactive<Recordable>({});
+
       // 临时数据
       const state = reactive({
         indeterminate: false,
@@ -108,6 +118,12 @@
         state.allKeys = keys;
       });
 
+      function changeHandler(_checkKeys) {
+        computedIndeterminate();
+        computedCheckAll();
+        console.log('_checkKeys=' + _checkKeys);
+      }
+
       // 获取 树当前选中的节点key
       function getCheckedKeys(): string[] {
         const checkedKeys = getTree().getCheckedKeys();
@@ -117,7 +133,8 @@
       // 计算 半选状态
       function computedIndeterminate() {
         const checkedKeys = getCheckedKeys();
-        state.indeterminate = checkedKeys.length > 0 && checkedKeys.length < state.allKeys.length;
+        const flag = checkedKeys.length > 0 && checkedKeys.length < state.allKeys.length;
+        state.indeterminate = flag;
       }
       // 计算 选中状态
       function computedCheckAll() {
@@ -167,8 +184,8 @@
           getTree().setCheckedKeys(uniq(newKeys));
         }
 
-        computedCheckAll();
-        computedIndeterminate();
+        // computedCheckAll();
+        // computedIndeterminate();
       }
 
       /**
@@ -225,11 +242,12 @@
         selectAll,
         isAllCheckedByKey,
         replaceFields,
+        changeHandler,
       };
     },
   });
 </script>
-<style scoped>
+<style lang="less" scoped>
   .appResource {
     border: 1px solid #d9d9d9;
   }

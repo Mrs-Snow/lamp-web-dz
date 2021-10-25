@@ -8,8 +8,5 @@ export default {
   state: 'state',
   readonly: 'readonly',
   dsType: 'dsType',
-  orgId: 'orgId',
-  label: 'label',
-  parentId: 'parentId',
-  sortValue: 'sortValue',
+  createdOrgId: 'createdOrgId',
 };

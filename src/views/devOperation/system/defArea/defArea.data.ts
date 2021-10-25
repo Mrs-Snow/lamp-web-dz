@@ -39,8 +39,8 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       },
     },
     {
-      label: t('devOperation.system.defArea.label'),
-      field: 'label',
+      label: t('devOperation.system.defArea.name'),
+      field: 'name',
       component: 'Input',
       dynamicDisabled: () => {
         return [ActionEnum.VIEW].includes(type.value);

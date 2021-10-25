@@ -3,6 +3,8 @@ import {
   BaseRoleUpdateVO,
   BaseRoleResultVO,
   BaseRolePageQuery,
+  RoleEmployeeSaveVO,
+  BaseRoleResourceRelSaveVO,
 } from './model/baseRoleModel';
 import { PageParams, PageResult } from '/@/api/model/baseModel';
 import { defHttp } from '/@/utils/http/axios';
@@ -33,6 +35,22 @@ export const Api = {
     url: `${ServicePrefixEnum.BASE}/${MODULAR}/query`,
     method: RequestEnum.POST,
   } as AxiosRequestConfig,
+  SaveRoleEmployee: {
+    url: `${ServicePrefixEnum.BASE}/${MODULAR}/roleEmployee`,
+    method: RequestEnum.POST,
+  } as AxiosRequestConfig,
+  SaveRoleResource: {
+    url: `${ServicePrefixEnum.BASE}/${MODULAR}/roleResource`,
+    method: RequestEnum.POST,
+  } as AxiosRequestConfig,
+  FindEmployeeIdByRoleId: {
+    url: `${ServicePrefixEnum.BASE}/${MODULAR}/employeeList`,
+    method: RequestEnum.GET,
+  } as AxiosRequestConfig,
+  FindResourceIdByRoleId: {
+    url: `${ServicePrefixEnum.BASE}/${MODULAR}/resourceList`,
+    method: RequestEnum.GET,
+  } as AxiosRequestConfig,
 };
 
 export const page = (params: PageParams<BaseRolePageQuery>) =>
@@ -48,3 +66,15 @@ export const update = (params: BaseRoleUpdateVO) =>
   defHttp.request<BaseRoleResultVO>({ ...Api.Update, params });
 
 export const remove = (params: string[]) => defHttp.request<boolean>({ ...Api.Delete, params });
+
+export const saveRoleEmployee = (params: RoleEmployeeSaveVO) =>
+  defHttp.request<string[]>({ ...Api.SaveRoleEmployee, params });
+
+export const saveRoleResource = (params: BaseRoleResourceRelSaveVO) =>
+  defHttp.request<boolean>({ ...Api.SaveRoleResource, params });
+
+export const findEmployeeIdByRoleId = (roleId: string) =>
+  defHttp.request<string[]>({ ...Api.FindEmployeeIdByRoleId, params: { roleId } });
+
+export const findResourceIdByRoleId = (roleId: string) =>
+  defHttp.request<Recordable>({ ...Api.FindResourceIdByRoleId, params: { roleId } });

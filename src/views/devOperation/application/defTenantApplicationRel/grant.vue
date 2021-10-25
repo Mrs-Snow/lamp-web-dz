@@ -1,5 +1,5 @@
 <template>
-  <PageWrapper dense contentClass="flex" contentFullHeight>
+  <PageWrapper dense contentClass="flex" contentFullHeight class="mb-10">
     <TenantList class="md:w-1/4" ref="tenantListRef" />
     <ApplicationTabs class="md:w-3/4" ref="applicationTabsRef" />
     <template #rightFooter>

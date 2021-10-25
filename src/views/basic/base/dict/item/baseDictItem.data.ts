@@ -94,7 +94,7 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       dynamicDisabled: true,
     },
     {
-      label: t('basic.base.baseDictItem.label'),
+      label: t('basic.base.baseDictItem.name'),
       field: 'parentName',
       component: 'Input',
       dynamicDisabled: true,

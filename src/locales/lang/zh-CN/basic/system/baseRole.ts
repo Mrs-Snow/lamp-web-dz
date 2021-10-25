@@ -8,8 +8,5 @@ export default {
   state: '状态',
   readonly: '内置角色',
   dsType: '数据权限',
-  orgId: '组织ID',
-  label: '名称',
-  parentId: '父ID',
-  sortValue: '排序',
+  createdOrgId: '创建人组织',
 };

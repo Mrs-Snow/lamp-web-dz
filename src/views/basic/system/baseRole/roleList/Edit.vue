@@ -1,5 +1,5 @@
 <template>
-  <BasicDrawer
+  <BasicModal
     v-bind="$attrs"
     @register="registerDrawer"
     showFooter
@@ -9,11 +9,11 @@
     @ok="handleSubmit"
   >
     <BasicForm @register="registerForm" />
-  </BasicDrawer>
+  </BasicModal>
 </template>
 <script lang="ts">
   import { defineComponent, ref, unref } from 'vue';
-  import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
+  import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
@@ -24,7 +24,7 @@
 
   export default defineComponent({
     name: 'BaseRoleEdit',
-    components: { BasicDrawer, BasicForm },
+    components: { BasicModal, BasicForm },
     emits: ['success', 'register'],
     setup(_, { emit }) {
       const { t } = useI18n();
@@ -40,8 +40,8 @@
           },
         });
 
-      const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(async (data) => {
-        setDrawerProps({ confirmLoading: false });
+      const [registerDrawer, { setModalProps, closeModal }] = useModalInner(async (data) => {
+        setModalProps({ confirmLoading: false });
         await resetSchema(editFormSchema(type));
         await resetFields();
         type.value = data?.type || ActionEnum.ADD;
@@ -63,7 +63,7 @@
       async function handleSubmit() {
         try {
           const params = await validate();
-          setDrawerProps({ confirmLoading: true });
+          setModalProps({ confirmLoading: true });
 
           if (unref(type) !== ActionEnum.VIEW) {
             if (unref(type) === ActionEnum.EDIT) {
@@ -74,10 +74,10 @@
             }
             createMessage.success(t(`common.tips.${type.value}Success`));
           }
-          closeDrawer();
+          closeModal();
           emit('success');
         } finally {
-          setDrawerProps({ confirmLoading: false });
+          setModalProps({ confirmLoading: false });
         }
       }
 

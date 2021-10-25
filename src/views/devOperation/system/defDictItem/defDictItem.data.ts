@@ -85,7 +85,7 @@ export const editFormSchema = (_): FormSchema[] => {
       dynamicDisabled: true,
     },
     {
-      label: t('devOperation.system.defDictItem.label'),
+      label: t('devOperation.system.defDictItem.name'),
       field: 'parentName',
       component: 'Input',
       dynamicDisabled: true,

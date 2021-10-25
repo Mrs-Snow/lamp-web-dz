@@ -118,14 +118,14 @@
           if (unref(type) === ActionEnum.ADD) {
             title.value =
               t(`common.title.${type.value}`) +
-              `【${record?.applicationName}】中【${parent?.label}】的子资源`;
+              `【${record?.applicationName}】中【${parent?.name}】的子资源`;
           } else {
             title.value =
               t(`common.title.${type.value}`) +
-              `【${record?.applicationName}】中的【${record?.label}】`;
+              `【${record?.applicationName}】中的【${record?.name}】`;
           }
         }
-        record['parentName'] = parent?.label;
+        record['parentName'] = parent?.name;
         record['parentId'] = parent?.id;
         record['parentResourceType'] = parent?.resourceType;
         if (unref(type) !== ActionEnum.EDIT) {

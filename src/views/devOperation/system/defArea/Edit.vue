@@ -68,7 +68,7 @@
         let validateApi = unref(type) !== ActionEnum.ADD ? Api.Update : Api.Save;
 
         const { record = {}, parent } = data;
-        record['parentName'] = parent?.label;
+        record['parentName'] = parent?.name;
         record['parentId'] = parent?.id;
         if (unref(type) !== ActionEnum.EDIT) {
           record.id = undefined;

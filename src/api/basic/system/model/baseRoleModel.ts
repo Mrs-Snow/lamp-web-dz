@@ -8,10 +8,7 @@ export interface BaseRolePageQuery {
   state?: boolean;
   readonly?: boolean;
   dsType?: Enum;
-  orgId?: string;
-  label?: string;
-  parentId?: string;
-  sortValue?: number;
+  createdOrgId?: string;
 }
 
 export interface BaseRoleSaveVO {
@@ -22,10 +19,7 @@ export interface BaseRoleSaveVO {
   state: boolean;
   readonly: boolean;
   dsType: Enum;
-  orgId: string;
-  label: string;
-  parentId: string;
-  sortValue: number;
+  createdOrgId: string;
 }
 
 export interface BaseRoleUpdateVO {
@@ -37,10 +31,7 @@ export interface BaseRoleUpdateVO {
   state: boolean;
   readonly: boolean;
   dsType: Enum;
-  orgId: string;
-  label: string;
-  parentId: string;
-  sortValue: number;
+  createdOrgId: string;
 }
 
 export interface BaseRoleResultVO {
@@ -51,11 +42,22 @@ export interface BaseRoleResultVO {
   state?: boolean;
   readonly?: boolean;
   dsType?: Enum;
-  orgId?: string;
+  createdOrgId?: string;
   id?: string;
   createdBy?: string;
   createdTime?: string;
   updatedBy?: string;
   updatedTime?: string;
   echoMap?: Recordable;
+}
+
+export interface RoleEmployeeSaveVO {
+  flag: boolean;
+  roleId: string;
+  employeeIdList: string[];
+}
+
+export interface BaseRoleResourceRelSaveVO {
+  roleId: string;
+  applicationResourceMap: Recordable;
 }
