@@ -143,7 +143,11 @@ export class VAxios {
         formData.append(key, params.data![key]);
       });
     }
-    formData.append(params.name || 'file', params.file, params.filename);
+    if (params.filename) {
+      formData.append(params.name || 'file', params.file, params.filename);
+    } else {
+      formData.append(params.name || 'file', params.file);
+    }
 
     const customParams = omit(params, 'file', 'filename', 'name');
 
