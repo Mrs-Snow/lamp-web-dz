@@ -90,6 +90,11 @@
         } else {
           state.title = '请选择角色';
           formData.roleId = '';
+          const appResourceMap = {};
+          for (const item of state.applicationResourceList) {
+            appResourceMap[item.defApplication.id] = [];
+          }
+          state.appResMap = appResourceMap;
         }
       }
 

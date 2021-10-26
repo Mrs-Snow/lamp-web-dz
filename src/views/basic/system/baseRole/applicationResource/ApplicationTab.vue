@@ -121,7 +121,6 @@
       function changeHandler(_checkKeys) {
         computedIndeterminate();
         computedCheckAll();
-        console.log('_checkKeys=' + _checkKeys);
       }
 
       // 获取 树当前选中的节点key
