@@ -14,11 +14,16 @@
               label: t('common.title.edit'),
               onClick: handleEdit.bind(null, record),
             },
+            {
+              label: '绑定',
+              onClick: handleBindUser.bind(null, record),
+            },
           ]"
         />
       </template>
     </BasicTable>
     <EditModal @register="registerModal" @success="handleSuccess" />
+    <RoleEmployeeModal @register="registerRoleEmployeeModal" @success="handleSuccess" />
   </div>
 </template>
 <script lang="ts">
@@ -30,19 +35,21 @@
   import { handleFetchParams } from '/@/utils/lamp/common';
   import { ActionEnum } from '/@/enums/commonEnum';
   import { page, remove } from '/@/api/basic/system/baseRole';
-  import { columns, searchFormSchema } from './baseRole.data';
+  import { columns, searchFormSchema } from '../baseRole.data';
   import EditModal from './Edit.vue';
+  import RoleEmployeeModal from '../roleEmployee/index.vue';
 
   export default defineComponent({
     // 若需要开启页面缓存，请将此参数跟菜单名保持一致
     name: 'BaseRoleManagement',
-    components: { BasicTable, EditModal, TableAction },
+    components: { BasicTable, EditModal, TableAction, RoleEmployeeModal },
     emits: ['select'],
     setup(_, { emit }) {
       const { t } = useI18n();
       const { createMessage, createConfirm } = useMessage();
       // 编辑页弹窗
       const [registerModal, { openModal }] = useModal();
+      const [registerRoleEmployeeModal, { openModal: openRoleEmployeeMadal }] = useModal();
 
       // 表格
       const [registerTable, { reload, getSelectRowKeys }] = useTable({
@@ -61,6 +68,7 @@
         rowKey: 'id',
         rowSelection: {
           type: 'radio',
+          columnWidth: 40,
           onChange: (_, selectedRows: Recordable[]) => {
             emit('select', selectedRows[0]);
           },
@@ -72,19 +80,18 @@
         //   return list;
         // },
         actionColumn: {
-          width: 100,
+          width: 120,
           title: t('common.column.action'),
           dataIndex: 'action',
           slots: { customRender: 'action' },
         },
       });
 
-      // 弹出复制页面
-      function handleCopy(record: Recordable, e: Event) {
+      // 绑定用户
+      function handleBindUser(record: Recordable, e: Event) {
         e?.stopPropagation();
-        openModal(true, {
-          record,
-          type: ActionEnum.COPY,
+        openRoleEmployeeMadal(true, {
+          ...record,
         });
       }
 
@@ -92,15 +99,6 @@
       function handleAdd() {
         openModal(true, {
           type: ActionEnum.ADD,
-        });
-      }
-
-      // 弹出查看页面
-      function handleView(record: Recordable, e: Event) {
-        e?.stopPropagation();
-        openModal(true, {
-          record,
-          type: ActionEnum.VIEW,
         });
       }
 
@@ -122,14 +120,6 @@
         await remove(ids);
         createMessage.success(t('common.tips.deleteSuccess'));
         handleSuccess();
-      }
-
-      // 点击单行删除
-      function handleDelete(record: Recordable, e: Event) {
-        e?.stopPropagation();
-        if (record?.id) {
-          batchDelete([record.id]);
-        }
       }
 
       // 点击批量删除
@@ -154,13 +144,12 @@
         t,
         registerTable,
         registerModal,
-        handleView,
+        registerRoleEmployeeModal,
         handleAdd,
-        handleCopy,
         handleEdit,
-        handleDelete,
         handleSuccess,
         handleBatchDelete,
+        handleBindUser,
       };
     },
   });

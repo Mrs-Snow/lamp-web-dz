@@ -25,7 +25,7 @@ export default {
       orderField: ORDER_FIELD,
     },
     // 可选的分页选项
-    pageSizeOptions: ['20', '50', '80', '100'],
+    pageSizeOptions: ['10', '20', '50', '80', '100'],
     // 默认每页显示多少条
     defaultPageSize: 20,
     // Default Size

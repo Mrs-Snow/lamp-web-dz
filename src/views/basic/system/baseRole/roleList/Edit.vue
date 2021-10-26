@@ -1,7 +1,7 @@
 <template>
   <BasicModal
     v-bind="$attrs"
-    @register="registerDrawer"
+    @register="registerModal"
     showFooter
     width="30%"
     :maskClosable="false"
@@ -20,7 +20,7 @@
   import { ActionEnum, VALIDATE_API } from '/@/enums/commonEnum';
   import { Api, save, update } from '/@/api/basic/system/baseRole';
   import { getValidateRules } from '/@/api/lamp/common/formValidateService';
-  import { customFormSchemaRules, editFormSchema } from './baseRole.data';
+  import { customFormSchemaRules, editFormSchema } from '../baseRole.data';
 
   export default defineComponent({
     name: 'BaseRoleEdit',
@@ -40,7 +40,7 @@
           },
         });
 
-      const [registerDrawer, { setModalProps, closeModal }] = useModalInner(async (data) => {
+      const [registerModal, { setModalProps, closeModal }] = useModalInner(async (data) => {
         setModalProps({ confirmLoading: false });
         await resetSchema(editFormSchema(type));
         await resetFields();
@@ -81,7 +81,7 @@
         }
       }
 
-      return { type, t, registerDrawer, registerForm, handleSubmit };
+      return { type, t, registerModal, registerForm, handleSubmit };
     },
   });
 </script>
