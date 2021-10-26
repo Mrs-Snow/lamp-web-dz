@@ -3,7 +3,7 @@ export interface BasicPageParams {
   pageSize: number;
 }
 
-export interface BasicFetchResult<T extends any> {
+export interface BasicFetchResult<T> {
   items: T[];
   total: number;
 }
@@ -19,7 +19,7 @@ export interface RemoteData {
   data?: any;
 }
 
-export interface PageParams<T extends any> {
+export interface PageParams<T> {
   model: T;
   size: number;
   current: number;
@@ -28,7 +28,7 @@ export interface PageParams<T extends any> {
   extra?: any;
 }
 
-export interface PageResult<T extends any> {
+export interface PageResult<T> {
   records: T[];
   offset: number;
   pages: number;
