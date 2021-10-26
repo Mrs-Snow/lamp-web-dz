@@ -5,7 +5,7 @@ import axios from 'axios';
 import qs from 'qs';
 import { AxiosCanceler } from './axiosCancel';
 import { isFunction, isString } from '/@/utils/is';
-import { cloneDeep, omit } from 'lodash-es';
+import { cloneDeep } from 'lodash-es';
 import { ContentTypeEnum } from '/@/enums/httpEnum';
 import { RequestEnum } from '/@/enums/httpEnum';
 
@@ -141,6 +141,8 @@ export class VAxios {
 
         formData.append(key, params.data![key]);
       });
+
+      delete params.data;
     }
     if (params.filename) {
       formData.append(params.name || 'file', params.file, params.filename);
@@ -148,11 +150,10 @@ export class VAxios {
       formData.append(params.name || 'file', params.file);
     }
 
-    const customParams = omit(params, 'file', 'filename', 'name');
-
-    Object.keys(customParams).forEach((key) => {
-      formData.append(key, customParams[key]);
-    });
+    // const customParams = omit(params, 'file', 'filename', 'name');
+    // Object.keys(customParams).forEach((key) => {
+    //   formData.append(key, customParams[key]);
+    // });
 
     // 全局api前缀
     const { apiUrl } = opt;

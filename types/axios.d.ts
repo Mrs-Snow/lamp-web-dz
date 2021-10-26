@@ -47,11 +47,4 @@ export interface UploadFileParams {
   file: File | Blob;
   // 传给后端的，文件名
   filename?: string;
-  // [key: string]: any;
-  // 是否覆盖单个单个文件
-  single?: Boolean;
-  attachmentId?: string;
-  bizId?: string;
-  bizType: string;
-  group?: string;
 }
