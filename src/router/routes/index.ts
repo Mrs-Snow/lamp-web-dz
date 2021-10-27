@@ -67,94 +67,11 @@ export const ConstRouter: AppRouteRecordRaw[] = [
       {
         path: 'welcome',
         name: 'Welcome',
-        component: () => import('/@/views/lamp/welcome/index.vue'),
+        component: () => import('/@/views/lamp/home/index.vue'),
         meta: {
           title: t('routes.dashboard.welcome'),
           affix: true,
           icon: 'bx:bx-home',
-        },
-      },
-    ],
-  },
-  {
-    path: '/system',
-    name: 'system',
-    component: LAYOUT,
-    redirect: '/system/menu',
-    meta: {
-      title: '角色管理',
-    },
-    children: [
-      {
-        path: 'roleResource/:roleId',
-        name: 'roleResource',
-        component: () => import('/@/views/lamp/system/role/resource/RoleResource.vue'),
-        meta: {
-          title: '绑定资源',
-          hideMenu: true,
-          currentActiveMenu: '/system/role',
-        },
-      },
-      {
-        path: 'dictionaryItem/:type',
-        name: 'dictionaryItem',
-        component: () => import('/@/views/lamp/system/dictionaryItem/index.vue'),
-        meta: {
-          title: '字典项管理',
-          hideMenu: true,
-          currentActiveMenu: '/system/dictionary',
-        },
-      },
-    ],
-  },
-  {
-    path: '/resources',
-    name: 'resources',
-    component: LAYOUT,
-    redirect: '/resources/msg',
-    meta: {
-      title: '资源管理',
-    },
-    children: [
-      {
-        path: 'sms/:id',
-        name: 'smsEdit',
-        component: () => import('/@/views/lamp/resources/sms/Edit.vue'),
-        meta: {
-          title: '发送短信',
-          hideMenu: true,
-          currentActiveMenu: '/resources/sms',
-        },
-      },
-      {
-        path: 'msg/:id',
-        name: 'msgEdit',
-        component: () => import('/@/views/lamp/resources/msg/Edit.vue'),
-        meta: {
-          title: '发送消息',
-          hideMenu: true,
-          currentActiveMenu: '/resources/msg',
-        },
-      },
-    ],
-  },
-  {
-    path: '/workbench',
-    name: 'workbench',
-    component: LAYOUT,
-    redirect: '/workbench/notice',
-    meta: {
-      title: '通知公告',
-    },
-    children: [
-      {
-        path: 'notice/:id',
-        name: 'noticeView',
-        component: () => import('/@/views/lamp/workbench/notice/View.vue'),
-        meta: {
-          title: '我的消息',
-          hideMenu: true,
-          currentActiveMenu: '/workbench/notice',
         },
       },
     ],
@@ -180,6 +97,89 @@ export const ConstRouter: AppRouteRecordRaw[] = [
       },
     ],
   },
+  // {
+  //   path: '/system',
+  //   name: 'system',
+  //   component: LAYOUT,
+  //   redirect: '/system/menu',
+  //   meta: {
+  //     title: '角色管理',
+  //   },
+  //   children: [
+  //     {
+  //       path: 'roleResource/:roleId',
+  //       name: 'roleResource',
+  //       component: () => import('/@/views/lamp/system/role/resource/RoleResource.vue'),
+  //       meta: {
+  //         title: '绑定资源',
+  //         hideMenu: true,
+  //         currentActiveMenu: '/system/role',
+  //       },
+  //     },
+  //     {
+  //       path: 'dictionaryItem/:type',
+  //       name: 'dictionaryItem',
+  //       component: () => import('/@/views/lamp/system/dictionaryItem/index.vue'),
+  //       meta: {
+  //         title: '字典项管理',
+  //         hideMenu: true,
+  //         currentActiveMenu: '/system/dictionary',
+  //       },
+  //     },
+  //   ],
+  // },
+  // {
+  //   path: '/resources',
+  //   name: 'resources',
+  //   component: LAYOUT,
+  //   redirect: '/resources/msg',
+  //   meta: {
+  //     title: '资源管理',
+  //   },
+  //   children: [
+  //     {
+  //       path: 'sms/:id',
+  //       name: 'smsEdit',
+  //       component: () => import('/@/views/lamp/resources/sms/Edit.vue'),
+  //       meta: {
+  //         title: '发送短信',
+  //         hideMenu: true,
+  //         currentActiveMenu: '/resources/sms',
+  //       },
+  //     },
+  //     {
+  //       path: 'msg/:id',
+  //       name: 'msgEdit',
+  //       component: () => import('/@/views/lamp/resources/msg/Edit.vue'),
+  //       meta: {
+  //         title: '发送消息',
+  //         hideMenu: true,
+  //         currentActiveMenu: '/resources/msg',
+  //       },
+  //     },
+  //   ],
+  // },
+  // {
+  //   path: '/workbench',
+  //   name: 'workbench',
+  //   component: LAYOUT,
+  //   redirect: '/workbench/notice',
+  //   meta: {
+  //     title: '通知公告',
+  //   },
+  //   children: [
+  //     {
+  //       path: 'notice/:id',
+  //       name: 'noticeView',
+  //       component: () => import('/@/views/lamp/workbench/notice/View.vue'),
+  //       meta: {
+  //         title: '我的消息',
+  //         hideMenu: true,
+  //         currentActiveMenu: '/workbench/notice',
+  //       },
+  //     },
+  //   ],
+  // },
 ];
 
 // Basic routing without permission

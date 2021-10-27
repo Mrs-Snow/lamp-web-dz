@@ -40,3 +40,9 @@ export enum RouteEnum {
 
   BASIC_DICT_ITEM = '个性字典项',
 }
+
+//0-过期 1-有效
+export enum ExpireStateEnum {
+  EFFECTIVE = '1',
+  EXPIRED = '0',
+}

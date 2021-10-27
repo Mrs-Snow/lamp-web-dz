@@ -11,6 +11,7 @@ import {
   TENANT_KEY,
   USER_INFO_KEY,
   EXPIRE_TIME_KEY,
+  APPLICATION_ID_KEY,
 } from '/@/enums/cacheEnum';
 import { getAuthCache, setAuthCache } from '/@/utils/auth';
 import type {
@@ -43,6 +44,7 @@ interface UserState {
   refreshToken?: string;
   expireTime?: string;
   tenant?: string;
+  applicationId?: string;
 }
 
 export const useUserStore = defineStore({
@@ -60,7 +62,10 @@ export const useUserStore = defineStore({
     lastUpdateTime: 0,
     refreshToken: '',
     expireTime: '',
+    // 租户编码
     tenant: '',
+    // 应用id
+    applicationId: '1',
   }),
   getters: {
     getUserInfo(): UserInfo {
@@ -87,6 +92,9 @@ export const useUserStore = defineStore({
     getTenant(): string {
       return this.tenant || getAuthCache<string>(TENANT_KEY);
     },
+    getApplicationId(): string {
+      return this.applicationId || getAuthCache<string>(APPLICATION_ID_KEY);
+    },
   },
   actions: {
     setToken(info: string | undefined) {
@@ -108,6 +116,10 @@ export const useUserStore = defineStore({
     setTenant(info: string) {
       this.tenant = info;
       setAuthCache(TENANT_KEY, info);
+    },
+    setApplicationId(info: string) {
+      this.applicationId = info;
+      setAuthCache(APPLICATION_ID_KEY, info);
     },
     setExpireTime(info: string) {
       this.expireTime = info;

@@ -13,15 +13,15 @@ export const Api = {
     };
   },
   FindEnumListByType: {
-    url: `${ServicePrefixEnum.OAUTH}/enums/findEnumListByType`,
+    url: `${ServicePrefixEnum.OAUTH}/anyTenant/enums/findEnumListByType`,
     method: RequestEnum.POST,
   },
   FindCodeListByType: {
-    url: `${ServicePrefixEnum.OAUTH}/dict/findDictMapItemListByKey`,
+    url: `${ServicePrefixEnum.OAUTH}/anyUser/dict/findDictMapItemListByKey`,
     method: RequestEnum.POST,
   },
   Params: {
-    url: `${ServicePrefixEnum.OAUTH}/parameter/value`,
+    url: `${ServicePrefixEnum.OAUTH}/anyUser/parameter/value`,
     method: RequestEnum.GET,
   },
 };

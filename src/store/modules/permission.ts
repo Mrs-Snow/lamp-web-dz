@@ -52,9 +52,6 @@ export const usePermissionStore = defineStore({
     visibleResource: {} as VisibleResourceVO,
   }),
   getters: {
-    // getPermCodeList(): string[] | number[] {
-    //   return this.permCodeList;
-    // },
     getBackMenuList(): Menu[] {
       return this.backMenuList;
     },
@@ -72,10 +69,6 @@ export const usePermissionStore = defineStore({
     },
   },
   actions: {
-    // setPermCodeList(codeList: string[]) {
-    //   this.permCodeList = codeList;
-    // },
-
     setBackMenuList(list: Menu[]) {
       this.backMenuList = list;
       list?.length > 0 && this.setLastBuildMenuTime();
@@ -103,6 +96,7 @@ export const usePermissionStore = defineStore({
       this.lastBuildMenuTime = 0;
       this.visibleResource = {} as VisibleResourceVO;
     },
+    // 加载资源
     async changePermissionCode() {
       const visibleResource = await getResourceByUserId();
       this.setVisibleResource(visibleResource);

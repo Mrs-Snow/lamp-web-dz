@@ -22,9 +22,9 @@ export const getMenuList = (params?: getMenuListByIdParams) => {
  * 根据
  * @param params
  */
-export function getResourceByUserId(params?) {
+export function getResourceByUserId(applicationId?: string) {
   return defHttp.get<VisibleResourceVO>({
     url: Api.GetResourceByUserId,
-    params,
+    params: { applicationId },
   });
 }

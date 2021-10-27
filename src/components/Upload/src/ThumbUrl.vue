@@ -10,10 +10,10 @@
       />
       <div style="width: 100%; height: 100%" v-if="loading"></div>
       <slot name="empty" v-if="!realSrc && !loadError">
-        <img src="./err-img.svg" />
+        <img :width="props.width" :height="props.height" src="./err-img.svg" />
       </slot>
       <slot name="error" v-if="loadError">
-        <img src="./err-img.svg" />
+        <img :width="props.width" :height="props.height" src="./err-img.svg" />
       </slot>
     </template>
     <template v-else>

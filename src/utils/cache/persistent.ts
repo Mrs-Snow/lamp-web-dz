@@ -18,6 +18,7 @@ import {
   APP_LOCAL_CACHE_KEY,
   APP_SESSION_CACHE_KEY,
   MULTIPLE_TABS_KEY,
+  APPLICATION_ID_KEY,
 } from '/@/enums/cacheEnum';
 import { DEFAULT_CACHE_TIME } from '/@/settings/encryptionSetting';
 import { toRaw } from 'vue';
@@ -27,6 +28,7 @@ interface BasicStore {
   [TOKEN_KEY]: string | number | null | undefined;
   [REFRESH_TOKEN_KEY]: string | number | null | undefined;
   [TENANT_KEY]: string | number | null | undefined;
+  [APPLICATION_ID_KEY]: string | number | null | undefined;
   [PERM_CODE_KEY]: Recordable;
   [PERM_KEY]: Recordable;
   [EXPIRE_TIME_KEY]: string | number | null | undefined;

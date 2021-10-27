@@ -16,6 +16,7 @@ export interface RouteItem {
 export interface getMenuListByIdParams {
   userId?: number | string;
   group?: string;
+  applicationId: string;
 }
 
 /**
