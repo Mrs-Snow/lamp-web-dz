@@ -8,8 +8,6 @@ export default {
   orgId: 'orgId',
   mainOrgId: 'mainOrgId',
   realName: 'realName',
-  nation: 'nation',
-  education: 'education',
   positionStatus: 'positionStatus',
   state: 'state',
 };

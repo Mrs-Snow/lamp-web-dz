@@ -1,5 +1,3 @@
-import { Enum } from '/@/api/model/baseModel';
-
 export interface DefUserPageQuery {
   username?: string;
   name?: string;
@@ -9,7 +7,9 @@ export interface DefUserPageQuery {
   wxOpenId?: string;
   ddOpenId?: string;
   readonly?: boolean;
-  sex?: Enum;
+  sex?: string;
+  nation?: string;
+  education?: string;
   state?: boolean;
   workDescribe?: string;
   passwordErrorLastTime?: string;
@@ -29,8 +29,10 @@ export interface DefUserSaveVO {
   wxOpenId: string;
   ddOpenId: string;
   readonly: boolean;
-  sex: Enum;
+  sex: string;
   state: boolean;
+  nation?: string;
+  education?: string;
   workDescribe: string;
   passwordErrorLastTime: string;
   passwordErrorNum: number;
@@ -50,7 +52,9 @@ export interface DefUserUpdateVO {
   wxOpenId: string;
   ddOpenId: string;
   readonly: boolean;
-  sex: Enum;
+  sex: string;
+  nation?: string;
+  education?: string;
   state: boolean;
   workDescribe: string;
   passwordErrorLastTime: string;
@@ -70,7 +74,9 @@ export interface DefUserResultVO {
   wxOpenId?: string;
   ddOpenId?: string;
   readonly?: boolean;
-  sex?: Enum;
+  sex?: string;
+  nation?: string;
+  education?: string;
   state?: boolean;
   workDescribe?: string;
   passwordErrorLastTime?: string;

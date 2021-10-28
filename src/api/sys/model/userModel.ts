@@ -1,16 +1,16 @@
 import { Enum } from '../../model/baseModel';
 
+export type GrantType = 'CAPTCHA' | 'PASSWORD' | 'MOBILE' | 'REFRESH_TOKEN';
+
 /**
  * @description: Login interface parameters
  */
 export interface LoginParams {
-  account: string;
+  username: string;
   password: string;
-  tenantView?: string;
-  tenant?: string;
   code?: string;
   key?: string;
-  grantType?: string;
+  grantType: GrantType;
   refreshToken?: string;
 }
 

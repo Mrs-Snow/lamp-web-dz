@@ -1,3 +1,5 @@
+import { BaseEmployeeResultVO } from '/@/api/basic/user/model/baseEmployeeModel';
+import { Tenant } from '/@/api/devOperation/tenant/model/tenantModel';
 import { ErrorTypeEnum } from '/@/enums/exceptionEnum';
 import { MenuModeEnum, MenuTypeEnum } from '/@/enums/menuEnum';
 
@@ -47,4 +49,31 @@ export interface BeforeMiniState {
   menuSplit?: boolean;
   menuMode?: MenuModeEnum;
   menuType?: MenuTypeEnum;
+}
+
+export interface DefUserInfoResultVO {
+  echoMap: Recordable;
+  id: string;
+  username: string;
+  nickName: string;
+  email: string;
+  mobile: string;
+  idCard: string;
+  wxOpenId: string;
+  ddOpenId: string;
+  readonly: boolean;
+  sex: string;
+  nation: string;
+  education: string;
+  state: boolean;
+  workDescribe: string;
+  employeeId: string;
+  tenantId: string;
+  createdTime: string;
+  createdBy: string;
+  updatedTime: string;
+  updatedBy: string;
+  baseEmployee: BaseEmployeeResultVO;
+  tenantList: Tenant[];
+  homePath?: string;
 }

@@ -1,11 +1,12 @@
+import type { DefUserInfoResultVO } from '/#/store';
 import { defHttp } from '/@/utils/http/axios';
-import { LoginParams, LogoutParams, LoginResultModel, GetUserInfoModel } from './model/userModel';
+import { LoginParamVO, LogoutParams, LoginResultVO } from './model/userModel';
 import { ContentTypeEnum } from '/@/enums/httpEnum';
 
 import { ErrorMessageMode } from '/#/axios';
 
 enum Api {
-  getEmployeeById = '/oauth/anyone/getEmployeeById',
+  getUserInfoById = '/oauth/anyone/getUserInfoById',
   Login = '/oauth/anyTenant/login',
   Logout = '/oauth/anyUser/logout',
   LoadCaptcha = '/oauth/anyTenant/captcha',
@@ -14,8 +15,8 @@ enum Api {
 /**
  * @description: user login api
  */
-export function loginApi(params: LoginParams, mode: ErrorMessageMode = 'modal') {
-  return defHttp.post<LoginResultModel>(
+export function loginApi(params: LoginParamVO, mode: ErrorMessageMode = 'modal') {
+  return defHttp.post<LoginResultVO>(
     {
       url: Api.Login,
       params,
@@ -28,13 +29,13 @@ export function loginApi(params: LoginParams, mode: ErrorMessageMode = 'modal') 
 }
 
 /**
- * @description: getUserInfo
+ * @description: getUserInfoById
  */
-export function getUserInfoById(employeeId?: string) {
-  return defHttp.get<GetUserInfoModel>(
+export function getUserInfoById(userId?: string) {
+  return defHttp.get<DefUserInfoResultVO>(
     {
-      url: Api.getEmployeeById,
-      params: { employeeId },
+      url: Api.getUserInfoById,
+      params: { userId },
     },
     { errorMessageMode: 'none' },
   );

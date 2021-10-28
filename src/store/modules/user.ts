@@ -1,4 +1,4 @@
-import type { UserInfo } from '/#/store';
+import type { DefUserInfoResultVO } from '/#/store';
 import type { ErrorMessageMode } from '/#/axios';
 import { defineStore } from 'pinia';
 import { store } from '/@/store';
@@ -14,14 +14,9 @@ import {
   APPLICATION_ID_KEY,
 } from '/@/enums/cacheEnum';
 import { getAuthCache, setAuthCache } from '/@/utils/auth';
-import type {
-  LoginParams,
-  LogoutParams,
-  GetUserInfoModel,
-  GetCaptchaByKeyParams,
-} from '/@/api/sys/model/userModel';
+import type { LoginParamVO, LogoutParams } from '/@/api/lamp/common/model/userModel';
 
-import { loginApi, loadCaptcha, doLogout, getUserInfoById } from '/@/api/sys/user';
+import { loginApi, loadCaptcha, doLogout, getUserInfoById } from '/@/api/lamp/common/oauth';
 
 import { useI18n } from '/@/hooks/web/useI18n';
 import { useMessage } from '/@/hooks/web/useMessage';
@@ -30,13 +25,12 @@ import { usePermissionStore } from '/@/store/modules/permission';
 import { RouteRecordRaw } from 'vue-router';
 import { PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
 import { h } from 'vue';
-import { Base64 } from 'js-base64';
-import { useGlobSetting } from '/@/hooks/setting';
+// import { useGlobSetting } from '/@/hooks/setting';
 
-const globSetting = useGlobSetting();
+// const globSetting = useGlobSetting();
 
 interface UserState {
-  userInfo: Nullable<UserInfo>;
+  userInfo: Nullable<DefUserInfoResultVO>;
   token?: string;
   roleList: RoleEnum[];
   sessionTimeout?: boolean;
@@ -44,7 +38,7 @@ interface UserState {
   refreshToken?: string;
   expireTime?: string;
   tenant?: string;
-  applicationId?: string;
+  applicationId: string;
 }
 
 export const useUserStore = defineStore({
@@ -62,14 +56,14 @@ export const useUserStore = defineStore({
     lastUpdateTime: 0,
     refreshToken: '',
     expireTime: '',
-    // 租户编码
+    // 租户ID
     tenant: '',
     // 应用id
     applicationId: '1',
   }),
   getters: {
-    getUserInfo(): UserInfo {
-      return this.userInfo || getAuthCache<UserInfo>(USER_INFO_KEY) || {};
+    getUserInfo(): DefUserInfoResultVO {
+      return this.userInfo || getAuthCache<DefUserInfoResultVO>(USER_INFO_KEY) || {};
     },
     getToken(): string {
       return this.token || getAuthCache<string>(TOKEN_KEY);
@@ -105,7 +99,7 @@ export const useUserStore = defineStore({
       this.roleList = roleList;
       setAuthCache(ROLES_KEY, roleList);
     },
-    setUserInfo(info: UserInfo | null) {
+    setUserInfo(info: DefUserInfoResultVO | null) {
       this.userInfo = info;
       this.lastUpdateTime = new Date().getTime();
       setAuthCache(USER_INFO_KEY, info);
@@ -142,57 +136,30 @@ export const useUserStore = defineStore({
      * @description: login
      */
     async login(
-      params: LoginParams & {
+      params: LoginParamVO & {
         goHome?: boolean;
         mode?: ErrorMessageMode;
       },
-    ): Promise<GetUserInfoModel | null> {
+    ): Promise<DefUserInfoResultVO | null> {
       try {
         const { goHome = true, mode, ...loginParams } = params;
-        if (loginParams.tenantView) {
-          loginParams.tenant = `${Base64.encode(loginParams.tenantView as string)}`;
-        }
-        this.setTenant(loginParams.tenant as string);
         const data = await loginApi(loginParams, mode);
-        const { token, refreshToken, expiration } = data;
+        const { token, tenantId, refreshToken, expiration } = data;
 
         // save token
         this.setToken(token);
         this.setRefreshToken(refreshToken);
         this.setExpireTime(expiration);
-        // get user info
-        const userInfo = {
-          id: data.userId,
-          account: data.account,
-          name: data.name,
-          avatarId: data.avatarId,
-          workDescribe: data.workDescribe,
-          homePath: data?.homePath,
-        };
-        this.setUserInfo(userInfo);
+        this.setTenant(tenantId);
+        this.setApplicationId(tenantId);
 
-        const sessionTimeout = this.sessionTimeout;
-        if (sessionTimeout) {
-          this.setSessionTimeout(false);
-        } else {
-          const permissionStore = usePermissionStore();
-          if (!permissionStore.isDynamicAddedRoute) {
-            const routes = await permissionStore.buildRoutesAction();
-            routes.forEach((route) => {
-              router.addRoute(route as unknown as RouteRecordRaw);
-            });
-            router.addRoute(PAGE_NOT_FOUND_ROUTE as unknown as RouteRecordRaw);
-            permissionStore.setDynamicAddedRoute(true);
-          }
-          goHome && (await router.replace(userInfo.homePath || PageEnum.BASE_HOME));
-        }
-        return userInfo;
+        return this.afterLoginAction(goHome);
       } catch (error) {
         return Promise.reject(error);
       }
     },
 
-    async afterLoginAction(goHome?: boolean): Promise<GetUserInfoModel | null> {
+    async afterLoginAction(goHome?: boolean): Promise<DefUserInfoResultVO | null> {
       if (!this.getToken) return null;
       // get user info
       const userInfo = await this.getUserInfoAction();
@@ -216,13 +183,13 @@ export const useUserStore = defineStore({
     },
 
     // 刷新时加载用户信息
-    async getUserInfoAction(): Promise<UserInfo> {
+    async getUserInfoAction(): Promise<DefUserInfoResultVO> {
       const userInfo = await getUserInfoById();
       this.setUserInfo(userInfo);
       return userInfo;
     },
 
-    async loadCaptcha({ key }: GetCaptchaByKeyParams): Promise<string | ''> {
+    async loadCaptcha(key: string): Promise<string | ''> {
       try {
         const res = await loadCaptcha(key).catch((e) => {
           const { createMessage } = useMessage();
@@ -253,8 +220,6 @@ export const useUserStore = defineStore({
       if (this.getToken) {
         const param: LogoutParams = {
           token: this.getToken,
-          userId: this.getUserInfo?.id,
-          clientId: globSetting.clientId,
         };
         await doLogout(param).finally(() => {
           this.setToken('');

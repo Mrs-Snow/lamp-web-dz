@@ -98,7 +98,9 @@ export const usePermissionStore = defineStore({
     },
     // 加载资源
     async changePermissionCode() {
-      const visibleResource = await getResourceByUserId();
+      const userStore = useUserStore();
+      const applicationId = userStore.getApplicationId;
+      const visibleResource = await getResourceByUserId(applicationId);
       this.setVisibleResource(visibleResource);
     },
     async buildRoutesAction(): Promise<AppRouteRecordRaw[]> {
@@ -128,7 +130,7 @@ export const usePermissionStore = defineStore({
        * */
       const patchHomeAffix = (routes: AppRouteRecordRaw[]) => {
         if (!routes || routes.length === 0) return;
-        let homePath: string = userStore.getUserInfo.homePath || PageEnum.BASE_HOME;
+        let homePath: string = PageEnum.BASE_HOME;
         function patcher(routes: AppRouteRecordRaw[], parentPath = '') {
           if (parentPath) parentPath = parentPath + '/';
           routes.forEach((route: AppRouteRecordRaw) => {
@@ -190,7 +192,8 @@ export const usePermissionStore = defineStore({
           let routeList: AppRouteRecordRaw[] = [];
           try {
             await this.changePermissionCode();
-            routeList = (await getMenuList()) as AppRouteRecordRaw[];
+            const applicationId = userStore.getApplicationId;
+            routeList = (await getMenuList({ applicationId })) as AppRouteRecordRaw[];
           } catch (error) {
             console.error(error);
           }

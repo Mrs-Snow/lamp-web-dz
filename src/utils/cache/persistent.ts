@@ -1,4 +1,4 @@
-import type { LockInfo, UserInfo } from '/#/store';
+import type { DefUserInfoResultVO, LockInfo } from '/#/store';
 import type { ProjectConfig } from '/#/config';
 import type { RouteLocationNormalized } from 'vue-router';
 
@@ -32,7 +32,7 @@ interface BasicStore {
   [PERM_CODE_KEY]: Recordable;
   [PERM_KEY]: Recordable;
   [EXPIRE_TIME_KEY]: string | number | null | undefined;
-  [USER_INFO_KEY]: UserInfo;
+  [USER_INFO_KEY]: DefUserInfoResultVO;
   [ROLES_KEY]: string[];
   [LOCK_INFO_KEY]: LockInfo;
   [PROJ_CFG_KEY]: ProjectConfig;

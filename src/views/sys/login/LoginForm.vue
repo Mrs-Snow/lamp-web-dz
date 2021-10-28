@@ -14,17 +14,17 @@
     <FormItem name="key">
       <Input size="large" v-model:value="formData.key" :hidden="true" />
     </FormItem>
-    <FormItem name="tenantView" v-show="formState.isMultiTenant" class="enter-x">
+    <!-- <FormItem name="tenantView" v-show="formState.isMultiTenant" class="enter-x">
       <Input
         size="large"
         v-model:value="formData.tenantView"
         :placeholder="t('sys.login.tenant')"
       />
-    </FormItem>
-    <FormItem name="account" class="enter-x">
+    </FormItem> -->
+    <FormItem name="username" class="enter-x">
       <Input
         size="large"
-        v-model:value="formData.account"
+        v-model:value="formData.username"
         :placeholder="t('sys.login.userName')"
         class="fix-auto-fill"
       />
@@ -164,12 +164,10 @@
   });
 
   const formData = reactive({
-    tenant: '',
-    tenantView: '0000',
-    account: 'lamp',
+    username: 'lamp',
     password: 'lamp',
     code: '',
-    grantType: globSetting.showCaptcha === 'true' ? 'captcha' : 'password',
+    grantType: globSetting.showCaptcha === 'true' ? 'CAPTCHA' : 'PASSWORD',
     key: randomNum(24, 16),
     verify: undefined,
   });
@@ -183,13 +181,11 @@
   // 加载验证码
   async function loadCaptcha() {
     formData.code = '';
-    const captcha = await userStore.loadCaptcha({ key: formData.key });
+    const captcha = await userStore.loadCaptcha(formData.key);
     formState.captchaSrc = captcha;
   }
 
   const { validForm } = useFormValid(formRef);
-
-  //onKeyStroke('Enter', handleLogin);
 
   const getShow = computed(() => unref(getLoginState) === LoginStateEnum.LOGIN);
 
@@ -202,7 +198,7 @@
       if (userInfo) {
         notification.success({
           message: t('sys.login.loginSuccessTitle'),
-          description: `${t('sys.login.loginSuccessDesc')}: ${userInfo.name}`,
+          description: `${t('sys.login.loginSuccessDesc')}`,
           duration: 3,
         });
       } else {

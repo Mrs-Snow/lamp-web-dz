@@ -1,10 +1,10 @@
+import { DefUserResultVO } from '/@/api/devOperation/tenant/model/defUserModel';
+
 export interface BaseEmployeePageQuery {
   isDefault?: boolean;
   userId?: string;
   positionId?: string;
   realName?: string;
-  nation?: string;
-  education?: string;
   positionStatus?: string;
   state?: boolean;
 }
@@ -14,8 +14,6 @@ export interface BaseEmployeeSaveVO {
   userId: string;
   positionId: string;
   realName: string;
-  nation: string;
-  education: string;
   positionStatus: string;
   state: boolean;
 }
@@ -26,8 +24,6 @@ export interface BaseEmployeeUpdateVO {
   userId: string;
   positionId: string;
   realName: string;
-  nation: string;
-  education: string;
   positionStatus: string;
   state: boolean;
 }
@@ -37,8 +33,6 @@ export interface BaseEmployeeResultVO {
   userId?: string;
   positionId?: string;
   realName?: string;
-  nation?: string;
-  education?: string;
   positionStatus?: string;
   state?: boolean;
   id?: string;
@@ -49,5 +43,5 @@ export interface BaseEmployeeResultVO {
   echoMap?: Recordable;
   activeStatus?: string;
   orgIdList?: string[];
-  defUser: Recordable;
+  defUser: DefUserResultVO;
 }

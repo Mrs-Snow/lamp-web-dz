@@ -10,7 +10,7 @@ import { useGlobSetting } from '/@/hooks/setting';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { RequestEnum, ResultEnum, ContentTypeEnum } from '/@/enums/httpEnum';
 import { isString } from '/@/utils/is';
-import { getToken, getTenant } from '/@/utils/auth';
+import { getToken, getTenant, getApplicationId } from '/@/utils/auth';
 import { setObjToUrlParams, deepMerge } from '/@/utils';
 import { useErrorLogStoreWithOut } from '/@/store/modules/errorLog';
 import { useI18n } from '/@/hooks/web/useI18n';
@@ -137,7 +137,8 @@ const transform: AxiosTransform = {
    * @description: 请求拦截器处理
    */
   requestInterceptors: (config, options) => {
-    const tokenName = 'token';
+    const tokenName = 'Token';
+
     const { multiTenantType, clientId, clientSecret } = globSetting;
 
     const token = getToken();
@@ -152,11 +153,13 @@ const transform: AxiosTransform = {
       (config as Recordable)?.requestOptions?.withTenant !== false &&
       multiTenantType !== 'NONE'
     ) {
-      (config as Recordable).headers.tenant = getTenant();
+      (config as Recordable).headers['TenantId'] = getTenant();
     }
 
+    (config as Recordable).headers['ApplicationId'] = getApplicationId();
+
     // 添加客户端信息
-    (config as Recordable).headers['Authorization'] = `Basic ${Base64.encode(
+    (config as Recordable).headers['Authorization'] = `${Base64.encode(
       `${clientId}:${clientSecret}`,
     )}`;
 
@@ -215,7 +218,7 @@ function createAxios(opt?: Partial<CreateAxiosOptions>) {
         // See https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication#authentication_schemes
         // authentication schemes，e.g: Bearer
         // authenticationScheme: 'Bearer',
-        authenticationScheme: 'Bearer',
+        authenticationScheme: '',
         timeout: 10 * 1000,
         // 基础接口地址
         // baseURL: globSetting.apiUrl,

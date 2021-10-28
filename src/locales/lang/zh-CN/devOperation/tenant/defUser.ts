@@ -10,6 +10,8 @@ export default {
   ddOpenId: '钉钉OpenId',
   readonly: '内置',
   sex: '性别',
+  nation: '民族',
+  education: '学历',
   state: '状态',
   locked: '是否锁定',
   workDescribe: '工作描述',

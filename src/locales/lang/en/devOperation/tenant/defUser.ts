@@ -10,6 +10,8 @@ export default {
   ddOpenId: 'ddOpenId',
   readonly: 'readonly',
   sex: 'sex',
+  nation: 'nation',
+  education: 'education',
   state: 'state',
   locked: 'locked',
   workDescribe: 'workDescribe',

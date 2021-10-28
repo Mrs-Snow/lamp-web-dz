@@ -1,5 +1,3 @@
-import { Enum } from '/@/api/model/baseModel';
-
 export interface GlobalUserPageDTO {
   id: string;
   tenantCode: string;
@@ -10,7 +8,7 @@ export interface GlobalUserPageDTO {
 export interface UserUpdatePasswordDTO {
   tenantCode: string;
   name: string;
-  account: string;
+  username: string;
   mobile: string;
   email: string;
 }
@@ -18,19 +16,18 @@ export interface UserUpdatePasswordDTO {
 export interface User {
   echoMap: Recordable;
   id: string;
-  account: string;
-  name: string;
-  orgId: string;
-  stationId: string;
-  readonly: boolean;
+  username: string;
+  nickName: string;
   email: string;
   mobile: string;
-  sex: Enum;
-  state: boolean;
-  avatar: string;
+  idCard: string;
+  wxOpenId: string;
+  ddOpenId: string;
+  readonly: boolean;
+  sex: string;
   nation: string;
   education: string;
-  positionStatus: string;
+  state: boolean;
   workDescribe: string;
   createdTime: string;
   createdBy: string;
@@ -41,7 +38,7 @@ export interface User {
 export interface GlobalUserSaveDTO {
   tenantCode: string;
   name: string;
-  account: string;
+  username: string;
   mobile: string;
   email: string;
   password: string;
@@ -52,7 +49,7 @@ export interface GlobalUserUpdateDTO {
   id: string;
   tenantCode: string;
   name: string;
-  account: string;
+  username: string;
   mobile: string;
   email: string;
 }
