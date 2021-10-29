@@ -27,17 +27,28 @@
 <script lang="ts">
   import { defineComponent, onMounted, ref } from 'vue';
   import { Card, Empty } from 'ant-design-vue';
+  import { usePermission } from '/@/hooks/web/usePermission';
+  import { useUserStore } from '/@/store/modules/user';
   import ThumbUrl from '/@/components/Upload/src/ThumbUrl.vue';
   import { findMyApplication } from '/@/api/devOperation/application/defApplication';
   import { DefApplicationResultVO } from '/@/api/devOperation/application/model/defApplicationModel';
   import { ExpireStateEnum } from '/@/enums/biz/tenant';
+  import { useMessage } from '/@/hooks/web/useMessage';
 
   export default defineComponent({
     components: { Card, CardGrid: Card.Grid, Empty, ThumbUrl },
     setup() {
       const applicationList = ref<DefApplicationResultVO[]>([]);
+      const { createMessage } = useMessage();
+      const { refreshMenu } = usePermission();
+      const userStore = useUserStore();
       function handlerTurnToApplication(item: DefApplicationResultVO) {
-        alert('切换应用' + item);
+        if (item && item.id) {
+          userStore.setApplicationId(item.id);
+          refreshMenu();
+        } else {
+          createMessage.error('请选择正确的应用进行切换');
+        }
       }
 
       onMounted(async () => {

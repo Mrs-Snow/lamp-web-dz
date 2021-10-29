@@ -31,6 +31,7 @@ import { usePermissionStore } from '/@/store/modules/permission';
 import { RouteRecordRaw } from 'vue-router';
 import { PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
 import { h } from 'vue';
+import { useTabs } from '/@/hooks/web/useTabs';
 // import { useGlobSetting } from '/@/hooks/setting';
 
 // const globSetting = useGlobSetting();
@@ -66,7 +67,7 @@ export const useUserStore = defineStore({
     // 租户ID
     tenant: '',
     // 应用id
-    applicationId: '1',
+    applicationId: '',
   }),
   getters: {
     getUserInfo(): DefUserInfoResultVO {
@@ -151,11 +152,16 @@ export const useUserStore = defineStore({
         this.setTenant(tenantId);
         this.setApplicationId(DEF_APP_ID);
         this.setSessionTimeout(false);
-        return this.afterLoginAction(true, 'message');
+        const permissionStore = usePermissionStore();
+        permissionStore.resetState;
+        const { closeAll } = useTabs(router);
+        await closeAll();
+        return this.afterLoginAction('message', true);
       } catch (error) {
         return Promise.reject(error);
       }
     },
+
     /**
      * @description: login
      */
@@ -177,18 +183,15 @@ export const useUserStore = defineStore({
         this.setTenant(tenantId);
         this.setApplicationId(DEF_APP_ID);
 
-        const permissionStore = usePermissionStore();
-        permissionStore.resetState;
-
-        return this.afterLoginAction(goHome, mode);
+        return this.afterLoginAction(mode, goHome);
       } catch (error) {
         return Promise.reject(error);
       }
     },
 
     async afterLoginAction(
-      goHome = true,
       mode: ErrorMessageMode,
+      goHome?: boolean,
     ): Promise<DefUserInfoResultVO | null> {
       if (!this.getToken) return null;
       // get user info
@@ -213,7 +216,7 @@ export const useUserStore = defineStore({
     },
 
     // 刷新时加载用户信息
-    async getUserInfoAction(mode: ErrorMessageMode): Promise<DefUserInfoResultVO> {
+    async getUserInfoAction(mode: ErrorMessageMode = 'none'): Promise<DefUserInfoResultVO> {
       const userInfo = await getUserInfoById(mode);
       this.setUserInfo(userInfo);
       return userInfo;
