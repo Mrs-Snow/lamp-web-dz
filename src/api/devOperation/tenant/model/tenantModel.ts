@@ -93,6 +93,9 @@ export interface Tenant {
   createdBy: string;
   updatedTime: string;
   updatedBy: string;
+
+  employeeState: boolean;
+  isDefault: boolean;
 }
 
 export interface TenantConnectDTO {

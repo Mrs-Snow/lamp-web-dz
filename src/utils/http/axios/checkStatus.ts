@@ -8,12 +8,20 @@ import { SessionTimeoutProcessingEnum } from '/@/enums/appEnum';
 const { createMessage, createErrorModal } = useMessage();
 const error = createMessage.error!;
 const stp = projectSetting.sessionTimeoutProcessing;
+// 用户、员工、企业被禁用，都提示重登
+// const ALERT_LOGIN_CODE = [100_000_001, 100_000_002, 100_000_003];
+// 应用无权限、token 超时等直接退出重登
+// const RE_LOGIN_CODE = [100_000_004];
 
-export function checkStatus(
-  status: number,
-  msg: string,
-  errorMessageMode: ErrorMessageMode = 'message',
-): void {
+export function checkStatus(err: any, errorMessageMode: ErrorMessageMode = 'message'): void {
+  const { response } = err || {};
+  const msg: string = response?.data?.msg ?? '';
+  const status: number = response?.status;
+  // const code: number = response?.data?.code;
+  // if (ALERT_LOGIN_CODE.includes(code)) {
+  //   status = 401;
+  // }
+
   const { t } = useI18n();
   const userStore = useUserStoreWithOut();
   let errMessage = '';

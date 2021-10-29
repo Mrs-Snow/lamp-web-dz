@@ -16,7 +16,11 @@
         :theme="getHeaderTheme"
         :sider="false"
       />
+      <!-- 面包屑 -->
       <LayoutBreadcrumb v-if="getShowContent && getShowBread" :theme="getHeaderTheme" />
+
+      <!-- 企业列表 -->
+      <TenantList :theme="getHeaderTheme" />
     </div>
     <!-- left end -->
 
@@ -76,7 +80,14 @@
   import { SettingButtonPositionEnum } from '/@/enums/appEnum';
   import { AppLocalePicker } from '/@/components/Application';
 
-  import { UserDropDown, LayoutBreadcrumb, FullScreen, Notify, ErrorAction } from './components';
+  import {
+    UserDropDown,
+    LayoutBreadcrumb,
+    TenantList,
+    FullScreen,
+    Notify,
+    ErrorAction,
+  } from './components';
   import { useAppInject } from '/@/hooks/web/useAppInject';
   import { useDesign } from '/@/hooks/web/useDesign';
 
@@ -90,6 +101,7 @@
       AppLogo,
       LayoutTrigger,
       LayoutBreadcrumb,
+      TenantList,
       LayoutMenu,
       UserDropDown,
       AppLocalePicker,

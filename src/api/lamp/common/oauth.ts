@@ -2,15 +2,33 @@ import type { DefUserInfoResultVO } from '/#/store';
 import { defHttp } from '/@/utils/http/axios';
 import { LoginParamVO, LogoutParams, LoginResultVO } from './model/userModel';
 import { ContentTypeEnum } from '/@/enums/httpEnum';
+import { ServicePrefixEnum } from '/@/enums/commonEnum';
 
 import { ErrorMessageMode } from '/#/axios';
+import { AxiosRequestConfig } from 'axios';
 
-enum Api {
-  getUserInfoById = '/oauth/anyone/getUserInfoById',
-  Login = '/oauth/anyTenant/login',
-  Logout = '/oauth/anyUser/logout',
-  LoadCaptcha = '/oauth/anyTenant/captcha',
-}
+const Api = {
+  // 登录
+  Login: {
+    url: `${ServicePrefixEnum.OAUTH}/anyTenant/login`,
+  },
+  // 获取用户信息
+  getUserInfoById: {
+    url: `${ServicePrefixEnum.OAUTH}/anyone/getUserInfoById`,
+  },
+  // 退出
+  Logout: { url: `${ServicePrefixEnum.OAUTH}/anyUser/logout` },
+  // 加载验证码
+  LoadCaptcha: {
+    url: `${ServicePrefixEnum.OAUTH}/anyTenant/captcha`,
+    method: 'GET',
+    responseType: 'arraybuffer',
+  } as AxiosRequestConfig,
+  // 切换当前企业
+  SwitchTenant: {
+    url: `${ServicePrefixEnum.OAUTH}/anyone/switchTenant`,
+  },
+};
 
 /**
  * @description: user login api
@@ -18,7 +36,7 @@ enum Api {
 export function loginApi(params: LoginParamVO, mode: ErrorMessageMode = 'modal') {
   return defHttp.post<LoginResultVO>(
     {
-      url: Api.Login,
+      ...Api.Login,
       params,
     },
     {
@@ -31,13 +49,13 @@ export function loginApi(params: LoginParamVO, mode: ErrorMessageMode = 'modal')
 /**
  * @description: getUserInfoById
  */
-export function getUserInfoById(userId?: string) {
+export function getUserInfoById(mode: ErrorMessageMode = 'none', userId?: string) {
   return defHttp.get<DefUserInfoResultVO>(
     {
-      url: Api.getUserInfoById,
-      params: { userId },
+      ...Api.getUserInfoById,
+      params: { userId: userId },
     },
-    { errorMessageMode: 'none' },
+    { errorMessageMode: mode },
   );
 }
 
@@ -47,9 +65,7 @@ export function getUserInfoById(userId?: string) {
 export function loadCaptcha(key: String) {
   return defHttp.request(
     {
-      url: Api.LoadCaptcha,
-      method: 'GET',
-      responseType: 'arraybuffer',
+      ...Api.LoadCaptcha,
       params: { key: key },
     },
     { isTransformResponse: false },
@@ -61,10 +77,17 @@ export function loadCaptcha(key: String) {
  */
 export function doLogout(params: LogoutParams) {
   return defHttp.post<boolean>({
-    url: Api.Logout,
+    ...Api.Logout,
     params,
     headers: {
       'Content-Type': ContentTypeEnum.FORM_URLENCODED,
     },
+  });
+}
+
+export function switchTenant(tenantId: string) {
+  return defHttp.get<LoginResultVO>({
+    ...Api.SwitchTenant,
+    params: { tenantId },
   });
 }

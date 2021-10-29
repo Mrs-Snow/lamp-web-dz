@@ -16,7 +16,13 @@ import {
 import { getAuthCache, setAuthCache } from '/@/utils/auth';
 import type { LoginParamVO, LogoutParams } from '/@/api/lamp/common/model/userModel';
 
-import { loginApi, loadCaptcha, doLogout, getUserInfoById } from '/@/api/lamp/common/oauth';
+import {
+  loginApi,
+  loadCaptcha,
+  doLogout,
+  getUserInfoById,
+  switchTenant,
+} from '/@/api/lamp/common/oauth';
 
 import { useI18n } from '/@/hooks/web/useI18n';
 import { useMessage } from '/@/hooks/web/useMessage';
@@ -28,6 +34,7 @@ import { h } from 'vue';
 // import { useGlobSetting } from '/@/hooks/setting';
 
 // const globSetting = useGlobSetting();
+const DEF_APP_ID = '1';
 
 interface UserState {
   userInfo: Nullable<DefUserInfoResultVO>;
@@ -132,6 +139,23 @@ export const useUserStore = defineStore({
       this.expireTime = '';
       this.refreshToken = '';
     },
+
+    async switchTenant(switchTenantId: string): Promise<DefUserInfoResultVO | null> {
+      try {
+        const data = await switchTenant(switchTenantId);
+        const { token, tenantId, refreshToken, expiration } = data;
+        // save token
+        this.setToken(token);
+        this.setRefreshToken(refreshToken);
+        this.setExpireTime(expiration);
+        this.setTenant(tenantId);
+        this.setApplicationId(DEF_APP_ID);
+        this.setSessionTimeout(false);
+        return this.afterLoginAction(true, 'message');
+      } catch (error) {
+        return Promise.reject(error);
+      }
+    },
     /**
      * @description: login
      */
@@ -151,18 +175,24 @@ export const useUserStore = defineStore({
         this.setRefreshToken(refreshToken);
         this.setExpireTime(expiration);
         this.setTenant(tenantId);
-        this.setApplicationId(tenantId);
+        this.setApplicationId(DEF_APP_ID);
 
-        return this.afterLoginAction(goHome);
+        const permissionStore = usePermissionStore();
+        permissionStore.resetState;
+
+        return this.afterLoginAction(goHome, mode);
       } catch (error) {
         return Promise.reject(error);
       }
     },
 
-    async afterLoginAction(goHome?: boolean): Promise<DefUserInfoResultVO | null> {
+    async afterLoginAction(
+      goHome = true,
+      mode: ErrorMessageMode,
+    ): Promise<DefUserInfoResultVO | null> {
       if (!this.getToken) return null;
       // get user info
-      const userInfo = await this.getUserInfoAction();
+      const userInfo = await this.getUserInfoAction(mode);
 
       const sessionTimeout = this.sessionTimeout;
       if (sessionTimeout) {
@@ -183,8 +213,8 @@ export const useUserStore = defineStore({
     },
 
     // 刷新时加载用户信息
-    async getUserInfoAction(): Promise<DefUserInfoResultVO> {
-      const userInfo = await getUserInfoById();
+    async getUserInfoAction(mode: ErrorMessageMode): Promise<DefUserInfoResultVO> {
+      const userInfo = await getUserInfoById(mode);
       this.setUserInfo(userInfo);
       return userInfo;
     },

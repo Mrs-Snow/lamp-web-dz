@@ -48,7 +48,7 @@
       const userStore = useUserStore();
       const lockStore = useLockStore();
 
-      const getRealName = computed(() => userStore.getUserInfo?.name);
+      const getRealName = computed(() => userStore.getUserInfo?.nickName);
       const [register, { closeModal }] = useModalInner();
       const avatarUrl = ref<string>('');
 
