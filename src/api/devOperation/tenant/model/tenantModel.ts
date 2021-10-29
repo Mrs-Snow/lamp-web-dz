@@ -41,7 +41,7 @@ export interface TenantSaveDTO {
 }
 
 export interface TenantUpdateDTO {
-  id: number;
+  id: string;
   name: string;
   code: string;
   registerType: Enum;
@@ -66,7 +66,7 @@ export interface TenantUpdateDTO {
 }
 
 export interface Tenant {
-  id: number;
+  id: string;
   name: string;
   code: string;
   abbreviation: string;
@@ -99,7 +99,7 @@ export interface Tenant {
 }
 
 export interface TenantConnectDTO {
-  id: number;
+  id: string;
   tenant: string;
   connectType: string;
   authorityDatasource: string;

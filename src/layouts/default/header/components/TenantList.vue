@@ -1,7 +1,7 @@
 <template>
   <div :class="[prefixCls, `${prefixCls}--${theme}`]">
     <Dropdown placement="bottomLeft">
-      <span> {{ getTenantName(getTenantList[0]) }} <DownOutlined /></span>
+      <span> {{ getTenantName(getCurrentTenant) }} <DownOutlined /></span>
       <template #overlay>
         <Menu
           @click="switchTenantConfirm"
@@ -28,7 +28,6 @@
   import { useUserStore } from '/@/store/modules/user';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { MenuInfo } from 'ant-design-vue/lib/menu/src/interface';
-  import { func } from 'vue-types';
 
   export default defineComponent({
     name: 'TenantList',
@@ -41,8 +40,16 @@
       const userStore = useUserStore();
       const { createMessage, createConfirm } = useMessage();
 
-      const currentTenantId = computed(() => userStore.getTenant);
+      // 我拥有的企业
       const getTenantList = computed(() => userStore.getUserInfo?.tenantList);
+      // 当前企业id
+      const currentTenantId = computed(() => userStore.getTenant);
+      // 当前企业
+      const getCurrentTenant = computed(() => {
+        return userStore.getUserInfo?.tenantList?.find(
+          (item) => item.id === unref(currentTenantId),
+        );
+      });
 
       function getTenantName(tenant: Recordable) {
         const strList = [tenant.name];
@@ -60,24 +67,23 @@
       }
 
       function disabledItem(tenant: Recordable) {
-        // return !tenant.state || !tenant.employeeState || unref(currentTenantId) === tenant.id;
-        return false;
+        return !tenant.state || !tenant.employeeState || unref(currentTenantId) === tenant.id;
       }
       function switchTenantConfirm({ key }: MenuInfo) {
         const tanant = userStore.getUserInfo?.tenantList?.find((item) => item.id === key);
-        // if (!tanant) {
-        //   createMessage.error('无法切换该企业，请选择正常的企业');
-        //   throw Error('无法切换该企业，请选择正常的企业');
-        // }
-        // if (!tanant.state) {
-        //   createMessage.error('该企业已被禁用');
-        //   throw Error('该企业已被禁用');
-        // }
+        if (!tanant) {
+          createMessage.error('无法切换该企业，请选择正常的企业');
+          throw Error('无法切换该企业，请选择正常的企业');
+        }
+        if (!tanant.state) {
+          createMessage.error('该企业已被禁用');
+          throw Error('该企业已被禁用');
+        }
 
-        // if (!tanant.employeeState) {
-        //   createMessage.error('您在该公司的账号被禁用，请联系公司管理员');
-        //   throw Error('您在该公司的账号被禁用，请联系公司管理员');
-        // }
+        if (!tanant.employeeState) {
+          createMessage.error('您在该公司的账号被禁用，请联系公司管理员');
+          throw Error('您在该公司的账号被禁用，请联系公司管理员');
+        }
 
         createConfirm({
           iconType: 'warning',
@@ -93,10 +99,17 @@
       async function switchTenant(tenantId: string) {
         const userInfo = await userStore.switchTenant(tenantId);
         if (userInfo) {
-          alert('切换成功');
+          createMessage.success('切换成功');
         }
       }
-      return { prefixCls, switchTenantConfirm, getTenantName, getTenantList, disabledItem };
+      return {
+        prefixCls,
+        switchTenantConfirm,
+        getTenantName,
+        getTenantList,
+        getCurrentTenant,
+        disabledItem,
+      };
     },
   });
 </script>
