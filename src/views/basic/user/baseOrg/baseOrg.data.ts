@@ -25,7 +25,7 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
     {
       field: 'parentName',
       defaultValue: '根节点',
-      label: t('lamp.org.org.parentId'),
+      label: t('basic.user.baseOrg.parentId'),
       component: 'Input',
       dynamicDisabled: true,
     },

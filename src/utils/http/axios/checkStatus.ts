@@ -14,7 +14,7 @@ const stp = projectSetting.sessionTimeoutProcessing;
 // const RE_LOGIN_CODE = [100_000_004];
 
 export function checkStatus(err: any, errorMessageMode: ErrorMessageMode = 'message'): void {
-  const { response } = err || {};
+  const { response, request } = err || {};
   const msg: string = response?.data?.msg ?? '';
   const status: number = response?.status;
   // const code: number = response?.data?.code;
@@ -25,7 +25,7 @@ export function checkStatus(err: any, errorMessageMode: ErrorMessageMode = 'mess
   const { t } = useI18n();
   const userStore = useUserStoreWithOut();
   let errMessage = '';
-  console.warn('status=%s, msg=%s', status, msg);
+  console.warn('status=%s, url=%s, msg=%s', status, request?.responseURL, msg);
   switch (status) {
     case 400:
       errMessage = `${msg}`;

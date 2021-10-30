@@ -112,3 +112,27 @@ export const customFormSchemaRules = (type: Ref<ActionEnum>): Partial<FormSchema
     },
   ];
 };
+
+export const defColumns = (): BasicColumn[] => {
+  return [
+    {
+      title: t('basic.base.baseDict.key'),
+      dataIndex: 'key',
+    },
+    {
+      title: t('basic.base.baseDict.name'),
+      dataIndex: 'name',
+    },
+    {
+      title: t('basic.base.baseDict.remark'),
+      dataIndex: 'remark',
+    },
+    {
+      title: t('basic.base.baseDict.state'),
+      dataIndex: 'state',
+      width: 100,
+      filters: [...stateFilters()],
+      slots: { customRender: 'state' },
+    },
+  ];
+};

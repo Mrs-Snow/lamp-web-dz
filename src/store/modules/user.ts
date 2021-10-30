@@ -91,10 +91,12 @@ export const useUserStore = defineStore({
     getExpireTime(): string {
       return this.expireTime || getAuthCache<string>(EXPIRE_TIME_KEY);
     },
+    // 4.0.0 存储的是租户id
     getTenant(): string {
       return this.tenant || getAuthCache<string>(TENANT_KEY);
     },
     getApplicationId(): string {
+      debugger;
       return this.applicationId || getAuthCache<string>(APPLICATION_ID_KEY);
     },
   },
@@ -115,6 +117,7 @@ export const useUserStore = defineStore({
     setSessionTimeout(flag: boolean) {
       this.sessionTimeout = flag;
     },
+    // 4.0.0 存储的是租户id
     setTenant(info: string) {
       this.tenant = info;
       setAuthCache(TENANT_KEY, info);
@@ -139,6 +142,7 @@ export const useUserStore = defineStore({
       this.tenant = '';
       this.expireTime = '';
       this.refreshToken = '';
+      this.applicationId = '';
     },
 
     async switchTenant(switchTenantId: string): Promise<DefUserInfoResultVO | null> {

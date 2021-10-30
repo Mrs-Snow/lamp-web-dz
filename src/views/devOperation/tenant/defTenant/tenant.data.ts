@@ -35,7 +35,7 @@ export const columns: BasicColumn[] = [
   },
   {
     title: t('devOperation.tenant.defTenant.status'),
-    dataIndex: 'status.desc',
+    dataIndex: 'echoMap.status',
     width: 120,
   },
   {

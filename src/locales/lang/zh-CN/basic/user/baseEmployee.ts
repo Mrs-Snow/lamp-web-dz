@@ -8,8 +8,6 @@ export default {
   orgId: '所属部门',
   mainOrgId: '所属主部门',
   realName: '真实姓名',
-  nation: '民族',
-  education: '学历',
   positionStatus: '职位状态',
   state: '状态',
 };

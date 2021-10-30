@@ -9,6 +9,6 @@ export default {
   state: '状态',
   remarks: '备注',
   label: '名称',
-  parentId: '父ID',
+  parentId: '父机构',
   sortValue: '排序',
 };

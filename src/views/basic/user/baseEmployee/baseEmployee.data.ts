@@ -28,16 +28,6 @@ export const columns = (): BasicColumn[] => {
       slots: { customRender: 'orgIdList' },
     },
     {
-      title: t('basic.user.baseEmployee.nation'),
-      dataIndex: 'echoMap.nation',
-      width: 70,
-    },
-    {
-      title: t('basic.user.baseEmployee.education'),
-      dataIndex: 'echoMap.education',
-      width: 70,
-    },
-    {
       title: t('basic.user.baseEmployee.positionStatus'),
       dataIndex: 'echoMap.positionStatus',
       width: 100,
@@ -151,12 +141,40 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       },
     },
     {
+      label: t('devOperation.tenant.defUser.nation'),
+      field: 'nation',
+      component: 'ApiSelect',
+      componentProps: {
+        ...dictComponentProps(DictEnum.NATION),
+      },
+      show: () => {
+        return [ActionEnum.ADD, ActionEnum.COPY].includes(type.value);
+      },
+      colProps: {
+        span: 12,
+      },
+    },
+    {
+      label: t('devOperation.tenant.defUser.education'),
+      field: 'education',
+      component: 'ApiSelect',
+      componentProps: {
+        ...dictComponentProps(DictEnum.EDUCATION),
+      },
+      show: () => {
+        return [ActionEnum.ADD, ActionEnum.COPY].includes(type.value);
+      },
+      colProps: {
+        span: 12,
+      },
+    },
+    {
       field: 'divider-selects3',
       component: 'Divider',
       label: '职位信息',
     },
     {
-      label: t('lamp.org.user.orgId'),
+      label: t('basic.user.baseEmployee.orgId'),
       field: 'orgIdList',
       component: 'ApiTreeSelect',
       componentProps: {
@@ -166,9 +184,9 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
         allowClear: true,
         multiple: true,
       },
-      // dynamicDisabled: () => {
-      //   return [ActionEnum.VIEW].includes(type.value);
-      // },
+      dynamicDisabled: () => {
+        return [ActionEnum.VIEW].includes(type.value);
+      },
       colProps: {
         span: 12,
       },
@@ -195,39 +213,6 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       component: 'ApiSelect',
       componentProps: {
         ...dictComponentProps(DictEnum.POSITION_STATUS),
-      },
-      dynamicDisabled: () => {
-        return [ActionEnum.VIEW].includes(type.value);
-      },
-      colProps: {
-        span: 12,
-      },
-    },
-    {
-      field: 'divider-selects4',
-      component: 'Divider',
-      label: '其他信息',
-    },
-    {
-      label: t('basic.user.baseEmployee.nation'),
-      field: 'nation',
-      component: 'ApiSelect',
-      componentProps: {
-        ...dictComponentProps(DictEnum.NATION),
-      },
-      dynamicDisabled: () => {
-        return [ActionEnum.VIEW].includes(type.value);
-      },
-      colProps: {
-        span: 12,
-      },
-    },
-    {
-      label: t('basic.user.baseEmployee.education'),
-      field: 'education',
-      component: 'ApiSelect',
-      componentProps: {
-        ...dictComponentProps(DictEnum.EDUCATION),
       },
       dynamicDisabled: () => {
         return [ActionEnum.VIEW].includes(type.value);
@@ -328,6 +313,29 @@ export const userEditFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
         ...stateComponentProps(),
       },
       defaultValue: true,
+      colProps: {
+        span: 12,
+      },
+    },
+    {
+      label: t('devOperation.tenant.defUser.nation'),
+      field: 'nation',
+      component: 'ApiSelect',
+      componentProps: {
+        ...dictComponentProps(DictEnum.NATION),
+      },
+
+      colProps: {
+        span: 12,
+      },
+    },
+    {
+      label: t('devOperation.tenant.defUser.education'),
+      field: 'education',
+      component: 'ApiSelect',
+      componentProps: {
+        ...dictComponentProps(DictEnum.EDUCATION),
+      },
       colProps: {
         span: 12,
       },

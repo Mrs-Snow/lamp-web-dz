@@ -42,9 +42,10 @@
       const { createMessage } = useMessage();
       const { refreshMenu } = usePermission();
       const userStore = useUserStore();
-      function handlerTurnToApplication(item: DefApplicationResultVO) {
+      async function handlerTurnToApplication(item: DefApplicationResultVO) {
         if (item && item.id) {
           userStore.setApplicationId(item.id);
+          await userStore.getUserInfoAction();
           refreshMenu();
         } else {
           createMessage.error('请选择正确的应用进行切换');

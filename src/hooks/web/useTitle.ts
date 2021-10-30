@@ -4,6 +4,7 @@ import { useTitle as usePageTitle } from '@vueuse/core';
 import { useGlobSetting } from '/@/hooks/setting';
 import { useRouter } from 'vue-router';
 import { useLocaleStore } from '/@/store/modules/locale';
+import { useUserStore } from '/@/store/modules/user';
 
 import { REDIRECT_NAME } from '/@/router/constant';
 
@@ -15,7 +16,7 @@ export function useTitle() {
   const { t } = useI18n();
   const { currentRoute } = useRouter();
   const localeStore = useLocaleStore();
-
+  const userStore = useUserStore();
   const pageTitle = usePageTitle();
 
   watch(
@@ -27,8 +28,12 @@ export function useTitle() {
         return;
       }
 
+      let appTitle = userStore.getUserInfo?.defApplication?.name;
+
+      appTitle = appTitle ?? title;
+
       const tTitle = t(route?.meta?.title as string);
-      pageTitle.value = tTitle ? ` ${tTitle} - ${title} ` : `${title}`;
+      pageTitle.value = tTitle ? ` ${tTitle} - ${appTitle} ` : `${appTitle}`;
     },
     { immediate: true },
   );

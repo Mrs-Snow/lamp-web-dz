@@ -9,12 +9,19 @@
     width="80%"
   >
     <PageWrapper dense contentFullHeight>
-      <BasicTable @register="registerTable" />
+      <BasicTable @register="registerTable">
+        <template #state="{ record }">
+          <Tag :color="record.state ? 'success' : 'error'">
+            {{ record.state ? t('lamp.common.enable') : t('lamp.common.disable') }}
+          </Tag>
+        </template></BasicTable
+      >
     </PageWrapper>
   </BasicModal>
 </template>
 <script lang="ts">
   import { defineComponent } from 'vue';
+  import { Tag } from 'ant-design-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { BasicTable, useTable } from '/@/components/Table';
   import { useMessage } from '/@/hooks/web/useMessage';
@@ -23,12 +30,12 @@
   import { handleFetchParams } from '/@/utils/lamp/common';
   import { page } from '/@/api/devOperation/system/defDict';
   import { importDict } from '/@/api/basic/base/baseDict';
-  import { columns, searchFormSchema } from '../baseDict.data';
+  import { defColumns, searchFormSchema } from '../baseDict.data';
 
   export default defineComponent({
     // 若需要开启页面缓存，请将此参数跟菜单名保持一致
     name: 'BaseDictImportManagement',
-    components: { BasicModal, BasicTable, PageWrapper },
+    components: { BasicModal, BasicTable, PageWrapper, Tag },
     emits: ['success', 'register'],
     setup(_, { emit }) {
       const { t } = useI18n();
@@ -38,7 +45,7 @@
       const [registerTable, { getSelectRowKeys }] = useTable({
         title: t('basic.base.baseDict.table.title'),
         api: page,
-        columns: columns(),
+        columns: defColumns(),
         formConfig: {
           labelWidth: 120,
           schemas: searchFormSchema(),
