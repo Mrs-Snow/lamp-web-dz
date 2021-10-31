@@ -42,14 +42,14 @@ export const Api = {
     url: `${ServicePrefixEnum.TENANT}/anyone/findMyApplication`,
     method: RequestEnum.GET,
   } as AxiosRequestConfig,
-  FindRecommendApplication: {
-    url: `${ServicePrefixEnum.TENANT}/anyone/findRecommendApplication`,
-    method: RequestEnum.GET,
-  } as AxiosRequestConfig,
+  // FindRecommendApplication: {
+  //   url: `${ServicePrefixEnum.TENANT}/anyone/findRecommendApplication`,
+  //   method: RequestEnum.GET,
+  // } as AxiosRequestConfig,
 };
 
-export const findMyApplication = (name?: string) =>
-  defHttp.request<DefApplicationResultVO[]>({ ...Api.FindMyApplication, params: { name } });
+// export const findMyApplication = (name?: string) =>
+//   defHttp.request<DefApplicationResultVO[]>({ ...Api.FindMyApplication, params: { name } });
 
 export const pageFindMyApplication = (params: PageParams<DefApplicationPageQuery>) =>
   defHttp.request<DefApplicationResultVO[]>({
@@ -57,8 +57,8 @@ export const pageFindMyApplication = (params: PageParams<DefApplicationPageQuery
     params: { name: params?.model?.name },
   });
 
-export const findRecommendApplication = (name?: string) =>
-  defHttp.request<DefApplicationResultVO[]>({ ...Api.FindRecommendApplication, params: { name } });
+// export const findRecommendApplication = (name?: string) =>
+//   defHttp.request<DefApplicationResultVO[]>({ ...Api.FindRecommendApplication, params: { name } });
 
 export const page = (params: PageParams<DefApplicationPageQuery>) =>
   defHttp.request<PageResult<DefApplicationResultVO>>({ ...Api.Page, params });

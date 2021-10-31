@@ -50,7 +50,7 @@ export const baseSetschemas: FormSchema[] = [
     show: false,
   },
   {
-    field: 'account',
+    field: 'username',
     component: 'Input',
     label: '账号',
     colProps: { span: 18 },
@@ -59,7 +59,34 @@ export const baseSetschemas: FormSchema[] = [
     },
   },
   {
-    field: 'name',
+    field: 'email',
+    component: 'Input',
+    label: '邮箱',
+    colProps: { span: 18 },
+    dynamicDisabled: () => {
+      return true;
+    },
+  },
+  {
+    field: 'mobile',
+    component: 'Input',
+    label: '手机',
+    colProps: { span: 18 },
+    dynamicDisabled: () => {
+      return true;
+    },
+  },
+  {
+    field: 'idCard',
+    component: 'Input',
+    label: '身份证号',
+    colProps: { span: 18 },
+    dynamicDisabled: () => {
+      return true;
+    },
+  },
+  {
+    field: 'nickName',
     component: 'Input',
     label: '昵称',
     colProps: { span: 18 },
@@ -95,15 +122,6 @@ export const baseSetschemas: FormSchema[] = [
     colProps: { span: 18 },
     componentProps: {
       ...dictComponentProps(DictEnum.EDUCATION),
-    },
-  },
-  {
-    field: 'positionStatus',
-    component: 'ApiSelect',
-    label: '职位状态',
-    colProps: { span: 18 },
-    componentProps: {
-      ...dictComponentProps(DictEnum.POSITION_STATUS),
     },
   },
   {

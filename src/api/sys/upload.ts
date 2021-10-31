@@ -16,6 +16,8 @@ export function uploadApi(
     {
       url: uploadUrl,
       onUploadProgress,
+      // 60 s
+      timeout: 60 * 1000,
     },
     params,
   );

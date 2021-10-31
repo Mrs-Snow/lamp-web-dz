@@ -53,7 +53,7 @@
           },
         ]"
       >
-        <span class="text"> {{ title }}</span>
+        <span class="text"> {{ newTitle }}</span>
         <Icon
           :size="16"
           :icon="getMixSideFixed ? 'ri:pushpin-2-fill' : 'ri:pushpin-2-line'"
@@ -98,6 +98,7 @@
   import { listenerRouteChange } from '/@/logics/mitt/routeChange';
   import LayoutTrigger from '../trigger/index.vue';
   import { usePermissionStore } from '/@/store/modules/permission';
+  import { useUserStore } from '/@/store/modules/user';
 
   export default defineComponent({
     name: 'LayoutMixSider',
@@ -139,6 +140,8 @@
       } = useMenuSetting();
 
       const { title } = useGlobSetting();
+      const userStore = useUserStore();
+      let newTitle = ref<string>(title);
       const permissionStore = usePermissionStore();
 
       useDragLine(sideRef, dragBarRef, true);
@@ -202,6 +205,14 @@
         {
           immediate: true,
         },
+      );
+
+      watch(
+        () => userStore.getUserInfo?.defApplication?.name,
+        () => {
+          newTitle.value = userStore.getUserInfo?.defApplication?.name ?? title;
+        },
+        { immediate: true },
       );
 
       listenerRouteChange((route) => {
@@ -329,6 +340,7 @@
         sideRef,
         dragBarRef,
         title,
+        newTitle,
         openMenu,
         getMenuTheme,
         getItemEvents,

@@ -33,12 +33,11 @@
   import { useMessage } from '/@/hooks/web/useMessage';
 
   import { FileBizTypeEnum } from '/@/enums/commonEnum';
-  import { get, updateBase, updateAvatar } from '/@/api/lamp/org/user';
+  import { updateBaseInfo, updateAvatar } from '/@/api/lamp/profile/userInfo';
   import { baseSetschemas } from './data';
   import { useUserStore } from '/@/store/modules/user';
   import { uploadApi } from '/@/api/lamp/file/upload';
-  import { UserUpdateAvatarDTO } from '/@/api/lamp/org/model/userModel';
-  import { Enum } from '/@/api/model/baseModel';
+  import { getUserInfoById } from '/@/api/lamp/common/oauth';
 
   export default defineComponent({
     components: {
@@ -62,8 +61,7 @@
 
       onMounted(async () => {
         const { id } = userStore.getUserInfo;
-        const data = await get(id);
-        data.sex = (data?.sex as Enum)?.code as string;
+        const data = await getUserInfoById('message', id);
         setFieldsValue(data);
       });
 
@@ -77,20 +75,16 @@
         userinfo.avatarId = data?.id;
         userStore.setUserInfo(userinfo);
 
-        const params = { id: userinfo.id, appendixAvatar: data } as UserUpdateAvatarDTO;
+        const params = { id: userinfo.id, appendixAvatar: data };
         await updateAvatar(params);
       }
 
       async function handleSubmit() {
         try {
           const params = await validate();
-          await updateBase(params);
+          await updateBaseInfo(params);
 
-          const userinfo = userStore.getUserInfo;
-          userinfo.account = params.account;
-          userinfo.name = params.name;
-          userinfo.workDescribe = params.workDescribe;
-          userStore.setUserInfo(userinfo);
+          userStore.getUserInfoAction();
 
           createMessage.success(t(`common.tips.updateSuccess`));
         } finally {

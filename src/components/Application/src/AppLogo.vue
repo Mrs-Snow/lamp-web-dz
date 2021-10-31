@@ -6,7 +6,7 @@
   <div class="anticon" :class="getAppLogoClass" @click="goHome">
     <img src="../../../assets/images/logo.png" />
     <div class="ml-2 truncate md:opacity-100" :class="getTitleClass" v-show="showTitle">
-      {{ showTitle }}
+      {{ newTitle }}
     </div>
   </div>
 </template>
@@ -38,7 +38,7 @@
   const { getCollapsedShowTitle } = useMenuSetting();
   const userStore = useUserStore();
   const { title } = useGlobSetting();
-  let showTitle = ref<string>(title);
+  let newTitle = ref<string>(title);
   const go = useGo();
 
   const getAppLogoClass = computed(() => [
@@ -57,7 +57,7 @@
   watch(
     () => userStore.getUserInfo?.defApplication?.name,
     () => {
-      showTitle.value = userStore.getUserInfo?.defApplication?.name ?? title;
+      newTitle.value = userStore.getUserInfo?.defApplication?.name ?? title;
     },
     { immediate: true },
   );

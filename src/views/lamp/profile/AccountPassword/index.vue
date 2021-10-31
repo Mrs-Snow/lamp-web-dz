@@ -19,7 +19,7 @@
   import { BasicForm, useForm } from '/@/components/Form';
   import { getValidateRules } from '/@/api/lamp/common/formValidateService';
   import { formSchema } from './pwd.data';
-  import { Api, updatePassword } from '/@/api/lamp/org/user';
+  import { Api, updatePassword } from '/@/api/lamp/profile/userInfo';
 
   export default defineComponent({
     name: 'ChangePassword2',

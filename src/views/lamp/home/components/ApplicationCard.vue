@@ -1,7 +1,11 @@
 <template>
-  <Card title="我的应用" v-bind="$attrs">
+  <Card title="我的应用" v-bind="$attrs" hoverable>
     <template v-for="item in applicationList" :key="item.id">
-      <CardGrid @click="handlerTurnToApplication(item)" class="!md:w-1/3 !w-full">
+      <CardGrid
+        @click="handlerTurnToApplication(item)"
+        class="!md:w-1/3 !w-full"
+        :class="getAppCardClass(item)"
+      >
         <span class="flex">
           <ThumbUrl
             :width="50"
@@ -30,7 +34,7 @@
   import { usePermission } from '/@/hooks/web/usePermission';
   import { useUserStore } from '/@/store/modules/user';
   import ThumbUrl from '/@/components/Upload/src/ThumbUrl.vue';
-  import { findMyApplication } from '/@/api/devOperation/application/defApplication';
+  import { findMyApplication } from '/@/api/lamp/profile/userInfo';
   import { DefApplicationResultVO } from '/@/api/devOperation/application/model/defApplicationModel';
   import { ExpireStateEnum } from '/@/enums/biz/tenant';
   import { useMessage } from '/@/hooks/web/useMessage';
@@ -45,6 +49,10 @@
       const userStore = useUserStore();
 
       async function handlerTurnToApplication(item: DefApplicationResultVO) {
+        if (userStore.getApplicationId === item?.id) {
+          createMessage.warn(`您当前正处于[${item.name}]，无需切换`);
+          return;
+        }
         if (item && item.id) {
           createConfirm({
             iconType: 'warning',
@@ -66,11 +74,24 @@
         }
       }
 
+      const getAppCardClass = (item: DefApplicationResultVO) => {
+        return userStore.getApplicationId === item?.id ? 'appDisabled' : '';
+      };
+
       onMounted(async () => {
         applicationList.value = await findMyApplication();
       });
 
-      return { ExpireStateEnum, applicationList, handlerTurnToApplication };
+      return { ExpireStateEnum, getAppCardClass, applicationList, handlerTurnToApplication };
     },
   });
 </script>
+
+<style lang="less" scoped>
+  .appDisabled {
+    color: rgb(0 0 0 / 75%);
+    background-color: #f5f5f5;
+    cursor: not-allowed;
+    opacity: 100%;
+  }
+</style>

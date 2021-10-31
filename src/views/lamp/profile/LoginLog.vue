@@ -33,8 +33,6 @@
   import { useI18n } from '/@/hooks/web/useI18n';
 
   import { msgNotifyList } from './data';
-  import { page } from '/@/api/lamp/system/loginLog';
-  import { LoginLog } from '/@/api/lamp/system/model/loginLogModel';
 
   export default defineComponent({
     name: 'MyLoginLog',
@@ -46,17 +44,17 @@
       Icon,
     },
     setup() {
-      const loginLogList = ref<LoginLog[]>([]);
+      const loginLogList = ref<any[]>([]);
       const userStore = useUserStore();
       const { t } = useI18n();
       onMounted(async () => {
-        const list = await page({
-          current: 1,
-          size: 10,
-          model: { userId: userStore.getUserInfo.id },
-        });
-
-        loginLogList.value = list.records;
+        console.log(userStore.getUserInfo);
+        // const list = await page({
+        //   current: 1,
+        //   size: 10,
+        //   model: { userId: userStore.getUserInfo.id },
+        // });
+        // loginLogList.value = list.records;
       });
 
       return {

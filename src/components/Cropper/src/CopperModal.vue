@@ -128,6 +128,10 @@
       type: Function as PropType<PromiseFn>,
       required: true,
     },
+    name: {
+      type: String as PropType<string>,
+      default: 'file',
+    },
     uploadParams: {
       type: Object as PropType<any>,
       default: {},
@@ -188,7 +192,13 @@
           const blob = dataURLtoBlob(previewSource.value);
           try {
             setModalProps({ confirmLoading: true });
-            const uploadParam = { ...props.uploadParams, ...{ filename } };
+            const uploadParam = {
+              data: {
+                ...(props.uploadParams || {}),
+              },
+              name: props.name,
+              filename,
+            };
             const result = await uploadApi({
               ...uploadParam,
               file: blob,
