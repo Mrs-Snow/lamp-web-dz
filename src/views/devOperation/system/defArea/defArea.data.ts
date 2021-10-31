@@ -19,14 +19,14 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
     {
       field: 'parentId',
       defaultValue: 0,
-      label: t('lamp.org.org.parentId'),
+      label: t('devOperation.system.defArea.parentId'),
       component: 'Input',
       show: false,
     },
     {
       field: 'parentName',
       defaultValue: '根节点',
-      label: t('lamp.org.org.parentId'),
+      label: t('devOperation.system.defArea.parentId'),
       component: 'Input',
       dynamicDisabled: true,
     },
@@ -46,7 +46,6 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
         return [ActionEnum.VIEW].includes(type.value);
       },
     },
-
     {
       label: t('devOperation.system.defArea.fullName'),
       field: 'fullName',

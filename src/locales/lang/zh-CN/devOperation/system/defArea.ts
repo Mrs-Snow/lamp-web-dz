@@ -8,9 +8,9 @@ export default {
   level: '行政级别',
   source: '数据来源',
   state: '状态',
-  grade: '树层级',
-  path: '路径',
-  label: '名称',
-  parentId: '父ID',
+  treeGrade: '树层级',
+  treePath: '路径',
+  name: '名称',
+  parentId: '父节点',
   sortValue: '排序',
 };

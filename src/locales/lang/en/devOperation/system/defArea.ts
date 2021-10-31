@@ -8,9 +8,9 @@ export default {
   level: 'level',
   source: 'source',
   state: 'state',
-  grade: 'grade',
-  path: 'path',
-  label: 'label',
+  treeGrade: 'treeGrade',
+  treePath: 'treePath',
+  name: 'label',
   parentId: 'parentId',
   sortValue: 'sortValue',
 };

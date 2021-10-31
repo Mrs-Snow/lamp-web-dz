@@ -8,9 +8,7 @@
   >
     <div :class="`${prefixCls}__entry`">
       <div :class="`${prefixCls}__header`">
-        <Avatar :src="avatarUrl" :size="70">
-          <Avatar :size="70">{{ getRealName?.charAt(0) }}</Avatar></Avatar
-        >
+        <Avatar :src="avatarUrl" :size="70"> {{ getRealName?.charAt(0) }} </Avatar>
         <p :class="`${prefixCls}__header-name`">
           {{ getRealName }}
         </p>
@@ -48,7 +46,9 @@
       const userStore = useUserStore();
       const lockStore = useLockStore();
 
-      const getRealName = computed(() => userStore.getUserInfo?.nickName);
+      const getRealName = computed(() => {
+        return userStore.getUserInfo?.nickName;
+      });
       const [register, { closeModal }] = useModalInner();
       const avatarUrl = ref<string>('');
 

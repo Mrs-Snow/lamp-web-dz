@@ -34,19 +34,33 @@
   import { DefApplicationResultVO } from '/@/api/devOperation/application/model/defApplicationModel';
   import { ExpireStateEnum } from '/@/enums/biz/tenant';
   import { useMessage } from '/@/hooks/web/useMessage';
+  import { isUrl } from '/@/utils/is';
 
   export default defineComponent({
     components: { Card, CardGrid: Card.Grid, Empty, ThumbUrl },
     setup() {
       const applicationList = ref<DefApplicationResultVO[]>([]);
-      const { createMessage } = useMessage();
+      const { createMessage, createConfirm } = useMessage();
       const { refreshMenu } = usePermission();
       const userStore = useUserStore();
+
       async function handlerTurnToApplication(item: DefApplicationResultVO) {
         if (item && item.id) {
-          userStore.setApplicationId(item.id);
-          await userStore.getUserInfoAction();
-          refreshMenu();
+          createConfirm({
+            iconType: 'warning',
+            content: `确定要切换到应用：[${item.name}]， 并重新加载其资源吗？`,
+            onOk: async () => {
+              if (item.url && isUrl(item.url)) {
+                window.open(item.url);
+              } else {
+                userStore.setApplicationId(item.id as string);
+                await userStore.getUserInfoAction();
+                await refreshMenu();
+
+                createMessage.success(`成功切换到应用：[${item.name}]`);
+              }
+            },
+          });
         } else {
           createMessage.error('请选择正确的应用进行切换');
         }

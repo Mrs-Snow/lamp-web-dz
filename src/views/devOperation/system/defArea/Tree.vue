@@ -14,7 +14,7 @@
       :beforeRightClick="getRightMenuList"
       :clickRowToExpand="false"
       :treeData="treeData"
-      :replaceFields="{ key: 'id', title: 'label' }"
+      :replaceFields="{ key: 'id', title: 'name' }"
       @select="handleSelect"
       ref="treeRef"
     />

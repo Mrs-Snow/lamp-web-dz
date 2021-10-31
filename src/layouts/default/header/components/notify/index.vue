@@ -29,9 +29,9 @@
   import NoticeList from './NoticeList.vue';
   import { useRouter } from 'vue-router';
   import { useDesign } from '/@/hooks/web/useDesign';
-  import { myMsg, mark } from '/@/api/lamp/resources/msg';
+  // import { myMsg, mark } from '/@/api/lamp/resources/msg';
   import { MsgTypeEnum } from '/@/enums/commonEnum';
-  import { MsgPageResult } from '/@/api/lamp/resources/model/msgModel';
+  // import { MsgPageResult } from '/@/api/lamp/resources/model/msgModel';
   import { PageEnum } from '/@/enums/pageEnum';
 
   export default defineComponent({
@@ -42,11 +42,13 @@
       const listData = ref<TabItem[]>([]);
 
       async function loadMyMsg() {
-        const allMsg = await myMsg({
-          current: 1,
-          size: 5,
-          model: {},
-        });
+        // const allMsg = await myMsg({
+        //   current: 1,
+        //   size: 5,
+        //   model: {},
+        // });
+
+        const allMsg = {};
 
         listData.value = [];
 
@@ -86,16 +88,17 @@
       const count = computed(() => {
         let count = 0;
         for (let i = 0; i < listData.value.length; i++) {
-          count += Number(listData.value[i]?.data?.total);
+          count += Number(listData.value[i]?.data?.total ?? 0);
         }
         return count;
       });
 
-      async function onNoticeClick(record: MsgPageResult) {
-        const flag = await mark([record.id]);
-        if (flag) {
-          loadMyMsg();
-        }
+      async function onNoticeClick(record: any) {
+        // async function onNoticeClick(record: MsgPageResult) {
+        // const flag = await mark([record.id]);
+        // if (flag) {
+        //   loadMyMsg();
+        // }
         replace({
           name: 'noticeView',
           params: { id: record.id },

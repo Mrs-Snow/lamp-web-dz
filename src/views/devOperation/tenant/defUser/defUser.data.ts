@@ -128,7 +128,7 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
         span: 12,
       },
       dynamicDisabled: () => {
-        return [ActionEnum.VIEW, ActionEnum.EDIT].includes(type.value);
+        return [ActionEnum.VIEW].includes(type.value);
       },
     },
     {
@@ -139,7 +139,7 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
         span: 12,
       },
       dynamicDisabled: () => {
-        return [ActionEnum.VIEW, ActionEnum.EDIT].includes(type.value);
+        return [ActionEnum.VIEW].includes(type.value);
       },
     },
     {
@@ -150,7 +150,7 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
         span: 12,
       },
       dynamicDisabled: () => {
-        return [ActionEnum.VIEW, ActionEnum.EDIT].includes(type.value);
+        return [ActionEnum.VIEW].includes(type.value);
       },
     },
     {
@@ -170,7 +170,7 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       component: 'Input',
       dynamicDisabled: true,
       ifShow: () => {
-        return [ActionEnum.VIEW].includes(type.value);
+        return [ActionEnum.VIEW, ActionEnum.EDIT].includes(type.value);
       },
       colProps: {
         span: 12,

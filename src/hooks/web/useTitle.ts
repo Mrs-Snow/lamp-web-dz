@@ -19,22 +19,28 @@ export function useTitle() {
   const userStore = useUserStore();
   const pageTitle = usePageTitle();
 
+  function computeTitle() {
+    const route = unref(currentRoute);
+
+    if (route.name === REDIRECT_NAME) {
+      return;
+    }
+    let appTitle = userStore.getUserInfo?.defApplication?.name;
+
+    appTitle = appTitle ?? title;
+    const tTitle = t(route?.meta?.title as string);
+    pageTitle.value = tTitle ? ` ${tTitle} - ${appTitle} ` : `${appTitle}`;
+  }
+
   watch(
-    [() => currentRoute.value.path, () => localeStore.getLocale],
-    () => {
-      const route = unref(currentRoute);
-
-      if (route.name === REDIRECT_NAME) {
-        return;
-      }
-
-      let appTitle = userStore.getUserInfo?.defApplication?.name;
-
-      appTitle = appTitle ?? title;
-
-      const tTitle = t(route?.meta?.title as string);
-      pageTitle.value = tTitle ? ` ${tTitle} - ${appTitle} ` : `${appTitle}`;
+    [
+      () => currentRoute.value.path,
+      () => localeStore.getLocale,
+      () => userStore.getUserInfo?.defApplication?.name,
+    ],
+    () => computeTitle(),
+    {
+      immediate: true,
     },
-    { immediate: true },
   );
 }

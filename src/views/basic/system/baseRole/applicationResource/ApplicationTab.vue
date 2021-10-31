@@ -23,7 +23,8 @@
     >
       <template #title="item">
         <TreeIcon :icon="item.icon" v-if="item.icon" />
-        [{{ item.echoMap?.resourceType }}] {{ item.name }}
+        <template v-if="item.echoMap?.resourceType">[{{ item.echoMap?.resourceType }}]</template>
+        {{ item.name }}
         <span>
           <a
             v-if="item.children && item.children.length"

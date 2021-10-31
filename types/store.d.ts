@@ -78,4 +78,5 @@ export interface DefUserInfoResultVO {
   tenantList: Tenant[];
   defApplication: DefApplicationResultVO;
   homePath?: string;
+  avatarId?: string;
 }

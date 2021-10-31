@@ -96,7 +96,6 @@ export const useUserStore = defineStore({
       return this.tenant || getAuthCache<string>(TENANT_KEY);
     },
     getApplicationId(): string {
-      debugger;
       return this.applicationId || getAuthCache<string>(APPLICATION_ID_KEY);
     },
   },

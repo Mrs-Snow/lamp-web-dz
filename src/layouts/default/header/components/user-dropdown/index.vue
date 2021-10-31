@@ -1,12 +1,12 @@
 <template>
   <Dropdown placement="bottomLeft" :overlayClassName="`${prefixCls}-dropdown-overlay`">
     <span :class="[prefixCls, `${prefixCls}--${theme}`]" class="flex">
-      <Avatar :src="avatarUrl" :size="26" :style="{ 'margin-right': '12px' }">
-        <Avatar :size="26">{{ getUserInfo?.name?.charAt(0) }}</Avatar></Avatar
-      >
+      <Avatar :src="avatarUrl" :style="{ 'margin-right': '0.5rem' }">
+        {{ getUserInfo?.nickName?.charAt(0) }}
+      </Avatar>
       <span :class="`${prefixCls}__info hidden md:block`">
         <span :class="`${prefixCls}__name  `" class="truncate">
-          {{ getUserInfo.name }}
+          {{ getUserInfo.nickName }}
         </span>
       </span>
     </span>
@@ -145,7 +145,7 @@
         (v: string) => {
           loadAvatarUrl(v);
         },
-        { immediate: true }
+        { immediate: true },
       );
 
       // const getAvatar = computed(() => {
