@@ -9,9 +9,11 @@
         <span class="flex">
           <ThumbUrl
             :width="50"
-            :fileId="item.echoMap?.DEF__APPLICATION__LOGO?.[0].id"
-            :fileType="item.echoMap?.DEF__APPLICATION__LOGO?.[0].fileType?.code"
-            :originalFileName="item.echoMap?.DEF__APPLICATION__LOGO?.[0].originalFileName"
+            :fileId="item.echoMap?.[FileBizTypeEnum.DEF_APPLICATION_LOGO]?.[0]?.id"
+            :fileType="item.echoMap?.[FileBizTypeEnum.DEF_APPLICATION_LOGO]?.[0]?.fileType?.code"
+            :originalFileName="
+              item.echoMap?.[FileBizTypeEnum.DEF_APPLICATION_LOGO]?.[0]?.originalFileName
+            "
           />
           <span class="text-lg ml-4">{{ item.name }}</span>
         </span>
@@ -39,6 +41,7 @@
   import { ExpireStateEnum } from '/@/enums/biz/tenant';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { isUrl } from '/@/utils/is';
+  import { FileBizTypeEnum } from '/@/enums/commonEnum';
 
   export default defineComponent({
     components: { Card, CardGrid: Card.Grid, Empty, ThumbUrl },
@@ -46,6 +49,7 @@
       const applicationList = ref<DefApplicationResultVO[]>([]);
       const { createMessage, createConfirm } = useMessage();
       const { refreshMenu } = usePermission();
+
       const userStore = useUserStore();
 
       async function handlerTurnToApplication(item: DefApplicationResultVO) {
@@ -82,7 +86,13 @@
         applicationList.value = await findMyApplication();
       });
 
-      return { ExpireStateEnum, getAppCardClass, applicationList, handlerTurnToApplication };
+      return {
+        ExpireStateEnum,
+        FileBizTypeEnum,
+        getAppCardClass,
+        applicationList,
+        handlerTurnToApplication,
+      };
     },
   });
 </script>
