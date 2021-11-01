@@ -24,7 +24,7 @@
   import { useDesign } from '/@/hooks/web/useDesign';
   import { useGlobSetting } from '/@/hooks/setting';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { getTenant, getToken } from '/@/utils/auth';
+  import { getTenantId, getToken, getApplicationId } from '/@/utils/auth';
 
   export default defineComponent({
     name: 'TinymceImageUpload',
@@ -46,7 +46,17 @@
     setup(props, { emit }) {
       let uploading = false;
 
-      const { uploadUrl, apiUrl, multiTenantType, clientId, clientSecret } = useGlobSetting();
+      const {
+        uploadUrl,
+        apiUrl,
+        multiTenantType,
+        clientId,
+        clientSecret,
+        tokenKey,
+        tenantIdKey,
+        applicationIdKey,
+        authorizationKey,
+      } = useGlobSetting();
       const actionUrl = apiUrl + uploadUrl;
       const { t } = useI18n();
       const { prefixCls } = useDesign('tinymce-img-upload');
@@ -88,14 +98,15 @@
       // 增加token
       const token = getToken();
       if (token) {
-        headers['token'] = `Bearer ${token}`;
+        headers[tokenKey] = `${token}`;
       }
       // 增加租户编码
       if (multiTenantType !== 'NONE') {
-        headers['tenant'] = getTenant();
+        headers[tenantIdKey] = getTenantId();
       }
       // 添加客户端信息
-      headers['Authorization'] = `Basic ${Base64.encode(`${clientId}:${clientSecret}`)}`;
+      headers[applicationIdKey] = getApplicationId();
+      headers[authorizationKey] = `${Base64.encode(`${clientId}:${clientSecret}`)}`;
 
       return {
         prefixCls,

@@ -1,10 +1,6 @@
 <template>
   <div :class="getClass" :style="getStyle">
-    <div
-      :class="`${prefixCls}-image-wrapper`"
-      :style="getImageWrapperStyle"
-      @click="handleOpenModal"
-    >
+    <div :class="getCropperAvatarImageClass" :style="getImageWrapperStyle" @click="handleOpenModal">
       <div :class="`${prefixCls}-image-mask`" :style="getImageWrapperStyle">
         <Icon
           icon="ant-design:cloud-upload-outlined"
@@ -30,6 +26,7 @@
       :uploadApi="uploadApi"
       :uploadParams="uploadParams"
       :src="realSrc"
+      :circled="circled"
     />
   </div>
 </template>
@@ -46,6 +43,7 @@
   import { FileResultVO } from '/@/api/lamp/file/model/uploadModel';
 
   const props = {
+    circled: { type: Boolean, default: true },
     width: { type: [String, Number], default: '200px' },
     value: { type: Object as PropType<FileResultVO>, default: {} },
     showBtn: { type: Boolean, default: true },
@@ -86,6 +84,14 @@
       const getImageWrapperStyle = computed(
         (): CSSProperties => ({ width: unref(getWidth), height: unref(getWidth) }),
       );
+
+      const getCropperAvatarImageClass = computed(() => {
+        if (props.circled) {
+          return [`${prefixCls}-image-wrapper`, `${prefixCls}-image-wrapper-circled`];
+        } else {
+          return [`${prefixCls}-image-wrapper`];
+        }
+      });
 
       watch(
         () => props.value,
@@ -130,6 +136,7 @@
         realSrc,
         getClass,
         getImageWrapperStyle,
+        getCropperAvatarImageClass,
         getStyle,
         handleUploadSuccess,
         handleOpenModal,
@@ -145,12 +152,15 @@
     display: inline-block;
     text-align: center;
 
+    &-image-wrapper-circled {
+      border-radius: 50%;
+    }
+
     &-image-wrapper {
       overflow: hidden;
       cursor: pointer;
       background: @component-background;
       border: 1px solid @border-color-base;
-      border-radius: 50%;
 
       img {
         width: 100%;

@@ -7,13 +7,15 @@
         :width="props.width"
         :height="props.height"
         :fallback="errImg"
+        :preview="props.preview"
+        :placeholder="true"
       />
-      <div style="width: 100%; height: 100%" v-if="loading"></div>
+      <!-- <div style="width: 100%; height: 100%" v-if="loading"></div> -->
       <slot name="empty" v-if="!realSrc && !loadError">
-        <img :width="props.width" :height="props.height" src="./err-img.svg" />
+        <Image :src="errImg" :width="props.width" :preview="props.preview" :height="props.height" />
       </slot>
       <slot name="error" v-if="loadError">
-        <img :width="props.width" :height="props.height" src="./err-img.svg" />
+        <Image :src="errImg" :width="props.width" :preview="props.preview" :height="props.height" />
       </slot>
     </template>
     <template v-else>
@@ -23,11 +25,11 @@
 </template>
 <script lang="ts">
   import { defineComponent, ref, watch } from 'vue';
-  import { propTypes } from '/@/utils/propTypes';
   import { Image } from 'ant-design-vue';
-  import { asyncGetUrls } from '/@/api/lamp/file/upload';
-  import errImg from './err-img.svg';
   import { Base64 } from 'js-base64';
+  import { propTypes } from '/@/utils/propTypes';
+  import { asyncGetUrls } from '/@/api/lamp/file/upload';
+  import { errImg } from '/@/utils/file/base64Conver';
 
   export default defineComponent({
     components: { Image },
@@ -36,6 +38,7 @@
       fileId: propTypes.string.def(''),
       width: propTypes.number.def(104),
       height: propTypes.number.def(104),
+      preview: propTypes.bool.def(true),
       fileType: propTypes.string.def('IMAGE'),
       originalFileName: propTypes.string.def('未知文件'),
     },
@@ -110,8 +113,6 @@
     img {
       position: static;
       display: block;
-      cursor: zoom-in;
-      border-radius: 4px;
       object-fit: cover;
       max-height: 104px;
       margin: 0 auto;

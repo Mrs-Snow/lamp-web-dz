@@ -8,7 +8,7 @@ import {
   ROLES_KEY,
   TOKEN_KEY,
   REFRESH_TOKEN_KEY,
-  TENANT_KEY,
+  TENANT_ID_KEY,
   USER_INFO_KEY,
   EXPIRE_TIME_KEY,
   APPLICATION_ID_KEY,
@@ -32,10 +32,10 @@ import { RouteRecordRaw } from 'vue-router';
 import { PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
 import { h } from 'vue';
 import { useTabs } from '/@/hooks/web/useTabs';
-// import { useGlobSetting } from '/@/hooks/setting';
+import { useGlobSetting } from '/@/hooks/setting';
 
-// const globSetting = useGlobSetting();
-const DEF_APP_ID = '1';
+const globSetting = useGlobSetting();
+const DEF_APP_ID = globSetting.defApplicationId;
 
 interface UserState {
   userInfo: Nullable<DefUserInfoResultVO>;
@@ -45,7 +45,7 @@ interface UserState {
   lastUpdateTime: number;
   refreshToken?: string;
   expireTime?: string;
-  tenant?: string;
+  tenantId?: string;
   applicationId: string;
 }
 
@@ -65,7 +65,7 @@ export const useUserStore = defineStore({
     refreshToken: '',
     expireTime: '',
     // 租户ID
-    tenant: '',
+    tenantId: '',
     // 应用id
     applicationId: '',
   }),
@@ -92,8 +92,8 @@ export const useUserStore = defineStore({
       return this.expireTime || getAuthCache<string>(EXPIRE_TIME_KEY);
     },
     // 4.0.0 存储的是租户id
-    getTenant(): string {
-      return this.tenant || getAuthCache<string>(TENANT_KEY);
+    getTenantId(): string {
+      return this.tenantId || getAuthCache<string>(TENANT_ID_KEY);
     },
     getApplicationId(): string {
       return this.applicationId || getAuthCache<string>(APPLICATION_ID_KEY);
@@ -117,9 +117,9 @@ export const useUserStore = defineStore({
       this.sessionTimeout = flag;
     },
     // 4.0.0 存储的是租户id
-    setTenant(info: string) {
-      this.tenant = info;
-      setAuthCache(TENANT_KEY, info);
+    setTenantId(info: string) {
+      this.tenantId = info;
+      setAuthCache(TENANT_ID_KEY, info);
     },
     setApplicationId(info: string) {
       this.applicationId = info;
@@ -138,7 +138,7 @@ export const useUserStore = defineStore({
       this.token = '';
       this.roleList = [];
       this.sessionTimeout = false;
-      this.tenant = '';
+      this.tenantId = '';
       this.expireTime = '';
       this.refreshToken = '';
       this.applicationId = '';
@@ -152,7 +152,7 @@ export const useUserStore = defineStore({
         this.setToken(token);
         this.setRefreshToken(refreshToken);
         this.setExpireTime(expiration);
-        this.setTenant(tenantId);
+        this.setTenantId(tenantId);
         this.setApplicationId(DEF_APP_ID);
         this.setSessionTimeout(false);
         const permissionStore = usePermissionStore();
@@ -183,7 +183,7 @@ export const useUserStore = defineStore({
         this.setToken(token);
         this.setRefreshToken(refreshToken);
         this.setExpireTime(expiration);
-        this.setTenant(tenantId);
+        this.setTenantId(tenantId);
         this.setApplicationId(DEF_APP_ID);
 
         return this.afterLoginAction(mode, goHome);

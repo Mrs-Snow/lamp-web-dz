@@ -6,7 +6,7 @@ export const LOCALE_KEY = 'LOCALE__';
 // 刷新Token key
 export const REFRESH_TOKEN_KEY = 'REFRESH__TOKEN__';
 // 租户ID key
-export const TENANT_KEY = 'TENANT__';
+export const TENANT_ID_KEY = 'TENANT__ID__';
 // 应用id key
 export const APPLICATION_ID_KEY = 'APPLICATION__ID__';
 // 用户信息 key

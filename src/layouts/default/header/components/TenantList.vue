@@ -43,7 +43,7 @@
       // 我拥有的企业
       const getTenantList = computed(() => userStore.getUserInfo?.tenantList);
       // 当前企业id
-      const currentTenantId = computed(() => userStore.getTenant);
+      const currentTenantId = computed(() => userStore.getTenantId);
       // 当前企业
       const getCurrentTenant = computed(() => {
         return userStore.getUserInfo?.tenantList?.find(

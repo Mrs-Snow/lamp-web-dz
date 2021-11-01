@@ -149,8 +149,15 @@ export interface GlobConfig {
   clientId: string;
   clientSecret: string;
   multiTenantType?: string;
-  showCaptcha?: stirng;
-  tips?: stirng;
+  showCaptcha?: string;
+  tips?: string;
+  defApplicationId: string;
+  previewUrlPrefix?: string;
+  tokenKey: string;
+  tenantIdKey: string;
+  applicationIdKey: string;
+  authorizationKey: string;
+  axiosTimeout?: string;
 }
 export interface GlobEnvConfig {
   // Site title
@@ -171,5 +178,20 @@ export interface GlobEnvConfig {
   VITE_GLOB_SHOW_CAPTCHA?: string;
   // 多租户模式
   VITE_GLOB_MULTI_TENANT_TYPE?: string;
+  // 网站header栏红色提示文字
   VITE_GLOB_TIPS?: string;
+  // 默认登录时加载的默认应用ID，此ID需要事先在def_application中配置
+  VITE_GLOB_DEF_APPLICATION_ID: string;
+  // 第三方文件预览服务 需要自行安装kkFileView（https://gitee.com/kekingcn/file-online-preview）
+  VITE_GLOB_PREVIEW_URL_PREFIX?: string;
+  // 请求头中携带的token(用户身份信息) key名称
+  VITE_GLOB_TOKEN_KEY: string;
+  // 请求头中携带的租户ID key名称
+  VITE_GLOB_TENANT_ID_KEY: string;
+  // 请求头中携带的应用ID key名称
+  VITE_GLOB_APPLICATION_ID_KEY: string;
+  // 请求头中携带的客户端信息 key名称
+  VITE_GLOB_AUTHORIZATION_KEY: string;
+  // axios 请求默认超时间： 10s
+  VITE_GLOB_AXIOS_TIMEOUT?: string;
 }

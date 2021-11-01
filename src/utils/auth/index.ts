@@ -1,6 +1,6 @@
 import { Persistent, BasicKeys } from '/@/utils/cache/persistent';
 import projectSetting from '/@/settings/projectSetting';
-import { CacheTypeEnum, TOKEN_KEY, TENANT_KEY, APPLICATION_ID_KEY } from '/@/enums/cacheEnum';
+import { CacheTypeEnum, TOKEN_KEY, TENANT_ID_KEY, APPLICATION_ID_KEY } from '/@/enums/cacheEnum';
 
 const { permissionCacheType } = projectSetting;
 const isLocal = permissionCacheType === CacheTypeEnum.LOCAL;
@@ -9,8 +9,8 @@ export function getToken() {
   return getAuthCache(TOKEN_KEY) || '';
 }
 
-export function getTenant() {
-  return getAuthCache<string>(TENANT_KEY) || '';
+export function getTenantId() {
+  return getAuthCache<string>(TENANT_ID_KEY) || '';
 }
 
 export function getApplicationId() {

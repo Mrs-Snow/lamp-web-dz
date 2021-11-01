@@ -10,7 +10,7 @@ import { useGlobSetting } from '/@/hooks/setting';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { RequestEnum, ResultEnum, ContentTypeEnum } from '/@/enums/httpEnum';
 import { isString } from '/@/utils/is';
-import { getToken, getTenant, getApplicationId } from '/@/utils/auth';
+import { getToken, getTenantId, getApplicationId } from '/@/utils/auth';
 import { setObjToUrlParams, deepMerge } from '/@/utils';
 import { useErrorLogStoreWithOut } from '/@/store/modules/errorLog';
 import { useI18n } from '/@/hooks/web/useI18n';
@@ -19,7 +19,6 @@ import { useUserStoreWithOut } from '/@/store/modules/user';
 import { Base64 } from 'js-base64';
 
 const globSetting = useGlobSetting();
-const urlPrefix = globSetting.urlPrefix;
 const { createMessage, createErrorModal } = useMessage();
 
 /**
@@ -137,13 +136,19 @@ const transform: AxiosTransform = {
    * @description: 请求拦截器处理
    */
   requestInterceptors: (config, options) => {
-    const tokenName = 'Token';
-
-    const { multiTenantType, clientId, clientSecret } = globSetting;
+    const {
+      multiTenantType,
+      clientId,
+      clientSecret,
+      tokenKey,
+      tenantIdKey,
+      applicationIdKey,
+      authorizationKey,
+    } = globSetting;
 
     const token = getToken();
     if (token && (config as Recordable)?.requestOptions?.withToken !== false) {
-      (config as Recordable).headers[tokenName] = options.authenticationScheme
+      (config as Recordable).headers[tokenKey] = options.authenticationScheme
         ? `${options.authenticationScheme} ${token}`
         : token;
     }
@@ -153,13 +158,13 @@ const transform: AxiosTransform = {
       (config as Recordable)?.requestOptions?.withTenant !== false &&
       multiTenantType !== 'NONE'
     ) {
-      (config as Recordable).headers['TenantId'] = getTenant();
+      (config as Recordable).headers[tenantIdKey] = getTenantId();
     }
 
-    (config as Recordable).headers['ApplicationId'] = getApplicationId();
+    (config as Recordable).headers[applicationIdKey] = getApplicationId();
 
     // 添加客户端信息
-    (config as Recordable).headers['Authorization'] = `${Base64.encode(
+    (config as Recordable).headers[authorizationKey] = `${Base64.encode(
       `${clientId}:${clientSecret}`,
     )}`;
 
@@ -218,7 +223,7 @@ function createAxios(opt?: Partial<CreateAxiosOptions>) {
         // authentication schemes，e.g: Bearer
         // authenticationScheme: 'Bearer',
         authenticationScheme: '',
-        timeout: 10 * 1000,
+        timeout: globSetting.axiosTimeout,
         // 基础接口地址
         // baseURL: globSetting.apiUrl,
 
@@ -244,7 +249,7 @@ function createAxios(opt?: Partial<CreateAxiosOptions>) {
           // 接口地址
           apiUrl: globSetting.apiUrl,
           // 接口拼接地址
-          urlPrefix: urlPrefix,
+          urlPrefix: globSetting.urlPrefix,
           //  是否加入时间戳
           joinTime: true,
           // 忽略重复请求

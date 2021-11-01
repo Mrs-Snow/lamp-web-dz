@@ -7,7 +7,7 @@ import { Memory } from './memory';
 import {
   TOKEN_KEY,
   REFRESH_TOKEN_KEY,
-  TENANT_KEY,
+  TENANT_ID_KEY,
   PERM_CODE_KEY,
   PERM_KEY,
   EXPIRE_TIME_KEY,
@@ -27,7 +27,7 @@ import { pick, omit } from 'lodash-es';
 interface BasicStore {
   [TOKEN_KEY]: string | number | null | undefined;
   [REFRESH_TOKEN_KEY]: string | number | null | undefined;
-  [TENANT_KEY]: string | number | null | undefined;
+  [TENANT_ID_KEY]: string | number | null | undefined;
   [APPLICATION_ID_KEY]: string | number | null | undefined;
   [PERM_CODE_KEY]: Recordable;
   [PERM_KEY]: Recordable;

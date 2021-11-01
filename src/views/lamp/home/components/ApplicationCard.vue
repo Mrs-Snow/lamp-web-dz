@@ -9,6 +9,8 @@
         <span class="flex">
           <ThumbUrl
             :width="50"
+            :height="50"
+            :preview="false"
             :fileId="item.echoMap?.[FileBizTypeEnum.DEF_APPLICATION_LOGO]?.[0]?.id"
             :fileType="item.echoMap?.[FileBizTypeEnum.DEF_APPLICATION_LOGO]?.[0]?.fileType?.code"
             :originalFileName="
@@ -58,11 +60,14 @@
           return;
         }
         if (item && item.id) {
+          const isOpen = item.url && isUrl(item.url);
           createConfirm({
             iconType: 'warning',
-            content: `确定要切换到应用：[${item.name}]， 并重新加载其资源吗？`,
+            content: `确定要${isOpen ? '跳转' : '切换'}到应用：【${
+              item.name
+            }】， 并重新加载其资源吗？`,
             onOk: async () => {
-              if (item.url && isUrl(item.url)) {
+              if (isOpen) {
                 window.open(item.url);
               } else {
                 userStore.setApplicationId(item.id as string);

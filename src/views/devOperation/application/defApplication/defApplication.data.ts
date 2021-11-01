@@ -98,6 +98,7 @@ export const editFormSchema = (_): FormSchema[] => {
       componentProps: {
         uploadApi: uploadApi,
         uploadParams: { bizType: FileBizTypeEnum.DEF_APPLICATION_LOGO },
+        circled: false,
       },
     },
     {

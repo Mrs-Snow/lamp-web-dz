@@ -15,6 +15,13 @@ export const useGlobSetting = (): Readonly<GlobConfig> => {
     VITE_GLOB_MULTI_TENANT_TYPE,
     VITE_GLOB_SHOW_CAPTCHA,
     VITE_GLOB_TIPS,
+    VITE_GLOB_DEF_APPLICATION_ID,
+    VITE_GLOB_PREVIEW_URL_PREFIX,
+    VITE_GLOB_TOKEN_KEY,
+    VITE_GLOB_TENANT_ID_KEY,
+    VITE_GLOB_APPLICATION_ID_KEY,
+    VITE_GLOB_AUTHORIZATION_KEY,
+    VITE_GLOB_AXIOS_TIMEOUT,
   } = getAppEnvConfig();
 
   if (!/[a-zA-Z\_]*/.test(VITE_GLOB_APP_SHORT_NAME)) {
@@ -35,6 +42,13 @@ export const useGlobSetting = (): Readonly<GlobConfig> => {
     multiTenantType: VITE_GLOB_MULTI_TENANT_TYPE,
     showCaptcha: VITE_GLOB_SHOW_CAPTCHA,
     tips: VITE_GLOB_TIPS,
+    defApplicationId: VITE_GLOB_DEF_APPLICATION_ID,
+    previewUrlPrefix: VITE_GLOB_PREVIEW_URL_PREFIX,
+    tokenKey: VITE_GLOB_TOKEN_KEY,
+    tenantIdKey: VITE_GLOB_TENANT_ID_KEY,
+    applicationIdKey: VITE_GLOB_APPLICATION_ID_KEY,
+    authorizationKey: VITE_GLOB_AUTHORIZATION_KEY,
+    axiosTimeout: VITE_GLOB_AXIOS_TIMEOUT,
   };
   return glob as Readonly<GlobConfig>;
 };

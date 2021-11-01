@@ -95,15 +95,19 @@
         </div>
       </div>
       <div :class="`${prefixCls}-right`">
-        <div :class="`${prefixCls}-preview`">
+        <div :class="getCropperPreviewClass">
           <img :src="previewSource" v-if="previewSource" :alt="t('component.cropper.preview')" />
         </div>
         <template v-if="previewSource">
           <div :class="`${prefixCls}-group`">
-            <Avatar :src="previewSource" size="large" />
-            <Avatar :src="previewSource" :size="48" />
-            <Avatar :src="previewSource" :size="64" />
-            <Avatar :src="previewSource" :size="80" />
+            <Avatar
+              :src="previewSource"
+              :shape="props.circled ? 'circle' : 'square'"
+              size="large"
+            />
+            <Avatar :src="previewSource" :shape="props.circled ? 'circle' : 'square'" :size="48" />
+            <Avatar :src="previewSource" :shape="props.circled ? 'circle' : 'square'" :size="64" />
+            <Avatar :src="previewSource" :shape="props.circled ? 'circle' : 'square'" :size="80" />
           </div>
         </template>
       </div>
@@ -113,7 +117,7 @@
 <script lang="ts">
   import type { CropendResult, Cropper } from './typing';
 
-  import { defineComponent, ref } from 'vue';
+  import { computed, defineComponent, ref } from 'vue';
   import CropperImage from './Cropper.vue';
   import { Space, Upload, Avatar, Tooltip } from 'ant-design-vue';
   import { useDesign } from '/@/hooks/web/useDesign';
@@ -214,8 +218,17 @@
         }
       }
 
+      const getCropperPreviewClass = computed(() => {
+        if (props.circled) {
+          return [`${prefixCls}-preview`, `${prefixCls}-preview-circled`];
+        } else {
+          return [`${prefixCls}-preview`];
+        }
+      });
+
       return {
         t,
+        props,
         prefixCls,
         src,
         register,
@@ -225,6 +238,7 @@
         handleReady,
         handlerToolbar,
         handleOk,
+        getCropperPreviewClass,
       };
     },
   });
@@ -277,13 +291,16 @@
       margin-top: 10px;
     }
 
+    &-preview-circled {
+      border-radius: 50%;
+    }
+
     &-preview {
       width: 220px;
       height: 220px;
       margin: 0 auto;
       overflow: hidden;
       border: 1px solid @border-color-base;
-      border-radius: 50%;
 
       img {
         width: 100%;
