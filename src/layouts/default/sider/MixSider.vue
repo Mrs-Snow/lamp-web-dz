@@ -87,6 +87,7 @@
   import { Icon } from '/@/components/Icon';
   import { AppLogo } from '/@/components/Application';
   import { useMenuSetting } from '/@/hooks/setting/useMenuSetting';
+  import { usePermissionStore } from '/@/store/modules/permission';
   import { useDragLine } from './useLayoutSider';
   import { useGlobSetting } from '/@/hooks/setting';
   import { useDesign } from '/@/hooks/web/useDesign';
