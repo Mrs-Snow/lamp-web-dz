@@ -2,21 +2,13 @@
   <span class="thumb">
     <template v-if="props.fileType === 'IMAGE'">
       <Image
-        v-if="realSrc && !loadError"
         :src="realSrc"
         :width="props.width"
         :height="props.height"
-        :fallback="errImg"
+        :fallback="props.fallback"
         :preview="props.preview"
         :placeholder="true"
       />
-      <!-- <div style="width: 100%; height: 100%" v-if="loading"></div> -->
-      <slot name="empty" v-if="!realSrc && !loadError">
-        <Image :src="errImg" :width="props.width" :preview="props.preview" :height="props.height" />
-      </slot>
-      <slot name="error" v-if="loadError">
-        <Image :src="errImg" :width="props.width" :preview="props.preview" :height="props.height" />
-      </slot>
     </template>
     <template v-else>
       <a href="javascript:;" @click="onView(realSrc, $event)">{{ props.originalFileName }}</a>
@@ -30,6 +22,7 @@
   import { propTypes } from '/@/utils/propTypes';
   import { asyncGetUrls } from '/@/api/lamp/file/upload';
   import { errImg } from '/@/utils/file/base64Conver';
+  import { useGlobSetting } from '/@/hooks/setting';
 
   export default defineComponent({
     components: { Image },
@@ -38,19 +31,18 @@
       fileId: propTypes.string.def(''),
       width: propTypes.number.def(104),
       height: propTypes.number.def(104),
-      preview: propTypes.bool.def(true),
       fileType: propTypes.string.def('IMAGE'),
       originalFileName: propTypes.string.def('未知文件'),
+      preview: propTypes.bool.def(true),
+      fallback: propTypes.string.def(errImg),
     },
     setup(props) {
-      const loading = ref<boolean>(false);
-      const loadError = ref<boolean>(false);
       const realSrc = ref<string>('');
+      const { previewUrlPrefix } = useGlobSetting();
 
       watch(
         () => props.fileUrl,
         () => {
-          loadError.value = false;
           if (props.fileUrl && props.fileUrl.startsWith('http')) {
             realSrc.value = props.fileUrl;
           } else if (props.fileUrl && props.fileUrl.startsWith('data:')) {
@@ -63,7 +55,6 @@
       watch(
         () => props.fileId,
         () => {
-          loadError.value = false;
           if (props.fileId) {
             realSrc.value = '';
             loadSrc();
@@ -76,35 +67,22 @@
         if (!props.fileId) {
           return;
         }
-        loading.value = true;
-        loadError.value = false;
-        asyncGetUrls(props.fileId)
-          .then((res) => {
-            if (res.code === 0) {
-              realSrc.value = res.url;
-            } else {
-              loadError.value = true;
-            }
-          })
-          .catch(() => {
-            loadError.value = true;
-          })
-          .finally(() => {
-            loading.value = false;
-          });
+
+        asyncGetUrls(props.fileId).then((res) => {
+          if (res.code === 0) {
+            realSrc.value = res.url;
+          }
+        });
       }
-      function onView(realSrc, e) {
+      function onView(realSrc: string, e: Event) {
         e?.stopPropagation();
         e?.preventDefault();
         if (realSrc) {
-          window.open(
-            'http://106.53.26.9:8012/onlinePreview?url=' +
-              encodeURIComponent(Base64.encode(realSrc)),
-          );
+          window.open(previewUrlPrefix + encodeURIComponent(Base64.encode(realSrc)));
         }
       }
 
-      return { realSrc, loading, loadError, errImg, props, onView };
+      return { realSrc, errImg, props, onView };
     },
   });
 </script>

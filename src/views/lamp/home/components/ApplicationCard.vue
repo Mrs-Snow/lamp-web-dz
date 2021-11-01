@@ -109,4 +109,9 @@
     cursor: not-allowed;
     opacity: 100%;
   }
+
+  [data-theme='dark'] .appDisabled {
+    color: rgb(255 255 255 / 30%);
+    background-color: rgb(255 255 255 / 8%);
+  }
 </style>
