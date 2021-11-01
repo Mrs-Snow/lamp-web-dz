@@ -152,7 +152,10 @@
       let scaleY = 1;
 
       const { prefixCls } = useDesign('cropper-am');
-      const [register, { closeModal, setModalProps }] = useModalInner();
+      const [register, { closeModal, setModalProps }] = useModalInner(async (_data) => {
+        src.value = '';
+        previewSource.value = '';
+      });
       const { t } = useI18n();
 
       // Block upload

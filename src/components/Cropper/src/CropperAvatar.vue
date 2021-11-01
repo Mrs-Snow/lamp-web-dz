@@ -1,6 +1,10 @@
 <template>
   <div :class="getClass" :style="getStyle">
-    <div :class="`${prefixCls}-image-wrapper`" :style="getImageWrapperStyle" @click="openModal">
+    <div
+      :class="`${prefixCls}-image-wrapper`"
+      :style="getImageWrapperStyle"
+      @click="handleOpenModal"
+    >
       <div :class="`${prefixCls}-image-mask`" :style="getImageWrapperStyle">
         <Icon
           icon="ant-design:cloud-upload-outlined"
@@ -13,7 +17,7 @@
     </div>
     <a-button
       :class="`${prefixCls}-upload-btn`"
-      @click="openModal"
+      @click="handleOpenModal"
       v-if="showBtn"
       v-bind="btnProps"
     >
@@ -111,6 +115,10 @@
         emit('change', data);
       }
 
+      function handleOpenModal() {
+        openModal(true, { src: realSrc.value });
+      }
+
       expose({ openModal: openModal.bind(null, true), closeModal });
 
       return {
@@ -124,6 +132,7 @@
         getImageWrapperStyle,
         getStyle,
         handleUploadSuccess,
+        handleOpenModal,
       };
     },
   });
