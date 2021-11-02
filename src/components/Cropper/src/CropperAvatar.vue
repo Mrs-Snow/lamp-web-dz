@@ -111,11 +111,17 @@
           return;
         }
         const api = props.isDef ? asyncFindDefUrlById : asyncFindUrlById;
-        api(props.value.id).then((res) => {
-          if (res.code === 0) {
-            realSrc.value = res.data;
-          }
-        });
+        api(props.value.id)
+          .then((res) => {
+            console.log('cro fileId=%s , code=%s， data=%s', props.value.id, res?.code, res?.data);
+            if (res.code === 0) {
+              realSrc.value = res.data;
+            }
+          })
+          .catch((e) => {
+            console.log('cro e=');
+            console.log(e);
+          });
       }
 
       function handleUploadSuccess({ data }) {

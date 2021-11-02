@@ -1,7 +1,8 @@
 // 延时请求结果
 export interface AsyncResult {
   code: number;
-  data: string;
+  data: string | number | Recordable;
+  msg?: string;
 }
 export interface DelayResult {
   key: string;
@@ -12,7 +13,7 @@ export interface DelayResult {
 
 export type CacheKeyFunc = (data: Recordable) => string;
 type ApiFunc = (paramList: Array<any>, cacheKey: CacheKeyFunc) => Promise<Map<string, DelayResult>>;
-type ErrorDataFunc = (param: any, error, reject) => any;
+type ErrorDataFunc = (param: any, error, reject) => AsyncResult;
 
 // 初始化参数
 // getErrorData如果没传，遇到错误的时候会把异常抛给每一个reject，如果有则按getErrorData规则执行
@@ -21,7 +22,7 @@ export interface InitOption {
   api: ApiFunc;
   cacheKey?: CacheKeyFunc;
   delay?: number;
-  getErrorData?: (param, error, reject) => any;
+  getErrorData?: (param: any, error, reject) => AsyncResult;
 }
 // 延时请求工具类
 export class TimeDelayReq {
@@ -51,7 +52,7 @@ export class TimeDelayReq {
     // 清空超时的缓存
     for (const key1 of this.resMap.keys()) {
       const item: DelayResult | undefined = this.resMap.get(key1);
-      if (item && (item.endTime || 0) > Date.now()) {
+      if (item && (item.endTime || 0) < Date.now()) {
         this.resMap.delete(key1);
       }
     }
@@ -94,30 +95,30 @@ export class TimeDelayReq {
   }
   // 合并请求
   async _loadByParams(paramList: Array<Recordable>) {
-    const resRejMap: Map<string, any> = new Map();
-    paramList.forEach((item) => {
-      const key = this.cacheKey(item.param);
-      resRejMap.set(key, item);
-    });
+    const errRejMap: Map<string, any> = new Map();
     const formatParamList = paramList.map((item) => item.param);
     try {
       const res: Map<string, DelayResult> = await this.api(formatParamList, this.cacheKey);
       const endTime = new Date().getTime() + this.cacheTime;
-      for (const key of res.keys()) {
+
+      paramList.forEach((itemParam) => {
+        const key = this.cacheKey(itemParam.param);
         const item: DelayResult | undefined = res.get(key);
         if (item) {
           if (item.isOk) {
             // 请求正确
             item.endTime = endTime;
-            resRejMap.get(key).resolve(item.data);
+            itemParam.resolve(item.data);
           } else {
             // 请求有错
-            resRejMap.get(key).resolve(item.data);
+            itemParam.resolve(item.data);
             res.delete(key);
           }
+        } else {
+          errRejMap.set(key, itemParam);
         }
-        resRejMap.delete(key);
-      }
+      });
+
       // 写入缓存
       for (const key of res.keys()) {
         const item = res.get(key);
@@ -126,9 +127,9 @@ export class TimeDelayReq {
         }
       }
       // 处理没有结果的内容
-      this.doError(resRejMap, Error('请求无结果'));
+      this.doError(errRejMap, Error('请求无结果'));
     } catch (error: any) {
-      this.doError(resRejMap, error);
+      this.doError(errRejMap, error);
     }
   }
 

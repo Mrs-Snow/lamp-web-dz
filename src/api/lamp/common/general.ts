@@ -86,11 +86,11 @@ export async function asyncFindDictList(param: Recordable): Promise<AsyncResult>
 }
 
 const enumTimeDelayReq = new TimeDelayReq({
-  cacheKey: (param) => `${param?.type}`,
-  getErrorData(_param, error, _reject) {
+  cacheKey: (param: any) => `${param?.type}`,
+  getErrorData(_param: any, error, _reject) {
     return {
       code: 400,
-      msg: error.message || '请求错误',
+      msg: error?.message || '请求错误',
       data: [],
     };
   },
