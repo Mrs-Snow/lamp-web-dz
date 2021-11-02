@@ -3,7 +3,7 @@
     <template #headerContent> <WorkbenchHeader /> </template>
     <div class="lg:flex">
       <div class="lg:w-7/10 w-full !mr-4 enter-y">
-        <ApplicationCard :loading="loading" class="enter-y" />
+        <ApplicationCard class="enter-y" :api="findMyApplication" />
         <DynamicInfo :loading="loading" class="!my-4 enter-y" />
       </div>
       <div class="lg:w-3/10 w-full enter-y">
@@ -27,6 +27,7 @@
   import QuickNav from './components/QuickNav.vue';
   import DynamicInfo from './components/DynamicInfo.vue';
   import SaleRadar from './components/SaleRadar.vue';
+  import { findMyApplication } from '/@/api/lamp/profile/userInfo';
 
   const loading = ref(true);
 

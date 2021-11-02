@@ -1,11 +1,7 @@
 <template>
-  <Card title="我的应用" v-bind="$attrs" hoverable>
+  <Card :title="props.title" v-bind="$attrs" :loading="loading" hoverable>
     <template v-for="item in applicationList" :key="item.id">
-      <CardGrid
-        @click="handlerTurnToApplication(item)"
-        class="!md:w-1/3 !w-full"
-        :class="getAppCardClass(item)"
-      >
+      <CardGrid @click="customClick(item)" class="!md:w-1/3 !w-full" :class="getAppCardClass(item)">
         <span class="flex">
           <ThumbUrl
             :width="50"
@@ -21,15 +17,18 @@
         </span>
         <div class="flex mt-2 h-10 text-secondary">{{ item.introduce }}</div>
         <div class="flex justify-between text-secondary">
-          <span>{{ item.state === ExpireStateEnum.EFFECTIVE ? '有效' : '已过期' }}</span>
+          <span>{{
+            item.state === ExpireStateEnum.EFFECTIVE
+              ? '有效'
+              : item.state === ExpireStateEnum.EXPIRED
+              ? '已过期'
+              : '申请开通'
+          }}</span>
           <span v-if="item.state === ExpireStateEnum.EXPIRED">{{ item.expirationTime }}</span>
         </div>
       </CardGrid>
     </template>
-    <Empty
-      description="暂未开通任何应用, 联系您公司管理员开通"
-      v-if="applicationList.length === 0"
-    />
+    <Empty :description="props.description" v-if="applicationList.length === 0" />
   </Card>
 </template>
 <script lang="ts">
@@ -38,19 +37,33 @@
   import { usePermission } from '/@/hooks/web/usePermission';
   import { useUserStore } from '/@/store/modules/user';
   import ThumbUrl from '/@/components/Upload/src/ThumbUrl.vue';
-  import { findMyApplication } from '/@/api/lamp/profile/userInfo';
   import { DefApplicationResultVO } from '/@/api/devOperation/application/model/defApplicationModel';
   import { ExpireStateEnum } from '/@/enums/biz/tenant';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { isUrl } from '/@/utils/is';
   import { FileBizTypeEnum } from '/@/enums/commonEnum';
+  import { propTypes } from '/@/utils/propTypes';
 
   export default defineComponent({
     components: { Card, CardGrid: Card.Grid, Empty, ThumbUrl },
-    setup() {
+    props: {
+      title: propTypes.string.def('我的应用'),
+      description: propTypes.string.def('暂未开通任何应用, 联系您公司管理员开通'),
+      api: {
+        type: Function as PropType<PromiseFn>,
+        default: null,
+        required: true,
+      },
+      handleClick: {
+        type: Function as PropType<PromiseFn>,
+        default: null,
+      },
+    },
+    setup(props) {
       const applicationList = ref<DefApplicationResultVO[]>([]);
       const { createMessage, createConfirm } = useMessage();
       const { refreshMenu } = usePermission();
+      const loading = ref<boolean>(true);
 
       const userStore = useUserStore();
 
@@ -83,20 +96,25 @@
         }
       }
 
+      const customClick = props.handleClick ? props.handleClick : handlerTurnToApplication;
+
       const getAppCardClass = (item: DefApplicationResultVO) => {
         return userStore.getApplicationId === item?.id ? 'appDisabled' : '';
       };
 
       onMounted(async () => {
-        applicationList.value = await findMyApplication();
+        applicationList.value = await props.api();
+        loading.value = false;
       });
 
       return {
+        props,
         ExpireStateEnum,
         FileBizTypeEnum,
         getAppCardClass,
         applicationList,
-        handlerTurnToApplication,
+        customClick,
+        loading,
       };
     },
   });
