@@ -1,24 +1,25 @@
 // 延时请求结果
+export interface AsyncResult {
+  code: number;
+  data: string;
+}
 export interface DelayResult {
-  key: String;
-  data: any;
-  endTime?: Number;
-  isOk: Boolean;
+  key: string;
+  data: AsyncResult;
+  endTime?: number;
+  isOk: boolean;
 }
 
-type cacheKeyFunc = (data: any) => String;
-type serviceFunc = (
-  paramList: Array<any>,
-  cacheKey: cacheKeyFunc
-) => Promise<Map<String, DelayResult>>;
-type getErrorDataFunc = (param, error, reject) => any;
+export type CacheKeyFunc = (data: Recordable) => string;
+type ApiFunc = (paramList: Array<any>, cacheKey: CacheKeyFunc) => Promise<Map<string, DelayResult>>;
+type ErrorDataFunc = (param: any, error, reject) => any;
 
 // 初始化参数
 // getErrorData如果没传，遇到错误的时候会把异常抛给每一个reject，如果有则按getErrorData规则执行
 export interface InitOption {
   cacheTime?: number;
-  service: serviceFunc;
-  cacheKey?: cacheKeyFunc;
+  api: ApiFunc;
+  cacheKey?: CacheKeyFunc;
   delay?: number;
   getErrorData?: (param, error, reject) => any;
 }
@@ -26,16 +27,16 @@ export interface InitOption {
 export class TimeDelayReq {
   timeoutId: NodeJS.Timeout | null = null; // 倒计时id
   tempParam: Array<any> = []; // 零时参数存放
-  resMap: Map<String, DelayResult> = new Map<String, DelayResult>(); // 结果集缓存
+  resMap: Map<string, DelayResult> = new Map<string, DelayResult>(); // 结果集缓存
   cacheTime = 60 * 1000 * 30; // 默认缓存30分钟
   delay = 100; // 请求延时
-  cacheKey: cacheKeyFunc = JSON.stringify; // 默认获取缓存key的方式
-  service: serviceFunc = async () => new Map<String, DelayResult>(); // 具体执行请求的方法
-  getErrorData: getErrorDataFunc | undefined = undefined; // 错误处理函数
+  cacheKey: CacheKeyFunc = JSON.stringify; // 默认获取缓存key的方式
+  api: ApiFunc = async () => new Map<string, DelayResult>(); // 具体执行请求的方法
+  getErrorData: ErrorDataFunc | undefined = undefined; // 错误处理函数
   // 构造函数需要传配置值
   constructor(initOption: InitOption) {
-    const { service, getErrorData, cacheKey, cacheTime, delay } = initOption;
-    this.service = service;
+    const { api, getErrorData, cacheKey, cacheTime, delay } = initOption;
+    this.api = api;
     this.cacheTime = cacheTime || this.cacheTime;
     this.cacheKey = cacheKey || this.cacheKey;
     this.getErrorData = getErrorData;
@@ -56,7 +57,7 @@ export class TimeDelayReq {
     }
   }
   // 缓存的KEY 默认是JSON字串
-  _loadFormCache(param) {
+  _loadFormCache(param: any) {
     const key = this.cacheKey(param);
     this.clearTimeoutCache();
     const res = this.resMap.get(key);
@@ -65,9 +66,9 @@ export class TimeDelayReq {
     }
     return null;
   }
-  // 单词请求，缓存有取缓存，缓存没有放进演示请求参数中，会集中请求
-  async loadByParam(param) {
-    const result = new Promise((resolve, reject) => {
+  // 单次请求，缓存有取缓存，缓存没有放进延迟请求参数中，延迟批量请求
+  async loadByParam(param: any): Promise<AsyncResult> {
+    const result = new Promise<AsyncResult>((resolve, reject) => {
       try {
         const cache = this._loadFormCache(param);
         if (cache) {
@@ -75,12 +76,12 @@ export class TimeDelayReq {
           return;
         }
       } catch (error) {}
-      this._loadByParam(param, resolve, reject);
+      this._loadFromApi(param, resolve, reject);
     });
     return result;
   }
   //  处理请求参数合并的问题
-  _loadByParam(param, resolve, reject) {
+  _loadFromApi(param: any, resolve, reject) {
     if (this.timeoutId !== null) {
       clearTimeout(this.timeoutId);
     }
@@ -92,22 +93,22 @@ export class TimeDelayReq {
     }, this.delay);
   }
   // 合并请求
-  async _loadByParams(paramList) {
-    const resRejMap: Map<String, any> = new Map();
+  async _loadByParams(paramList: Array<Recordable>) {
+    const resRejMap: Map<string, any> = new Map();
     paramList.forEach((item) => {
-      const key: any = this.cacheKey(item.param);
+      const key = this.cacheKey(item.param);
       resRejMap.set(key, item);
     });
-    const formatedParamList = paramList.map((item) => item.param);
+    const formatParamList = paramList.map((item) => item.param);
     try {
-      const res: Map<String, DelayResult> = await this.service(formatedParamList, this.cacheKey);
-      const endTime = Date.now() + this.cacheTime;
+      const res: Map<string, DelayResult> = await this.api(formatParamList, this.cacheKey);
+      const endTime = new Date().getTime() + this.cacheTime;
       for (const key of res.keys()) {
         const item: DelayResult | undefined = res.get(key);
         if (item) {
           if (item.isOk) {
             // 请求正确
-            item.data.endTime = endTime;
+            item.endTime = endTime;
             resRejMap.get(key).resolve(item.data);
           } else {
             // 请求有错
@@ -125,13 +126,13 @@ export class TimeDelayReq {
         }
       }
       // 处理没有结果的内容
-      this.doErro(resRejMap, Error('请求无结果'));
-    } catch (error) {
-      this.doErro(resRejMap, error);
+      this.doError(resRejMap, Error('请求无结果'));
+    } catch (error: any) {
+      this.doError(resRejMap, error);
     }
   }
 
-  doErro(resRejMap, error) {
+  doError(resRejMap: Map<string, any>, error: any) {
     if (this.getErrorData) {
       for (const key of resRejMap.keys()) {
         const item = resRejMap.get(key);

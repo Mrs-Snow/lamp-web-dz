@@ -3,7 +3,7 @@ import { ServicePrefixEnum } from '/@/enums/commonEnum';
 import { OptionsGetResultModel, CodeQueryVO, SystemApiVO } from './model/optionsModel';
 import { RequestEnum } from '/@/enums/httpEnum';
 import { isString } from '/@/utils/is';
-import { TimeDelayReq, DelayResult } from '/@/utils/lamp/timeDelayReq';
+import { TimeDelayReq, DelayResult, AsyncResult } from '/@/utils/lamp/timeDelayReq';
 
 export const Api = {
   SystemApiScan: (serviceProfix: string) => {
@@ -50,13 +50,8 @@ export const findParams = (params: string[] | string = []) => {
   return defHttp.request<string>({ ...Api.Params, params });
 };
 
-export interface AsyncGetVO {
-  code: number;
-  data: string;
-}
-
 const codeTimeDelayReq = new TimeDelayReq({
-  cacheKey: (param) => `${param?.type || param}`,
+  cacheKey: (param) => `${param?.type}`,
   getErrorData(_param, error, _reject) {
     return {
       code: 400,
@@ -65,12 +60,12 @@ const codeTimeDelayReq = new TimeDelayReq({
     };
   },
   // 实现批量请求
-  async service(paramList, cacheKey) {
+  async api(paramList, cacheKey) {
     const data = await findCodeListByType(paramList);
-    const resultMap: Map<String, DelayResult> = new Map<String, DelayResult>();
-    paramList.forEach((code) => {
-      const key = cacheKey(code);
-      const dictList = data[code?.type];
+    const resultMap: Map<string, DelayResult> = new Map<string, DelayResult>();
+    paramList.forEach((param) => {
+      const key = cacheKey(param);
+      const dictList = data[param?.type];
       if (dictList) {
         resultMap.set(key, {
           key,
@@ -86,12 +81,12 @@ const codeTimeDelayReq = new TimeDelayReq({
   },
 });
 
-export async function asyncFindDictList(param: {}) {
+export async function asyncFindDictList(param: Recordable): Promise<AsyncResult> {
   return codeTimeDelayReq.loadByParam(param);
 }
 
 const enumTimeDelayReq = new TimeDelayReq({
-  cacheKey: (param) => `${param?.type || param}`,
+  cacheKey: (param) => `${param?.type}`,
   getErrorData(_param, error, _reject) {
     return {
       code: 400,
@@ -100,19 +95,19 @@ const enumTimeDelayReq = new TimeDelayReq({
     };
   },
   // 实现批量请求
-  async service(paramList, cacheKey) {
+  async api(paramList, cacheKey) {
     const data = await findEnumListByType(paramList);
-    const resultMap: Map<String, DelayResult> = new Map<String, DelayResult>();
-    paramList.forEach((code) => {
-      const key = cacheKey(code);
-      const dictList = data[code?.type];
-      if (dictList) {
+    const resultMap: Map<string, DelayResult> = new Map<string, DelayResult>();
+    paramList.forEach((param) => {
+      const key = cacheKey(param);
+      const enumList = data[param?.type];
+      if (enumList) {
         resultMap.set(key, {
           key,
           isOk: true,
           data: {
             code: 0,
-            data: dictList,
+            data: enumList,
           },
         });
       }
@@ -121,7 +116,6 @@ const enumTimeDelayReq = new TimeDelayReq({
   },
 });
 
-export async function asyncFindEnumList(code: string): Promise<AsyncGetVO> {
-  const data = await enumTimeDelayReq.loadByParam(code);
-  return data as AsyncGetVO;
+export async function asyncFindEnumList(code: Recordable): Promise<AsyncResult> {
+  return await enumTimeDelayReq.loadByParam(code);
 }

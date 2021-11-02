@@ -8,9 +8,10 @@
         <div class="change-avatar">
           <div class="mb-2"> 头像 </div>
           <CropperAvatar
-            :uploadApi="uploadApi"
+            :uploadApi="uploadToDef"
             :uploadParams="{ bizType: FileBizTypeEnum.BASE_USER_AVATAR }"
-            :value="avatar"
+            :value="avatarId"
+            :isDef="true"
             btnText="更换头像"
             :btnProps="{ preIcon: 'ant-design:cloud-upload-outlined' }"
             @change="handleUpdateAvatar"
@@ -36,8 +37,7 @@
   import { updateBaseInfo, updateAvatar } from '/@/api/lamp/profile/userInfo';
   import { baseSetschemas } from './data';
   import { useUserStore } from '/@/store/modules/user';
-  import { uploadApi } from '/@/api/lamp/file/upload';
-  import { getUserInfoById } from '/@/api/lamp/common/oauth';
+  import { uploadToDef } from '/@/api/lamp/file/upload';
 
   export default defineComponent({
     components: {
@@ -60,23 +60,23 @@
       });
 
       onMounted(async () => {
-        const { id } = userStore.getUserInfo;
-        const data = await getUserInfoById('message', id);
+        const data = userStore.getUserInfo;
         setFieldsValue(data);
       });
 
-      const avatar = computed(() => {
+      const avatarId = computed(() => {
         const { avatarId } = userStore.getUserInfo;
         return { id: avatarId };
       });
 
-      async function handleUpdateAvatar({ data }) {
+      async function handleUpdateAvatar(data: any) {
         const userinfo = userStore.getUserInfo;
-        userinfo.avatarId = data?.id;
-        userStore.setUserInfo(userinfo);
 
         const params = { id: userinfo.id, appendixAvatar: data };
         await updateAvatar(params);
+
+        const userInfo = userStore.getUserInfoAction();
+        setFieldsValue(userInfo);
       }
 
       async function handleSubmit() {
@@ -84,16 +84,16 @@
           const params = await validate();
           await updateBaseInfo(params);
 
-          userStore.getUserInfoAction();
+          await userStore.getUserInfoAction();
 
           createMessage.success(t(`common.tips.updateSuccess`));
         } finally {
         }
       }
       return {
-        avatar,
+        avatarId,
         register,
-        uploadApi,
+        uploadToDef,
         handleUpdateAvatar,
         handleSubmit,
         FileBizTypeEnum,

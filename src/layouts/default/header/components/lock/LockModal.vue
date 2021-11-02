@@ -8,9 +8,14 @@
   >
     <div :class="`${prefixCls}__entry`">
       <div :class="`${prefixCls}__header`">
-        <Avatar :src="avatarUrl" :size="70"> {{ getRealName?.charAt(0) }} </Avatar>
+        <AvatarPreview
+          :size="70"
+          :isDef="true"
+          :fileId="getUserInfo?.avatarId"
+          :errorTxt="getUserInfo?.nickName?.substr(0, 1)"
+        />
         <p :class="`${prefixCls}__header-name`">
-          {{ getRealName }}
+          {{ getUserInfo.nickName }}
         </p>
       </div>
 
@@ -25,20 +30,20 @@
   </BasicModal>
 </template>
 <script lang="ts">
-  import { defineComponent, computed, ref, watch } from 'vue';
-  import { Avatar } from 'ant-design-vue';
+  import { computed, defineComponent, ref } from 'vue';
+
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useDesign } from '/@/hooks/web/useDesign';
   import { BasicModal, useModalInner } from '/@/components/Modal/index';
   import { BasicForm, useForm } from '/@/components/Form/index';
+  import { AvatarPreview } from '/@/components/AvatarPreview';
 
-  import { asyncGetUrls } from '/@/api/lamp/file/upload';
   import { useUserStore } from '/@/store/modules/user';
   import { useLockStore } from '/@/store/modules/lock';
 
   export default defineComponent({
     name: 'LockModal',
-    components: { BasicModal, BasicForm, Avatar },
+    components: { BasicModal, BasicForm, AvatarPreview },
 
     setup() {
       const { t } = useI18n();
@@ -46,8 +51,8 @@
       const userStore = useUserStore();
       const lockStore = useLockStore();
 
-      const getRealName = computed(() => {
-        return userStore.getUserInfo?.nickName;
+      const getUserInfo = computed(() => {
+        return userStore.getUserInfo;
       });
       const [register, { closeModal }] = useModalInner();
       const avatarUrl = ref<string>('');
@@ -79,48 +84,11 @@
         await resetFields();
       }
 
-      // onMounted(async () => {
-      //   const user = userStore.getUserInfo;
-      //   await loadAvatarUrl(user.avatarId as string);
-      // });
-
-      async function loadAvatarUrl(avatarId: string) {
-        const res = await asyncGetUrls(avatarId);
-        if (res.code === 0) {
-          avatarUrl.value = res.url;
-        }
-      }
-
-      watch(
-        () => userStore.getUserInfo.avatarId,
-        (v: string) => {
-          loadAvatarUrl(v);
-        },
-        { immediate: true },
-      );
-
-      // const getAvatar = computed(() => {
-      //   const user = userStore.getUserInfo;
-      //   debugger;
-      //   if (!user['avatar']) {
-      //     // 这里要怎么写？
-      //     // return require(`/@/assets/avatar/default.jpg`);
-      //     // return () => import(`/@/assets/avatar/default.jpg`);
-      //   } else {
-      //     if (user['avatar'].startsWith('http://') || user['avatar'].startsWith('https://')) {
-      //       return user['avatar'];
-      //     } else {
-      //       // return import(`/@/assets/avatar/${user.avatar}`);
-      //     }
-      //   }
-      //   return user['avatar'];
-      // });
-
       return {
         t,
         avatarUrl,
         prefixCls,
-        getRealName,
+        getUserInfo,
         register,
         registerForm,
         handleLock,

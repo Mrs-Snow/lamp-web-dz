@@ -20,7 +20,7 @@
   import { Image } from 'ant-design-vue';
   import { Base64 } from 'js-base64';
   import { propTypes } from '/@/utils/propTypes';
-  import { asyncGetUrls } from '/@/api/lamp/file/upload';
+  import { asyncFindDefUrlById, asyncFindUrlById } from '/@/api/lamp/file/upload';
   import { errImg } from '/@/utils/file/base64Conver';
   import { useGlobSetting } from '/@/hooks/setting';
 
@@ -33,6 +33,7 @@
       height: propTypes.number.def(104),
       fileType: propTypes.string.def('IMAGE'),
       originalFileName: propTypes.string.def('未知文件'),
+      isDef: propTypes.bool.def(false),
       preview: propTypes.bool.def(true),
       fallback: propTypes.string.def(errImg),
     },
@@ -68,9 +69,10 @@
           return;
         }
 
-        asyncGetUrls(props.fileId).then((res) => {
+        const api = props.isDef ? asyncFindDefUrlById : asyncFindUrlById;
+        api(props.fileId).then((res) => {
           if (res.code === 0) {
-            realSrc.value = res.url;
+            realSrc.value = res.data;
           }
         });
       }

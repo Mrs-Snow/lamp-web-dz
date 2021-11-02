@@ -92,12 +92,6 @@ export const baseSetschemas: FormSchema[] = [
     colProps: { span: 18 },
   },
   {
-    field: 'email',
-    component: 'Input',
-    label: '邮箱',
-    colProps: { span: 18 },
-  },
-  {
     field: 'sex',
     component: 'ApiSelect',
     label: '性别',

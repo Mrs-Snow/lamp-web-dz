@@ -1,9 +1,12 @@
 <template>
   <Dropdown placement="bottomLeft" :overlayClassName="`${prefixCls}-dropdown-overlay`">
     <span :class="[prefixCls, `${prefixCls}--${theme}`]" class="flex">
-      <Avatar :src="avatarUrl" :style="{ 'margin-right': '0.5rem' }">
-        {{ getUserInfo?.nickName?.charAt(0) }}
-      </Avatar>
+      <AvatarPreview
+        :isDef="true"
+        :fileId="getUserInfo?.avatarId"
+        :errorTxt="getUserInfo?.nickName?.substr(0, 1)"
+        :style="{ 'margin-right': '0.5rem' }"
+      />
       <span :class="`${prefixCls}__info hidden md:block`">
         <span :class="`${prefixCls}__name  `" class="truncate">
           {{ getUserInfo.nickName }}
@@ -43,10 +46,10 @@
 </template>
 <script lang="ts">
   // components
-  import { Dropdown, Menu, Avatar } from 'ant-design-vue';
+  import { Dropdown, Menu } from 'ant-design-vue';
   import { useRouter } from 'vue-router';
 
-  import { defineComponent, computed, ref, onMounted, watch } from 'vue';
+  import { defineComponent, computed, ref } from 'vue';
 
   import { DOC_URL } from '/@/settings/siteSetting';
 
@@ -55,11 +58,11 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useDesign } from '/@/hooks/web/useDesign';
   import { useModal } from '/@/components/Modal';
+  import { AvatarPreview } from '/@/components/AvatarPreview';
 
   import { propTypes } from '/@/utils/propTypes';
   import { openWindow } from '/@/utils';
 
-  import { asyncGetUrls } from '/@/api/lamp/file/upload';
   import { createAsyncComponent } from '/@/utils/factory/createAsyncComponent';
 
   type MenuEvent = 'logout' | 'doc' | 'lock' | 'profile';
@@ -69,7 +72,7 @@
     components: {
       Dropdown,
       Menu,
-      Avatar,
+      AvatarPreview,
       MenuItem: createAsyncComponent(() => import('./DropMenuItem.vue')),
       MenuDivider: Menu.Divider,
       LockAction: createAsyncComponent(() => import('../lock/LockModal.vue')),
@@ -127,40 +130,6 @@
             break;
         }
       }
-
-      onMounted(async () => {
-        const user = userStore.getUserInfo;
-        await loadAvatarUrl(user.avatarId as string);
-      });
-
-      async function loadAvatarUrl(avatarId: string) {
-        const res = await asyncGetUrls(avatarId);
-        if (res.code === 0) {
-          avatarUrl.value = res.url;
-        }
-      }
-
-      watch(
-        () => userStore.getUserInfo.avatarId,
-        (v: string) => {
-          loadAvatarUrl(v);
-        },
-        { immediate: true },
-      );
-
-      // const getAvatar = computed(() => {
-      //   const user = userStore.getUserInfo;
-      // if (!user['avatar']) {
-      //   // return require(`/@/assets/avatar/default.jpg`);
-      // } else {
-      //   if (user['avatar'].startsWith('http://') || user['avatar'].startsWith('https://')) {
-      //     return user['avatar'];
-      //   } else {
-      //     // return require(`/@/assets/avatar/${user.avatar}`);
-      //   }
-      // }
-      // return user['avatar'];
-      // });
 
       return {
         prefixCls,

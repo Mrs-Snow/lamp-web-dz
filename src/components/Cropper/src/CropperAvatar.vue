@@ -9,7 +9,7 @@
           color="#d6d6d6"
         />
       </div>
-      <img v-if="realSrc" :src="realSrc" alt="avatar" />
+      <img v-if="realSrc" :src="realSrc" :alt="props.alt" />
     </div>
     <a-button
       :class="`${prefixCls}-upload-btn`"
@@ -39,7 +39,7 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import type { ButtonProps } from '/@/components/Button';
   import Icon from '/@/components/Icon';
-  import { asyncGetUrls } from '/@/api/lamp/file/upload';
+  import { asyncFindUrlById, asyncFindDefUrlById } from '/@/api/lamp/file/upload';
   import { FileResultVO } from '/@/api/lamp/file/model/uploadModel';
 
   const props = {
@@ -49,6 +49,8 @@
     showBtn: { type: Boolean, default: true },
     btnProps: { type: Object as PropType<ButtonProps> },
     btnText: { type: String, default: '' },
+    alt: { type: String, default: '' },
+    isDef: { type: Boolean, default: false },
     uploadApi: {
       type: Function as PropType<PromiseFn>,
       default: null,
@@ -108,9 +110,10 @@
         if (!props.value.id) {
           return;
         }
-        asyncGetUrls(props.value.id).then((res) => {
+        const api = props.isDef ? asyncFindDefUrlById : asyncFindUrlById;
+        api(props.value.id).then((res) => {
           if (res.code === 0) {
-            realSrc.value = res.url;
+            realSrc.value = res.data;
           }
         });
       }
@@ -129,6 +132,7 @@
 
       return {
         t,
+        props,
         prefixCls,
         register,
         openModal: openModal as any,
