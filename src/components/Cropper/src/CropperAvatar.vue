@@ -115,7 +115,7 @@
           .then((res) => {
             console.log('cro fileId=%s , code=%s， data=%s', props.value.id, res?.code, res?.data);
             if (res.code === 0) {
-              realSrc.value = res.data;
+              realSrc.value = res.data as string;
             }
           })
           .catch((e) => {

@@ -72,7 +72,7 @@
         const api = props.isDef ? asyncFindDefUrlById : asyncFindUrlById;
         api(props.fileId).then((res) => {
           if (res.code === 0) {
-            realSrc.value = res.data;
+            realSrc.value = res.data as string;
           }
         });
       }
