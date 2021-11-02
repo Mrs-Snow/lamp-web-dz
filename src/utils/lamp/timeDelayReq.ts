@@ -52,7 +52,7 @@ export class TimeDelayReq {
     // 清空超时的缓存
     for (const key1 of this.resMap.keys()) {
       const item: DelayResult | undefined = this.resMap.get(key1);
-      if (item && (item.endTime || 0) < Date.now()) {
+      if (item && (item.endTime || 0) < new Date().getTime()) {
         this.resMap.delete(key1);
       }
     }
@@ -101,6 +101,7 @@ export class TimeDelayReq {
       const res: Map<string, DelayResult> = await this.api(formatParamList, this.cacheKey);
       const endTime = new Date().getTime() + this.cacheTime;
 
+      const successMap: Map<string, DelayResult> = new Map();
       paramList.forEach((itemParam) => {
         const key = this.cacheKey(itemParam.param);
         const item: DelayResult | undefined = res.get(key);
@@ -109,6 +110,7 @@ export class TimeDelayReq {
             // 请求正确
             item.endTime = endTime;
             itemParam.resolve(item.data);
+            successMap.set(key, item);
           } else {
             // 请求有错
             itemParam.resolve(item.data);
@@ -120,7 +122,7 @@ export class TimeDelayReq {
       });
 
       // 写入缓存
-      for (const key of res.keys()) {
+      for (const key of successMap.keys()) {
         const item = res.get(key);
         if (item) {
           this.resMap.set(key, item);
