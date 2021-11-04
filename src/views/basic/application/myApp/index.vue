@@ -28,7 +28,7 @@
       const { t } = useI18n();
       const { createMessage } = useMessage();
       function handleClick() {
-        createMessage.warn('联系公司管理员开通');
+        createMessage.warn('快联系公司管理员开通我吧~');
       }
       return {
         t,
