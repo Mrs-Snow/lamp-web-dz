@@ -22,11 +22,11 @@ export const asyncRoutes = [PAGE_NOT_FOUND_ROUTE, ...routeModuleList];
 export const VbenRoutes: AppRouteModule[] = [
   {
     path: '/vben',
-    name: 'VBenDemo',
+    name: '更多功能',
     component: LAYOUT,
     meta: {
       icon: 'ant-design:table-outlined',
-      title: 'VBenDemo',
+      title: '更多功能',
     },
     children: routeModuleList,
   },

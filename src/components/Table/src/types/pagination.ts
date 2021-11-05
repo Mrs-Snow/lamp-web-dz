@@ -60,7 +60,7 @@ export interface PaginationProps {
 
   /**
    * specify the sizeChanger options
-   * @default ['10', '20', '30', '40']
+   * @default ['5', '10', '20', '50', '80', '100']
    * @type string[]
    */
   pageSizeOptions?: string[];

@@ -310,6 +310,7 @@ export function useDataSource(
         resultItems = (await afterFetch(resultItems)) || resultItems;
       }
       dataSourceRef.value = resultItems;
+      tableData.value = resultItems;
       setPagination({
         total: resultTotal || 0,
       });

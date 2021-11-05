@@ -106,6 +106,7 @@ export interface TableActionType {
   setProps: (props: Partial<BasicTableProps>) => void;
   redoHeight: () => void;
   setSelectedRowKeys: (rowKeys: string[] | number[]) => void;
+  setSelectedRows: (rows: Recordable[]) => void;
   getPaginationRef: () => PaginationProps | boolean;
   getSize: () => SizeType;
   getRowSelection: () => TableRowSelection<Recordable>;

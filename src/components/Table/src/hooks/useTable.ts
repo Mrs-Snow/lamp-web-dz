@@ -113,6 +113,9 @@ export function useTable(tableProps?: Props): [
     setSelectedRowKeys: (keys: string[] | number[]) => {
       getTableInstance().setSelectedRowKeys(keys);
     },
+    setSelectedRows: (rows: Recordable[]) => {
+      getTableInstance().setSelectedRows(rows);
+    },
     getPaginationRef: () => {
       return getTableInstance().getPaginationRef();
     },

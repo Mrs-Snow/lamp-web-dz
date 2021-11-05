@@ -2,31 +2,44 @@
   <div class="bg-white m-4 ml-2 overflow-hidden">
     <BasicTable @register="registerTable">
       <template #toolbar>
-        <a-button type="primary" v-if="dictId" color="error" @click="handleBatchDelete">{{
-          t('common.title.delete')
-        }}</a-button>
-        <a-button type="primary" v-if="dictId" @click="handleAdd">{{
-          t('common.title.add')
-        }}</a-button>
+        <a-button
+          type="primary"
+          preIcon="ant-design:delete-outlined"
+          v-if="dictId"
+          color="error"
+          @click="handleBatchDelete"
+          >{{ t('common.title.delete') }}</a-button
+        >
+        <a-button
+          type="primary"
+          preIcon="ant-design:plus-outlined"
+          v-if="dictId"
+          @click="handleAdd"
+          >{{ t('common.title.add') }}</a-button
+        >
       </template>
       <template #state="{ record }">
-        <Tag :color="record.state ? 'success' : 'error'">
-          {{ record.state ? t('lamp.common.enable') : t('lamp.common.disable') }}
-        </Tag>
+        <Badge
+          :status="record.state ? 'success' : 'error'"
+          :text="record.state ? t('lamp.common.enable') : t('lamp.common.disable')"
+        />
       </template>
       <template #action="{ record }">
         <TableAction
           :actions="[
             {
-              label: t('common.title.edit'),
+              tooltip: t('common.title.edit'),
+              icon: 'clarity:note-edit-line',
               onClick: handleEdit.bind(null, record),
             },
             {
-              label: t('common.title.copy'),
+              tooltip: t('common.title.copy'),
+              icon: 'ant-design:copy-outlined',
               onClick: handleCopy.bind(null, record),
             },
             {
-              label: t('common.title.delete'),
+              tooltip: t('common.title.delete'),
+              icon: 'ant-design:delete-outlined',
               color: 'error',
               popConfirm: {
                 title: t('common.tips.confirmDelete'),
@@ -34,6 +47,7 @@
               },
             },
           ]"
+          :stopButtonPropagation="true"
         />
       </template>
     </BasicTable>
@@ -42,7 +56,7 @@
 </template>
 <script lang="ts">
   import { defineComponent, ref, reactive } from 'vue';
-  import { Descriptions, Tag } from 'ant-design-vue';
+  import { Descriptions, Badge } from 'ant-design-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
@@ -60,7 +74,7 @@
       BasicTable,
       EditModal,
       TableAction,
-      Tag,
+      Badge,
       [Descriptions.name]: Descriptions,
       [Descriptions.Item.name]: Descriptions.Item,
     },
@@ -84,8 +98,16 @@
         api: page,
         columns: columns(),
         formConfig: {
-          labelWidth: 120,
+          labelWidth: 100,
+          baseColProps: { xs: 24, sm: 12, md: 12, lg: 12, xl: 8 },
           schemas: searchFormSchema(),
+          autoSubmitOnEnter: true,
+          resetButtonOptions: {
+            preIcon: 'ant-design:rest-outlined',
+          },
+          submitButtonOptions: {
+            preIcon: 'ant-design:search-outlined',
+          },
         },
         immediate: false,
         beforeFetch: handleFetchParams,
@@ -113,9 +135,11 @@
 
       function fetch(row: Recordable) {
         if (row && row.id) {
-          dictId.value = row?.id as string;
-          dict.name = (row?.name || '') as string;
-          reload();
+          if (dictId.value !== (row?.id as string)) {
+            dictId.value = row?.id as string;
+            dict.name = (row?.name || '') as string;
+            reload();
+          }
         } else {
           dictId.value = '';
           dict.name = '';
