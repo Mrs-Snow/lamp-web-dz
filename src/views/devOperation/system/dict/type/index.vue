@@ -36,7 +36,6 @@
   import { defineComponent } from 'vue';
   import { Badge } from 'ant-design-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { useRouter } from 'vue-router';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { BasicTable, useTable } from '/@/components/Table';
   import { useDrawer } from '/@/components/Drawer';
@@ -45,7 +44,6 @@
   import { page, remove } from '/@/api/devOperation/system/defDict';
   import { columns, searchFormSchema } from './defDict.data';
   import EditModal from './Edit.vue';
-  import { RouteEnum } from '/@/enums/biz/tenant';
 
   export default defineComponent({
     // 若需要开启页面缓存，请将此参数跟菜单名保持一致
@@ -57,7 +55,6 @@
       const { createMessage, createConfirm } = useMessage();
       // 编辑页弹窗
       const [registerDrawer, { openDrawer }] = useDrawer();
-      const { replace } = useRouter();
 
       // 表格
       const [registerTable, { reload, getSelectRowKeys, getSelectRows, setSelectedRowKeys }] =
@@ -143,16 +140,6 @@
         });
       }
 
-      // 查看字典项
-      function handleViewItem(record: Recordable, e: Event) {
-        e.stopPropagation();
-        replace({
-          name: RouteEnum.DICT_ITEM,
-          params: { dictId: record.id },
-          query: { name: record.name, key: record.key, remark: record.remark },
-        });
-      }
-
       // 选择事件
       function emitChange() {
         const selectedKeys = getSelectRows();
@@ -195,7 +182,6 @@
         handleDelete,
         handleSuccess,
         handleBatchDelete,
-        handleViewItem,
         handleSelectionChange,
         handleRowClick,
         handleRowDbClick,

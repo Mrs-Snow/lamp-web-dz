@@ -1,18 +1,31 @@
 <template>
   <div class="bg-white m-4 mr-2 overflow-hidden">
-    <BasicTable @register="registerTable">
+    <BasicTable
+      @register="registerTable"
+      @selection-change="handleSelectionChange"
+      @row-click="handleRowClick"
+      @row-dbClick="handleRowDbClick"
+      @fetch-success="onFetchSuccess"
+    >
       <template #toolbar>
         <a-button type="primary" @click="handleImport">{{ t('common.title.import') }}</a-button>
-        <a-button type="primary" color="error" @click="handleBatchDelete">{{
-          t('common.title.delete')
+        <a-button
+          preIcon="ant-design:delete-outlined"
+          type="primary"
+          color="error"
+          @click="handleBatchDelete"
+          >{{ t('common.title.delete') }}</a-button
+        >
+        <a-button type="primary" preIcon="clarity:note-edit-line" @click="handleEdit">{{
+          t('common.title.edit')
         }}</a-button>
-        <a-button type="primary" @click="handleEdit">{{ t('common.title.edit') }}</a-button>
         <a-button type="primary" @click="handleView">{{ t('common.title.view') }}</a-button>
       </template>
       <template #state="{ record }">
-        <Tag :color="record.state ? 'success' : 'error'">
-          {{ record.state ? t('lamp.common.enable') : t('lamp.common.disable') }}
-        </Tag>
+        <Badge
+          :status="record.state ? 'success' : 'error'"
+          :text="record.state ? t('lamp.common.enable') : t('lamp.common.disable')"
+        />
       </template>
     </BasicTable>
     <EditModal @register="registerDrawer" @success="handleSuccess" />
@@ -21,7 +34,7 @@
 </template>
 <script lang="ts">
   import { defineComponent } from 'vue';
-  import { Tag } from 'ant-design-vue';
+  import { Badge } from 'ant-design-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { BasicTable, useTable } from '/@/components/Table';
@@ -38,7 +51,7 @@
   export default defineComponent({
     // 若需要开启页面缓存，请将此参数跟菜单名保持一致
     name: 'BaseDictManagement',
-    components: { BasicTable, EditModal, Tag, ImportDictModal },
+    components: { BasicTable, EditModal, Badge, ImportDictModal },
     emits: ['select'],
     setup(_, { emit }) {
       const { t } = useI18n();
@@ -48,28 +61,34 @@
       const [registerModal, { openModal }] = useModal();
 
       // 表格
-      const [registerTable, { reload, getSelectRowKeys, getSelectRows, clearSelectedRowKeys }] =
-        useTable({
-          title: t('basic.base.baseDict.table.title'),
-          api: page,
-          columns: columns(),
-          formConfig: {
-            labelWidth: 70,
-            schemas: searchFormSchema(),
+      const [
+        registerTable,
+        { reload, getSelectRowKeys, getSelectRows, clearSelectedRowKeys, setSelectedRowKeys },
+      ] = useTable({
+        title: t('basic.base.baseDict.table.title'),
+        api: page,
+        columns: columns(),
+        formConfig: {
+          labelWidth: 70,
+          schemas: searchFormSchema(),
+          autoSubmitOnEnter: true,
+          resetButtonOptions: {
+            preIcon: 'ant-design:rest-outlined',
           },
-          beforeFetch: handleFetchParams,
-          useSearchForm: true,
-          showTableSetting: false,
-          bordered: true,
-          rowKey: 'id',
-          rowSelection: {
-            type: 'radio',
-            columnWidth: 40,
-            onChange: (_, selectedRows: Recordable[]) => {
-              emit('select', selectedRows[0]);
-            },
+          submitButtonOptions: {
+            preIcon: 'ant-design:search-outlined',
           },
-        });
+        },
+        beforeFetch: handleFetchParams,
+        useSearchForm: true,
+        showTableSetting: false,
+        bordered: true,
+        rowKey: 'id',
+        rowSelection: {
+          type: 'radio',
+          columnWidth: 40,
+        },
+      });
 
       // 弹出新增页面
       function handleImport() {
@@ -142,6 +161,39 @@
         });
       }
 
+      // 选择事件
+      function emitChange() {
+        const selectedKeys = getSelectRows();
+        emit('select', selectedKeys.length > 0 ? selectedKeys[0] : {});
+      }
+
+      // 勾选事件触发
+      function handleSelectionChange() {
+        emitChange();
+      }
+
+      // 单击行回调
+      function handleRowClick(record: Recordable) {
+        setSelectedRowKeys([record.id]);
+        emitChange();
+      }
+      // 双击行回调
+      function handleRowDbClick(record: Recordable) {
+        setSelectedRowKeys([record.id]);
+        const rows = getSelectRows();
+        openDrawer(true, {
+          record: rows[0],
+          type: ActionEnum.EDIT,
+        });
+      }
+      async function onFetchSuccess(result: Recordable) {
+        // 请求之后对返回值进行处理
+        if (result && result.items && result.items.length > 0) {
+          await setSelectedRowKeys([result.items[0].id]);
+          emitChange();
+        }
+      }
+
       return {
         t,
         registerTable,
@@ -154,6 +206,10 @@
         handleView,
         handleSuccess,
         DictClassifyEnum,
+        handleSelectionChange,
+        handleRowClick,
+        handleRowDbClick,
+        onFetchSuccess,
       };
     },
   });
