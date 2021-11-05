@@ -2,25 +2,38 @@
   <PageWrapper dense contentFullHeight>
     <BasicTable @register="registerTable">
       <template #toolbar>
-        <a-button type="primary" @click="handleAdd">{{ t('common.title.add') }}</a-button>
+        <a-button type="primary" preIcon="ant-design:plus-outlined" @click="handleAdd">{{
+          t('common.title.add')
+        }}</a-button>
+        <a-button
+          preIcon="ant-design:delete-outlined"
+          type="primary"
+          color="error"
+          @click="handleBatchDelete"
+          >{{ t('common.title.delete') }}</a-button
+        >
       </template>
       <template #action="{ record }">
         <TableAction
           :actions="[
             {
-              label: t('devOperation.tenant.defDatasourceConfig.testConnection'),
+              icon: 'ant-design:bug-outlined',
+              tooltip: t('devOperation.tenant.defDatasourceConfig.testConnection'),
               onClick: handleConnection.bind(null, record),
             },
             {
-              label: t('common.title.copy'),
+              tooltip: t('common.title.copy'),
+              icon: 'ant-design:copy-outlined',
               onClick: handleCopy.bind(null, record),
             },
             {
-              label: t('common.title.edit'),
+              tooltip: t('common.title.edit'),
+              icon: 'clarity:note-edit-line',
               onClick: handleEdit.bind(null, record),
             },
             {
-              label: t('common.title.delete'),
+              tooltip: t('common.title.delete'),
+              icon: 'ant-design:delete-outlined',
               color: 'error',
               popConfirm: {
                 title: t('common.tips.confirmDelete'),
@@ -55,21 +68,33 @@
     setup() {
       const { t } = useI18n();
       const [registerModal, { openModal }] = useModal();
-      const { createMessage } = useMessage();
-      const [registerTable, { reload }] = useTable({
+      const { createMessage, createConfirm } = useMessage();
+      const [registerTable, { reload, getSelectRowKeys }] = useTable({
         title: t('devOperation.tenant.defDatasourceConfig.table.title'),
         api: page,
         columns,
         formConfig: {
           labelWidth: 120,
           schemas: searchFormSchema,
+          baseColProps: { xs: 24, sm: 12, md: 12, lg: 12, xl: 8 },
+          autoSubmitOnEnter: true,
+          resetButtonOptions: {
+            preIcon: 'ant-design:rest-outlined',
+          },
+          submitButtonOptions: {
+            preIcon: 'ant-design:search-outlined',
+          },
+        },
+        rowKey: 'id',
+        rowSelection: {
+          type: 'checkbox',
         },
         beforeFetch: handleFetchParams,
         useSearchForm: true,
         showTableSetting: true,
         bordered: true,
         actionColumn: {
-          width: 220,
+          width: 180,
           title: t('common.column.action'),
           dataIndex: 'action',
           slots: { customRender: 'action' },
@@ -77,7 +102,7 @@
       });
 
       // 弹出复制页面
-      function handleCopy(record: Recordable, e) {
+      function handleCopy(record: Recordable, e: Event) {
         e.stopPropagation();
         openModal(true, {
           record,
@@ -128,11 +153,33 @@
           });
       }
 
-      function handleDelete(record: Recordable) {
-        remove([record.id]).then(() => {
-          createMessage.success(t('common.tips.deleteSuccess'));
-          handleSuccess();
+      async function batchDelete(ids: any[]) {
+        await remove(ids);
+        createMessage.success(t('common.tips.deleteSuccess'));
+        handleSuccess();
+      }
+
+      // 点击批量删除
+      function handleBatchDelete() {
+        const ids = getSelectRowKeys();
+        if (!ids || ids.length <= 0) {
+          createMessage.warning(t('common.tips.pleaseSelectTheData'));
+          return;
+        }
+        createConfirm({
+          iconType: 'warning',
+          content: t('common.tips.confirmDelete'),
+          onOk: async () => {
+            await batchDelete(ids);
+          },
         });
+      }
+
+      function handleDelete(record: Recordable, e: Event) {
+        e?.stopPropagation();
+        if (record?.id) {
+          batchDelete([record.id]);
+        }
       }
 
       function handleSuccess() {
@@ -148,6 +195,7 @@
         handleConnection,
         handleDelete,
         handleSuccess,
+        handleBatchDelete,
         t,
       };
     },

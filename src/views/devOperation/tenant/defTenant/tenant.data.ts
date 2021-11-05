@@ -327,7 +327,7 @@ export const customConnectionFormSchemaRules = (required: boolean): Partial<Form
   ];
 };
 
-export const connectionFormSchema = (onChange: Fn): FormSchema[] => {
+export const initDataFormSchema = (onChange: Fn): FormSchema[] => {
   return [
     {
       field: 'id',
@@ -337,8 +337,8 @@ export const connectionFormSchema = (onChange: Fn): FormSchema[] => {
       show: false,
     },
     {
-      field: 'tenant',
-      label: t('devOperation.tenant.defTenant.code'),
+      field: 'name',
+      label: t('devOperation.tenant.defTenant.name'),
       component: 'Input',
       dynamicDisabled: true,
     },
@@ -350,56 +350,35 @@ export const connectionFormSchema = (onChange: Fn): FormSchema[] => {
         options: [
           {
             label: '本地',
-            value: TenantConnectTypeEnum.LOCAL,
+            value: TenantConnectTypeEnum.SYSTEM,
           },
           {
             label: '远程',
-            value: TenantConnectTypeEnum.REMOTE,
-            disabled: globSetting.multiTenantType !== MultiTenantTypeEnum.DATASOURCE,
+            value: TenantConnectTypeEnum.CUSTOM,
+            disabled: ![
+              MultiTenantTypeEnum.DATASOURCE,
+              MultiTenantTypeEnum.DATASOURCE_COLUMN,
+            ].includes(globSetting.multiTenantType as MultiTenantTypeEnum),
           },
         ],
         onChange,
       },
-      defaultValue: TenantConnectTypeEnum.LOCAL,
+      defaultValue: TenantConnectTypeEnum.SYSTEM,
     },
     {
-      field: 'authorityDatasource',
-      label: '权限服务连接源',
+      field: 'baseDatasourceId',
+      label: '基础库',
       component: 'Select',
       dynamicDisabled: ({ values }) => {
-        return values?.connectType === TenantConnectTypeEnum.LOCAL;
+        return values?.connectType === TenantConnectTypeEnum.SYSTEM;
       },
     },
     {
-      field: 'fileDatasource',
-      label: '文件服务连接源',
+      field: 'extendDatasourceId',
+      label: '扩展库',
       component: 'Select',
       dynamicDisabled: ({ values }) => {
-        return values?.connectType === TenantConnectTypeEnum.LOCAL;
-      },
-    },
-    {
-      field: 'msgDatasource',
-      label: '消息服务连接源',
-      component: 'Select',
-      dynamicDisabled: ({ values }) => {
-        return values?.connectType === TenantConnectTypeEnum.LOCAL;
-      },
-    },
-    {
-      field: 'oauthDatasource',
-      label: '认证服务连接源',
-      component: 'Select',
-      dynamicDisabled: ({ values }) => {
-        return values?.connectType === TenantConnectTypeEnum.LOCAL;
-      },
-    },
-    {
-      field: 'gateDatasource',
-      label: '网关服务连接源',
-      component: 'Select',
-      dynamicDisabled: ({ values }) => {
-        return values?.connectType === TenantConnectTypeEnum.LOCAL;
+        return values?.connectType === TenantConnectTypeEnum.SYSTEM;
       },
     },
   ];
@@ -408,31 +387,13 @@ export const connectionFormSchema = (onChange: Fn): FormSchema[] => {
 export const getUpdateOptions = (selectList: any[]) => {
   return [
     {
-      field: 'authorityDatasource',
+      field: 'baseDatasourceId',
       componentProps: {
         options: selectList,
       },
     },
     {
-      field: 'fileDatasource',
-      componentProps: {
-        options: selectList,
-      },
-    },
-    {
-      field: 'msgDatasource',
-      componentProps: {
-        options: selectList,
-      },
-    },
-    {
-      field: 'oauthDatasource',
-      componentProps: {
-        options: selectList,
-      },
-    },
-    {
-      field: 'gateDatasource',
+      field: 'extendDatasourceId',
       componentProps: {
         options: selectList,
       },

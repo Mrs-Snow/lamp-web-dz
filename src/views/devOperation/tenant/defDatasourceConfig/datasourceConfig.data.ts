@@ -44,25 +44,21 @@ export const searchFormSchema: FormSchema[] = [
     field: 'name',
     label: t('devOperation.tenant.defDatasourceConfig.name'),
     component: 'Input',
-    colProps: { span: 8 },
   },
   {
     field: 'username',
     label: t('devOperation.tenant.defDatasourceConfig.username'),
     component: 'Input',
-    colProps: { span: 8 },
   },
   {
     field: 'url',
     label: t('devOperation.tenant.defDatasourceConfig.url'),
     component: 'Input',
-    colProps: { span: 8 },
   },
   {
     field: 'createTimeRange',
     label: t('lamp.common.createdTime'),
     component: 'RangePicker',
-    colProps: { span: 8 },
   },
 ];
 

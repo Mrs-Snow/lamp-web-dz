@@ -107,14 +107,9 @@ export interface Tenant {
   isDefault: boolean;
 }
 
-export interface TenantConnectDTO {
+export interface DefTenantInitVO {
   id: string;
-  tenant: string;
   connectType: Enum;
-  baseDatasource?: string;
-  fileDatasource?: string;
-  msgDatasource?: string;
-  oauthDatasource?: string;
-  gateDatasource?: string;
-  tenantDatasource?: string;
+  baseDatasourceId?: string;
+  extendDatasourceId?: string;
 }

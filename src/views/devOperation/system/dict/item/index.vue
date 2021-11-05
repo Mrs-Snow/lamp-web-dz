@@ -99,8 +99,8 @@
         columns: columns(),
         formConfig: {
           labelWidth: 100,
-          baseColProps: { xs: 24, sm: 12, md: 12, lg: 12, xl: 8 },
           schemas: searchFormSchema(),
+          baseColProps: { xs: 24, sm: 12, md: 12, lg: 12, xl: 8 },
           autoSubmitOnEnter: true,
           resetButtonOptions: {
             preIcon: 'ant-design:rest-outlined',

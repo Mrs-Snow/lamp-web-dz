@@ -1,18 +1,18 @@
 export enum TenantStatusEnum {
-  NORMAL = 'NORMAL',
-  WAIT_INIT = 'WAIT_INIT',
-  FORBIDDEN = 'FORBIDDEN',
-  WAITING = 'WAITING',
-  REFUSE = 'REFUSE',
-  DELETE = 'DELETE',
+  NORMAL = '05',
+  WAIT_INIT = '10',
+  FORBIDDEN = '15',
+  WAITING = '20',
+  REFUSE = '25',
+  DELETE = '30',
 }
 export enum TenantTypeEnum {
   CREATE = 'CREATE',
   REGISTER = 'REGISTER',
 }
 export enum TenantConnectTypeEnum {
-  LOCAL = 'LOCAL',
-  REMOTE = 'REMOTE',
+  SYSTEM = 'SYSTEM',
+  CUSTOM = 'CUSTOM',
 }
 
 export enum MultiTenantTypeEnum {

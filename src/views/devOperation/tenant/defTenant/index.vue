@@ -2,24 +2,37 @@
   <PageWrapper dense contentFullHeight>
     <BasicTable @register="registerTable">
       <template #toolbar>
-        <a-button type="primary" @click="handleCreate">{{ t('common.title.add') }}</a-button>
+        <a-button type="primary" preIcon="ant-design:plus-outlined" @click="handleCreate">{{
+          t('common.title.add')
+        }}</a-button>
       </template>
       <template #action="{ record }">
         <TableAction
           :actions="[
             {
-              label: '初始化',
-              onClick: handleInit.bind(null, record),
+              icon: 'ant-design:database-outlined',
+              tooltip: '初始化数据',
+              onClick: handleInitData.bind(null, record),
               ifShow: () => {
-                return record?.status?.code === TenantStatusEnum.WAIT_INIT;
+                return record?.status === TenantStatusEnum.WAIT_INIT;
               },
             },
             {
-              label: t('common.title.edit'),
+              icon: 'ant-design:cloud-upload-outlined',
+              tooltip: '连数据源',
+              onClick: handleLinkDataSource.bind(null, record),
+              ifShow: () => {
+                return record?.status === TenantStatusEnum.WAIT_INIT;
+              },
+            },
+            {
+              tooltip: t('common.title.edit'),
+              icon: 'clarity:note-edit-line',
               onClick: handleEdit.bind(null, record),
             },
             {
-              label: t('common.title.delete'),
+              tooltip: t('common.title.delete'),
+              icon: 'ant-design:delete-outlined',
               color: 'error',
               popConfirm: {
                 title: t('common.tips.confirmDelete'),
@@ -27,11 +40,12 @@
               },
             },
           ]"
+          :stopButtonPropagation="true"
         />
       </template>
     </BasicTable>
     <EditModal @register="registerDrawer" @success="handleSuccess" />
-    <ConnectionModal @register="registerInitDrawer" @success="handleInitSuccess" />
+    <InitDataModal @register="registerInitDrawer" @success="handleInitSuccess" />
   </PageWrapper>
 </template>
 <script lang="ts">
@@ -47,11 +61,11 @@
   import { page, remove } from '/@/api/devOperation/tenant/tenant';
   import { columns, searchFormSchema } from './tenant.data';
   import EditModal from './Edit.vue';
-  import ConnectionModal from './Connection.vue';
+  import InitDataModal from './InitData.vue';
 
   export default defineComponent({
     name: 'TenantManagement',
-    components: { BasicTable, PageWrapper, EditModal, TableAction, ConnectionModal },
+    components: { BasicTable, PageWrapper, EditModal, TableAction, InitDataModal },
     setup() {
       const { t } = useI18n();
       const [registerDrawer, { openDrawer }] = useDrawer();
@@ -67,11 +81,23 @@
         formConfig: {
           labelWidth: 120,
           schemas: searchFormSchema,
+          baseColProps: { xs: 24, sm: 12, md: 12, lg: 12, xl: 8 },
+          autoSubmitOnEnter: true,
+          resetButtonOptions: {
+            preIcon: 'ant-design:rest-outlined',
+          },
+          submitButtonOptions: {
+            preIcon: 'ant-design:search-outlined',
+          },
         },
         beforeFetch: handleFetchParams,
         useSearchForm: true,
         showTableSetting: true,
         bordered: true,
+        rowKey: 'id',
+        rowSelection: {
+          type: 'checkbox',
+        },
         actionColumn: {
           width: 160,
           title: t('common.column.action'),
@@ -80,11 +106,6 @@
         },
       });
 
-      function handleInit(record: Recordable) {
-        openInitDrawer(true, {
-          record,
-        });
-      }
       function handleCreate() {
         openDrawer(true, {
           type: ActionEnum.ADD,
@@ -111,19 +132,24 @@
       function handleInitSuccess() {
         reload();
       }
+      function handleInitData(record: Recordable) {
+        openInitDrawer(true, { record });
+      }
+      function handleLinkDataSource() {}
 
       return {
+        TenantStatusEnum,
+        t,
         registerTable,
         registerDrawer,
         handleCreate,
         handleEdit,
         handleDelete,
         handleSuccess,
-        handleInit,
         registerInitDrawer,
         handleInitSuccess,
-        TenantStatusEnum,
-        t,
+        handleInitData,
+        handleLinkDataSource,
       };
     },
   });

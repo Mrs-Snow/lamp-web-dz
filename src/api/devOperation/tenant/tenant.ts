@@ -3,7 +3,7 @@ import {
   TenantUpdateDTO,
   Tenant,
   TenantPageQuery,
-  TenantConnectDTO,
+  DefTenantInitVO,
 } from './model/tenantModel';
 import { PageParams, PageResult } from '/@/api/model/baseModel';
 import { defHttp } from '/@/utils/http/axios';
@@ -34,8 +34,8 @@ export const Api = {
     url: `${ServicePrefixEnum.TENANT}/${MODULAR}/query`,
     method: RequestEnum.POST,
   } as AxiosRequestConfig,
-  InitConnect: {
-    url: `${ServicePrefixEnum.TENANT}/${MODULAR}/initConnect`,
+  InitData: {
+    url: `${ServicePrefixEnum.TENANT}/${MODULAR}/initData`,
     method: RequestEnum.POST,
   } as AxiosRequestConfig,
   Check: function (code: string) {
@@ -61,5 +61,5 @@ export const remove = (params: string[]) => defHttp.request<boolean>({ ...Api.De
 
 export const check = (code: string) => defHttp.request<boolean>(Api.Check(code));
 
-export const initConnect = (params: TenantConnectDTO) =>
-  defHttp.request<boolean>({ ...Api.InitConnect, params });
+export const initData = (params: DefTenantInitVO) =>
+  defHttp.request<boolean>({ ...Api.InitData, params });
