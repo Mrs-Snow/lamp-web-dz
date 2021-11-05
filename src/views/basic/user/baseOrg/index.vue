@@ -8,7 +8,8 @@
   import { defineComponent, ref, unref } from 'vue';
   import { PageWrapper } from '/@/components/Page';
   import { ActionEnum } from '/@/enums/commonEnum';
-  import BaseOrgTree from './Tree.vue';
+  import BaseOrgTree from './BlocksTree.vue';
+  // import BaseOrgTree from './Tree.vue';
   import Edit from './Edit.vue';
 
   export default defineComponent({

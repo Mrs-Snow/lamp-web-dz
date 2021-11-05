@@ -3,6 +3,7 @@
     <div class="m-4">
       <a-button @click="handleAdd()" class="mr-2">{{ t('common.title.addRoot') }}</a-button>
       <a-button @click="handleBatchDelete()" class="mr-2">{{ t('common.title.delete') }}</a-button>
+      <a-button @click="handleBatchDelete()" class="mr-2"> 切换 </a-button>
     </div>
     <BasicTree
       :title="t('basic.user.baseOrg.table.title')"
