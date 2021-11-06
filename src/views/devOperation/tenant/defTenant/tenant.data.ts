@@ -270,7 +270,7 @@ export const customFormSchemaRules = (type: Ref<ActionEnum>): Partial<FormSchema
 export const customConnectionFormSchemaRules = (required: boolean): Partial<FormSchemaExt>[] => {
   return [
     {
-      field: 'authorityDatasource',
+      field: 'baseDatasourceId',
       rules: [
         {
           required: required,
@@ -281,40 +281,7 @@ export const customConnectionFormSchemaRules = (required: boolean): Partial<Form
       type: RuleType.cover,
     },
     {
-      field: 'fileDatasource',
-      rules: [
-        {
-          required: required,
-          message: t('common.rules.require'),
-          trigger: ['change', 'blur'],
-        },
-      ],
-      type: RuleType.cover,
-    },
-    {
-      field: 'msgDatasource',
-      rules: [
-        {
-          required: required,
-          message: t('common.rules.require'),
-          trigger: ['change', 'blur'],
-        },
-      ],
-      type: RuleType.cover,
-    },
-    {
-      field: 'oauthDatasource',
-      rules: [
-        {
-          required: required,
-          message: t('common.rules.require'),
-          trigger: ['change', 'blur'],
-        },
-      ],
-      type: RuleType.cover,
-    },
-    {
-      field: 'gateDatasource',
+      field: 'extendDatasourceId',
       rules: [
         {
           required: required,
@@ -398,5 +365,55 @@ export const getUpdateOptions = (selectList: any[]) => {
         options: selectList,
       },
     },
+  ];
+};
+
+// 初始化链接表单
+export const linkFormSchema = (): FormSchema[] => {
+  return [
+    {
+      field: 'id',
+      label: 'ID',
+      component: 'Input',
+      required: false,
+      show: false,
+    },
+    {
+      field: 'name',
+      label: t('devOperation.tenant.defTenant.name'),
+      component: 'Input',
+      componentProps: {
+        readonly: true,
+      },
+    },
+    // {
+    //   field: 'baseDatasourceId',
+    //   label: 'lamp-base-server',
+    //   component: 'Input',
+    //   slot: 'base',
+    // },
+    // {
+    //   field: 'baseDatasourceId',
+    //   label: 'lamp-oauth-server',
+    //   component: 'Input',
+    // },
+    // {
+    //   field: 'baseDatasourceId',
+    //   label: 'lamp-gateway-server',
+    //   component: 'Input',
+    // },
+    // {
+    //   field: 'baseDatasourceId',
+    //   label: 'lamp-file-server',
+    //   component: 'Input',
+    // },
+    // {
+    //   field: 'extendDatasourceId',
+    //   label: 'lamp-msg-server',
+    //   component: 'Input',
+    //   // dynamicDisabled: ({ values }) => {
+    //   //   return values?.connectType === TenantConnectTypeEnum.SYSTEM;
+    //   // },
+    // },
   ];
 };

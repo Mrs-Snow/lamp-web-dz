@@ -2,7 +2,7 @@
   <PageWrapper dense contentFullHeight>
     <BasicTable @register="registerTable">
       <template #toolbar>
-        <a-button type="primary" preIcon="ant-design:plus-outlined" @click="handleCreate">{{
+        <a-button type="primary" preIcon="ant-design:plus-outlined" @click="handleAdd">{{
           t('common.title.add')
         }}</a-button>
       </template>
@@ -21,9 +21,6 @@
               icon: 'ant-design:cloud-upload-outlined',
               tooltip: '连数据源',
               onClick: handleLinkDataSource.bind(null, record),
-              ifShow: () => {
-                return record?.status === TenantStatusEnum.WAIT_INIT;
-              },
             },
             {
               tooltip: t('common.title.edit'),
@@ -46,6 +43,7 @@
     </BasicTable>
     <EditModal @register="registerDrawer" @success="handleSuccess" />
     <InitDataModal @register="registerInitDrawer" @success="handleInitSuccess" />
+    <LinkDataSourceModal @register="registerLinkDrawer" @success="handleSuccess" />
   </PageWrapper>
 </template>
 <script lang="ts">
@@ -62,18 +60,26 @@
   import { columns, searchFormSchema } from './tenant.data';
   import EditModal from './Edit.vue';
   import InitDataModal from './InitData.vue';
+  import LinkDataSourceModal from './LinkDataSource.vue';
 
   export default defineComponent({
     name: 'TenantManagement',
-    components: { BasicTable, PageWrapper, EditModal, TableAction, InitDataModal },
+    components: {
+      BasicTable,
+      PageWrapper,
+      EditModal,
+      TableAction,
+      InitDataModal,
+      LinkDataSourceModal,
+    },
     setup() {
       const { t } = useI18n();
       const [registerDrawer, { openDrawer }] = useDrawer();
-      const drawer = useDrawer();
-      const registerInitDrawer = drawer[0];
-      const openInitDrawer = drawer[1].openDrawer;
+      const [registerLinkDrawer, { openDrawer: openLinkDrawer }] = useDrawer();
+      const [registerInitDrawer, { openDrawer: openInitDrawer }] = useDrawer();
 
       const { createMessage } = useMessage();
+
       const [registerTable, { reload }] = useTable({
         title: t('devOperation.tenant.defTenant.table.title'),
         api: page,
@@ -106,7 +112,14 @@
         },
       });
 
-      function handleCreate() {
+      function handleInitData(record: Recordable) {
+        openInitDrawer(true, { record });
+      }
+      function handleLinkDataSource(record: Recordable) {
+        openLinkDrawer(true, { record });
+      }
+
+      function handleAdd() {
         openDrawer(true, {
           type: ActionEnum.ADD,
         });
@@ -132,21 +145,18 @@
       function handleInitSuccess() {
         reload();
       }
-      function handleInitData(record: Recordable) {
-        openInitDrawer(true, { record });
-      }
-      function handleLinkDataSource() {}
 
       return {
         TenantStatusEnum,
         t,
         registerTable,
         registerDrawer,
-        handleCreate,
+        registerInitDrawer,
+        registerLinkDrawer,
+        handleAdd,
         handleEdit,
         handleDelete,
         handleSuccess,
-        registerInitDrawer,
         handleInitSuccess,
         handleInitData,
         handleLinkDataSource,

@@ -7,7 +7,7 @@ import {
 } from './model/tenantModel';
 import { PageParams, PageResult } from '/@/api/model/baseModel';
 import { defHttp } from '/@/utils/http/axios';
-import { RequestEnum } from '/@/enums/httpEnum';
+import { ContentTypeEnum, RequestEnum } from '/@/enums/httpEnum';
 import { ServicePrefixEnum } from '/@/enums/commonEnum';
 import type { AxiosRequestConfig } from 'axios';
 
@@ -34,16 +34,34 @@ export const Api = {
     url: `${ServicePrefixEnum.TENANT}/${MODULAR}/query`,
     method: RequestEnum.POST,
   } as AxiosRequestConfig,
-  InitData: {
-    url: `${ServicePrefixEnum.TENANT}/${MODULAR}/initData`,
-    method: RequestEnum.POST,
-  } as AxiosRequestConfig,
+
   Check: function (code: string) {
     return {
       url: `${ServicePrefixEnum.TENANT}/${MODULAR}/check/${code}`,
       method: RequestEnum.GET,
     } as AxiosRequestConfig;
   },
+  InitData: {
+    url: `${ServicePrefixEnum.TENANT}/ds/initData`,
+    method: RequestEnum.POST,
+  } as AxiosRequestConfig,
+  InitConnect: function (serviceProfix: string) {
+    return {
+      url: `/${serviceProfix}/ds/initConnect`,
+      method: RequestEnum.POST,
+      headers: { 'Content-Type': ContentTypeEnum.FORM_URLENCODED },
+    } as AxiosRequestConfig;
+  },
+  CheckDs: function (serviceProfix: string) {
+    return {
+      url: `/${serviceProfix}/ds/check`,
+      method: RequestEnum.GET,
+    } as AxiosRequestConfig;
+  },
+  FindOnlineServicePrefix: {
+    url: `${ServicePrefixEnum.GATEWAY}/findOnlineServicePrefix`,
+    method: RequestEnum.GET,
+  } as AxiosRequestConfig,
 };
 
 export const page = (params: PageParams<TenantPageQuery>) =>
@@ -63,3 +81,12 @@ export const check = (code: string) => defHttp.request<boolean>(Api.Check(code))
 
 export const initData = (params: DefTenantInitVO) =>
   defHttp.request<boolean>({ ...Api.InitData, params });
+
+export const findOnlineServicePrefix = () =>
+  defHttp.request<Recordable>({ ...Api.FindOnlineServicePrefix });
+
+export const initConnect = (serviceProfix: string, tenantId: string) =>
+  defHttp.request<boolean>({ ...Api.InitConnect(serviceProfix), params: { tenantId } });
+
+export const checkDs = (serviceProfix: string, tenantId: string) =>
+  defHttp.request<boolean>({ ...Api.CheckDs(serviceProfix), params: { tenantId } });
