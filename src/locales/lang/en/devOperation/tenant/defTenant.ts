@@ -6,9 +6,9 @@ export default {
   registerType: 'registerType',
   abbreviation: 'abbreviation',
   creditCode: 'creditCode',
-
   connectType: 'connectType',
   status: 'status',
+  state: 'state',
   expirationTime: 'expirationTime',
   describe: 'describe',
   logo: 'logo',

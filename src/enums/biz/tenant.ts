@@ -1,10 +1,9 @@
 export enum TenantStatusEnum {
   NORMAL = '05',
   WAIT_INIT = '10',
-  FORBIDDEN = '15',
-  WAITING = '20',
-  REFUSE = '25',
-  DELETE = '30',
+  WAITING = '15',
+  REFUSE = '20',
+  DELETE = '25',
 }
 export enum TenantTypeEnum {
   CREATE = 'CREATE',

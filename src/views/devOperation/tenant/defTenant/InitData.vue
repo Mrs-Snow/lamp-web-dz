@@ -16,17 +16,11 @@
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { useGlobSetting } from '/@/hooks/setting';
-  import { MultiTenantTypeEnum, TenantConnectTypeEnum } from '/@/enums/biz/tenant';
+  import { TenantConnectTypeEnum } from '/@/enums/biz/tenant';
 
   import { getValidateRules } from '/@/api/lamp/common/formValidateService';
   import { Api, initData } from '/@/api/devOperation/tenant/tenant';
-  import { query } from '/@/api/devOperation/tenant/datasourceConfig';
-  import {
-    initDataFormSchema,
-    getUpdateOptions,
-    customConnectionFormSchemaRules,
-  } from './tenant.data';
+  import { initDataFormSchema, customInitDataFormSchemaRules } from './tenant.data';
 
   export default defineComponent({
     name: 'TenantInitData',
@@ -34,7 +28,6 @@
     emits: ['success', 'register'],
     setup(_, { emit }) {
       const { createMessage } = useMessage();
-      const globSetting = useGlobSetting();
 
       const onChange = (e: ChangeEvent) => {
         let required = false;
@@ -43,7 +36,7 @@
         } else {
           clearValidate();
         }
-        updateSchema(customConnectionFormSchemaRules(required));
+        updateSchema(customInitDataFormSchemaRules(required));
       };
 
       const [registerForm, { setFieldsValue, resetFields, updateSchema, validate, clearValidate }] =
@@ -56,43 +49,26 @@
           },
         });
 
-      async function loadUpdateOptions() {
-        if (
-          globSetting.multiTenantType === MultiTenantTypeEnum.DATASOURCE ||
-          globSetting.multiTenantType === MultiTenantTypeEnum.DATASOURCE_COLUMN
-        ) {
-          const configList = await query();
-          const optionList = configList.map((item) => {
-            return {
-              value: item.id,
-              label: `[${item.name}](${item.username})(${item.driverClassName})`,
-            };
-          });
-
-          const updateOptions = getUpdateOptions(optionList);
-          updateSchema(updateOptions);
-        }
-      }
-
       const [registerDrawer, { setDrawerProps, closeDrawer, changeLoading }] = useDrawerInner(
         async (data) => {
           changeLoading(true);
-          await resetFields();
-          setDrawerProps({ confirmLoading: false });
+          try {
+            await resetFields();
+            setDrawerProps({ confirmLoading: false });
 
-          await loadUpdateOptions();
+            const record = { ...data.record };
 
-          const record = { ...data.record };
+            record.connectType = record?.connectType?.code || TenantConnectTypeEnum.SYSTEM;
+            await setFieldsValue({
+              ...record,
+            });
 
-          record.connectType = record?.connectType?.code || TenantConnectTypeEnum.SYSTEM;
-          await setFieldsValue({
-            ...record,
-          });
-
-          const formSchemaRules = await getValidateRules(Api.InitData);
-          updateSchema(formSchemaRules);
-
-          changeLoading(false);
+            await getValidateRules(Api.InitData).then(async (rules) => {
+              rules && rules.length > 0 && (await updateSchema(rules));
+            });
+          } finally {
+            changeLoading(false);
+          }
         },
       );
 

@@ -34,6 +34,11 @@ export const Api = {
     url: `${ServicePrefixEnum.TENANT}/${MODULAR}/query`,
     method: RequestEnum.POST,
   } as AxiosRequestConfig,
+  UpdateState: {
+    url: `${ServicePrefixEnum.TENANT}/${MODULAR}/updateState`,
+    method: RequestEnum.POST,
+    headers: { 'Content-Type': ContentTypeEnum.FORM_URLENCODED },
+  } as AxiosRequestConfig,
 
   Check: function (code: string) {
     return {
@@ -74,6 +79,9 @@ export const save = (params: TenantSaveDTO) => defHttp.request<Tenant>({ ...Api.
 
 export const update = (params: TenantUpdateDTO) =>
   defHttp.request<Tenant>({ ...Api.Update, params });
+
+export const updateState = (id: string, state: boolean) =>
+  defHttp.request<boolean>({ ...Api.UpdateState, params: { id, state } });
 
 export const remove = (params: string[]) => defHttp.request<boolean>({ ...Api.Delete, params });
 

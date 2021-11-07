@@ -1,18 +1,22 @@
-import { Ref, unref } from 'vue';
+import { Ref, unref, h } from 'vue';
 import moment, { Moment } from 'moment';
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { useGlobSetting } from '/@/hooks/setting';
 import { ActionEnum, FileBizTypeEnum } from '/@/enums/commonEnum';
-import { MultiTenantTypeEnum, TenantConnectTypeEnum } from '/@/enums/biz/tenant';
-
+import { MultiTenantTypeEnum, TenantConnectTypeEnum, TenantStatusEnum } from '/@/enums/biz/tenant';
+import { Tag, Badge, Switch } from 'ant-design-vue';
 import { uploadApi } from '/@/api/lamp/file/upload';
 import { RuleType, FormSchemaExt } from '/@/api/lamp/common/formValidateService';
 import { check } from '/@/api/devOperation/tenant/tenant';
+import { query } from '/@/api/devOperation/tenant/datasourceConfig';
+import { useMessage } from '/@/hooks/web/useMessage';
+import { updateState } from '/@/api/devOperation/tenant/tenant';
 
 const { t } = useI18n();
 const globSetting = useGlobSetting();
 
+// 列表页字段
 export const columns: BasicColumn[] = [
   {
     title: t('devOperation.tenant.defTenant.code'),
@@ -26,22 +30,93 @@ export const columns: BasicColumn[] = [
   {
     title: t('devOperation.tenant.defTenant.registerType'),
     dataIndex: 'registerType.desc',
-    width: 120,
+    width: 100,
   },
   {
-    title: t('devOperation.tenant.defTenant.connectType'),
-    dataIndex: 'connectType.desc',
-    width: 120,
+    title: t('devOperation.tenant.defTenant.state'),
+    dataIndex: 'state',
+    width: 80,
+    customRender: ({ record }) => {
+      if (!Reflect.has(record, 'pendingStatus')) {
+        record.pendingStatus = false;
+      }
+      return h(Switch, {
+        checked: record.state,
+        checkedChildren: t('lamp.common.enable'),
+        unCheckedChildren: t('lamp.common.disable'),
+        loading: record.pendingStatus,
+        onChange(checked: boolean) {
+          record.pendingStatus = true;
+          const { createMessage } = useMessage();
+          const newState = checked;
+          updateState(record.id, newState)
+            .then(() => {
+              record.state = newState;
+              createMessage.success(t(`common.tips.editSuccess`));
+            })
+            .catch(() => {
+              createMessage.success(t(`common.tips.editFail`));
+            })
+            .finally(() => {
+              record.pendingStatus = false;
+            });
+        },
+      });
+    },
   },
   {
     title: t('devOperation.tenant.defTenant.status'),
-    dataIndex: 'echoMap.status',
+    dataIndex: 'status',
     width: 120,
+    customRender: ({ record }) => {
+      let status: 'success' | 'processing' | 'error' | 'default' | 'warning' = 'success';
+      switch (record.status) {
+        case TenantStatusEnum.NORMAL: // 正常
+          status = 'success';
+          break;
+        case TenantStatusEnum.WAIT_INIT: //待初始化
+          status = 'processing';
+          break;
+          break;
+        case TenantStatusEnum.WAITING: // 待审核
+          status = 'processing';
+          break;
+        case TenantStatusEnum.REFUSE: // 拒绝
+          status = 'error';
+          break;
+        case TenantStatusEnum.DELETE: // 已删除
+          status = 'warning';
+          break;
+        default:
+          status = 'success';
+          break;
+      }
+      return <Badge status={status} text={record.echoMap?.status} />;
+    },
   },
   {
     title: t('devOperation.tenant.defTenant.expirationTime'),
     dataIndex: 'expirationTime',
     width: 180,
+    customRender: ({ record }) => {
+      // 永久有效 已过期， 还剩2天到期  xxxx
+      if (record.expirationTime) {
+        if (moment(record.expirationTime).isBefore(Date.now())) {
+          return <Tag color="error">已过期</Tag>;
+        } else if (moment(record.expirationTime).isBefore(moment().add(30, 'days'))) {
+          const duration = moment.duration(moment(record.expirationTime).diff(Date.now()));
+          if (duration.days() > 0) {
+            return <Tag color="warning">{duration.days() + 1}天后到期</Tag>;
+          } else {
+            return <Tag color="warning">{duration.hours()}小时后到期</Tag>;
+          }
+        } else {
+          return <Tag color="processing">{record.expirationTime}</Tag>;
+        }
+      } else {
+        return <Tag color="success">永久有效</Tag>;
+      }
+    },
   },
   {
     title: t('lamp.common.createdTime'),
@@ -51,6 +126,7 @@ export const columns: BasicColumn[] = [
   },
 ];
 
+// 列表页搜索表单字段
 export const searchFormSchema: FormSchema[] = [
   {
     field: 'code',
@@ -72,6 +148,7 @@ export const searchFormSchema: FormSchema[] = [
   },
 ];
 
+// 新增、编辑、查看页面表单字段
 export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
   return [
     {
@@ -219,6 +296,7 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
   ];
 };
 
+// 额外的新增、编辑表单验证规则
 export const customFormSchemaRules = (type: Ref<ActionEnum>): Partial<FormSchemaExt>[] => {
   return [
     {
@@ -267,7 +345,8 @@ export const customFormSchemaRules = (type: Ref<ActionEnum>): Partial<FormSchema
   ];
 };
 
-export const customConnectionFormSchemaRules = (required: boolean): Partial<FormSchemaExt>[] => {
+// 额外的初始化链接表单 校验规则
+export const customInitDataFormSchemaRules = (required: boolean): Partial<FormSchemaExt>[] => {
   return [
     {
       field: 'baseDatasourceId',
@@ -294,6 +373,7 @@ export const customConnectionFormSchemaRules = (required: boolean): Partial<Form
   ];
 };
 
+// 初始化链接表单
 export const initDataFormSchema = (onChange: Fn): FormSchema[] => {
   return [
     {
@@ -335,7 +415,12 @@ export const initDataFormSchema = (onChange: Fn): FormSchema[] => {
     {
       field: 'baseDatasourceId',
       label: '基础库',
-      component: 'Select',
+      component: 'ApiSelect',
+      componentProps: {
+        api: query,
+        labelField: 'name',
+        valueField: 'id',
+      },
       dynamicDisabled: ({ values }) => {
         return values?.connectType === TenantConnectTypeEnum.SYSTEM;
       },
@@ -343,26 +428,14 @@ export const initDataFormSchema = (onChange: Fn): FormSchema[] => {
     {
       field: 'extendDatasourceId',
       label: '扩展库',
-      component: 'Select',
+      component: 'ApiSelect',
+      componentProps: {
+        api: query,
+        labelField: 'name',
+        valueField: 'id',
+      },
       dynamicDisabled: ({ values }) => {
         return values?.connectType === TenantConnectTypeEnum.SYSTEM;
-      },
-    },
-  ];
-};
-
-export const getUpdateOptions = (selectList: any[]) => {
-  return [
-    {
-      field: 'baseDatasourceId',
-      componentProps: {
-        options: selectList,
-      },
-    },
-    {
-      field: 'extendDatasourceId',
-      componentProps: {
-        options: selectList,
       },
     },
   ];
@@ -386,34 +459,5 @@ export const linkFormSchema = (): FormSchema[] => {
         readonly: true,
       },
     },
-    // {
-    //   field: 'baseDatasourceId',
-    //   label: 'lamp-base-server',
-    //   component: 'Input',
-    //   slot: 'base',
-    // },
-    // {
-    //   field: 'baseDatasourceId',
-    //   label: 'lamp-oauth-server',
-    //   component: 'Input',
-    // },
-    // {
-    //   field: 'baseDatasourceId',
-    //   label: 'lamp-gateway-server',
-    //   component: 'Input',
-    // },
-    // {
-    //   field: 'baseDatasourceId',
-    //   label: 'lamp-file-server',
-    //   component: 'Input',
-    // },
-    // {
-    //   field: 'extendDatasourceId',
-    //   label: 'lamp-msg-server',
-    //   component: 'Input',
-    //   // dynamicDisabled: ({ values }) => {
-    //   //   return values?.connectType === TenantConnectTypeEnum.SYSTEM;
-    //   // },
-    // },
   ];
 };

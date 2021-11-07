@@ -14,7 +14,7 @@
               tooltip: '初始化数据',
               onClick: handleInitData.bind(null, record),
               ifShow: () => {
-                return record?.status === TenantStatusEnum.WAIT_INIT;
+                return true;
               },
             },
             {
@@ -96,6 +96,7 @@
             preIcon: 'ant-design:search-outlined',
           },
         },
+        clickToRowSelect: false,
         beforeFetch: handleFetchParams,
         useSearchForm: true,
         showTableSetting: true,
