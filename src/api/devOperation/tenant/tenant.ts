@@ -47,12 +47,12 @@ export const Api = {
     } as AxiosRequestConfig;
   },
   InitData: {
-    url: `${ServicePrefixEnum.TENANT}/ds/initData`,
+    url: `${ServicePrefixEnum.TENANT}/${MODULAR}/initData`,
     method: RequestEnum.POST,
   } as AxiosRequestConfig,
   InitConnect: function (serviceProfix: string) {
     return {
-      url: `/${serviceProfix}/ds/initConnect`,
+      url: `/${serviceProfix}/ds/initDataSource`,
       method: RequestEnum.POST,
       headers: { 'Content-Type': ContentTypeEnum.FORM_URLENCODED },
     } as AxiosRequestConfig;

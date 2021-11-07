@@ -45,7 +45,7 @@
             span: 23,
           },
         });
-
+      // const area = ref<string[]>([]);
       const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(async (data) => {
         await resetSchema(editFormSchema(type));
         await resetFields();
@@ -54,6 +54,18 @@
 
         if (unref(type) !== ActionEnum.ADD) {
           const record = { ...data?.record };
+
+          const area: string[] = [];
+          if (record.provinceId) {
+            area.push(record.provinceId);
+          }
+          if (record.cityId) {
+            area.push(record.cityId);
+          }
+          if (record.districtId) {
+            area.push(record.districtId);
+          }
+          record.area = area;
 
           const logos = await listByBizId(
             ServicePrefixEnum.TENANT,
@@ -78,6 +90,12 @@
           const params = await validate();
 
           if (unref(type) !== ActionEnum.VIEW) {
+            if (params.area) {
+              params.provinceId = params.area?.[0];
+              params.cityId = params.area?.[1];
+              params.districtId = params.area?.[2];
+            }
+
             if (unref(type) === ActionEnum.EDIT) {
               await update(params);
             } else {

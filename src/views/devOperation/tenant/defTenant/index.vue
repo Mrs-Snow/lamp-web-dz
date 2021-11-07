@@ -14,13 +14,18 @@
               tooltip: '初始化数据',
               onClick: handleInitData.bind(null, record),
               ifShow: () => {
-                return true;
+                return [TenantStatusEnum.WAIT_INIT, TenantStatusEnum.WAITING].includes(
+                  record?.status,
+                );
               },
             },
             {
               icon: 'ant-design:cloud-upload-outlined',
               tooltip: '连数据源',
               onClick: handleLinkDataSource.bind(null, record),
+              ifShow: () => {
+                return [TenantStatusEnum.NORMAL].includes(record?.status);
+              },
             },
             {
               tooltip: t('common.title.edit'),

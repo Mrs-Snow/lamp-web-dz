@@ -6,7 +6,7 @@ import {
 } from './model/defAreaModel';
 import { PageParams, PageResult } from '/@/api/model/baseModel';
 import { defHttp } from '/@/utils/http/axios';
-import { RequestEnum } from '/@/enums/httpEnum';
+import { ContentTypeEnum, RequestEnum } from '/@/enums/httpEnum';
 import { ServicePrefixEnum } from '/@/enums/commonEnum';
 import type { AxiosRequestConfig } from 'axios';
 
@@ -20,6 +20,11 @@ export const Api = {
   Tree: {
     url: `${ServicePrefixEnum.TENANT}/${MODULAR}/tree`,
     method: RequestEnum.POST,
+  } as AxiosRequestConfig,
+  LazyList: {
+    url: `${ServicePrefixEnum.TENANT}/${MODULAR}/lazyList`,
+    method: RequestEnum.POST,
+    headers: { 'Content-Type': ContentTypeEnum.FORM_URLENCODED },
   } as AxiosRequestConfig,
   Save: {
     url: `${ServicePrefixEnum.TENANT}/${MODULAR}`,
@@ -41,6 +46,9 @@ export const Api = {
 
 export const tree = (params?: DefAreaPageQuery) =>
   defHttp.request<DefAreaResultVO>({ ...Api.Tree, params });
+
+export const lazyList = (params: DefAreaPageQuery) =>
+  defHttp.request<DefAreaResultVO[]>({ ...Api.LazyList, params });
 
 export const page = (params: PageParams<DefAreaPageQuery>) =>
   defHttp.request<PageResult<DefAreaResultVO>>({ ...Api.Page, params });

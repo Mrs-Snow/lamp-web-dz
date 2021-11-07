@@ -12,6 +12,7 @@ import { check } from '/@/api/devOperation/tenant/tenant';
 import { query } from '/@/api/devOperation/tenant/datasourceConfig';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { updateState } from '/@/api/devOperation/tenant/tenant';
+import { lazyList } from '/@/api/devOperation/system/defArea';
 
 const { t } = useI18n();
 const globSetting = useGlobSetting();
@@ -132,19 +133,16 @@ export const searchFormSchema: FormSchema[] = [
     field: 'code',
     label: t('devOperation.tenant.defTenant.code'),
     component: 'Input',
-    colProps: { span: 5 },
   },
   {
     field: 'name',
     label: t('devOperation.tenant.defTenant.name'),
     component: 'Input',
-    colProps: { span: 5 },
   },
   {
     field: 'createTimeRange',
     label: t('lamp.common.createdTime'),
     component: 'RangePicker',
-    colProps: { span: 6 },
   },
 ];
 
@@ -198,6 +196,9 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
         span: 12,
       },
       componentProps: {
+        style: {
+          width: '100%',
+        },
         format: 'YYYY-MM-DD HH:mm:ss',
         valueFormat: 'YYYY-MM-DD HH:mm:ss',
         disabledDate: (current: Moment) => {
@@ -258,9 +259,22 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       label: '地区信息',
     },
     {
-      field: 'provinceId',
-      label: t('devOperation.tenant.defTenant.provinceId'),
-      component: 'Input',
+      field: 'area',
+      label: '地区',
+      component: 'ApiCascader',
+      componentProps: {
+        api: lazyList,
+        asyncFetchParamKey: 'parentId',
+        dataField: '',
+        labelField: 'name',
+        valueField: 'id',
+        initFetchParams: {
+          parentId: '0',
+        },
+        isLeaf: (record: Recordable) => {
+          return !(record.treeGrade < 2);
+        },
+      },
     },
     {
       field: 'address',
