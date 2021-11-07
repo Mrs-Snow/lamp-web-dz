@@ -41,6 +41,15 @@
                 confirm: handleDelete.bind(null, record),
               },
             },
+            {
+              tooltip: '绑定用户',
+              icon: 'ant-design:usergroup-add-outlined',
+              color: 'warning',
+              onClick: handleBindUser.bind(null, record),
+              ifShow: () => {
+                return [TenantStatusEnum.NORMAL].includes(record?.status);
+              },
+            },
           ]"
           :stopButtonPropagation="true"
         />
@@ -49,6 +58,7 @@
     <EditModal @register="registerDrawer" @success="handleSuccess" />
     <InitDataModal @register="registerInitDrawer" @success="handleInitSuccess" />
     <LinkDataSourceModal @register="registerLinkDrawer" @success="handleSuccess" />
+    <BindUserModal @register="registerModal" @success="handleSuccess" />
   </PageWrapper>
 </template>
 <script lang="ts">
@@ -58,6 +68,7 @@
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
   import { PageWrapper } from '/@/components/Page';
   import { useDrawer } from '/@/components/Drawer';
+  import { useModal } from '/@/components/Modal';
   import { handleFetchParams } from '/@/utils/lamp/common';
   import { ActionEnum } from '/@/enums/commonEnum';
   import { TenantStatusEnum } from '/@/enums/biz/tenant';
@@ -66,6 +77,7 @@
   import EditModal from './Edit.vue';
   import InitDataModal from './InitData.vue';
   import LinkDataSourceModal from './LinkDataSource.vue';
+  import BindUserModal from './BindUserModal.vue';
 
   export default defineComponent({
     name: 'TenantManagement',
@@ -76,10 +88,12 @@
       TableAction,
       InitDataModal,
       LinkDataSourceModal,
+      BindUserModal,
     },
     setup() {
       const { t } = useI18n();
       const [registerDrawer, { openDrawer }] = useDrawer();
+      const [registerModal, { openModal }] = useModal();
       const [registerLinkDrawer, { openDrawer: openLinkDrawer }] = useDrawer();
       const [registerInitDrawer, { openDrawer: openInitDrawer }] = useDrawer();
 
@@ -111,7 +125,7 @@
           type: 'checkbox',
         },
         actionColumn: {
-          width: 160,
+          width: 200,
           title: t('common.column.action'),
           dataIndex: 'action',
           slots: { customRender: 'action' },
@@ -152,11 +166,16 @@
         reload();
       }
 
+      function handleBindUser(record: Recordable) {
+        openModal(true, { record });
+      }
+
       return {
         TenantStatusEnum,
         t,
         registerTable,
         registerDrawer,
+        registerModal,
         registerInitDrawer,
         registerLinkDrawer,
         handleAdd,
@@ -166,6 +185,7 @@
         handleInitSuccess,
         handleInitData,
         handleLinkDataSource,
+        handleBindUser,
       };
     },
   });

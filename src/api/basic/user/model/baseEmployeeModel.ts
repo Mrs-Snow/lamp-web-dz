@@ -1,5 +1,10 @@
 import { DefUserResultVO } from '/@/api/devOperation/tenant/model/defUserModel';
 
+export interface DefTenantBindUserVO {
+  tenantId: string;
+  userIdList: string[];
+  isBind: boolean;
+}
 export interface BaseEmployeePageQuery {
   isDefault?: boolean;
   userId?: string;

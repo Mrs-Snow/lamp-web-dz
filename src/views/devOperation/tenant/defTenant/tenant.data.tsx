@@ -13,6 +13,7 @@ import { query } from '/@/api/devOperation/tenant/datasourceConfig';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { updateState } from '/@/api/devOperation/tenant/tenant';
 import { lazyList } from '/@/api/devOperation/system/defArea';
+import { stateFilters } from '/@/utils/lamp/common';
 
 const { t } = useI18n();
 const globSetting = useGlobSetting();
@@ -475,3 +476,82 @@ export const linkFormSchema = (): FormSchema[] => {
     },
   ];
 };
+
+// 列表页字段
+export const userColumns: BasicColumn[] = [
+  {
+    title: t('devOperation.tenant.defUser.username'),
+    dataIndex: 'username',
+    width: 180,
+  },
+  {
+    title: t('devOperation.tenant.defUser.nickName'),
+    dataIndex: 'nickName',
+    width: 180,
+  },
+  {
+    title: t('devOperation.tenant.defUser.email'),
+    dataIndex: 'email',
+    // width: 180,
+  },
+  {
+    title: t('devOperation.tenant.defUser.mobile'),
+    dataIndex: 'mobile',
+    // width: 180,
+  },
+  {
+    title: t('devOperation.tenant.defUser.sex'),
+    dataIndex: 'echoMap.sex',
+    width: 80,
+  },
+  {
+    title: t('devOperation.tenant.defUser.state'),
+    dataIndex: 'state',
+    width: 80,
+    filters: [...stateFilters()],
+    filterMultiple: false,
+    format: (text) => {
+      return text ? t('lamp.common.enable') : t('lamp.common.disable');
+    },
+  },
+  {
+    title: t('lamp.common.createdTime'),
+    dataIndex: 'createdTime',
+    sorter: true,
+    width: 180,
+  },
+];
+
+// 列表页搜索表单字段
+export const userSearchFormSchema: FormSchema[] = [
+  {
+    label: t('devOperation.tenant.defUser.username'),
+    field: 'username',
+    component: 'Input',
+    colProps: { span: 6 },
+  },
+  {
+    label: t('devOperation.tenant.defUser.nickName'),
+    field: 'nickName',
+    component: 'Input',
+    colProps: { span: 6 },
+  },
+  {
+    label: t('devOperation.tenant.defUser.email'),
+    field: 'email',
+    component: 'Input',
+    colProps: { span: 6 },
+  },
+  {
+    label: t('devOperation.tenant.defUser.mobile'),
+    field: 'mobile',
+    component: 'Input',
+    colProps: { span: 6 },
+  },
+  {
+    label: t('devOperation.tenant.defUser.idCard'),
+    field: 'idCard',
+    component: 'Input',
+    colProps: { span: 6 },
+  },
+];
