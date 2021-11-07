@@ -62,6 +62,7 @@ specifiers:
   inquirer: ^8.2.0
   intro.js: ^4.2.2
   jest: ^27.3.1
+  js-base64: ^3.7.2
   less: ^4.1.2
   lint-staged: 11.2.6
   lodash-es: ^4.17.21
@@ -112,6 +113,7 @@ specifiers:
   vue-router: ^4.0.12
   vue-tsc: ^0.28.10
   vue-types: ^4.1.1
+  vue3-blocks-tree: ^0.5.2
   xlsx: ^0.17.3
 
 dependencies:
@@ -130,6 +132,7 @@ dependencies:
   crypto-js: 4.1.1
   echarts: 5.2.2
   intro.js: 4.2.2
+  js-base64: 3.7.2
   lodash-es: 4.17.21
   mockjs: 1.1.0
   moment: 2.29.1
@@ -149,6 +152,7 @@ dependencies:
   vue-json-pretty: 2.0.4_vue@3.2.21
   vue-router: 4.0.12_vue@3.2.21
   vue-types: 4.1.1_vue@3.2.21
+  vue3-blocks-tree: 0.5.2_vue@3.2.21
   xlsx: 0.17.3
 
 devDependencies:
@@ -3306,7 +3310,7 @@ packages:
     dependencies:
       bin-check: 4.1.0
       bin-version-check: 4.0.0
-      binary-mirror-config: 1.32.0
+      binary-mirror-config: 1.33.0
       download: 7.1.0
       import-lazy: 4.0.0
       os-filter-obj: 2.0.0
@@ -3318,8 +3322,8 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /binary-mirror-config/1.32.0:
-    resolution: {integrity: sha512-kk7XbWqw0Bzufwoi4iPd0sgISOrP9pUqa/ERoxwyLhv9UZBf8rMxmiYecLwqu90CG5AaGWcBdrXjWB3RVAlqCw==}
+  /binary-mirror-config/1.33.0:
+    resolution: {integrity: sha512-9HcbzI65PDTi7bwkONLdNUGfs71V1o909+uqFZLSn4j7Zthcrjyr+ePo/+wf9tzrwXXL3bub+0NwKl7kpp5qmg==}
     dev: true
 
   /bl/1.2.3:
@@ -7460,6 +7464,10 @@ packages:
     resolution: {integrity: sha512-pZe//GGmwJndub7ZghVHz7vjb2LgC1m8B07Au3eYqeqv9emhESByMXxaEgkUkEqJe87oBbSniGYoQNIBklc7IQ==}
     dev: true
 
+  /js-base64/3.7.2:
+    resolution: {integrity: sha512-NnRs6dsyqUXejqk/yv2aiXlAvOs56sLkX6nUdeaNezI5LFFLlsZjOThmwnrcwh5ZZRwZlCMnVAY3CvhIhoVEKQ==}
+    dev: false
+
   /js-stringify/1.0.2:
     resolution: {integrity: sha1-Fzb939lyTyijaCrcYjCufk6Weds=}
     dev: true
@@ -11473,6 +11481,14 @@ packages:
       '@vue/runtime-dom': 3.2.21
       '@vue/server-renderer': 3.2.21_vue@3.2.21
       '@vue/shared': 3.2.21
+    dev: false
+
+  /vue3-blocks-tree/0.5.2_vue@3.2.21:
+    resolution: {integrity: sha512-IhG+RiKmqYvVU+nht7qW7tAWNFNsZA+R+DyoxdtYMF0LoKODnhrwTuqURNlpvKlZEIRLqOoycvtmn42NRG1aoA==}
+    peerDependencies:
+      vue: ^3.0.0
+    dependencies:
+      vue: 3.2.21
     dev: false
 
   /w3c-hr-time/1.0.2:

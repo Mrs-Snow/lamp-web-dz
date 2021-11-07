@@ -86,8 +86,8 @@
                 userStore.setApplicationId(item.id as string);
                 await userStore.getUserInfoAction();
                 await refreshMenu();
-
                 createMessage.success(`成功切换到应用：[${item.name}]`);
+                location.reload();
               }
             },
           });
