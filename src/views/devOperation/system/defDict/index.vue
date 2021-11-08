@@ -45,18 +45,19 @@
 <script lang="ts">
   import { defineComponent } from 'vue';
   import { Tag } from 'ant-design-vue';
-  import { useI18n } from '/@/hooks/web/useI18n';
   import { useRouter } from 'vue-router';
+  import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
   import { PageWrapper } from '/@/components/Page';
   import { useDrawer } from '/@/components/Drawer';
   import { handleFetchParams } from '/@/utils/lamp/common';
   import { ActionEnum } from '/@/enums/commonEnum';
+  import { RoleEnum } from '/@/enums/roleEnum';
+  import { RouteEnum } from '/@/enums/biz/tenant';
   import { page, remove } from '/@/api/devOperation/system/defDict';
   import { columns, searchFormSchema } from './defDict.data';
   import EditModal from './Edit.vue';
-  import { RouteEnum } from '/@/enums/biz/tenant';
 
   export default defineComponent({
     // 若需要开启页面缓存，请将此参数跟菜单名保持一致
@@ -168,6 +169,7 @@
         t,
         registerTable,
         registerDrawer,
+        RoleEnum,
         handleAdd,
         handleCopy,
         handleEdit,

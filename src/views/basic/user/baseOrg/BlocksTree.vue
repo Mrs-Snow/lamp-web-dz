@@ -112,35 +112,35 @@
     white-space: nowrap;
   }
 
-  /deep/ .bg-primary {
+  :deep(.bg-primary) {
     @{bgColor}: @primary-color;
   }
 
-  /deep/ .bg-white {
+  :deep(.bg-white) {
     @{bgColor}: white;
   }
 
-  /deep/ .bg-orange {
+  :deep(.bg-orange) {
     @{bgColor}: orange;
   }
 
-  /deep/ .bg-gold {
+  :deep(.bg-gold) {
     @{bgColor}: gold;
   }
 
-  /deep/ .bg-gray {
+  :deep(.bg-gray) {
     @{bgColor}: gray;
   }
 
-  /deep/ .bg-lightpink {
+  :deep(.bg-lightpink) {
     @{bgColor}: lightpink;
   }
 
-  /deep/ .bg-chocolate {
+  :deep(.bg-chocolate) {
     @{bgColor}: chocolate;
   }
 
-  /deep/ .bg-tomato {
+  :deep(.bg-tomato) {
     @{bgColor}: tomato;
   }
 </style>

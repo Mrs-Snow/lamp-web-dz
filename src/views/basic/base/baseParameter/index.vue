@@ -1,78 +1,84 @@
 <template>
-  <div class="bg-white m-4 mr-2 overflow-hidden">
+  <PageWrapper dense contentFullHeight>
     <BasicTable @register="registerTable">
       <template #toolbar>
         <a-button
           type="primary"
           color="error"
-          @click="handleBatchDelete"
           preIcon="ant-design:delete-outlined"
-          v-hasAnyPermission="[RoleEnum.ROLE_DELETE]"
-          >{{ t('common.title.delete') }}</a-button
+          @click="handleBatchDelete"
         >
-        <a-button
-          type="primary"
-          preIcon="ant-design:plus-outlined"
-          v-hasAnyPermission="[RoleEnum.ROLE_ADD]"
-          @click="handleAdd"
-          >{{ t('common.title.add') }}</a-button
-        >
+          {{ t('common.title.delete') }}
+        </a-button>
+        <a-button type="primary" preIcon="ant-design:plus-outlined" @click="handleAdd">
+          {{ t('common.title.add') }}
+        </a-button>
       </template>
       <template #action="{ record }">
         <TableAction
           :actions="[
             {
+              tooltip: t('common.title.view'),
+              icon: 'ant-design:search-outlined',
+              onClick: handleView.bind(null, record),
+            },
+            {
               tooltip: t('common.title.edit'),
               icon: 'ant-design:edit-outlined',
-              auth: RoleEnum.ROLE_EDIT,
               onClick: handleEdit.bind(null, record),
             },
             {
-              label: '绑定用户',
-              auth: RoleEnum.ROLE_BING_USER,
-              onClick: handleBindUser.bind(null, record),
+              tooltip: t('common.title.copy'),
+              icon: 'ant-design:copy-outlined',
+              onClick: handleCopy.bind(null, record),
+            },
+            {
+              tooltip: t('common.title.delete'),
+              icon: 'ant-design:delete-outlined',
+              color: 'error',
+              popConfirm: {
+                title: t('common.tips.confirmDelete'),
+                confirm: handleDelete.bind(null, record),
+              },
             },
           ]"
+          :stopButtonPropagation="true"
         />
       </template>
     </BasicTable>
-    <EditModal @register="registerModal" @success="handleSuccess" />
-    <RoleEmployeeModal @register="registerRoleEmployeeModal" @success="handleSuccess" />
-  </div>
+    <EditModal @register="registerDrawer" @success="handleSuccess" />
+  </PageWrapper>
 </template>
 <script lang="ts">
   import { defineComponent } from 'vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
-  import { useModal } from '/@/components/Modal';
+  import { PageWrapper } from '/@/components/Page';
+  import { useDrawer } from '/@/components/Drawer';
   import { handleFetchParams } from '/@/utils/lamp/common';
-  import { RoleEnum } from '/@/enums/roleEnum';
   import { ActionEnum } from '/@/enums/commonEnum';
-  import { page, remove } from '/@/api/basic/system/baseRole';
-  import { columns, searchFormSchema } from '../baseRole.data';
+  import { page, remove } from '/@/api/basic/base/baseParameter';
+  import { columns, searchFormSchema } from './baseParameter.data';
   import EditModal from './Edit.vue';
-  import RoleEmployeeModal from '../roleEmployee/index.vue';
 
   export default defineComponent({
     // 若需要开启页面缓存，请将此参数跟菜单名保持一致
-    name: 'BaseRoleManagement',
-    components: { BasicTable, EditModal, TableAction, RoleEmployeeModal },
-    emits: ['select'],
-    setup(_, { emit }) {
+    name: 'BaseParameterManagement',
+    components: { BasicTable, PageWrapper, EditModal, TableAction },
+    setup() {
       const { t } = useI18n();
       const { createMessage, createConfirm } = useMessage();
       // 编辑页弹窗
-      const [registerModal, { openModal }] = useModal();
-      const [registerRoleEmployeeModal, { openModal: openRoleEmployeeMadal }] = useModal();
+      const [registerDrawer, { openDrawer }] = useDrawer();
 
       // 表格
       const [registerTable, { reload, getSelectRowKeys }] = useTable({
-        title: t('basic.system.baseRole.table.title'),
+        title: t('basic.base.baseParameter.table.title'),
         api: page,
         columns: columns(),
         formConfig: {
-          labelWidth: 50,
+          labelWidth: 120,
           schemas: searchFormSchema(),
           autoSubmitOnEnter: true,
           resetButtonOptions: {
@@ -81,48 +87,52 @@
           submitButtonOptions: {
             preIcon: 'ant-design:search-outlined',
           },
-          alwaysShowLines: 1,
         },
         beforeFetch: handleFetchParams,
-        showIndexColumn: false,
         useSearchForm: true,
-        showTableSetting: false,
+        showTableSetting: true,
         bordered: true,
         rowKey: 'id',
         rowSelection: {
-          type: 'radio',
-          columnWidth: 40,
-          onChange: (_, selectedRows: Recordable[]) => {
-            emit('select', selectedRows[0]);
-          },
+          type: 'checkbox',
         },
         actionColumn: {
-          width: 120,
+          width: 200,
           title: t('common.column.action'),
           dataIndex: 'action',
           slots: { customRender: 'action' },
         },
       });
 
-      // 绑定用户
-      function handleBindUser(record: Recordable, e: Event) {
+      // 弹出复制页面
+      function handleCopy(record: Recordable, e: Event) {
         e?.stopPropagation();
-        openRoleEmployeeMadal(true, {
-          ...record,
+        openDrawer(true, {
+          record,
+          type: ActionEnum.COPY,
         });
       }
 
       // 弹出新增页面
       function handleAdd() {
-        openModal(true, {
+        openDrawer(true, {
           type: ActionEnum.ADD,
+        });
+      }
+
+      // 弹出查看页面
+      function handleView(record: Recordable, e: Event) {
+        e?.stopPropagation();
+        openDrawer(true, {
+          record,
+          type: ActionEnum.VIEW,
         });
       }
 
       // 弹出编辑页面
       function handleEdit(record: Recordable, e: Event) {
         e?.stopPropagation();
-        openModal(true, {
+        openDrawer(true, {
           record,
           type: ActionEnum.EDIT,
         });
@@ -137,6 +147,14 @@
         await remove(ids);
         createMessage.success(t('common.tips.deleteSuccess'));
         handleSuccess();
+      }
+
+      // 点击单行删除
+      function handleDelete(record: Recordable, e: Event) {
+        e?.stopPropagation();
+        if (record?.id) {
+          batchDelete([record.id]);
+        }
       }
 
       // 点击批量删除
@@ -159,15 +177,15 @@
 
       return {
         t,
-        RoleEnum,
         registerTable,
-        registerModal,
-        registerRoleEmployeeModal,
+        registerDrawer,
+        handleView,
         handleAdd,
+        handleCopy,
         handleEdit,
+        handleDelete,
         handleSuccess,
         handleBatchDelete,
-        handleBindUser,
       };
     },
   });
