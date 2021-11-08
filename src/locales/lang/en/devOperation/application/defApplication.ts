@@ -10,6 +10,7 @@ export default {
   remark: 'remark',
   url: 'url',
   isVisible: 'isVisible',
+  isGeneral: 'isGeneral',
   sortValue: 'sortValue',
   logo: 'logo',
 };

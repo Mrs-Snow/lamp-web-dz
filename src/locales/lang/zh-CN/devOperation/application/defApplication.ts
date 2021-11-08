@@ -9,7 +9,8 @@ export default {
   introduce: '简介',
   remark: '备注',
   url: '应用地址',
-  isVisible: '是否可见',
+  isVisible: '首页显示',
+  isGeneral: '公共应用',
   sortValue: '排序',
   logo: '图标',
 };

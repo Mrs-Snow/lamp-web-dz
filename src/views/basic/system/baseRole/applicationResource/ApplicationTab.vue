@@ -7,9 +7,9 @@
         :indeterminate="indeterminate"
         v-model:checked="checkAll"
       >
-        {{ application.name }}</Checkbox
-      ></template
-    >
+        <Tag color="error">应用</Tag> {{ application.name }}</Checkbox
+      >
+    </template>
     <BasicTree
       checkable
       checkStrictly
@@ -23,7 +23,9 @@
     >
       <template #title="item">
         <TreeIcon :icon="item.icon" v-if="item.icon" />
-        <template v-if="item.echoMap?.resourceType">[{{ item.echoMap?.resourceType }}]</template>
+        <template v-if="item.echoMap?.resourceType">
+          <Tag :color="getTagColor(item?.resourceType)">{{ item.echoMap?.resourceType }}</Tag>
+        </template>
         {{ item.name }}
         <span>
           <a
@@ -39,7 +41,7 @@
 </template>
 <script lang="ts">
   import { defineComponent, onMounted, ref, unref, toRefs, reactive } from 'vue';
-  import { Checkbox } from 'ant-design-vue';
+  import { Checkbox, Tag } from 'ant-design-vue';
   import type { TreeDataItem } from 'ant-design-vue/es/tree/Tree';
   import { CollapseContainer } from '/@/components/Container/index';
   import {
@@ -52,9 +54,10 @@
   import { isArray } from '/@/utils/is';
   import { uniq, intersection, difference } from 'lodash-es';
   import { useI18n } from '/@/hooks/web/useI18n';
-
   import { eachTree, findChildrenByParentId, getById } from '/@/utils/helper/treeHelper';
+  import { ResourceTypeEnum } from '/@/enums/biz/tenant';
   const replaceFields: ReplaceFields = { key: 'id', title: 'name' };
+  
   export default defineComponent({
     name: 'ApplicationResourceTab',
     components: {
@@ -62,6 +65,7 @@
       Checkbox,
       CollapseContainer,
       TreeIcon,
+      Tag,
     },
     props: {
       application: {
@@ -118,6 +122,22 @@
 
         state.allKeys = keys;
       });
+
+      // 计算资源类型标签的颜色
+      function getTagColor(resourceType: string) {
+        switch (resourceType) {
+          case ResourceTypeEnum.MENU:
+            return 'success';
+          case ResourceTypeEnum.VIEW:
+            return 'processing';
+          case ResourceTypeEnum.FUNCTION:
+            return 'cyan';
+          case ResourceTypeEnum.FIELD:
+            return 'blue';
+          default:
+            return 'success';
+        }
+      }
 
       function changeHandler(_checkKeys) {
         computedIndeterminate();
@@ -243,6 +263,7 @@
         isAllCheckedByKey,
         replaceFields,
         changeHandler,
+        getTagColor,
       };
     },
   });

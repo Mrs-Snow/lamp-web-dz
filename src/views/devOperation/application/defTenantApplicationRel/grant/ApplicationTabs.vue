@@ -19,13 +19,14 @@
           :resourceList="item.resourceList"
           :ref="(el) => (itemRefs[item.defApplication.id] = el)"
         />
+        <Empty v-if="applicationResourceList.length === 0" />
       </FormItem>
     </Form>
   </div>
 </template>
 <script lang="ts">
   import { defineComponent, onMounted, toRefs, reactive } from 'vue';
-  import { DatePicker, Form } from 'ant-design-vue';
+  import { DatePicker, Form, Empty } from 'ant-design-vue';
   import moment, { Moment } from 'moment';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { findApplicationResourceList } from '/@/api/devOperation/application/defApplication';
@@ -37,6 +38,7 @@
       DatePicker,
       ApplicationTab,
       Form,
+      Empty,
       FormItem: Form.Item,
     },
 

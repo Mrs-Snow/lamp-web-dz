@@ -32,6 +32,11 @@
      * The title is also displayed when the menu is collapsed
      */
     alwaysShowTitle: { type: Boolean },
+
+    /**
+     * 显示为当前应用的标题
+     */
+    applicationTitle: { type: Boolean, default: true },
   });
 
   const { prefixCls } = useDesign('app-logo');
@@ -57,7 +62,11 @@
   watch(
     () => userStore.getUserInfo?.defApplication?.name,
     () => {
-      newTitle.value = userStore.getUserInfo?.defApplication?.name ?? title;
+      if (props.applicationTitle) {
+        newTitle.value = userStore.getUserInfo?.defApplication?.name ?? title;
+      } else {
+        newTitle.value = title;
+      }
     },
     { immediate: true },
   );

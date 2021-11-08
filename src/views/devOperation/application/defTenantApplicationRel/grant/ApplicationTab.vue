@@ -7,9 +7,9 @@
         :indeterminate="indeterminate"
         v-model:checked="checkAll"
       >
-        {{ application.name }}</Checkbox
-      ></template
-    >
+        <Tag color="error">应用</Tag> {{ application.name }}</Checkbox
+      >
+    </template>
     <BasicTree
       checkable
       checkStrictly
@@ -21,7 +21,10 @@
     >
       <template #title="item">
         <TreeIcon :icon="item.icon" v-if="item.icon" />
-        [{{ item.echoMap?.resourceType }}] {{ item.name }}
+        <template v-if="item.echoMap?.resourceType">
+          <Tag :color="getTagColor(item?.resourceType)">{{ item.echoMap?.resourceType }}</Tag>
+        </template>
+        {{ item.name }}
         <span>
           <a
             v-if="item.children && item.children.length"
@@ -36,16 +39,17 @@
 </template>
 <script lang="ts">
   import { defineComponent, onMounted, ref, unref, toRefs, reactive } from 'vue';
-  import { Checkbox } from 'ant-design-vue';
+  import { Checkbox, Tag } from 'ant-design-vue';
   import type { TreeDataItem } from 'ant-design-vue/es/tree/Tree';
   import { CollapseContainer } from '/@/components/Container/index';
   import { BasicTree, TreeActionType, TreeIcon, ReplaceFields } from '/@/components/Tree';
   import { isArray } from '/@/utils/is';
   import { uniq, intersection, difference } from 'lodash-es';
   import { useI18n } from '/@/hooks/web/useI18n';
-
   import { eachTree, findChildrenByParentId, getById } from '/@/utils/helper/treeHelper';
+  import { ResourceTypeEnum } from '/@/enums/biz/tenant';
   const replaceFields: ReplaceFields = { key: 'id', title: 'name' };
+
   export default defineComponent({
     name: 'ApplicationTab',
     components: {
@@ -53,6 +57,7 @@
       Checkbox,
       CollapseContainer,
       TreeIcon,
+      Tag,
     },
     props: {
       application: {
@@ -107,6 +112,22 @@
 
         state.allKeys = keys;
       });
+
+      // 计算资源类型标签的颜色
+      function getTagColor(resourceType: string) {
+        switch (resourceType) {
+          case ResourceTypeEnum.MENU:
+            return 'success';
+          case ResourceTypeEnum.VIEW:
+            return 'processing';
+          case ResourceTypeEnum.FUNCTION:
+            return 'cyan';
+          case ResourceTypeEnum.FIELD:
+            return 'blue';
+          default:
+            return 'success';
+        }
+      }
 
       // 获取 树当前选中的节点key
       function getCheckedKeys(): string[] {
@@ -225,6 +246,7 @@
         selectAll,
         isAllCheckedByKey,
         replaceFields,
+        getTagColor,
       };
     },
   });

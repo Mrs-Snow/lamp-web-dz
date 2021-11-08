@@ -2,10 +2,16 @@
   <PageWrapper dense contentFullHeight>
     <BasicTable @register="registerTable">
       <template #toolbar>
-        <a-button type="primary" color="error" @click="handleBatchDelete">{{
-          t('common.title.delete')
+        <a-button
+          type="primary"
+          preIcon="ant-design:delete-outlined"
+          color="error"
+          @click="handleBatchDelete"
+          >{{ t('common.title.delete') }}</a-button
+        >
+        <a-button type="primary" preIcon="ant-design:plus-outlined" @click="handleAdd">{{
+          t('common.title.add')
         }}</a-button>
-        <a-button type="primary" @click="handleAdd">{{ t('common.title.add') }}</a-button>
       </template>
       <template #orgIdList="{ record }">
         <span>
@@ -48,6 +54,7 @@
               },
             },
           ]"
+          :stopButtonPropagation="true"
         />
       </template>
     </BasicTable>
@@ -86,6 +93,15 @@
         formConfig: {
           labelWidth: 120,
           schemas: searchFormSchema(),
+          baseColProps: { xs: 24, sm: 12, md: 12, lg: 12, xl: 8 },
+          autoSubmitOnEnter: true,
+          resetButtonOptions: {
+            preIcon: 'ant-design:rest-outlined',
+          },
+          submitButtonOptions: {
+            preIcon: 'ant-design:search-outlined',
+          },
+          alwaysShowLines: 1,
         },
         beforeFetch: handleFetchParams,
         useSearchForm: true,

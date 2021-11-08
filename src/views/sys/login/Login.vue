@@ -8,13 +8,13 @@
     <AppDarkModeToggle class="absolute top-3 right-7 enter-x" v-if="!sessionTimeout" />
 
     <span class="-enter-x xl:hidden">
-      <AppLogo :alwaysShowTitle="true" />
+      <AppLogo :alwaysShowTitle="true" :applicationTitle="false" />
     </span>
 
     <div class="container relative h-full py-2 mx-auto sm:px-10 sm:pb-20">
       <div class="flex h-full">
         <div class="hidden min-h-full pl-4 mr-4 xl:flex xl:flex-col xl:w-6/12">
-          <AppLogo class="-enter-x" />
+          <AppLogo class="-enter-x" :applicationTitle="false" />
           <div class="my-auto">
             <img
               :alt="title"
@@ -25,11 +25,11 @@
               <span class="inline-block mt-4 text-3xl"> {{ t('sys.login.signInTitle') }}</span>
             </div>
             <div class="mt-5 font-normal text-white text-md dark:text-gray-500 -enter-x">
-              {{ t('sys.login.signInDesc') }}
-              运营管理员账号： 0000/lamp_pt/lamp <br />
-              租户管理员账号：0000/lamp/lamp <br />
-              普通管理员账号：0000/general/lamp <br />
-              普通用户账号：0000/normal/lamp <br />
+              {{ t('sys.login.signInDesc') }} <br />
+              运营管理员账号： superLamp/lamp <br />
+              租户管理员账号：lamp/lamp <br />
+              普通管理员账号：test1/lamp <br />
+              普通用户账号：test2/lamp <br />
             </div>
           </div>
         </div>

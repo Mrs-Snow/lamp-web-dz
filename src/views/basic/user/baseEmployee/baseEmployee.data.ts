@@ -55,13 +55,32 @@ export const searchFormSchema = (): FormSchema[] => {
       label: t('basic.user.baseEmployee.realName'),
       field: 'realName',
       component: 'Input',
-      colProps: { span: 6 },
     },
+    {
+      label: t('devOperation.tenant.defUser.mobile'),
+      field: 'mobile',
+      component: 'Input',
+    },
+    {
+      label: t('devOperation.tenant.defUser.username'),
+      field: 'username',
+      component: 'Input',
+    },
+    {
+      label: t('devOperation.tenant.defUser.email'),
+      field: 'email',
+      component: 'Input',
+    },
+    {
+      label: t('devOperation.tenant.defUser.idCard'),
+      field: 'idCard',
+      component: 'Input',
+    },
+
     {
       field: 'createTimeRange',
       label: t('lamp.common.createdTime'),
       component: 'RangePicker',
-      colProps: { span: 6 },
     },
   ];
 };

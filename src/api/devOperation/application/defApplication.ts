@@ -38,18 +38,17 @@ export const Api = {
     url: `${ServicePrefixEnum.TENANT}/${MODULAR}/findApplicationResourceList`,
     method: RequestEnum.GET,
   } as AxiosRequestConfig,
+  // 首页、我的应用 等查询我的可用应用
   FindMyApplication: {
     url: `${ServicePrefixEnum.TENANT}/anyone/findMyApplication`,
     method: RequestEnum.GET,
   } as AxiosRequestConfig,
-  // FindRecommendApplication: {
-  //   url: `${ServicePrefixEnum.TENANT}/anyone/findRecommendApplication`,
-  //   method: RequestEnum.GET,
-  // } as AxiosRequestConfig,
+  // 角色授权时，查询当前企业拥有的应用和资源
+  FindAvailableApplicationResourceList: {
+    url: `${ServicePrefixEnum.TENANT}/${MODULAR}/findAvailableApplicationResourceList`,
+    method: RequestEnum.GET,
+  } as AxiosRequestConfig,
 };
-
-// export const findMyApplication = (name?: string) =>
-//   defHttp.request<DefApplicationResultVO[]>({ ...Api.FindMyApplication, params: { name } });
 
 export const pageFindMyApplication = (params: PageParams<DefApplicationPageQuery>) =>
   defHttp.request<DefApplicationResultVO[]>({
@@ -57,17 +56,17 @@ export const pageFindMyApplication = (params: PageParams<DefApplicationPageQuery
     params: { name: params?.model?.name },
   });
 
-// export const findRecommendApplication = (name?: string) =>
-//   defHttp.request<DefApplicationResultVO[]>({ ...Api.FindRecommendApplication, params: { name } });
+export const findApplicationResourceList = () =>
+  defHttp.request<ApplicationResourceResultVO[]>({ ...Api.FindApplicationResourceList });
+
+export const findAvailableApplicationResourceList = () =>
+  defHttp.request<ApplicationResourceResultVO[]>({ ...Api.FindAvailableApplicationResourceList });
 
 export const page = (params: PageParams<DefApplicationPageQuery>) =>
   defHttp.request<PageResult<DefApplicationResultVO>>({ ...Api.Page, params });
 
 export const query = (params?: DefApplicationPageQuery) =>
   defHttp.request<DefApplicationResultVO[]>({ ...Api.Query, params });
-
-export const findApplicationResourceList = () =>
-  defHttp.request<ApplicationResourceResultVO[]>({ ...Api.FindApplicationResourceList });
 
 export const save = (params: DefApplicationSaveVO) =>
   defHttp.request<DefApplicationResultVO>({ ...Api.Save, params });

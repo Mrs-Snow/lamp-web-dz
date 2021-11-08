@@ -20,14 +20,15 @@
         :checkedKeys="appResMap[item.defApplication.id]"
         :ref="(el) => (itemRefs[item.defApplication.id] = el)"
       />
+      <Empty v-if="applicationResourceList.length === 0" />
     </Card>
   </div>
 </template>
 <script lang="ts">
   import { defineComponent, onMounted, toRefs, reactive } from 'vue';
-  import { Card } from 'ant-design-vue';
+  import { Card, Empty } from 'ant-design-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { findApplicationResourceList } from '/@/api/devOperation/application/defApplication';
+  import { findAvailableApplicationResourceList } from '/@/api/devOperation/application/defApplication';
   import ApplicationTab from './ApplicationTab.vue';
   import { isArray } from '/@/utils/is';
   import { findResourceIdByRoleId, saveRoleResource } from '/@/api/basic/system/baseRole';
@@ -37,6 +38,7 @@
     name: 'ApplicationResourceTabs',
     components: {
       Card,
+      Empty,
       ApplicationTab,
     },
 
@@ -59,7 +61,7 @@
       });
 
       onMounted(async () => {
-        state.applicationResourceList = await findApplicationResourceList();
+        state.applicationResourceList = await findAvailableApplicationResourceList();
       });
 
       function getData(): BaseRoleResourceRelSaveVO {
