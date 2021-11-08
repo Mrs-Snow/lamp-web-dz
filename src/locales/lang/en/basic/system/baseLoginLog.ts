@@ -1,0 +1,16 @@
+export default {
+  table: { title: 'BaseLoginLog list' },
+  id: 'ID',
+  requestIp: 'requestIp',
+  userId: 'userId',
+  userName: 'userName',
+  account: 'account',
+  description: 'description',
+  loginDate: 'loginDate',
+  ua: 'ua',
+  browser: 'browser',
+  browserVersion: 'browserVersion',
+  operatingSystem: 'operatingSystem',
+  location: 'location',
+  createdOrgId: 'createdOrgId',
+};
