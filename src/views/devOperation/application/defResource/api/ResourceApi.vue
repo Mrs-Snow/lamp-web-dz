@@ -62,6 +62,7 @@
         title: '资源关联的接口',
         dataSource: innerVal,
         scroll: { y: 250 },
+        canResize: false,
         columns: resourceApiColumns,
         bordered: true,
         actionColumn: {

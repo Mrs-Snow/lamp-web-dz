@@ -494,15 +494,15 @@ export const resourceApiColumns: BasicColumn[] = [
     dataIndex: 'resourceId',
     ifShow: false,
   },
-  {
-    title: t('devOperation.application.defResourceApi.springApplicationName'),
-    dataIndex: 'springApplicationName',
-    width: 150,
-  },
-  {
-    title: t('devOperation.application.defResourceApi.controller'),
-    dataIndex: 'controller',
-  },
+  // {
+  //   title: t('devOperation.application.defResourceApi.springApplicationName'),
+  //   dataIndex: 'springApplicationName',
+  //   width: 150,
+  // },
+  // {
+  //   title: t('devOperation.application.defResourceApi.controller'),
+  //   dataIndex: 'controller',
+  // },
   {
     title: t('devOperation.application.defResourceApi.name'),
     dataIndex: 'name',
