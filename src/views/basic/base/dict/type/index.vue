@@ -11,32 +11,23 @@
         <a-button
           type="primary"
           v-hasPermission="[RoleEnum.BASIC_DICT_IMPORT]"
-          preIcon="ant-design:plus-outlined"
           @click="handleImport"
-          >{{ t('common.title.import') }}</a-button
         >
+          {{ t('common.title.import') }}
+        </a-button>
         <a-button
-          preIcon="ant-design:delete-outlined"
           type="primary"
           color="error"
           v-hasPermission="[RoleEnum.BASIC_DICT_DELETE]"
           @click="handleBatchDelete"
           >{{ t('common.title.delete') }}</a-button
         >
-        <a-button
-          type="primary"
-          v-hasPermission="[RoleEnum.BASIC_DICT_EDIT]"
-          preIcon="clarity:note-edit-line"
-          @click="handleEdit"
-          >{{ t('common.title.edit') }}</a-button
-        >
-        <a-button
-          type="primary"
-          v-hasPermission="[RoleEnum.BASIC_DICT_VIEW]"
-          preIcon="ant-design:search-outlined"
-          @click="handleView"
-          >{{ t('common.title.view') }}</a-button
-        >
+        <a-button type="primary" v-hasPermission="[RoleEnum.BASIC_DICT_EDIT]" @click="handleEdit">
+          {{ t('common.title.edit') }}
+        </a-button>
+        <a-button type="primary" v-hasPermission="[RoleEnum.BASIC_DICT_VIEW]" @click="handleView">
+          {{ t('common.title.view') }}
+        </a-button>
       </template>
       <template #state="{ record }">
         <Badge
@@ -87,7 +78,7 @@
         api: page,
         columns: columns(),
         formConfig: {
-          labelWidth: 70,
+          labelWidth: 60,
           schemas: searchFormSchema(),
           autoSubmitOnEnter: true,
           resetButtonOptions: {

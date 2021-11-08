@@ -1,5 +1,5 @@
 export default {
-  table: { title: '字典列表' },
+  table: { title: '字典项' },
   id: '主键',
   parentId: '字典ID',
   parentKey: '字典标识',

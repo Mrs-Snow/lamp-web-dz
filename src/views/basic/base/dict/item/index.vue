@@ -72,6 +72,7 @@
   import { handleFetchParams } from '/@/utils/lamp/common';
   import { DictClassifyEnum } from '/@/enums/biz/base';
   import { ActionEnum } from '/@/enums/commonEnum';
+  import { RoleEnum } from '/@/enums/roleEnum';
   import { page, remove } from '/@/api/basic/base/baseDictItem';
   import { columns, searchFormSchema } from './baseDictItem.data';
   import EditModal from './Edit.vue';
@@ -109,7 +110,7 @@
         formConfig: {
           labelWidth: 100,
           schemas: searchFormSchema(),
-          baseColProps: { xs: 24, sm: 12, md: 12, lg: 12, xl: 8 },
+          // baseColProps: { xs: 24, sm: 12, md: 12, lg: 12, xl: 8 },
           autoSubmitOnEnter: true,
           resetButtonOptions: {
             preIcon: 'ant-design:rest-outlined',
@@ -233,6 +234,7 @@
         handleSuccess,
         handleBatchDelete,
         DictClassifyEnum,
+        RoleEnum,
       };
     },
   });

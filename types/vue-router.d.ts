@@ -41,5 +41,8 @@ declare module 'vue-router' {
     ignoreRoute?: boolean;
     // Hide path for children
     hidePathForChildren?: boolean;
+    type?: 'primary' | 'error' | 'warn' | 'success';
+    content?: string;
+    dot?: boolean;
   }
 }

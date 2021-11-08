@@ -27,11 +27,17 @@
 
         if (!item) return false;
 
-        const { tag } = item;
-        if (!tag) return false;
+        const { tag, meta } = item;
 
-        const { dot, content } = tag;
-        if (!dot && !content) return false;
+        if (tag) {
+          const { dot, content } = tag;
+          if (!dot && !content) return false;
+        }
+
+        if (meta) {
+          const { dot, content } = meta;
+          if (!dot && !content) return false;
+        }
         return true;
       });
 
@@ -39,8 +45,16 @@
         if (!getShowTag.value) return '';
         const { item, collapseParent } = props;
         const { tag } = item;
-        const { dot, content } = tag!;
-        return dot || collapseParent ? '' : content;
+        if (tag) {
+          const { dot, content } = tag!;
+          return dot || collapseParent ? '' : content;
+        }
+        const { meta } = item;
+        if (meta) {
+          const { dot, content } = meta!;
+          return dot || collapseParent ? '' : content;
+        }
+        return '';
       });
 
       const getTagClass = computed(() => {

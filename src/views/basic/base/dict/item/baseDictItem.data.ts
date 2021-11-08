@@ -51,7 +51,7 @@ export const searchFormSchema = (): FormSchema[] => {
       label: t('basic.base.baseDictItem.classify'),
       field: 'classify',
       component: 'ApiSelect',
-      colProps: { span: 8 },
+      colProps: { span: 12 },
       componentProps: {
         ...dictComponentProps(DictEnum.DICT_CLASSIFY),
         mode: 'multiple',
@@ -61,13 +61,13 @@ export const searchFormSchema = (): FormSchema[] => {
       label: t('basic.base.baseDictItem.key'),
       field: 'key',
       component: 'Input',
-      colProps: { span: 8 },
+      colProps: { span: 12 },
     },
     {
       label: t('basic.base.baseDictItem.name'),
       field: 'name',
       component: 'Input',
-      colProps: { span: 8 },
+      colProps: { span: 12 },
     },
   ];
 };
