@@ -7,6 +7,7 @@
           preIcon="ant-design:delete-outlined"
           v-if="dictId"
           color="error"
+          v-hasPermission="[RoleEnum.BASIC_DICT_ITEM_DELETE]"
           @click="handleBatchDelete"
           >{{ t('common.title.delete') }}</a-button
         >
@@ -15,6 +16,7 @@
           preIcon="ant-design:plus-outlined"
           v-if="dictId"
           @click="handleAdd"
+          v-hasPermission="[RoleEnum.BASIC_DICT_ITEM_ADD]"
           >{{ t('common.title.add') }}</a-button
         >
       </template>
@@ -30,17 +32,20 @@
             {
               tooltip: t('common.title.edit'),
               icon: 'clarity:note-edit-line',
+              auth: RoleEnum.BASIC_DICT_ITEM_EDIT,
               onClick: handleEdit.bind(null, record),
             },
             {
               tooltip: t('common.title.copy'),
               icon: 'ant-design:copy-outlined',
+              auth: RoleEnum.BASIC_DICT_ITEM_ADD,
               onClick: handleCopy.bind(null, record),
             },
             {
               tooltip: t('common.title.delete'),
               icon: 'ant-design:delete-outlined',
               color: 'error',
+              auth: RoleEnum.BASIC_DICT_ITEM_DELETE,
               popConfirm: {
                 title: t('common.tips.confirmDelete'),
                 confirm: handleDelete.bind(null, record),

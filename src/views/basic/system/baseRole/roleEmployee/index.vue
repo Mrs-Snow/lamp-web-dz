@@ -4,10 +4,10 @@
     @register="registerModal"
     showFooter
     width="70%"
-    :height="300"
     :keyboard="true"
     :maskClosable="true"
     title="绑定员工"
+    :defaultFullscreen="true"
     @ok="handleSubmit"
   >
     <div ref="wrapEl">
@@ -81,6 +81,14 @@
         formConfig: {
           labelWidth: 70,
           schemas: roleEmployeeSearchFormSchema(),
+          autoSubmitOnEnter: true,
+          resetButtonOptions: {
+            preIcon: 'ant-design:rest-outlined',
+          },
+          submitButtonOptions: {
+            preIcon: 'ant-design:search-outlined',
+          },
+          alwaysShowLines: 1,
         },
         beforeFetch: handleFetchParams,
         showIndexColumn: false,
@@ -92,6 +100,7 @@
         searchInfo: {
           roleId: toRef(formData, 'roleId'),
         },
+        canResize: false,
         bordered: true,
         clickToRowSelect: false,
         rowKey: 'id',

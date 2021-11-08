@@ -2,29 +2,48 @@
   <PageWrapper dense contentFullHeight>
     <BasicTable @register="registerTable">
       <template #toolbar>
-        <a-button type="primary" color="error" @click="handleBatchDelete">{{
-          t('common.title.delete')
-        }}</a-button>
-        <a-button type="primary" @click="handleAdd">{{ t('common.title.add') }}</a-button>
+        <a-button
+          type="primary"
+          color="error"
+          preIcon="ant-design:delete-outlined"
+          v-hasAnyPermission="[RoleEnum.POSITION_DELETE]"
+          @click="handleBatchDelete"
+          >{{ t('common.title.delete') }}</a-button
+        >
+        <a-button
+          type="primary"
+          preIcon="ant-design:plus-outlined"
+          @click="handleAdd"
+          v-hasAnyPermission="[RoleEnum.POSITION_ADD]"
+          >{{ t('common.title.add') }}</a-button
+        >
       </template>
       <template #action="{ record }">
         <TableAction
           :actions="[
             {
-              label: t('common.title.view'),
+              tooltip: t('common.title.view'),
+              icon: 'ant-design:search-outlined',
               onClick: handleView.bind(null, record),
+              auth: RoleEnum.POSITION_VIEW,
             },
             {
-              label: t('common.title.edit'),
+              tooltip: t('common.title.edit'),
+              icon: 'ant-design:edit-outlined',
               onClick: handleEdit.bind(null, record),
+              auth: RoleEnum.POSITION_EDIT,
             },
             {
-              label: t('common.title.copy'),
+              tooltip: t('common.title.copy'),
+              icon: 'ant-design:copy-outlined',
               onClick: handleCopy.bind(null, record),
+              auth: RoleEnum.POSITION_ADD,
             },
             {
-              label: t('common.title.delete'),
+              tooltip: t('common.title.delete'),
               color: 'error',
+              icon: 'ant-design:delete-outlined',
+              auth: RoleEnum.POSITION_DELETE,
               popConfirm: {
                 title: t('common.tips.confirmDelete'),
                 confirm: handleDelete.bind(null, record),
@@ -45,6 +64,7 @@
   import { PageWrapper } from '/@/components/Page';
   import { useDrawer } from '/@/components/Drawer';
   import { handleFetchParams } from '/@/utils/lamp/common';
+  import { RoleEnum } from '/@/enums/roleEnum';
   import { ActionEnum } from '/@/enums/commonEnum';
   import { page, remove } from '/@/api/basic/user/basePosition';
   import { columns, searchFormSchema } from './basePosition.data';
@@ -68,6 +88,15 @@
         formConfig: {
           labelWidth: 120,
           schemas: searchFormSchema(),
+          baseColProps: { xs: 24, sm: 12, md: 12, lg: 12, xl: 8 },
+          autoSubmitOnEnter: true,
+          resetButtonOptions: {
+            preIcon: 'ant-design:rest-outlined',
+          },
+          submitButtonOptions: {
+            preIcon: 'ant-design:search-outlined',
+          },
+          alwaysShowLines: 1,
         },
         beforeFetch: handleFetchParams,
         useSearchForm: true,
@@ -167,6 +196,7 @@
         handleDelete,
         handleSuccess,
         handleBatchDelete,
+        RoleEnum,
       };
     },
   });

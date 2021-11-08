@@ -2,20 +2,34 @@
   <div class="bg-white m-4 mr-2 overflow-hidden">
     <BasicTable @register="registerTable">
       <template #toolbar>
-        <a-button type="primary" color="error" @click="handleBatchDelete">{{
-          t('common.title.delete')
-        }}</a-button>
-        <a-button type="primary" @click="handleAdd">{{ t('common.title.add') }}</a-button>
+        <a-button
+          type="primary"
+          color="error"
+          @click="handleBatchDelete"
+          preIcon="ant-design:delete-outlined"
+          v-hasAnyPermission="[RoleEnum.ROLE_DELETE]"
+          >{{ t('common.title.delete') }}</a-button
+        >
+        <a-button
+          type="primary"
+          preIcon="ant-design:delete-outlined"
+          v-hasAnyPermission="[RoleEnum.ROLE_ADD]"
+          @click="handleAdd"
+          >{{ t('common.title.add') }}</a-button
+        >
       </template>
       <template #action="{ record }">
         <TableAction
           :actions="[
             {
-              label: t('common.title.edit'),
+              tooltip: t('common.title.edit'),
+              icon: 'ant-design:edit-outlined',
+              auth: RoleEnum.ROLE_EDIT,
               onClick: handleEdit.bind(null, record),
             },
             {
-              label: '绑定',
+              label: '绑定用户',
+              auth: RoleEnum.ROLE_BING_USER,
               onClick: handleBindUser.bind(null, record),
             },
           ]"
@@ -33,6 +47,7 @@
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
   import { useModal } from '/@/components/Modal';
   import { handleFetchParams } from '/@/utils/lamp/common';
+  import { RoleEnum } from '/@/enums/roleEnum';
   import { ActionEnum } from '/@/enums/commonEnum';
   import { page, remove } from '/@/api/basic/system/baseRole';
   import { columns, searchFormSchema } from '../baseRole.data';
@@ -59,6 +74,14 @@
         formConfig: {
           labelWidth: 50,
           schemas: searchFormSchema(),
+          autoSubmitOnEnter: true,
+          resetButtonOptions: {
+            preIcon: 'ant-design:rest-outlined',
+          },
+          submitButtonOptions: {
+            preIcon: 'ant-design:search-outlined',
+          },
+          alwaysShowLines: 1,
         },
         beforeFetch: handleFetchParams,
         showIndexColumn: false,
@@ -73,12 +96,6 @@
             emit('select', selectedRows[0]);
           },
         },
-        // afterFetch: (list: Recordable[]) => {
-        //   if (list && list.length > 0) {
-        //     emit('select', list[0]);
-        //   }
-        //   return list;
-        // },
         actionColumn: {
           width: 120,
           title: t('common.column.action'),
@@ -142,6 +159,7 @@
 
       return {
         t,
+        RoleEnum,
         registerTable,
         registerModal,
         registerRoleEmployeeModal,

@@ -4,22 +4,39 @@
       @register="registerTable"
       @selection-change="handleSelectionChange"
       @row-click="handleRowClick"
-      @row-dbClick="handleRowDbClick"
+      @row-db-click="handleRowDbClick"
       @fetch-success="onFetchSuccess"
     >
       <template #toolbar>
-        <a-button type="primary" @click="handleImport">{{ t('common.title.import') }}</a-button>
+        <a-button
+          type="primary"
+          v-hasPermission="[RoleEnum.BASIC_DICT_IMPORT]"
+          preIcon="ant-design:plus-outlined"
+          @click="handleImport"
+          >{{ t('common.title.import') }}</a-button
+        >
         <a-button
           preIcon="ant-design:delete-outlined"
           type="primary"
           color="error"
+          v-hasPermission="[RoleEnum.BASIC_DICT_DELETE]"
           @click="handleBatchDelete"
           >{{ t('common.title.delete') }}</a-button
         >
-        <a-button type="primary" preIcon="clarity:note-edit-line" @click="handleEdit">{{
-          t('common.title.edit')
-        }}</a-button>
-        <a-button type="primary" @click="handleView">{{ t('common.title.view') }}</a-button>
+        <a-button
+          type="primary"
+          v-hasPermission="[RoleEnum.BASIC_DICT_EDIT]"
+          preIcon="clarity:note-edit-line"
+          @click="handleEdit"
+          >{{ t('common.title.edit') }}</a-button
+        >
+        <a-button
+          type="primary"
+          v-hasPermission="[RoleEnum.BASIC_DICT_VIEW]"
+          preIcon="ant-design:search-outlined"
+          @click="handleView"
+          >{{ t('common.title.view') }}</a-button
+        >
       </template>
       <template #state="{ record }">
         <Badge
@@ -41,6 +58,7 @@
   import { useDrawer } from '/@/components/Drawer';
   import { useModal } from '/@/components/Modal';
   import { handleFetchParams } from '/@/utils/lamp/common';
+  import { RoleEnum } from '/@/enums/roleEnum';
   import { ActionEnum } from '/@/enums/commonEnum';
   import { DictClassifyEnum } from '/@/enums/biz/base';
   import { page, remove } from '/@/api/basic/base/baseDict';
@@ -206,6 +224,7 @@
         handleView,
         handleSuccess,
         DictClassifyEnum,
+        RoleEnum,
         handleSelectionChange,
         handleRowClick,
         handleRowDbClick,

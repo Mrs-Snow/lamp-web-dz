@@ -6,12 +6,17 @@
           type="primary"
           preIcon="ant-design:delete-outlined"
           color="error"
+          v-hasAnyPermission="[RoleEnum.EMPLOYEE_DELETE]"
           @click="handleBatchDelete"
           >{{ t('common.title.delete') }}</a-button
         >
-        <a-button type="primary" preIcon="ant-design:plus-outlined" @click="handleAdd">{{
-          t('common.title.add')
-        }}</a-button>
+        <a-button
+          type="primary"
+          preIcon="ant-design:plus-outlined"
+          v-hasAnyPermission="[RoleEnum.EMPLOYEE_ADD]"
+          @click="handleAdd"
+          >{{ t('common.title.add') }}</a-button
+        >
       </template>
       <template #orgIdList="{ record }">
         <span>
@@ -32,6 +37,7 @@
               label: t('common.title.view'),
               icon: 'ant-design:search-outlined',
               onClick: handleView.bind(null, record),
+              auth: RoleEnum.EMPLOYEE_VIEW,
             },
           ]"
           :dropDownActions="[
@@ -39,15 +45,18 @@
               label: t('common.title.edit'),
               icon: 'ant-design:edit-outlined',
               onClick: handleEdit.bind(null, record),
+              auth: RoleEnum.EMPLOYEE_EDIT,
             },
             {
               label: t('common.title.copy'),
               icon: 'ant-design:copy-outlined',
               onClick: handleCopy.bind(null, record),
+              auth: RoleEnum.EMPLOYEE_ADD,
             },
             {
               label: t('common.title.delete'),
               icon: 'ant-design:delete-outlined',
+              auth: RoleEnum.EMPLOYEE_DELETE,
               popConfirm: {
                 title: t('common.tips.confirmDelete'),
                 confirm: handleDelete.bind(null, record),
@@ -66,6 +75,7 @@
   import { Tag } from 'ant-design-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
+  import { RoleEnum } from '/@/enums/roleEnum';
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
   import { PageWrapper } from '/@/components/Page';
   import { useDrawer } from '/@/components/Drawer';
@@ -201,6 +211,7 @@
         handleDelete,
         handleSuccess,
         handleBatchDelete,
+        RoleEnum,
       };
     },
   });

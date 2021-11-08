@@ -4,7 +4,7 @@
       @register="registerTable"
       @selection-change="handleSelectionChange"
       @row-click="handleRowClick"
-      @row-dbClick="handleRowDbClick"
+      @row-db-click="handleRowDbClick"
       @fetch-success="onFetchSuccess"
     >
       <template #toolbar>
