@@ -1,9 +1,9 @@
 <template>
   <div class="bg-white m-4 mr-2 overflow-hidden">
     <div class="m-4">
+      <a-button @click="changeDisplay()" class="mr-2"> 切换 </a-button>
       <a-button @click="handleAdd()" class="mr-2">{{ t('common.title.addRoot') }}</a-button>
       <a-button @click="handleBatchDelete()" class="mr-2">{{ t('common.title.delete') }}</a-button>
-      <a-button @click="handleBatchDelete()" class="mr-2"> 切换 </a-button>
     </div>
     <BasicTree
       :title="t('basic.user.baseOrg.table.title')"
@@ -41,7 +41,7 @@
     name: 'BaseOrgManagement',
     components: { BasicTree },
 
-    emits: ['select', 'add'],
+    emits: ['select', 'add', 'change'],
     setup(_, { emit }) {
       const { t } = useI18n();
       const { createMessage, createConfirm } = useMessage();
@@ -158,6 +158,11 @@
         batchDelete(checked);
       }
 
+      // 切换显示方式
+      function changeDisplay() {
+        emit('change', '1');
+      }
+
       return {
         t,
         treeRef,
@@ -168,6 +173,7 @@
         getRightMenuList,
         actionList,
         handleSelect,
+        changeDisplay,
       };
     },
   });

@@ -1,6 +1,21 @@
 <template>
   <PageWrapper dense fixedHeight contentClass="flex">
-    <BaseOrgTree class="md:w-1/2" @select="handleTreeSelect" @add="handleTreeAdd" ref="treeRef" />
+    <BaseBlocksTree
+      v-if="isBlocksTree"
+      class="md:w-1/2"
+      @select="handleTreeSelect"
+      @add="handleTreeAdd"
+      ref="treeRef"
+      @change="changeDisplay"
+    />
+    <BaseOrgTree
+      v-else
+      class="md:w-1/2"
+      @select="handleTreeSelect"
+      @add="handleTreeAdd"
+      ref="treeRef"
+      @change="changeDisplay"
+    />
     <Edit class="md:w-1/2" @success="handleEditSuccess" ref="editRef" />
   </PageWrapper>
 </template>
@@ -8,17 +23,18 @@
   import { defineComponent, ref, unref } from 'vue';
   import { PageWrapper } from '/@/components/Page';
   import { ActionEnum } from '/@/enums/commonEnum';
-  import BaseOrgTree from './BlocksTree.vue';
-  // import BaseOrgTree from './Tree.vue';
+  import BaseBlocksTree from './BlocksTree.vue';
+  import BaseOrgTree from './Tree.vue';
   import Edit from './Edit.vue';
 
   export default defineComponent({
     // 若需要开启页面缓存，请将此参数跟菜单名保持一致
     name: 'BaseOrgManage',
-    components: { Edit, BaseOrgTree, PageWrapper },
+    components: { Edit, BaseOrgTree, BaseBlocksTree, PageWrapper },
     setup() {
       const editRef = ref<any>(null);
       const treeRef = ref<any>(null);
+      const isBlocksTree = ref<boolean>(false);
 
       // 获取编辑表单
       function getEditRef() {
@@ -44,12 +60,18 @@
         getEditRef().setData({ type: ActionEnum.ADD, parent });
       }
 
+      function changeDisplay(type: string) {
+        isBlocksTree.value = type === '1';
+      }
+
       return {
         editRef,
         treeRef,
         handleEditSuccess,
         handleTreeSelect,
         handleTreeAdd,
+        changeDisplay,
+        isBlocksTree,
       };
     },
   });
