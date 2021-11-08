@@ -64,8 +64,7 @@
 
   const isHorizontal = ref<boolean>(false); // 是否垂直展示
   const collapsable = ref<boolean>(true); // 折叠节点
-  const architectureType = ref<number>(1); // 架构类型
-  const spinning = ref<boolean>(false); // 加载Loading...
+  const spinning = ref<boolean>(false); // 加载 ...
   const labelClassName = ref<string>('bg-primary'); // 主题背景类名
   const labelClassNameItem = reactive([
     { value: 'bg-primary', label: '主题背景' },
@@ -81,18 +80,12 @@
   const treeData = reactive<treeResult>({ name: '机构(单位/部门)树', expand: false, key: 0 });
 
   // 不同类型接口切换
-  async function getArchitectureTree() {
-    switch (architectureType.value) {
-      // 组织架构
-      case 1:
-        spinning.value = true;
-
-        try {
-          treeData.children = (await tree()) as any[];
-        } finally {
-          spinning.value = false;
-        }
-        break;
+  async function loadOrgTree() {
+    spinning.value = true;
+    try {
+      treeData.children = (await tree()) as any[];
+    } finally {
+      spinning.value = false;
     }
   }
 
@@ -108,7 +101,7 @@
 
   // 首次挂载
   onMounted(async () => {
-    getArchitectureTree();
+    await loadOrgTree();
   });
 </script>
 
