@@ -86,6 +86,10 @@
           labelWidth: 120,
           schemas: searchFormSchema(),
         },
+        defSort: {
+          sort: 'sortValue',
+          order: 'ascend',
+        },
         beforeFetch: handleFetchParams,
         useSearchForm: true,
         showTableSetting: true,

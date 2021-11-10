@@ -13,7 +13,7 @@
         <BasicTree
           v-model:value="model[field]"
           :treeData="treeData"
-          :replaceFields="{ title: 'label', key: 'id' }"
+          :replaceFields="{ title: 'name', key: 'id' }"
           :checkedKeys="checkedKeys"
           :expandedKeys="checkedKeys"
           checkable
