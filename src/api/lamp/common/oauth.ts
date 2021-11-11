@@ -1,6 +1,7 @@
 import type { DefUserInfoResultVO } from '/#/store';
 import { defHttp } from '/@/utils/http/axios';
 import { LoginParamVO, LogoutParams, LoginResultVO } from './model/userModel';
+import { MenuParams, MenuListResultModel, VisibleResourceVO } from './model/menuModel';
 import { ContentTypeEnum } from '/@/enums/httpEnum';
 import { ServicePrefixEnum } from '/@/enums/commonEnum';
 
@@ -24,9 +25,25 @@ const Api = {
     method: 'GET',
     responseType: 'arraybuffer',
   } as AxiosRequestConfig,
+  // 获取菜单
+  FindMenuList: {
+    url: '/oauth/anyone/visible/router',
+  },
+  // 获取资源
+  FindResourceList: {
+    url: '/oauth/anyone/visible/resource',
+  },
   // 切换当前企业
   SwitchTenant: {
     url: `${ServicePrefixEnum.OAUTH}/anyone/switchTenant`,
+  },
+  // 设置默认企业
+  UpdateDefaultTenant: {
+    url: `${ServicePrefixEnum.TENANT}/anyone/updateDefaultTenant`,
+  },
+  // 检测员工是否拥有指定应用的权限
+  CheckEmployeeHaveApplication: {
+    url: `${ServicePrefixEnum.OAUTH}/anyone/checkEmployeeHaveApplication`,
   },
 };
 
@@ -89,5 +106,41 @@ export function switchTenant(tenantId: string) {
   return defHttp.get<LoginResultVO>({
     ...Api.SwitchTenant,
     params: { tenantId },
+  });
+}
+
+export function updateDefaultTenant(tenantId: string) {
+  return defHttp.put<boolean>({
+    ...Api.UpdateDefaultTenant,
+    params: { tenantId },
+    headers: {
+      'Content-Type': ContentTypeEnum.FORM_URLENCODED,
+    },
+  });
+}
+
+/**
+ * @description: Get user menu based on id
+ */
+
+export const findMenuList = (params?: MenuParams) => {
+  return defHttp.get<MenuListResultModel>({ ...Api.FindMenuList, params });
+};
+
+/**
+ * 查询指定应用资源
+ * @param params
+ */
+export function findResourceList(applicationId: string) {
+  return defHttp.get<VisibleResourceVO>({
+    ...Api.FindResourceList,
+    params: { applicationId },
+  });
+}
+
+export function checkEmployeeHaveApplication(applicationId: string) {
+  return defHttp.get<boolean>({
+    ...Api.CheckEmployeeHaveApplication,
+    params: { applicationId },
   });
 }

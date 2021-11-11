@@ -18,8 +18,8 @@ import { ERROR_LOG_ROUTE, PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
 
 import { filter } from '/@/utils/helper/treeHelper';
 
-import { getMenuList, getResourceByUserId } from '/@/api/sys/menu';
-import { VisibleResourceVO } from '/@/api/sys/model/menuModel';
+import { findMenuList, findResourceList } from '/@/api/lamp/common/oauth';
+import { VisibleResourceVO } from '/@/api/lamp/common/model/menuModel';
 
 import { useMessage } from '/@/hooks/web/useMessage';
 import { PageEnum } from '/@/enums/pageEnum';
@@ -100,7 +100,7 @@ export const usePermissionStore = defineStore({
     async changePermissionCode() {
       const userStore = useUserStore();
       const applicationId = userStore.getApplicationId;
-      const visibleResource = await getResourceByUserId(applicationId);
+      const visibleResource = await findResourceList(applicationId);
       this.setVisibleResource(visibleResource);
     },
     async buildRoutesAction(): Promise<AppRouteRecordRaw[]> {
@@ -193,7 +193,7 @@ export const usePermissionStore = defineStore({
           try {
             await this.changePermissionCode();
             const applicationId = userStore.getApplicationId;
-            routeList = (await getMenuList({ applicationId })) as AppRouteRecordRaw[];
+            routeList = (await findMenuList({ applicationId })) as AppRouteRecordRaw[];
           } catch (error) {
             console.error(error);
           }

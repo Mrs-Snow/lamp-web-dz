@@ -44,6 +44,7 @@
   import { isUrl } from '/@/utils/is';
   import { FileBizTypeEnum } from '/@/enums/commonEnum';
   import { propTypes } from '/@/utils/propTypes';
+  import { checkEmployeeHaveApplication } from '/@/api/lamp/common/oauth';
 
   export default defineComponent({
     components: { Card, CardGrid: Card.Grid, Empty, ThumbUrl },
@@ -73,28 +74,37 @@
           createMessage.warn(`您当前正处于[${item.name}]，无需切换`);
           return;
         }
-        if (item && item.id) {
-          const isOpen = item.url && isUrl(item.url);
-          createConfirm({
-            iconType: 'warning',
-            content: `确定要${isOpen ? '跳转' : '切换'}到应用：【${
-              item.name
-            }】， 并重新加载其资源吗？`,
-            onOk: async () => {
-              if (isOpen) {
-                window.open(item.url);
-              } else {
-                userStore.setApplicationId(item.id as string);
-                await userStore.getUserInfoAction();
-                await refreshMenu();
-                createMessage.success(`成功切换到应用：[${item.name}]`);
-                location.reload();
-              }
-            },
-          });
-        } else {
+        if (!item || !item.id) {
           createMessage.error('请选择正确的应用进行切换');
+          return;
         }
+        const canJump = await checkEmployeeHaveApplication(item.id);
+        if (!canJump) {
+          createMessage.warn(`对不起，您无该应用访问权限，请联系贵公司管理员开通权限`);
+          return '';
+        }
+
+        const isOpen = item.url && isUrl(item.url);
+        createConfirm({
+          iconType: 'warning',
+          content: `确定要${isOpen ? '跳转' : '切换'}到应用：【${
+            item.name
+          }】， 并重新加载其资源吗？`,
+          onOk: async () => {
+            if (isOpen) {
+              window.open(item.url);
+            } else {
+              userStore.setApplicationId(item.id as string);
+              await userStore.getUserInfoAction();
+              await refreshMenu();
+              createMessage.success(`成功切换到应用：[${item.name}]`);
+
+              setTimeout(() => {
+                location.reload();
+              }, 200);
+            }
+          },
+        });
       }
 
       const customClick = props.handleClick ? props.handleClick : handlerTurnToApplication;

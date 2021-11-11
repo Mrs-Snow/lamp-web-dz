@@ -1,7 +1,9 @@
 <template>
   <div :class="[prefixCls, `${prefixCls}--${theme}`]">
     <Dropdown placement="bottomLeft">
-      <span> {{ getTenantName(getCurrentTenant) }} <DownOutlined /></span>
+      <span :title="getCurrentTenant?.name">
+        {{ getTenantName(getCurrentTenant) }} <DownOutlined
+      /></span>
       <template #overlay>
         <Menu
           @click="switchTenantConfirm"
@@ -11,8 +13,18 @@
             v-for="tenant in getTenantList"
             :key="tenant.id"
             :disabled="disabledItem(tenant)"
+            :title="tenant.name"
           >
             {{ getTenantName(tenant) }}
+
+            <a-button
+              type="link"
+              size="small"
+              v-if="!tenant.isDefault"
+              @click="setDefaults(tenant, $event)"
+            >
+              设为默认
+            </a-button>
           </MenuItem>
         </Menu>
       </template>
@@ -22,12 +34,13 @@
 <script lang="ts">
   import { defineComponent, computed, unref } from 'vue';
   import { Dropdown, Menu } from 'ant-design-vue';
+  import { MenuInfo } from 'ant-design-vue/lib/menu/src/interface';
   import { DownOutlined } from '@ant-design/icons-vue';
   import { propTypes } from '/@/utils/propTypes';
   import { useDesign } from '/@/hooks/web/useDesign';
   import { useUserStore } from '/@/store/modules/user';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { MenuInfo } from 'ant-design-vue/lib/menu/src/interface';
+  import { updateDefaultTenant } from '/@/api/lamp/common/oauth';
 
   export default defineComponent({
     name: 'TenantList',
@@ -52,7 +65,8 @@
       });
 
       function getTenantName(tenant: Recordable) {
-        const strList = [tenant.name];
+        const name = tenant?.name?.length > 10 ? tenant?.name?.substr(0, 10) + '...' : tenant?.name;
+        const strList = [name];
         if (!tenant.state) {
           // 企业被禁用
           strList.push('(已禁用)');
@@ -102,6 +116,21 @@
           createMessage.success('切换成功');
         }
       }
+      async function setDefaults(tenant: Recordable, e: Event) {
+        e?.stopPropagation();
+        e?.preventDefault();
+        createConfirm({
+          iconType: 'warning',
+          content: `是否确认设置【${tenant?.name} 】为默认企业？`,
+          onOk: async () => {
+            try {
+              await updateDefaultTenant(tenant.id as string);
+              userStore.getUserInfoAction();
+            } catch (e) {}
+          },
+        });
+      }
+
       return {
         prefixCls,
         switchTenantConfirm,
@@ -109,6 +138,7 @@
         getTenantList,
         getCurrentTenant,
         disabledItem,
+        setDefaults,
       };
     },
   });

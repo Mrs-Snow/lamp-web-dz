@@ -144,7 +144,7 @@ export const useUserStore = defineStore({
       this.applicationId = '';
     },
 
-    async switchTenant(switchTenantId: string): Promise<DefUserInfoResultVO | null> {
+    async switchTenant(switchTenantId: string) {
       try {
         const data = await switchTenant(switchTenantId);
         const { token, tenantId, refreshToken, expiration } = data;
@@ -156,10 +156,13 @@ export const useUserStore = defineStore({
         this.setApplicationId(DEF_APP_ID);
         this.setSessionTimeout(false);
         const permissionStore = usePermissionStore();
-        permissionStore.resetState;
+        permissionStore.resetState();
         const { closeAll } = useTabs(router);
         await closeAll();
-        return this.afterLoginAction('message', true);
+        await router.replace(PageEnum.BASE_HOME);
+        setTimeout(() => {
+          location.reload();
+        }, 200);
       } catch (error) {
         return Promise.reject(error);
       }
