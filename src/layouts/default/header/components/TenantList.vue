@@ -115,7 +115,7 @@
 </script>
 <style lang="less">
   @prefix-cls: ~'@{namespace}-layout-tenantList';
-  @tenantList-item-normal-color: #999;
+  @tenantList-item-normal-color: rgba(0, 0, 0, 0.85);
 
   .@{prefix-cls} {
     display: flex;

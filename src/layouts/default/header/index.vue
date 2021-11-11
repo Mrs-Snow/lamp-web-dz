@@ -37,7 +37,17 @@
 
     <!-- action  -->
     <div :class="`${prefixCls}-action`">
-      <div class="tips">{{ globSetting.tips }}</div>
+      <div :class="`${prefixCls}-action__item `">
+        <Alert
+          class="tips"
+          v-if="globSetting.tips"
+          type="warning"
+          show-icon
+          :message="globSetting.tips"
+          :title="globSetting.tips"
+          closable
+        />
+      </div>
       <AppSearch :class="`${prefixCls}-action__item `" v-if="getShowSearch" />
 
       <ErrorAction v-if="getUseErrorHandle" :class="`${prefixCls}-action__item error-action`" />
@@ -64,7 +74,7 @@
 
   import { propTypes } from '/@/utils/propTypes';
 
-  import { Layout } from 'ant-design-vue';
+  import { Layout, Alert } from 'ant-design-vue';
   import { AppLogo } from '/@/components/Application';
   import LayoutMenu from '../menu/index.vue';
   import LayoutTrigger from '../trigger/index.vue';
@@ -99,6 +109,7 @@
     components: {
       Header: Layout.Header,
       AppLogo,
+      Alert,
       LayoutTrigger,
       LayoutBreadcrumb,
       TenantList,
@@ -216,7 +227,29 @@
   @import './index.less';
   @prefix-cls: ~'@{namespace}-layout-header';
 
-  .@{prefix-cls}-action .tips {
-    color: #f00f;
+  .@{prefix-cls} {
+    &--light {
+      .ant-alert {
+        line-height: 1.15;
+      }
+    }
+
+    .tips {
+      max-width: 300px;
+
+      .ant-alert-message {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        word-wrap: break-word;
+        word-break: break-all;
+      }
+    }
+
+    &--dark {
+      .ant-alert {
+        line-height: 1.15;
+      }
+    }
   }
 </style>

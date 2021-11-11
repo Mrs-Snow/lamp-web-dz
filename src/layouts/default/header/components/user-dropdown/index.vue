@@ -156,12 +156,6 @@
     cursor: pointer;
     align-items: center;
 
-    img {
-      width: 24px;
-      height: 24px;
-      margin-right: 12px;
-    }
-
     &__header {
       border-radius: 50%;
     }

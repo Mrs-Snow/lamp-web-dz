@@ -1,7 +1,7 @@
 <template>
   <div :class="prefixCls">
     <Popover title="" trigger="click" :overlayClassName="`${prefixCls}__overlay`">
-      <Badge :count="count" :offset="[-2, 15]" :numberStyle="numberStyle">
+      <Badge :count="count" dot :numberStyle="numberStyle">
         <BellOutlined />
       </Badge>
       <template #content>
@@ -86,11 +86,11 @@
       }, 5 * 60000);
 
       const count = computed(() => {
-        let count = 0;
+        let num = 0;
         for (let i = 0; i < listData.value.length; i++) {
-          count += Number(listData.value[i]?.data?.total ?? 0);
+          num += Number(listData.value[i]?.data?.total ?? 0);
         }
-        return count;
+        return num;
       });
 
       async function onNoticeClick(record: any) {
