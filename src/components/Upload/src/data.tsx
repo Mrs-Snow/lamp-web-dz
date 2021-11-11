@@ -53,11 +53,11 @@ export function createTableColumns(): BasicColumn[] {
         return text && formatFileSize(text);
       },
     },
-    {
-      dataIndex: 'type',
-      title: '文件类型',
-      width: 100,
-    },
+    // {
+    //   dataIndex: 'type',
+    //   title: '文件类型',
+    //   width: 100,
+    // },
     {
       dataIndex: 'status',
       title: t('component.upload.fileStatue'),

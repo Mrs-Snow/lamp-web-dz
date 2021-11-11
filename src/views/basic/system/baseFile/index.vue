@@ -22,7 +22,7 @@
           :maxSize="20"
           :maxNumber="10"
           :uploadParams="{ bizType: FileBizTypeEnum.BASE_FILE }"
-          :api="uploadApi"
+          :api="uploadToTenant"
           :showPreviewButton="false"
           @change="handleChange"
         />
@@ -73,7 +73,7 @@
 
   import ThumbUrl from '/@/components/Upload/src/ThumbUrl.vue';
   import { page, remove, download } from '/@/api/basic/system/baseFile';
-  import { uploadApi } from '/@/api/lamp/file/upload';
+  import { uploadToTenant } from '/@/api/lamp/file/upload';
   import { columns, searchFormSchema } from './baseFile.data';
 
   export default defineComponent({
@@ -192,7 +192,7 @@
         handleSuccess,
         handleBatchDelete,
         handleBatchDownload,
-        uploadApi,
+        uploadToTenant,
         handleChange: (list: string[]) => {
           createMessage.info(`已上传${list.length}个文件`);
           handleSuccess();

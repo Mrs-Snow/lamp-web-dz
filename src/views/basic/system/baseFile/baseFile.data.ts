@@ -1,6 +1,6 @@
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
-import { uploadApi } from '/@/api/lamp/file/upload';
+import { uploadToTenant } from '/@/api/lamp/file/upload';
 
 import { enumComponentProps, formatFileSize } from '/@/utils/lamp/common';
 import { EnumEnum } from '/@/enums/commonEnum';
@@ -165,7 +165,7 @@ export const editFormSchema = (param): FormSchema[] => {
       helpMessage:
         '上面的3个参数可以实时控制本组件传递到后台的对应的参数，此功能一般只开放给开发人员调试使用。',
       componentProps: {
-        api: uploadApi,
+        api: uploadToTenant,
         uploadParams: param,
         multiple: false,
         maxNumber: 1,

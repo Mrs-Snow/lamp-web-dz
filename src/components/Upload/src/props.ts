@@ -3,6 +3,7 @@ import { FileBasicColumn } from './typing';
 import { FileResultVO } from '/@/api/lamp/file/model/uploadModel';
 
 export const basicProps = {
+  // 提示消息
   helpText: {
     type: String as PropType<string>,
     default: '',
@@ -22,19 +23,27 @@ export const basicProps = {
     type: Array as PropType<string[]>,
     default: () => [],
   },
+  // 是否支持上传多个文件
   multiple: {
     type: Boolean as PropType<boolean>,
     default: true,
   },
+  // 上传参数
   uploadParams: {
     type: Object as PropType<any>,
     default: {},
   },
+  // 是否从默认库 查询附件. 若传了api，优先从传入的api中查询；没有传递api，则根据此参数，从内置接口查询
+  isDef: {
+    type: Boolean as PropType<boolean>,
+    default: false,
+  },
   api: {
     type: Function as PropType<PromiseFn>,
     default: null,
-    required: true,
+    required: false,
   },
+  // 后台接口 接收文件的参数名
   name: {
     type: String as PropType<string>,
     default: 'file',
@@ -69,6 +78,11 @@ export const previewProps = {
   value: {
     type: Array as PropType<FileResultVO[]>,
     default: () => [],
+  },
+  // 是否从默认库 查询附件. 若传了api，优先从传入的api中查询；没有传递api，则根据此参数，从内置接口查询
+  isDef: {
+    type: Boolean as PropType<boolean>,
+    default: false,
   },
 };
 

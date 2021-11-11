@@ -103,7 +103,12 @@ const transform: AxiosTransform = {
         config.params = Object.assign(params || {}, joinTimestamp(joinTime, false));
       } else {
         // 兼容restful风格
-        config.url = config.url + params + `${joinTimestamp(joinTime, true)}`;
+        config.url =
+          config.url +
+          (params.startsWith('?') ? '' : '?') +
+          params +
+          '&' +
+          `${joinTimestamp(joinTime, false)}`;
         config.params = undefined;
       }
     } else {
@@ -125,7 +130,7 @@ const transform: AxiosTransform = {
         }
       } else {
         // 兼容restful风格
-        config.url = config.url + params;
+        config.url = config.url + (params.startsWith('?') ? '' : '?') + params;
         config.params = undefined;
       }
     }

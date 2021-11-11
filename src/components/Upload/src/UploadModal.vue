@@ -60,6 +60,7 @@
   import FileList from './FileList.vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { FileResultVO } from '/@/api/lamp/file/model/uploadModel';
+  import { uploadToDef, uploadToTenant } from '/@/api/lamp/file/upload';
 
   export default defineComponent({
     components: { BasicModal, Upload, Alert, FileList },
@@ -170,22 +171,14 @@
         emit('delete', record);
       }
 
-      // 预览
-      // function handlePreview(record: FileItem) {
-      //   const { thumbUrl = '' } = record;
-      //   createImgPreview({
-      //     imageList: [thumbUrl],
-      //   });
-      // }
-
       async function uploadApiByItem(item: FileItem) {
-        const { api } = props;
+        const api = props.api ?? (props.isDef ? uploadToDef : uploadToTenant);
         if (!api || !isFunction(api)) {
           return warn('upload api must exist and be a function');
         }
         try {
           item.status = UploadResultStatus.UPLOADING;
-          const { data } = await props.api?.(
+          const { data } = await api?.(
             {
               data: {
                 ...(props.uploadParams || {}),

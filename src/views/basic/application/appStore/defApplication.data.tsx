@@ -1,8 +1,6 @@
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
-import { dictComponentProps, yesNoComponentProps } from '/@/utils/lamp/common';
-import { DictEnum, FileBizTypeEnum } from '/@/enums/commonEnum';
-import { uploadApi } from '/@/api/sys/upload';
+import { FileBizTypeEnum } from '/@/enums/commonEnum';
 import { Tag } from 'ant-design-vue';
 import moment from 'moment';
 
@@ -77,7 +75,7 @@ export const editFormSchema = (_): FormSchema[] => {
       field: 'appendixIcon',
       component: 'CropperAvatar',
       componentProps: {
-        uploadApi: uploadApi,
+        isDef: true,
         showBtn: false,
         uploadParams: { bizType: FileBizTypeEnum.DEF_APPLICATION_LOGO },
       },

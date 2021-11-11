@@ -1,4 +1,5 @@
 import { Enum } from '/@/api/model/baseModel';
+import { ServicePrefixEnum } from '/@/enums/commonEnum';
 
 export interface FileResultVO {
   id: string;
@@ -40,4 +41,10 @@ export interface AppendixSaveVO {
   contentType: string;
   suffix: string;
   size: string;
+}
+export interface AppendixQuery {
+  prefix: ServicePrefixEnum;
+  bizId: string;
+  isDef?: boolean;
+  bizType?: string;
 }

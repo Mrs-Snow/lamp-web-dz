@@ -4,7 +4,6 @@ import { useI18n } from '/@/hooks/web/useI18n';
 import { dictComponentProps, yesNoComponentProps } from '/@/utils/lamp/common';
 import { DictEnum, FileBizTypeEnum } from '/@/enums/commonEnum';
 import { FormSchemaExt } from '/@/api/lamp/common/formValidateService';
-import { uploadApi } from '/@/api/sys/upload';
 import { RoleEnum } from '/@/enums/roleEnum';
 
 const { t } = useI18n();
@@ -116,9 +115,9 @@ export const editFormSchema = (_): FormSchema[] => {
       field: 'appendixIcon',
       component: 'CropperAvatar',
       componentProps: {
-        uploadApi: uploadApi,
         uploadParams: { bizType: FileBizTypeEnum.DEF_APPLICATION_LOGO },
         circled: false,
+        isDef: true,
       },
     },
     {

@@ -12,6 +12,7 @@
             :originalFileName="
               item.echoMap?.[FileBizTypeEnum.DEF_APPLICATION_LOGO]?.[0]?.originalFileName
             "
+            :isDef="true"
           />
           <span class="text-lg ml-4">{{ item.name }}</span>
         </span>

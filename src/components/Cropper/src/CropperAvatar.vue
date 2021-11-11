@@ -22,11 +22,12 @@
 
     <CopperModal
       @register="register"
-      @uploadSuccess="handleUploadSuccess"
+      @upload-success="handleUploadSuccess"
       :uploadApi="uploadApi"
       :uploadParams="uploadParams"
       :src="realSrc"
       :circled="circled"
+      :isDef="isDef"
     />
   </div>
 </template>
@@ -50,11 +51,12 @@
     btnProps: { type: Object as PropType<ButtonProps> },
     btnText: { type: String, default: '' },
     alt: { type: String, default: '' },
+    // 是否上传到到默认库。 设置为true，文件将调用 asyncFindDefUrlById 加载异步文件
     isDef: { type: Boolean, default: false },
     uploadApi: {
       type: Function as PropType<PromiseFn>,
       default: null,
-      required: true,
+      required: false,
     },
     uploadParams: {
       type: Object as PropType<any>,
@@ -111,17 +113,11 @@
           return;
         }
         const api = props.isDef ? asyncFindDefUrlById : asyncFindUrlById;
-        api(props.value.id)
-          .then((res) => {
-            console.log('cro fileId=%s , code=%s， data=%s', props.value.id, res?.code, res?.data);
-            if (res.code === 0) {
-              realSrc.value = res.data as string;
-            }
-          })
-          .catch((e) => {
-            console.log('cro e=');
-            console.log(e);
-          });
+        api(props.value.id).then((res) => {
+          if (res.code === 0) {
+            realSrc.value = res.data as string;
+          }
+        });
       }
 
       function handleUploadSuccess({ data }) {

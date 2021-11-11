@@ -20,7 +20,7 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { isArray } from '/@/utils/is';
   import { downloadFile } from '/@/utils/lamp/common';
-  import { download } from '/@/api/lamp/file/upload';
+  import { downloadFromDef, downloadFromTenant } from '/@/api/lamp/file/upload';
   import { FileResultVO } from '/@/api/lamp/file/model/uploadModel';
 
   export default defineComponent({
@@ -51,17 +51,10 @@
         }
       }
 
-      // // 预览
-      // function handlePreview(record: PreviewFileItem) {
-      //   const { url = '' } = record;
-      //   createImgPreview({
-      //     imageList: [url],
-      //   });
-      // }
-
       // 下载
       async function handleDownload(record: FileResultVO) {
         const { id } = record;
+        const download = props.isDef ? downloadFromDef : downloadFromTenant;
         const response = await download([id]);
         downloadFile(response);
       }

@@ -67,11 +67,12 @@
           }
           record.area = area;
 
-          const logos = await listByBizId(
-            ServicePrefixEnum.TENANT,
-            record.id,
-            FileBizTypeEnum.DEF_TENANT_LOGO,
-          );
+          const logos = await listByBizId({
+            prefix: ServicePrefixEnum.TENANT,
+            bizId: record.id,
+            bizType: FileBizTypeEnum.DEF_TENANT_LOGO,
+            isDef: true,
+          });
           record.logos = logos;
           await setFieldsValue(record);
         }

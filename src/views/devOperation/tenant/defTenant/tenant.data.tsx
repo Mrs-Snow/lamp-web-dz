@@ -6,7 +6,6 @@ import { useGlobSetting } from '/@/hooks/setting';
 import { ActionEnum, FileBizTypeEnum } from '/@/enums/commonEnum';
 import { MultiTenantTypeEnum, TenantConnectTypeEnum, TenantStatusEnum } from '/@/enums/biz/tenant';
 import { Tag, Badge, Switch } from 'ant-design-vue';
-import { uploadApi } from '/@/api/lamp/file/upload';
 import { RuleType, FormSchemaExt } from '/@/api/lamp/common/formValidateService';
 import { check } from '/@/api/devOperation/tenant/tenant';
 import { query } from '/@/api/devOperation/tenant/datasourceConfig';
@@ -214,12 +213,13 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       label: t('devOperation.tenant.defTenant.logo'),
       component: 'Upload',
       componentProps: {
-        api: uploadApi,
         uploadParams: {
           bizType: FileBizTypeEnum.DEF_TENANT_LOGO,
         },
         multiple: false,
         maxNumber: 1,
+        accept: ['image/*', '.xlsx', 'docx'],
+        isDef: true,
       },
       colProps: {
         span: 12,

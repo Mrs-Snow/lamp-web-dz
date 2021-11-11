@@ -23,6 +23,7 @@ export interface InitOption {
   cacheKey?: CacheKeyFunc;
   delay?: number;
   getErrorData?: (param: any, error, reject) => AsyncResult;
+  isUseCache?: boolean;
 }
 // 延时请求工具类
 export class TimeDelayReq {
@@ -31,17 +32,19 @@ export class TimeDelayReq {
   resMap: Map<string, DelayResult> = new Map<string, DelayResult>(); // 结果集缓存
   cacheTime = 60 * 1000 * 30; // 默认缓存30分钟
   delay = 100; // 请求延时
+  isUseCache = false; // 是否使用缓存
   cacheKey: CacheKeyFunc = JSON.stringify; // 默认获取缓存key的方式
   api: ApiFunc = async () => new Map<string, DelayResult>(); // 具体执行请求的方法
   getErrorData: ErrorDataFunc | undefined = undefined; // 错误处理函数
   // 构造函数需要传配置值
   constructor(initOption: InitOption) {
-    const { api, getErrorData, cacheKey, cacheTime, delay } = initOption;
+    const { api, getErrorData, cacheKey, cacheTime, delay, isUseCache } = initOption;
     this.api = api;
     this.cacheTime = cacheTime || this.cacheTime;
     this.cacheKey = cacheKey || this.cacheKey;
     this.getErrorData = getErrorData;
     this.delay = delay || 100;
+    this.isUseCache = isUseCache || false;
   }
   // 清空缓存
   clear() {
@@ -70,13 +73,15 @@ export class TimeDelayReq {
   // 单次请求，缓存有取缓存，缓存没有放进延迟请求参数中，延迟批量请求
   async loadByParam(param: any): Promise<AsyncResult> {
     const result = new Promise<AsyncResult>((resolve, reject) => {
-      try {
-        const cache = this._loadFormCache(param);
-        if (cache) {
-          resolve(cache);
-          return;
-        }
-      } catch (error) {}
+      if (this.isUseCache) {
+        try {
+          const cache = this._loadFormCache(param);
+          if (cache) {
+            resolve(cache);
+            return;
+          }
+        } catch (error) {}
+      }
       this._loadFromApi(param, resolve, reject);
     });
     return result;
