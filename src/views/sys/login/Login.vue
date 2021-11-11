@@ -26,10 +26,10 @@
             </div>
             <div class="mt-5 font-normal text-white text-md dark:text-gray-500 -enter-x">
               {{ t('sys.login.signInDesc') }} <br />
-              运营管理员账号： superLamp/lamp <br />
-              租户管理员账号：lamp/lamp <br />
-              普通管理员账号：test1/lamp <br />
-              普通用户账号：test2/lamp <br />
+              内置超级管理员账号： lamp/lamp <br />
+              普通租户管理员账号： test1/lamp <br />
+              普通管理员账号：test2/lamp <br />
+              普通用户账号：test3/lamp <br />
             </div>
           </div>
         </div>
@@ -64,16 +64,9 @@
       </div>
       <div class="copyright">
         <div style="padding: 20px 0">
-          <!-- <a
-            target="_blank"
-            href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=1234"
-            ><img src="/@/assets/images/gongan.png" /><span>黔ICP备 1234号</span></a
-          >
-          <span>|</span> -->
           <a target="_blank" href="https://beian.miit.gov.cn"
             ><img src="../../../assets/images/gongan.png" /><span>黔ICP备2021004749号</span></a
           >
-          <!-- <a target="_blank" href="https://beian.miit.gov.cn"><span>黔ICP备2021004749号</span></a> -->
         </div>
       </div>
     </div>
