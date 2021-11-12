@@ -1,7 +1,7 @@
 <template>
   <div :class="[prefixCls, `${prefixCls}--${theme}`]">
-    <Dropdown placement="bottomLeft">
-      <span :title="getCurrentTenant?.name">
+    <Dropdown placement="bottomLeft" v-if="getTenantList && getTenantList.length > 0">
+      <span :title="getCurrentTenant?.name" class="tenantName">
         {{ getTenantName(getCurrentTenant) }} <DownOutlined
       /></span>
       <template #overlay>
@@ -29,6 +29,7 @@
         </Menu>
       </template>
     </Dropdown>
+    <span v-else class="tenantName">暂无企业</span>
   </div>
 </template>
 <script lang="ts">
@@ -65,6 +66,9 @@
       });
 
       function getTenantName(tenant: Recordable) {
+        if (!tenant) {
+          return '';
+        }
         const name = tenant?.name?.length > 10 ? tenant?.name?.substr(0, 10) + '...' : tenant?.name;
         const strList = [name];
         if (!tenant.state) {
@@ -153,13 +157,13 @@
     align-items: center;
 
     &--light {
-      .ant-dropdown-trigger {
+      .tenantName {
         color: @tenantList-item-normal-color;
       }
     }
 
     &--dark {
-      .ant-dropdown-trigger {
+      .tenantName {
         color: rgb(255 255 255 / 60%);
       }
     }
