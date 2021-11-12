@@ -1,10 +1,12 @@
 import { Ref } from 'vue';
+import { Badge, Tag } from 'ant-design-vue';
 import moment from 'moment';
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { enumComponentProps } from '/@/utils/lamp/common';
 import { ActionEnum, EnumEnum } from '/@/enums/commonEnum';
 import { DropMenu } from '/@/components/Dropdown/src/typing';
+import { LogTypeEnum } from '/@/enums/biz/base';
 
 const { t } = useI18n();
 // 列表页字段
@@ -19,11 +21,15 @@ export const columns = (): BasicColumn[] => {
       title: t('basic.system.baseOperationLog.type'),
       dataIndex: 'type.desc',
       width: 100,
+      customRender: ({ record }) => {
+        const status = record?.type?.code === LogTypeEnum.OPT ? 'success' : 'error';
+        return <Badge status={status} text={record?.type?.desc} />;
+      },
     },
     {
       title: t('basic.system.baseOperationLog.userName'),
       dataIndex: 'userName',
-      width: 180,
+      width: 100,
     },
     {
       title: t('basic.system.baseOperationLog.description'),
@@ -31,14 +37,12 @@ export const columns = (): BasicColumn[] => {
       // width: 180,
     },
     {
-      title: t('basic.system.baseOperationLog.classPath'),
-      dataIndex: 'classPath',
-      // width: 180,
-    },
-    {
       title: t('basic.system.baseOperationLog.actionMethod'),
       dataIndex: 'actionMethod',
       // width: 180,
+      format: (actionMethod, record) => {
+        return record?.classPath + '#' + actionMethod;
+      },
     },
     {
       title: t('basic.system.baseOperationLog.requestUri'),
@@ -46,9 +50,44 @@ export const columns = (): BasicColumn[] => {
       // width: 180,
     },
     {
+      title: t('basic.system.baseOperationLog.consumingTime'),
+      dataIndex: 'consumingTime',
+      width: 100,
+      customRender: ({ record }) => {
+        const status =
+          record.consumingTime < 100
+            ? 'success'
+            : record.consumingTime < 1000
+            ? 'warning'
+            : 'error';
+        return <Badge status={status} text={record.consumingTime + 'ms'} />;
+      },
+    },
+    {
       title: t('basic.system.baseOperationLog.httpMethod'),
       dataIndex: 'httpMethod.desc',
-      // width: 180,
+      width: 100,
+      customRender: ({ record }) => {
+        let color = '';
+        switch (record?.httpMethod?.code) {
+          case 'POST':
+            color = 'success';
+            break;
+          case 'GET':
+            color = 'default';
+            break;
+          case 'DELETE':
+            color = 'warning';
+            break;
+          case 'PUT':
+            color = 'processing';
+            break;
+          default:
+            color = 'success';
+            break;
+        }
+        return <Tag color={color}>{record?.httpMethod?.desc}</Tag>;
+      },
     },
     {
       title: t('basic.system.baseOperationLog.startTime'),
@@ -60,14 +99,7 @@ export const columns = (): BasicColumn[] => {
       dataIndex: 'finishTime',
       width: 180,
     },
-    {
-      title: t('basic.system.baseOperationLog.consumingTime'),
-      dataIndex: 'consumingTime',
-      width: 100,
-      format: (text: string) => {
-        return text + 'ms';
-      },
-    },
+
     {
       title: t('basic.system.baseOperationLog.ua'),
       dataIndex: 'ua',

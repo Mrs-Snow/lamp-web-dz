@@ -45,3 +45,11 @@ export enum ExpireStateEnum {
   EFFECTIVE = '1',
   EXPIRED = '0',
 }
+
+// 登录状态
+export enum LoginStatusEnum {
+  SUCCESS = '01',
+  CAPTCHA_ERROR = '02',
+  PASSWORD_ERROR = '03',
+  USER_ERROR = '04',
+}

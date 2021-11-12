@@ -1,10 +1,13 @@
 export default {
-  table: { title: 'BaseLoginLog list' },
+  table: { title: 'DefLoginLog list' },
   id: 'ID',
-  requestIp: 'requestIp',
+  tenantId: 'tenantId',
+  employeeId: 'employeeId',
   userId: 'userId',
-  userName: 'userName',
-  account: 'account',
+  requestIp: 'requestIp',
+  nickName: 'nickName',
+  username: 'username',
+  status: 'status',
   description: 'description',
   loginDate: 'loginDate',
   ua: 'ua',
@@ -12,5 +15,4 @@ export default {
   browserVersion: 'browserVersion',
   operatingSystem: 'operatingSystem',
   location: 'location',
-  createdOrgId: 'createdOrgId',
 };

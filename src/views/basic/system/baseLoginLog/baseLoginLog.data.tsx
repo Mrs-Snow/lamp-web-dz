@@ -1,71 +1,78 @@
 import { Ref } from 'vue';
+import { Badge } from 'ant-design-vue';
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { ActionEnum } from '/@/enums/commonEnum';
 import { DropMenu } from '/@/components/Dropdown/src/typing';
 
+import { LoginStatusEnum } from '/@/enums/biz/tenant';
+
 const { t } = useI18n();
 // 列表页字段
 export const columns = (): BasicColumn[] => {
   return [
+    // {
+    //   title: t('devOperation.system.defLoginLog.tenantId'),
+    //   dataIndex: 'tenantId',
+    //   // width: 180,
+    // },
+    // {
+    //   title: t('devOperation.system.defLoginLog.employeeId'),
+    //   dataIndex: 'employeeId',
+    //   // width: 180,
+    // },
+    // {
+    //   title: t('devOperation.system.defLoginLog.userId'),
+    //   dataIndex: 'userId',
+    //   // width: 180,
+    // },
     {
-      title: t('basic.system.baseLoginLog.requestIp'),
+      title: t('devOperation.system.defLoginLog.requestIp'),
       dataIndex: 'requestIp',
       // width: 180,
     },
     {
-      title: t('basic.system.baseLoginLog.userId'),
-      dataIndex: 'userId',
+      title: t('devOperation.system.defLoginLog.nickName'),
+      dataIndex: 'nickName',
       // width: 180,
     },
     {
-      title: t('basic.system.baseLoginLog.userName'),
-      dataIndex: 'userName',
+      title: t('devOperation.system.defLoginLog.username'),
+      dataIndex: 'username',
       // width: 180,
     },
     {
-      title: t('basic.system.baseLoginLog.account'),
-      dataIndex: 'account',
-      // width: 180,
-    },
-    {
-      title: t('basic.system.baseLoginLog.description'),
+      title: t('devOperation.system.defLoginLog.description'),
       dataIndex: 'description',
       // width: 180,
+      customRender: ({ record }) => {
+        const status = LoginStatusEnum.SUCCESS === record.status ? 'success' : 'error';
+        return <Badge status={status} text={record.description} />;
+      },
     },
     {
-      title: t('basic.system.baseLoginLog.loginDate'),
+      title: t('devOperation.system.defLoginLog.loginDate'),
       dataIndex: 'loginDate',
       // width: 180,
     },
     {
-      title: t('basic.system.baseLoginLog.ua'),
-      dataIndex: 'ua',
-      // width: 180,
-    },
-    {
-      title: t('basic.system.baseLoginLog.browser'),
+      title: t('devOperation.system.defLoginLog.browser'),
       dataIndex: 'browser',
       // width: 180,
     },
     {
-      title: t('basic.system.baseLoginLog.browserVersion'),
+      title: t('devOperation.system.defLoginLog.browserVersion'),
       dataIndex: 'browserVersion',
       // width: 180,
     },
     {
-      title: t('basic.system.baseLoginLog.operatingSystem'),
+      title: t('devOperation.system.defLoginLog.operatingSystem'),
       dataIndex: 'operatingSystem',
       // width: 180,
     },
     {
-      title: t('basic.system.baseLoginLog.location'),
+      title: t('devOperation.system.defLoginLog.location'),
       dataIndex: 'location',
-      // width: 180,
-    },
-    {
-      title: t('basic.system.baseLoginLog.createdOrgId'),
-      dataIndex: 'createdOrgId',
       // width: 180,
     },
     {
@@ -80,34 +87,34 @@ export const columns = (): BasicColumn[] => {
 export const searchFormSchema = (): FormSchema[] => {
   return [
     {
-      label: t('basic.system.baseLoginLog.requestIp'),
+      label: t('devOperation.system.defLoginLog.requestIp'),
       field: 'requestIp',
       component: 'Input',
       colProps: { span: 8 },
     },
     {
-      label: t('basic.system.baseLoginLog.userName'),
-      field: 'userName',
+      label: t('devOperation.system.defLoginLog.username'),
+      field: 'username',
       component: 'Input',
       colProps: { span: 8 },
     },
     {
-      label: t('basic.system.baseLoginLog.account'),
-      field: 'account',
+      label: t('devOperation.system.defLoginLog.nickName'),
+      field: 'nickName',
       component: 'Input',
       colProps: { span: 8 },
     },
     {
-      label: t('basic.system.baseLoginLog.description'),
+      label: t('devOperation.system.defLoginLog.description'),
       field: 'description',
       component: 'Input',
-      colProps: { span: 5 },
+      colProps: { span: 8 },
     },
     {
       field: 'createTimeRange',
       label: t('lamp.common.createdTime'),
       component: 'RangePicker',
-      colProps: { span: 6 },
+      colProps: { span: 8 },
     },
   ];
 };
@@ -121,8 +128,32 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       component: 'Input',
       show: false,
     },
+    // {
+    //   label: t('devOperation.system.defLoginLog.tenantId'),
+    //   field: 'tenantId',
+    //   component: 'Input',
+    //   dynamicDisabled: () => {
+    //     return [ActionEnum.VIEW].includes(type.value);
+    //   },
+    // },
+    // {
+    //   label: t('devOperation.system.defLoginLog.employeeId'),
+    //   field: 'employeeId',
+    //   component: 'Input',
+    //   dynamicDisabled: () => {
+    //     return [ActionEnum.VIEW].includes(type.value);
+    //   },
+    // },
+    // {
+    //   label: t('devOperation.system.defLoginLog.userId'),
+    //   field: 'userId',
+    //   component: 'Input',
+    //   dynamicDisabled: () => {
+    //     return [ActionEnum.VIEW].includes(type.value);
+    //   },
+    // },
     {
-      label: t('basic.system.baseLoginLog.requestIp'),
+      label: t('devOperation.system.defLoginLog.requestIp'),
       field: 'requestIp',
       component: 'Input',
       dynamicDisabled: () => {
@@ -130,31 +161,31 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       },
     },
     {
-      label: t('basic.system.baseLoginLog.userId'),
-      field: 'userId',
+      label: t('devOperation.system.defLoginLog.nickName'),
+      field: 'nickName',
       component: 'Input',
       dynamicDisabled: () => {
         return [ActionEnum.VIEW].includes(type.value);
       },
     },
     {
-      label: t('basic.system.baseLoginLog.userName'),
-      field: 'userName',
+      label: t('devOperation.system.defLoginLog.username'),
+      field: 'username',
       component: 'Input',
       dynamicDisabled: () => {
         return [ActionEnum.VIEW].includes(type.value);
       },
     },
     {
-      label: t('basic.system.baseLoginLog.account'),
-      field: 'account',
+      label: t('devOperation.system.defLoginLog.status'),
+      field: 'status',
       component: 'Input',
       dynamicDisabled: () => {
         return [ActionEnum.VIEW].includes(type.value);
       },
     },
     {
-      label: t('basic.system.baseLoginLog.description'),
+      label: t('devOperation.system.defLoginLog.description'),
       field: 'description',
       component: 'Input',
       dynamicDisabled: () => {
@@ -162,7 +193,7 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       },
     },
     {
-      label: t('basic.system.baseLoginLog.loginDate'),
+      label: t('devOperation.system.defLoginLog.loginDate'),
       field: 'loginDate',
       component: 'Input',
       dynamicDisabled: () => {
@@ -170,7 +201,7 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       },
     },
     {
-      label: t('basic.system.baseLoginLog.ua'),
+      label: t('devOperation.system.defLoginLog.ua'),
       field: 'ua',
       component: 'Input',
       dynamicDisabled: () => {
@@ -178,7 +209,7 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       },
     },
     {
-      label: t('basic.system.baseLoginLog.browser'),
+      label: t('devOperation.system.defLoginLog.browser'),
       field: 'browser',
       component: 'Input',
       dynamicDisabled: () => {
@@ -186,7 +217,7 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       },
     },
     {
-      label: t('basic.system.baseLoginLog.browserVersion'),
+      label: t('devOperation.system.defLoginLog.browserVersion'),
       field: 'browserVersion',
       component: 'Input',
       dynamicDisabled: () => {
@@ -194,7 +225,7 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       },
     },
     {
-      label: t('basic.system.baseLoginLog.operatingSystem'),
+      label: t('devOperation.system.defLoginLog.operatingSystem'),
       field: 'operatingSystem',
       component: 'Input',
       dynamicDisabled: () => {
@@ -202,7 +233,7 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       },
     },
     {
-      label: t('basic.system.baseLoginLog.location'),
+      label: t('devOperation.system.defLoginLog.location'),
       field: 'location',
       component: 'Input',
       dynamicDisabled: () => {

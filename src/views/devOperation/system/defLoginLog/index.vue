@@ -28,7 +28,6 @@
               icon: 'ant-design:search-outlined',
               onClick: handleView.bind(null, record),
             },
-
             {
               tooltip: t('common.title.delete'),
               icon: 'ant-design:delete-outlined',
@@ -48,22 +47,21 @@
 </template>
 <script lang="ts">
   import { defineComponent } from 'vue';
-  import { DropMenu } from '/@/components/Dropdown/src/typing';
-  import { Dropdown } from '/@/components/Dropdown';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
   import { PageWrapper } from '/@/components/Page';
+  import { Dropdown, DropMenu } from '/@/components/Dropdown';
   import { useDrawer } from '/@/components/Drawer';
   import { handleFetchParams } from '/@/utils/lamp/common';
   import { ActionEnum } from '/@/enums/commonEnum';
-  import { page, remove, clear } from '/@/api/basic/system/baseLoginLog';
-  import { columns, searchFormSchema, clearList } from './baseLoginLog.data';
+  import { page, remove, clear } from '/@/api/devOperation/system/defLoginLog';
+  import { columns, searchFormSchema, clearList } from './defLoginLog.data';
   import EditModal from './Edit.vue';
 
   export default defineComponent({
     // 若需要开启页面缓存，请将此参数跟菜单名保持一致
-    name: 'BaseLoginLogManagement',
+    name: 'DefLoginLogManagement',
     components: { BasicTable, PageWrapper, EditModal, TableAction, Dropdown },
     setup() {
       const { t } = useI18n();
@@ -123,7 +121,6 @@
           type: ActionEnum.VIEW,
         });
       }
-
       // 新增或编辑成功回调
       function handleSuccess() {
         reload();
@@ -165,8 +162,8 @@
         t,
         registerTable,
         registerDrawer,
-        handleView,
         handleClearEvent,
+        handleView,
         handleDelete,
         handleSuccess,
         handleBatchDelete,

@@ -75,6 +75,7 @@
           labelWidth: 50,
           schemas: searchFormSchema(),
           autoSubmitOnEnter: true,
+          showResetButton: false,
           resetButtonOptions: {
             preIcon: 'ant-design:rest-outlined',
           },
