@@ -29,7 +29,7 @@
               内置超级管理员账号： lamp/lamp <br />
               普通租户管理员账号： test1/lamp <br />
               普通管理员账号：test2/lamp <br />
-              普通用户账号：test3/lamp <br />
+              普通用户账号：test33/123456 <br />
             </div>
           </div>
         </div>
