@@ -85,10 +85,12 @@
 
       async function fetch(role: Recordable) {
         if (role && role.id) {
-          state.title = `【${role.name}】拥有的应用资源`;
-          formData.roleId = role.id;
+          if (formData.roleId !== (role?.id as string)) {
+            state.title = `【${role.name}】拥有的应用资源`;
+            formData.roleId = role.id;
 
-          state.appResMap = await findResourceIdByRoleId(role.id);
+            state.appResMap = await findResourceIdByRoleId(role.id);
+          }
         } else {
           state.title = '请选择角色';
           formData.roleId = '';
