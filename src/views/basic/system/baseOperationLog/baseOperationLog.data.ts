@@ -13,17 +13,17 @@ export const columns = (): BasicColumn[] => {
     {
       title: t('basic.system.baseOperationLog.requestIp'),
       dataIndex: 'requestIp',
-      // width: 180,
+      width: 170,
     },
     {
       title: t('basic.system.baseOperationLog.type'),
       dataIndex: 'type.desc',
-      // width: 180,
+      width: 100,
     },
     {
       title: t('basic.system.baseOperationLog.userName'),
       dataIndex: 'userName',
-      // width: 180,
+      width: 180,
     },
     {
       title: t('basic.system.baseOperationLog.description'),
@@ -157,7 +157,7 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
     {
       label: t('basic.system.baseOperationLog.description'),
       field: 'description',
-      component: 'Input',
+      component: 'InputTextArea',
       dynamicDisabled: () => {
         return [ActionEnum.VIEW].includes(type.value);
       },
