@@ -1,6 +1,12 @@
 <template>
   <div class="bg-white m-4 mr-2 overflow-hidden">
-    <BasicTable @register="registerTable">
+    <BasicTable
+      @register="registerTable"
+      @selection-change="handleSelectionChange"
+      @row-click="handleRowClick"
+      @row-db-click="handleRowDbClick"
+      @fetch-success="onFetchSuccess"
+    >
       <template #toolbar>
         <a-button
           type="primary"
@@ -67,43 +73,41 @@
       const [registerRoleEmployeeModal, { openModal: openRoleEmployeeMadal }] = useModal();
 
       // 表格
-      const [registerTable, { reload, getSelectRowKeys }] = useTable({
-        title: t('basic.system.baseRole.table.title'),
-        api: page,
-        columns: columns(),
-        formConfig: {
-          labelWidth: 50,
-          schemas: searchFormSchema(),
-          autoSubmitOnEnter: true,
-          showResetButton: false,
-          resetButtonOptions: {
-            preIcon: 'ant-design:rest-outlined',
+      const [registerTable, { reload, getSelectRowKeys, setSelectedRowKeys, getSelectRows }] =
+        useTable({
+          title: t('basic.system.baseRole.table.title'),
+          api: page,
+          columns: columns(),
+          formConfig: {
+            labelWidth: 50,
+            schemas: searchFormSchema(),
+            autoSubmitOnEnter: true,
+            showResetButton: false,
+            resetButtonOptions: {
+              preIcon: 'ant-design:rest-outlined',
+            },
+            submitButtonOptions: {
+              preIcon: 'ant-design:search-outlined',
+            },
+            alwaysShowLines: 1,
           },
-          submitButtonOptions: {
-            preIcon: 'ant-design:search-outlined',
+          beforeFetch: handleFetchParams,
+          showIndexColumn: false,
+          useSearchForm: true,
+          showTableSetting: false,
+          bordered: true,
+          rowKey: 'id',
+          rowSelection: {
+            type: 'radio',
+            columnWidth: 40,
           },
-          alwaysShowLines: 1,
-        },
-        beforeFetch: handleFetchParams,
-        showIndexColumn: false,
-        useSearchForm: true,
-        showTableSetting: false,
-        bordered: true,
-        rowKey: 'id',
-        rowSelection: {
-          type: 'radio',
-          columnWidth: 40,
-          onChange: (_, selectedRows: Recordable[]) => {
-            emit('select', selectedRows[0]);
+          actionColumn: {
+            width: 120,
+            title: t('common.column.action'),
+            dataIndex: 'action',
+            slots: { customRender: 'action' },
           },
-        },
-        actionColumn: {
-          width: 120,
-          title: t('common.column.action'),
-          dataIndex: 'action',
-          slots: { customRender: 'action' },
-        },
-      });
+        });
 
       // 绑定用户
       function handleBindUser(record: Recordable, e: Event) {
@@ -158,6 +162,41 @@
         });
       }
 
+      // 选择事件
+      function emitChange() {
+        const selectedKeys = getSelectRows();
+        emit('select', selectedKeys.length > 0 ? selectedKeys[0] : {});
+      }
+
+      // 勾选事件触发
+      function handleSelectionChange() {
+        emitChange();
+      }
+
+      // 单击行回调
+      function handleRowClick(record: Recordable) {
+        setSelectedRowKeys([record.id]);
+        emitChange();
+      }
+
+      // 双击行回调
+      function handleRowDbClick(record: Recordable) {
+        setSelectedRowKeys([record.id]);
+        const rows = getSelectRows();
+        openModal(true, {
+          record: rows[0],
+          type: ActionEnum.EDIT,
+        });
+      }
+
+      async function onFetchSuccess(result: Recordable) {
+        // 请求之后对返回值进行处理
+        if (result && result.items && result.items.length > 0) {
+          setSelectedRowKeys([result.items[0].id]);
+          emitChange();
+        }
+      }
+
       return {
         t,
         RoleEnum,
@@ -169,6 +208,10 @@
         handleSuccess,
         handleBatchDelete,
         handleBindUser,
+        handleSelectionChange,
+        handleRowClick,
+        handleRowDbClick,
+        onFetchSuccess,
       };
     },
   });

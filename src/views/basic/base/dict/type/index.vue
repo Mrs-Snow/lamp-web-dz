@@ -186,6 +186,7 @@
         setSelectedRowKeys([record.id]);
         emitChange();
       }
+
       // 双击行回调
       function handleRowDbClick(record: Recordable) {
         setSelectedRowKeys([record.id]);
@@ -195,10 +196,11 @@
           type: ActionEnum.EDIT,
         });
       }
+
       async function onFetchSuccess(result: Recordable) {
         // 请求之后对返回值进行处理
         if (result && result.items && result.items.length > 0) {
-          await setSelectedRowKeys([result.items[0].id]);
+          setSelectedRowKeys([result.items[0].id]);
           emitChange();
         }
       }
