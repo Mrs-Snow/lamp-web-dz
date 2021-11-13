@@ -2,14 +2,6 @@
   <template v-if="getShow">
     <LoginFormTitle class="enter-x" />
     <Form class="p-4 enter-x" :model="formData" :rules="getFormRules" ref="formRef">
-      <FormItem name="account" class="enter-x">
-        <Input
-          class="fix-auto-fill"
-          size="large"
-          v-model:value="formData.account"
-          :placeholder="t('sys.login.userName')"
-        />
-      </FormItem>
       <FormItem name="mobile" class="enter-x">
         <Input
           size="large"
@@ -18,11 +10,11 @@
           class="fix-auto-fill"
         />
       </FormItem>
-      <FormItem name="sms" class="enter-x">
+      <FormItem name="code" class="enter-x">
         <CountdownInput
           size="large"
           class="fix-auto-fill"
-          v-model:value="formData.sms"
+          v-model:value="formData.code"
           :placeholder="t('sys.login.smsCode')"
         />
       </FormItem>
@@ -71,23 +63,26 @@
   import { Form, Input, Button, Checkbox } from 'ant-design-vue';
   import { StrengthMeter } from '/@/components/StrengthMeter';
   import { CountdownInput } from '/@/components/CountDown';
+  import { useMessage } from '/@/hooks/web/useMessage';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useLoginState, useFormRules, useFormValid, LoginStateEnum } from './useLogin';
+  import { useUserStore } from '/@/store/modules/user';
 
   const FormItem = Form.Item;
   const InputPassword = Input.Password;
   const { t } = useI18n();
+  const { notification } = useMessage();
   const { handleBackLogin, getLoginState } = useLoginState();
 
   const formRef = ref();
   const loading = ref(false);
+  const userStore = useUserStore();
 
   const formData = reactive({
-    account: '',
     password: '',
     confirmPassword: '',
     mobile: '',
-    sms: '',
+    code: '',
     policy: false,
   });
 
@@ -99,6 +94,21 @@
   async function handleRegister() {
     const data = await validForm();
     if (!data) return;
-    console.log(data);
+    try {
+      data.key = '123';
+      const username = await userStore.register(data);
+      notification.success({
+        message: '注册成功',
+        description: `注册成功,请使用${username}登录系统`,
+        duration: 3,
+      });
+      handleBackLogin();
+    } catch (error) {
+      notification.error({
+        message: '注册失败',
+        description: `注册失败`,
+        duration: 3,
+      });
+    }
   }
 </script>

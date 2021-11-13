@@ -14,10 +14,11 @@ import {
   APPLICATION_ID_KEY,
 } from '/@/enums/cacheEnum';
 import { getAuthCache, setAuthCache } from '/@/utils/auth';
-import type { LoginParamVO, LogoutParams } from '/@/api/lamp/common/model/userModel';
+import type { LoginParamVO, LogoutParams, RegisterVO } from '/@/api/lamp/common/model/userModel';
 
 import {
   loginApi,
+  register,
   loadCaptcha,
   doLogout,
   getUserInfoById,
@@ -252,6 +253,18 @@ export const useUserStore = defineStore({
         return '';
       }
     },
+
+    /**
+     * @description: register
+     */
+    async register(params: RegisterVO): Promise<string> {
+      try {
+        return await register(params);
+      } catch (error) {
+        return Promise.reject(error);
+      }
+    },
+
     /**
      * @description: logout
      */

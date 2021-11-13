@@ -75,7 +75,7 @@ export function useFormRules(formData?: Recordable) {
     const mobileFormRule = unref(getMobileFormRule);
 
     const mobileRule = {
-      sms: smsFormRule,
+      code: smsFormRule,
       mobile: mobileFormRule,
     };
     const loginRule = {
@@ -92,7 +92,6 @@ export function useFormRules(formData?: Recordable) {
       // register form rules
       case LoginStateEnum.REGISTER:
         return {
-          account: accountFormRule,
           password: passwordFormRule,
           confirmPassword: [
             { validator: validateConfirmPassword(formData?.password), trigger: 'change' },

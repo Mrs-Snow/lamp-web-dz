@@ -14,6 +14,15 @@ export interface LoginParamVO {
   refreshToken?: string;
 }
 
+export interface RegisterVO {
+  code: string;
+  key: string;
+  mobile: string;
+  password: string;
+  confirmPassword: GrantType;
+  nickName?: string;
+}
+
 /**
  * @description: Login interface return value
  */

@@ -1,17 +1,22 @@
 import type { DefUserInfoResultVO } from '/#/store';
 import { defHttp } from '/@/utils/http/axios';
-import { LoginParamVO, LogoutParams, LoginResultVO } from './model/userModel';
+import { LoginParamVO, LogoutParams, LoginResultVO, RegisterVO } from './model/userModel';
 import { MenuParams, MenuListResultModel, VisibleResourceVO } from './model/menuModel';
-import { ContentTypeEnum } from '/@/enums/httpEnum';
+import { ContentTypeEnum, RequestEnum } from '/@/enums/httpEnum';
 import { ServicePrefixEnum } from '/@/enums/commonEnum';
 
 import { ErrorMessageMode } from '/#/axios';
 import { AxiosRequestConfig } from 'axios';
 
-const Api = {
+export const Api = {
   // 登录
   Login: {
     url: `${ServicePrefixEnum.OAUTH}/anyTenant/login`,
+  },
+  // 用户注册
+  Register: {
+    url: `${ServicePrefixEnum.OAUTH}/anyTenant/register`,
+    method: RequestEnum.POST,
   },
   // 获取用户信息
   getUserInfoById: {
@@ -59,6 +64,19 @@ export function loginApi(params: LoginParamVO, mode: ErrorMessageMode = 'modal')
     {
       errorMessageMode: mode,
       withTenant: false,
+    },
+  );
+}
+
+export function register(params: RegisterVO, mode: ErrorMessageMode = 'modal') {
+  return defHttp.request<string>(
+    {
+      ...Api.Register,
+      params,
+    },
+    {
+      errorMessageMode: mode,
+      withTenant: true,
     },
   );
 }
