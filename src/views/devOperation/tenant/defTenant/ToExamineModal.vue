@@ -1,0 +1,78 @@
+<template>
+  <BasicModal
+    v-bind="$attrs"
+    okText="绑定"
+    @register="registerModal"
+    title="绑定用户"
+    @ok="handleSubmit"
+    :maskClosable="false"
+    :keyboard="true"
+  >
+    <BasicForm @register="registerForm" />
+  </BasicModal>
+</template>
+<script lang="ts">
+  import { defineComponent } from 'vue';
+  import { BasicModal, useModalInner } from '/@/components/Modal';
+  import { BasicForm, useForm } from '/@/components/Form/index';
+  import { useMessage } from '/@/hooks/web/useMessage';
+  import { useI18n } from '/@/hooks/web/useI18n';
+  import { toExamineFormSchema } from './tenant.data';
+  import { updateStatus } from '/@/api/devOperation/tenant/tenant';
+  import { bindUser } from '/@/api/basic/user/baseEmployee';
+
+  export default defineComponent({
+    name: 'ToExamineModal',
+    components: { BasicModal, BasicForm },
+    emits: ['success', 'register'],
+    setup(_, { emit }) {
+      const { t } = useI18n();
+      const { createMessage } = useMessage();
+      const [registerForm, { setFieldsValue, validate }] = useForm({
+        labelWidth: 120,
+        schemas: toExamineFormSchema(),
+        showActionButtonGroup: false,
+        actionColOptions: {
+          span: 23,
+        },
+      });
+
+      const [registerModal, { setModalProps, closeModal }] = useModalInner(async (data) => {
+        setModalProps({ confirmLoading: false });
+
+        const record = { ...data?.record };
+        record.status = '';
+        await setFieldsValue(record);
+      });
+
+      async function handleSubmit() {
+        try {
+          setModalProps({ confirmLoading: true });
+          const params = await validate();
+
+          await updateStatus(params);
+          try {
+            const bindParams = {
+              tenantId: params.id,
+              userIdList: [params.createdBy],
+              isBind: true,
+            };
+            await bindUser(bindParams);
+          } catch (e) {
+            createMessage.warn(
+              `绑定用户为租户管理员失败，请手动将用户【${params?.createdName}】绑定为管理员`,
+            );
+          }
+          createMessage.success('审核成功');
+
+          closeModal();
+          emit('success');
+        } finally {
+          setModalProps({ confirmLoading: false });
+        }
+      }
+
+      return { t, registerModal, registerForm, handleSubmit };
+    },
+  });
+</script>

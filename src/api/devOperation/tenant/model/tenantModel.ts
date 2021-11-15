@@ -20,8 +20,9 @@ export interface TenantPageQuery {
   connectType: Enum;
   status: string;
   state: boolean;
+  reviewComments: string;
   readonly: boolean;
-  duty: string;
+  createdName: string;
   expirationTime: string;
   describe: string;
   createdTime: string;
@@ -45,7 +46,7 @@ export interface TenantSaveDTO {
   districtName?: string;
   address?: string;
   state?: boolean;
-  duty?: string;
+  createdName?: string;
   expirationTime?: string;
   describe?: string;
   logos?: AppendixSaveVO[];
@@ -68,7 +69,7 @@ export interface TenantUpdateDTO {
   districtName?: string;
   address?: string;
   state?: boolean;
-  duty?: string;
+  createdName?: string;
   expirationTime?: string;
   describe?: string;
   logos?: AppendixSaveVO[];
@@ -95,7 +96,8 @@ export interface Tenant {
   status: string;
   state: boolean;
   readonly: boolean;
-  duty: string;
+  createdName: string;
+  reviewComments: string;
   expirationTime: string;
   describe: string;
   createdTime: string;
@@ -112,4 +114,10 @@ export interface DefTenantInitVO {
   connectType: Enum;
   baseDatasourceId?: string;
   extendDatasourceId?: string;
+}
+
+export interface ReviewComment {
+  id: string;
+  status: string;
+  reviewComments?: string;
 }

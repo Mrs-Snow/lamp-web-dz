@@ -1,4 +1,4 @@
-import { Ref, unref, h } from 'vue';
+import { Ref, h } from 'vue';
 import moment, { Moment } from 'moment';
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
@@ -7,7 +7,6 @@ import { ActionEnum, FileBizTypeEnum } from '/@/enums/commonEnum';
 import { MultiTenantTypeEnum, TenantConnectTypeEnum, TenantStatusEnum } from '/@/enums/biz/tenant';
 import { Tag, Badge, Switch } from 'ant-design-vue';
 import { RuleType, FormSchemaExt } from '/@/api/lamp/common/formValidateService';
-import { check } from '/@/api/devOperation/tenant/tenant';
 import { query } from '/@/api/devOperation/tenant/datasourceConfig';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { updateState } from '/@/api/devOperation/tenant/tenant';
@@ -19,11 +18,11 @@ const globSetting = useGlobSetting();
 
 // 列表页字段
 export const columns: BasicColumn[] = [
-  {
-    title: t('devOperation.tenant.defTenant.code'),
-    dataIndex: 'code',
-    width: 180,
-  },
+  // {
+  //   title: t('devOperation.tenant.defTenant.code'),
+  //   dataIndex: 'code',
+  //   width: 180,
+  // },
   {
     title: t('devOperation.tenant.defTenant.name'),
     dataIndex: 'name',
@@ -78,6 +77,8 @@ export const columns: BasicColumn[] = [
         case TenantStatusEnum.WAIT_INIT: //待初始化
           status = 'processing';
           break;
+        case TenantStatusEnum.WITHDRAW: // 已撤回
+          status = 'default';
           break;
         case TenantStatusEnum.WAITING: // 待审核
           status = 'processing';
@@ -85,7 +86,7 @@ export const columns: BasicColumn[] = [
         case TenantStatusEnum.REFUSE: // 拒绝
           status = 'error';
           break;
-        case TenantStatusEnum.DELETE: // 已删除
+        case TenantStatusEnum.AGREED: // 已删除
           status = 'warning';
           break;
         default:
@@ -129,11 +130,11 @@ export const columns: BasicColumn[] = [
 
 // 列表页搜索表单字段
 export const searchFormSchema: FormSchema[] = [
-  {
-    field: 'code',
-    label: t('devOperation.tenant.defTenant.code'),
-    component: 'Input',
-  },
+  // {
+  //   field: 'code',
+  //   label: t('devOperation.tenant.defTenant.code'),
+  //   component: 'Input',
+  // },
   {
     field: 'name',
     label: t('devOperation.tenant.defTenant.name'),
@@ -147,7 +148,7 @@ export const searchFormSchema: FormSchema[] = [
 ];
 
 // 新增、编辑、查看页面表单字段
-export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
+export const editFormSchema = (_: Ref<ActionEnum>): FormSchema[] => {
   return [
     {
       field: 'divider-selects1',
@@ -161,17 +162,17 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       required: false,
       show: false,
     },
-    {
-      field: 'code',
-      label: t('devOperation.tenant.defTenant.code'),
-      component: 'Input',
-      dynamicDisabled: (_) => {
-        return unref(type) !== ActionEnum.ADD;
-      },
-      colProps: {
-        span: 12,
-      },
-    },
+    // {
+    //   field: 'code',
+    //   label: t('devOperation.tenant.defTenant.code'),
+    //   component: 'Input',
+    //   dynamicDisabled: (_) => {
+    //     return unref(type) !== ActionEnum.ADD;
+    //   },
+    //   colProps: {
+    //     span: 12,
+    //   },
+    // },
     {
       field: 'name',
       label: t('devOperation.tenant.defTenant.name'),
@@ -296,8 +297,8 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       },
     },
     {
-      field: 'duty',
-      label: t('devOperation.tenant.defTenant.duty'),
+      field: 'createdName',
+      label: t('devOperation.tenant.defTenant.createdName'),
       component: 'Input',
       colProps: {
         span: 12,
@@ -312,32 +313,32 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
 };
 
 // 额外的新增、编辑表单验证规则
-export const customFormSchemaRules = (type: Ref<ActionEnum>): Partial<FormSchemaExt>[] => {
+export const customFormSchemaRules = (_: Ref<ActionEnum>): Partial<FormSchemaExt>[] => {
   return [
-    {
-      field: 'code',
-      type: RuleType.append,
-      rules: [
-        {
-          trigger: ['change', 'blur'],
-          async validator(_, value) {
-            if (unref(type) !== ActionEnum.ADD) {
-              return Promise.resolve();
-            }
-            if (value) {
-              const res = await check(value);
-              if (res) {
-                return Promise.reject('企业编码已经存在');
-              } else {
-                return Promise.resolve();
-              }
-            } else {
-              return Promise.resolve();
-            }
-          },
-        },
-      ],
-    },
+    // {
+    //   field: 'code',
+    //   type: RuleType.append,
+    //   rules: [
+    //     {
+    //       trigger: ['change', 'blur'],
+    //       async validator(_, value) {
+    //         if (unref(type) !== ActionEnum.ADD) {
+    //           return Promise.resolve();
+    //         }
+    //         if (value) {
+    //           const res = await check(value);
+    //           if (res) {
+    //             return Promise.reject('企业编码已经存在');
+    //           } else {
+    //             return Promise.resolve();
+    //           }
+    //         } else {
+    //           return Promise.resolve();
+    //         }
+    //       },
+    //     },
+    //   ],
+    // },
     {
       field: 'logos',
       rules: [
@@ -555,3 +556,51 @@ export const userSearchFormSchema: FormSchema[] = [
     colProps: { span: 6 },
   },
 ];
+
+// 审核页面
+export const toExamineFormSchema = (): FormSchema[] => {
+  return [
+    {
+      field: 'id',
+      label: 'ID',
+      component: 'Input',
+      required: false,
+      show: false,
+    },
+    {
+      field: 'createdName',
+      label: 'ID',
+      component: 'Input',
+      show: false,
+    },
+    {
+      field: 'createdBy',
+      label: 'ID',
+      component: 'Input',
+      show: false,
+    },
+    {
+      field: 'status',
+      label: '审核状态',
+      component: 'RadioGroup',
+      componentProps: {
+        options: [
+          {
+            label: '同意',
+            value: TenantStatusEnum.AGREED,
+          },
+          {
+            label: '拒绝',
+            value: TenantStatusEnum.REFUSE,
+          },
+        ],
+      },
+      rules: [{ required: true }],
+    },
+    {
+      field: 'reviewComments',
+      label: '审批意见',
+      component: 'InputTextArea',
+    },
+  ];
+};

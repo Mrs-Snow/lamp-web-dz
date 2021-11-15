@@ -61,6 +61,7 @@ export const ConstRouter: AppRouteRecordRaw[] = [
     redirect: '/home/welcome',
     meta: {
       icon: 'bx:bx-home',
+      hideMenu: true,
       title: t('routes.dashboard.welcome'),
     },
     children: [
@@ -97,37 +98,29 @@ export const ConstRouter: AppRouteRecordRaw[] = [
       },
     ],
   },
-  // {
-  //   path: '/system',
-  //   name: 'system',
-  //   component: LAYOUT,
-  //   redirect: '/system/menu',
-  //   meta: {
-  //     title: '角色管理',
-  //   },
-  //   children: [
-  //     {
-  //       path: 'roleResource/:roleId',
-  //       name: 'roleResource',
-  //       component: () => import('/@/views/lamp/system/role/resource/RoleResource.vue'),
-  //       meta: {
-  //         title: '绑定资源',
-  //         hideMenu: true,
-  //         currentActiveMenu: '/system/role',
-  //       },
-  //     },
-  //     {
-  //       path: 'dictionaryItem/:type',
-  //       name: 'dictionaryItem',
-  //       component: () => import('/@/views/lamp/system/dictionaryItem/index.vue'),
-  //       meta: {
-  //         title: '字典项管理',
-  //         hideMenu: true,
-  //         currentActiveMenu: '/system/dictionary',
-  //       },
-  //     },
-  //   ],
-  // },
+  {
+    path: '/myTenant',
+    name: 'myTenant',
+    component: LAYOUT,
+    redirect: '/myTenant/info',
+    meta: {
+      title: '我的企业',
+      hideChildrenInMenu: true,
+      icon: 'ant-design:group-outlined',
+    },
+    children: [
+      {
+        path: 'info',
+        name: 'myTenantInfo',
+        component: () => import('/@/views/basic/myTenant/index.vue'),
+        meta: {
+          title: '我的企业',
+          hideMenu: true,
+          icon: 'ant-design:group-outlined',
+        },
+      },
+    ],
+  },
   // {
   //   path: '/resources',
   //   name: 'resources',

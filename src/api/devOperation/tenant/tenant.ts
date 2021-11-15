@@ -4,6 +4,7 @@ import {
   Tenant,
   TenantPageQuery,
   DefTenantInitVO,
+  ReviewComment,
 } from './model/tenantModel';
 import { PageParams, PageResult } from '/@/api/model/baseModel';
 import { defHttp } from '/@/utils/http/axios';
@@ -36,6 +37,11 @@ export const Api = {
   } as AxiosRequestConfig,
   UpdateState: {
     url: `${ServicePrefixEnum.TENANT}/${MODULAR}/updateState`,
+    method: RequestEnum.POST,
+    headers: { 'Content-Type': ContentTypeEnum.FORM_URLENCODED },
+  } as AxiosRequestConfig,
+  UpdateStatus: {
+    url: `${ServicePrefixEnum.TENANT}/${MODULAR}/updateStatus`,
     method: RequestEnum.POST,
     headers: { 'Content-Type': ContentTypeEnum.FORM_URLENCODED },
   } as AxiosRequestConfig,
@@ -82,6 +88,9 @@ export const update = (params: TenantUpdateDTO) =>
 
 export const updateState = (id: string, state: boolean) =>
   defHttp.request<boolean>({ ...Api.UpdateState, params: { id, state } });
+
+export const updateStatus = (params: ReviewComment) =>
+  defHttp.request<boolean>({ ...Api.UpdateStatus, params });
 
 export const remove = (params: string[]) => defHttp.request<boolean>({ ...Api.Delete, params });
 

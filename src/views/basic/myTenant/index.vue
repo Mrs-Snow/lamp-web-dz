@@ -10,32 +10,6 @@
         <TableAction
           :actions="[
             {
-              icon: 'ant-design:audit-outlined',
-              tooltip: '审核',
-              onClick: handleToExamine.bind(null, record),
-              ifShow: () => {
-                return [TenantStatusEnum.WAITING].includes(record?.status);
-              },
-            },
-            {
-              icon: 'ant-design:database-outlined',
-              tooltip: '初始化数据',
-              onClick: handleInitData.bind(null, record),
-              ifShow: () => {
-                return [TenantStatusEnum.WAIT_INIT, TenantStatusEnum.AGREED].includes(
-                  record?.status,
-                );
-              },
-            },
-            {
-              icon: 'ant-design:cloud-upload-outlined',
-              tooltip: '连数据源',
-              onClick: handleLinkDataSource.bind(null, record),
-              ifShow: () => {
-                return [TenantStatusEnum.NORMAL, TenantStatusEnum.AGREED].includes(record?.status);
-              },
-            },
-            {
               tooltip: t('common.title.edit'),
               icon: 'clarity:note-edit-line',
               onClick: handleEdit.bind(null, record),
@@ -48,14 +22,35 @@
                 title: t('common.tips.confirmDelete'),
                 confirm: handleDelete.bind(null, record),
               },
+              ifShow: () => {
+                return [
+                  TenantStatusEnum.WITHDRAW,
+                  TenantStatusEnum.WAITING,
+                  TenantStatusEnum.REFUSE,
+                ].includes(record.status);
+              },
             },
             {
-              tooltip: '绑定用户',
-              icon: 'ant-design:usergroup-add-outlined',
-              color: 'warning',
-              onClick: handleBindUser.bind(null, record),
+              tooltip: '撤回',
+              icon: 'ant-design:rollback-outlined',
+              color: 'error',
+              popConfirm: {
+                title: '是否确认要撤回审批',
+                confirm: handleWithdraw.bind(null, record),
+              },
               ifShow: () => {
-                return [TenantStatusEnum.NORMAL].includes(record?.status);
+                return record.status === TenantStatusEnum.WAITING;
+              },
+            },
+            {
+              tooltip: '发起审批',
+              icon: 'ant-design:audit-outlined',
+              popConfirm: {
+                title: '是否确认要重新发起审批',
+                confirm: handleRelaunch.bind(null, record),
+              },
+              ifShow: () => {
+                return record.status === TenantStatusEnum.WITHDRAW;
               },
             },
           ]"
@@ -64,10 +59,6 @@
       </template>
     </BasicTable>
     <EditModal @register="registerDrawer" @success="handleSuccess" />
-    <InitDataModal @register="registerInitDrawer" @success="handleInitSuccess" />
-    <LinkDataSourceModal @register="registerLinkDrawer" @success="handleSuccess" />
-    <BindUserModal @register="registerModal" @success="handleSuccess" />
-    <ToExamineModal @register="registerToExamineModal" @success="handleSuccess" />
   </PageWrapper>
 </template>
 <script lang="ts">
@@ -77,37 +68,24 @@
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
   import { PageWrapper } from '/@/components/Page';
   import { useDrawer } from '/@/components/Drawer';
-  import { useModal } from '/@/components/Modal';
   import { handleFetchParams } from '/@/utils/lamp/common';
   import { ActionEnum } from '/@/enums/commonEnum';
   import { TenantStatusEnum } from '/@/enums/biz/tenant';
-  import { page, remove } from '/@/api/devOperation/tenant/tenant';
+  import { page, remove, updateStatus } from '/@/api/devOperation/tenant/myTenant';
   import { columns, searchFormSchema } from './tenant.data';
   import EditModal from './Edit.vue';
-  import InitDataModal from './InitData.vue';
-  import LinkDataSourceModal from './LinkDataSource.vue';
-  import BindUserModal from './BindUserModal.vue';
-  import ToExamineModal from './ToExamineModal.vue';
 
   export default defineComponent({
-    name: 'TenantManagement',
+    name: 'MyTenantManagement',
     components: {
       BasicTable,
       PageWrapper,
       EditModal,
       TableAction,
-      InitDataModal,
-      LinkDataSourceModal,
-      BindUserModal,
-      ToExamineModal,
     },
     setup() {
       const { t } = useI18n();
       const [registerDrawer, { openDrawer }] = useDrawer();
-      const [registerModal, { openModal }] = useModal();
-      const [registerToExamineModal, { openModal: openToExamineModal }] = useModal();
-      const [registerLinkDrawer, { openDrawer: openLinkDrawer }] = useDrawer();
-      const [registerInitDrawer, { openDrawer: openInitDrawer }] = useDrawer();
 
       const { createMessage } = useMessage();
 
@@ -137,19 +115,12 @@
           type: 'checkbox',
         },
         actionColumn: {
-          width: 200,
+          width: 120,
           title: t('common.column.action'),
           dataIndex: 'action',
           slots: { customRender: 'action' },
         },
       });
-
-      function handleInitData(record: Recordable) {
-        openInitDrawer(true, { record });
-      }
-      function handleLinkDataSource(record: Recordable) {
-        openLinkDrawer(true, { record });
-      }
 
       function handleAdd() {
         openDrawer(true, {
@@ -164,26 +135,25 @@
         });
       }
 
-      function handleDelete(record: Recordable) {
-        remove([record.id]).then(() => {
-          createMessage.success(t('common.tips.deleteSuccess'));
-          handleSuccess();
-        });
+      async function handleDelete(record: Recordable) {
+        await remove([record.id]);
+        createMessage.success(t('common.tips.deleteSuccess'));
+        handleSuccess();
+      }
+
+      async function handleWithdraw(record: Recordable) {
+        await updateStatus({ id: record.id, status: TenantStatusEnum.WITHDRAW });
+        createMessage.success('撤回成功');
+        handleSuccess();
+      }
+      async function handleRelaunch(record: Recordable) {
+        await updateStatus({ id: record.id, status: TenantStatusEnum.WAITING });
+        createMessage.success('发起审批成功');
+        handleSuccess();
       }
 
       function handleSuccess() {
         reload();
-      }
-      function handleInitSuccess() {
-        reload();
-      }
-
-      function handleBindUser(record: Recordable) {
-        openModal(true, { record });
-      }
-
-      function handleToExamine(record: Recordable) {
-        openToExamineModal(true, { record });
       }
 
       return {
@@ -191,19 +161,12 @@
         t,
         registerTable,
         registerDrawer,
-        registerModal,
-        registerInitDrawer,
-        registerLinkDrawer,
-        registerToExamineModal,
         handleAdd,
         handleEdit,
         handleDelete,
+        handleWithdraw,
+        handleRelaunch,
         handleSuccess,
-        handleInitSuccess,
-        handleInitData,
-        handleLinkDataSource,
-        handleBindUser,
-        handleToExamine,
       };
     },
   });

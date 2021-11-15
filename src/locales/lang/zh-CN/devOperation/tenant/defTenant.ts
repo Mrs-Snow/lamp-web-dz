@@ -8,7 +8,7 @@ export default {
   connectType: '连接类型',
   status: '审核状态',
   state: '状态',
-  duty: '责任人',
+  createdName: '创建人',
   expirationTime: '有效期',
   logo: 'logo地址',
   describe: '企业简介',

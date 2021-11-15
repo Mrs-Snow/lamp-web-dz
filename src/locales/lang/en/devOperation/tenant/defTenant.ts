@@ -2,7 +2,7 @@ export default {
   table: { title: 'Tenant List' },
   code: 'code',
   name: 'name',
-  duty: 'duty',
+  createdName: 'createdName',
   registerType: 'registerType',
   abbreviation: 'abbreviation',
   creditCode: 'creditCode',

@@ -197,21 +197,23 @@ export const usePermissionStore = defineStore({
           } catch (error) {
             console.error(error);
           }
-          console.log('routeList=%s', routeList);
 
-          // Dynamically introduce components
+          // 动态引入组件
           routeList = transformObjToRoute(routeList);
-          console.log('transformObjToRoute=%s', routeList);
-          //  Background routing to menu structure
-          const backMenuList = transformRouteToMenu([...routeList, ...VbenRoutes]);
+
+          // 后台路由 + 前段写死的路由(一般是公共菜单)
+          routeList = [...ConstRouter, ...routeList, ...VbenRoutes];
+
+          //  后台路由转菜单结构
+          const backMenuList = transformRouteToMenu(routeList);
           this.setBackMenuList(backMenuList);
 
           // remove meta.ignoreRoute item
-          routeList = filter([...routeList, ...VbenRoutes], routeRemoveIgnoreFilter);
+          routeList = filter(routeList, routeRemoveIgnoreFilter);
           routeList = routeList.filter(routeRemoveIgnoreFilter);
 
           routeList = flatMultiLevelRoutes(routeList);
-          routes = [PAGE_NOT_FOUND_ROUTE, ...ConstRouter, ...routeList];
+          routes = [PAGE_NOT_FOUND_ROUTE, ...routeList];
           break;
       }
 

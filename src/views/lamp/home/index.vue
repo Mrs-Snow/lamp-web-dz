@@ -42,6 +42,7 @@
   import WorkbenchHeader from './components/WorkbenchHeader.vue';
   import ApplicationCard from './components/ApplicationCard.vue';
   import { useUserStore } from '/@/store/modules/user';
+  import { useRouter } from 'vue-router';
   import QuickNav from './components/QuickNav.vue';
   import DynamicInfo from './components/DynamicInfo.vue';
   import SaleRadar from './components/SaleRadar.vue';
@@ -52,14 +53,18 @@
   const loading = ref(false);
   const userStore = useUserStore();
   const { createSuccessModal } = useMessage();
-
+  const { replace } = useRouter();
   const userinfo = computed(() => userStore.getUserInfo);
 
   function handleEmployee() {
     createSuccessModal({ content: '请联系贵公司管理员邀请您加入公司。' });
   }
 
-  function handleTenant() {}
+  function handleTenant() {
+    replace({
+      name: 'myTenantInfo',
+    });
+  }
 </script>
 
 <style lang="less" scoped>
