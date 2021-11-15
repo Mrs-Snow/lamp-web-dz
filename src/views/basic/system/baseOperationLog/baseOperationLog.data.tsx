@@ -26,11 +26,11 @@ export const columns = (): BasicColumn[] => {
         return <Badge status={status} text={record?.type?.desc} />;
       },
     },
-    {
-      title: t('basic.system.baseOperationLog.userName'),
-      dataIndex: 'userName',
-      width: 100,
-    },
+    // {
+    //   title: t('basic.system.baseOperationLog.userName'),
+    //   dataIndex: 'userName',
+    //   width: 100,
+    // },
     {
       title: t('basic.system.baseOperationLog.description'),
       dataIndex: 'description',

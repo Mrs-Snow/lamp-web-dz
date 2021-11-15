@@ -19,7 +19,6 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { toExamineFormSchema } from './tenant.data';
   import { updateStatus } from '/@/api/devOperation/tenant/tenant';
-  import { bindUser } from '/@/api/basic/user/baseEmployee';
 
   export default defineComponent({
     name: 'ToExamineModal',
@@ -27,7 +26,7 @@
     emits: ['success', 'register'],
     setup(_, { emit }) {
       const { t } = useI18n();
-      const { createMessage } = useMessage();
+      const { createSuccessModal } = useMessage();
       const [registerForm, { setFieldsValue, validate }] = useForm({
         labelWidth: 120,
         schemas: toExamineFormSchema(),
@@ -51,19 +50,11 @@
           const params = await validate();
 
           await updateStatus(params);
-          try {
-            const bindParams = {
-              tenantId: params.id,
-              userIdList: [params.createdBy],
-              isBind: true,
-            };
-            await bindUser(bindParams);
-          } catch (e) {
-            createMessage.warn(
-              `绑定用户为租户管理员失败，请手动将用户【${params?.createdName}】绑定为管理员`,
-            );
-          }
-          createMessage.success('审核成功');
+
+          createSuccessModal({
+            title: '审核成功',
+            content: `请执行以下操作,使用户能正常使用系统： <br/> 1. 初始化数据源 <br/> 2. 手动绑定用户【${params?.createdName}】为租户管理员`,
+          });
 
           closeModal();
           emit('success');

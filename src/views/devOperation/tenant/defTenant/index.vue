@@ -22,14 +22,12 @@
               tooltip: '初始化数据',
               onClick: handleInitData.bind(null, record),
               ifShow: () => {
-                return [TenantStatusEnum.WAIT_INIT, TenantStatusEnum.AGREED].includes(
-                  record?.status,
-                );
+                return [TenantStatusEnum.WAIT_INIT].includes(record?.status);
               },
             },
             {
               icon: 'ant-design:cloud-upload-outlined',
-              tooltip: '连数据源',
+              tooltip: '初始化数据源',
               onClick: handleLinkDataSource.bind(null, record),
               ifShow: () => {
                 return [TenantStatusEnum.NORMAL, TenantStatusEnum.AGREED].includes(record?.status);

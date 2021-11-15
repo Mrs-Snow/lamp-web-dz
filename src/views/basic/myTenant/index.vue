@@ -10,11 +10,6 @@
         <TableAction
           :actions="[
             {
-              tooltip: t('common.title.edit'),
-              icon: 'clarity:note-edit-line',
-              onClick: handleEdit.bind(null, record),
-            },
-            {
               tooltip: t('common.title.delete'),
               icon: 'ant-design:delete-outlined',
               color: 'error',
@@ -50,8 +45,13 @@
                 confirm: handleRelaunch.bind(null, record),
               },
               ifShow: () => {
-                return record.status === TenantStatusEnum.WITHDRAW;
+                return [TenantStatusEnum.WITHDRAW, TenantStatusEnum.REFUSE].includes(record.status);
               },
+            },
+            {
+              tooltip: t('common.title.edit'),
+              icon: 'clarity:note-edit-line',
+              onClick: handleEdit.bind(null, record),
             },
           ]"
           :stopButtonPropagation="true"
