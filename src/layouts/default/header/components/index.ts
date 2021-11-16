@@ -9,7 +9,7 @@ export const LayoutBreadcrumb = createAsyncComponent(() => import('./Breadcrumb.
 
 export const TenantList = createAsyncComponent(() => import('./TenantList.vue'));
 
-export const Notify = createAsyncComponent(() => import('./notify/index.vue'));
+export const Notify = createAsyncComponent(() => import('./notifyWs/index.vue'));
 
 export const ErrorAction = createAsyncComponent(() => import('./ErrorAction.vue'));
 

@@ -1,4 +1,4 @@
-import { Enum } from '/@/api/model/baseModel';
+import { Enum, PageResult } from '/@/api/model/baseModel';
 
 export interface EMsgPageQuery {
   bizId?: string;
@@ -49,6 +49,13 @@ export interface EMsgUpdateVO {
   updateTime: string;
 }
 
+export interface MyMsgResult {
+  todoList: PageResult<EMsgResultVO>;
+  notifyList: PageResult<EMsgResultVO>;
+  noticeList: PageResult<EMsgResultVO>;
+  earlyWarningList: PageResult<EMsgResultVO>;
+}
+
 export interface EMsgResultVO {
   bizId?: string;
   bizType?: string;
@@ -61,7 +68,7 @@ export interface EMsgResultVO {
   isSingleHandle?: boolean;
   createTime?: string;
   updateTime?: string;
-  id?: string;
+  id: string;
   createdBy?: string;
   updatedBy?: string;
   echoMap?: Recordable;

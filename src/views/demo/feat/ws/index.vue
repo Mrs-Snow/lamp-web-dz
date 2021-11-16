@@ -69,16 +69,21 @@
     setup() {
       let host = window.location.host;
       const state = reactive({
-        // server: 'ws://localhost:8760/api/wsMsg/anno/myMsg',
-        server: `ws://${host}/api/wsMsg/anno/myMsg`,
-        // server: 'ws://localhost:8768/anno/myMsg',
+        // server: 'ws://localhost:8760/api/wsMsg/anno/test',
+        server: `ws://${host}/api/wsMsg/anno/test`,
+        // server: 'ws://localhost:8768/anno/test',
         sendValue: '',
         recordList: [] as { id: number; time: number; res: string }[],
       });
 
+      function onMessage(ws: WebSocket, event: MessageEvent) {
+        console.log(ws);
+        console.log(event);
+      }
       const { status, data, send, close, open } = useWebSocket(state.server, {
         autoReconnect: false,
-        heartbeat: true,
+        heartbeat: false,
+        onMessage: onMessage,
       });
 
       watchEffect(() => {
@@ -104,7 +109,7 @@
       });
 
       function handlerSend() {
-        send(state.sendValue);
+        send(JSON.stringify({ aa: state.sendValue, UserId: '1459157721822527488', TenantId: '1' }));
         state.sendValue = '';
       }
 

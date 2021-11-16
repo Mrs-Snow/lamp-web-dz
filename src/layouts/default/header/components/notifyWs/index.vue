@@ -22,67 +22,80 @@
   </div>
 </template>
 <script lang="ts">
-  import { computed, defineComponent, ref, onMounted } from 'vue';
+  import { computed, defineComponent, ref, onMounted, reactive } from 'vue';
   import { Popover, Tabs, Badge } from 'ant-design-vue';
   import { BellOutlined } from '@ant-design/icons-vue';
   import { useRouter } from 'vue-router';
-  import { TabItem } from './data';
-  import NoticeList from './NoticeList.vue';
+  import { useWebSocket } from '@vueuse/core';
   import { useDesign } from '/@/hooks/web/useDesign';
-  import { myMsg, mark } from '/@/api/basic/msg/eMsg';
+  import { useUserStore } from '/@/store/modules/user';
+  import { RouteEnum } from '/@/enums/biz/tenant';
+  import { mark } from '/@/api/basic/msg/eMsg';
   import { ActionEnum, MsgTypeEnum } from '/@/enums/commonEnum';
   import { EMsgResultVO } from '/@/api/basic/msg/model/eMsgModel';
-  import { PageEnum } from '/@/enums/pageEnum';
-  import { RouteEnum } from '/@/enums/biz/tenant';
+  import NoticeList from './NoticeList.vue';
+  import { TabItem } from './data';
 
   export default defineComponent({
     components: { Popover, BellOutlined, Tabs, TabPane: Tabs.TabPane, Badge, NoticeList },
     setup() {
       const { prefixCls } = useDesign('header-notify');
-      const { replace, currentRoute } = useRouter();
+      const { replace } = useRouter();
       const listData = ref<TabItem[]>([]);
+      const userStore = useUserStore();
+      const userId = userStore.getUserInfo.id;
+      const tenantId = userStore.getTenantId;
 
-      async function loadMyMsg() {
-        const allMsg = await myMsg({
-          current: 1,
-          size: 5,
-          model: {},
-        });
-
-        listData.value = [];
-
-        listData.value.push({
-          key: MsgTypeEnum.TO_DO,
-          name: '待办',
-          data: allMsg?.todoList,
-        });
-        listData.value.push({
-          key: MsgTypeEnum.NOTIFY,
-          name: '通知',
-          data: allMsg?.notifyList,
-        });
-        listData.value.push({
-          key: MsgTypeEnum.NOTICE,
-          name: '公告',
-          data: allMsg?.noticeList,
-        });
-        listData.value.push({
-          key: MsgTypeEnum.EARLY_WARNING,
-          name: '预警',
-          data: allMsg?.earlyWarningList,
-        });
-      }
-
-      onMounted(() => {
-        loadMyMsg();
+      let host = window.location.host;
+      const state = reactive({
+        server: `ws://${host}/api/wsMsg/anno/myMsg/${tenantId}/${userId}`,
+        sendValue: '',
+        recordList: [] as { id: number; time: number; res: string }[],
       });
 
-      setInterval(() => {
-        const { path } = currentRoute.value;
-        if (path !== PageEnum.BASE_LOGIN) {
-          // loadMyMsg();
+      function onMessage(_: WebSocket, event: MessageEvent) {
+        const jsonStr = event.data;
+        if (!jsonStr) {
+          return;
         }
-      }, 5 * 60000);
+        const jsonResult = JSON.parse(jsonStr);
+
+        if (jsonResult?.type === '2') {
+          listData.value = [];
+
+          listData.value.push({
+            key: MsgTypeEnum.TO_DO,
+            name: '待办',
+            data: jsonResult.data?.todoList,
+          });
+          listData.value.push({
+            key: MsgTypeEnum.NOTIFY,
+            name: '通知',
+            data: jsonResult.data?.notifyList,
+          });
+          listData.value.push({
+            key: MsgTypeEnum.NOTICE,
+            name: '公告',
+            data: jsonResult.data?.noticeList,
+          });
+          listData.value.push({
+            key: MsgTypeEnum.EARLY_WARNING,
+            name: '预警',
+            data: jsonResult.data?.earlyWarningList,
+          });
+        } else {
+          send('pull');
+        }
+      }
+      const { send } = useWebSocket(state.server, {
+        autoReconnect: true,
+        heartbeat: false,
+        onMessage: onMessage,
+      });
+
+      onMounted(() => {
+        send('pull');
+      });
 
       const count = computed(() => {
         let num = 0;
@@ -95,7 +108,7 @@
       async function onNoticeClick(record: EMsgResultVO) {
         const flag = await mark([record.id]);
         if (flag) {
-          loadMyMsg();
+          send('pull');
         }
         replace({
           name: RouteEnum.BASIC_MY_MSG_VIEW,

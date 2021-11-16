@@ -1,4 +1,10 @@
-import { EMsgSaveVO, EMsgUpdateVO, EMsgResultVO, EMsgPageQuery } from './model/eMsgModel';
+import {
+  EMsgSaveVO,
+  MyMsgResult,
+  EMsgUpdateVO,
+  EMsgResultVO,
+  EMsgPageQuery,
+} from './model/eMsgModel';
 import { PageParams, PageResult } from '/@/api/model/baseModel';
 import { defHttp } from '/@/utils/http/axios';
 import { RequestEnum } from '/@/enums/httpEnum';
@@ -72,7 +78,7 @@ export const get = (id: string) => defHttp.request<EMsgResultVO>({ ...Api.Get(id
 export const mark = (params: string[]) => defHttp.request<boolean>({ ...Api.Mark, params });
 
 export const myMsg = (params: PageParams<EMsgPageQuery>) =>
-  defHttp.request<EMsgResultVO>({ ...Api.MyMsg, params }, { errorMessageMode: 'none' });
+  defHttp.request<MyMsgResult>({ ...Api.MyMsg, params }, { errorMessageMode: 'none' });
 
 export const pageMyMsg = (params: PageParams<EMsgPageQuery>) =>
   defHttp.request<PageResult<EMsgResultVO>>({ ...Api.PageMyMsg, params });
