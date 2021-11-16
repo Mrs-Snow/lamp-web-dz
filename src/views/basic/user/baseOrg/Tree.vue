@@ -2,8 +2,16 @@
   <div class="bg-white m-4 mr-2 overflow-hidden">
     <div class="m-4">
       <a-button @click="changeDisplay()" class="mr-2"> 切换 </a-button>
-      <a-button @click="handleAdd()" class="mr-2">{{ t('common.title.addRoot') }}</a-button>
-      <a-button @click="handleBatchDelete()" class="mr-2">{{ t('common.title.delete') }}</a-button>
+      <a-button @click="handleAdd()" v-hasAnyPermission="[RoleEnum.ORG_ADD]" class="mr-2">
+        {{ t('common.title.addRoot') }}
+      </a-button>
+      <a-button
+        @click="handleBatchDelete()"
+        v-hasAnyPermission="[RoleEnum.ORG_DELETE]"
+        class="mr-2"
+      >
+        {{ t('common.title.delete') }}
+      </a-button>
     </div>
     <BasicTree
       :title="t('basic.user.baseOrg.table.title')"
@@ -23,7 +31,6 @@
 </template>
 <script lang="ts">
   import { defineComponent, onMounted, ref, unref, h } from 'vue';
-  import { PlusOutlined, DeleteOutlined } from '@ant-design/icons-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
   import {
@@ -33,6 +40,7 @@
     TreeActionType,
     ContextMenuItem,
   } from '/@/components/Tree';
+  import { RoleEnum } from '/@/enums/roleEnum';
   import { findNodeByKey } from '/@/utils/lamp/common';
 
   import { tree, remove } from '/@/api/basic/user/baseOrg';
@@ -80,27 +88,37 @@
       // 悬停图标
       const actionList: ActionItem[] = [
         {
+          auth: RoleEnum.ORG_ADD,
           render: (node) => {
-            return h(PlusOutlined, {
-              class: 'ml-2',
-              onClick: (e: Event) => {
-                e?.stopPropagation();
-                e?.preventDefault();
-                emit('add', findNodeByKey(node.id, treeData.value));
+            return h(
+              'a',
+              {
+                class: 'ml-2',
+                onClick: (e: Event) => {
+                  e?.stopPropagation();
+                  e?.preventDefault();
+                  emit('add', findNodeByKey(node.id, treeData.value));
+                },
               },
-            });
+              t('common.title.add'),
+            );
           },
         },
         {
+          auth: RoleEnum.ORG_DELETE,
           render: (node) => {
-            return h(DeleteOutlined, {
-              class: 'ml-2',
-              onClick: (e: Event) => {
-                e?.stopPropagation();
-                e?.preventDefault();
-                batchDelete([node.id]);
+            return h(
+              'a',
+              {
+                class: 'ml-2',
+                onClick: (e: Event) => {
+                  e?.stopPropagation();
+                  e?.preventDefault();
+                  batchDelete([node.id]);
+                },
               },
-            });
+              t('common.title.delete'),
+            );
           },
         },
       ];
@@ -110,6 +128,7 @@
         return [
           {
             label: t('common.title.addChildren'),
+            auth: [RoleEnum.ORG_ADD],
             handler: () => {
               emit('add', findNodeByKey(unref(node.$attrs).id, treeData.value));
             },
@@ -117,6 +136,7 @@
           },
           {
             label: t('common.title.delete'),
+            auth: [RoleEnum.ORG_DELETE],
             handler: () => {
               batchDelete([unref(node.$attrs).id]);
             },
@@ -174,6 +194,7 @@
         actionList,
         handleSelect,
         changeDisplay,
+        RoleEnum,
       };
     },
   });

@@ -7,6 +7,7 @@
           color="error"
           preIcon="ant-design:delete-outlined"
           @click="handleBatchDelete"
+          v-hasAnyPermission="[RoleEnum.SYSTEM_WEB_LOG_DELETE]"
         >
           {{ t('common.title.delete') }}
         </a-button>
@@ -15,6 +16,7 @@
           :trigger="['click']"
           :dropMenuList="clearList"
           @menu-event="handleClearEvent"
+          v-hasAnyPermission="[RoleEnum.SYSTEM_WEB_LOG_DELETE]"
           overlayClassName="app-locale-picker-overlay"
         >
           <a-button type="primary">清理日志</a-button>
@@ -26,12 +28,14 @@
             {
               tooltip: t('common.title.view'),
               icon: 'ant-design:search-outlined',
+              auth: RoleEnum.SYSTEM_WEB_LOG_VIEW,
               onClick: handleView.bind(null, record),
             },
             {
               tooltip: t('common.title.delete'),
               icon: 'ant-design:delete-outlined',
               color: 'error',
+              auth: RoleEnum.SYSTEM_WEB_LOG_DELETE,
               popConfirm: {
                 title: t('common.tips.confirmDelete'),
                 confirm: handleDelete.bind(null, record),
@@ -59,6 +63,7 @@
   import { page, remove, clear } from '/@/api/basic/system/baseOperationLog';
   import { columns, searchFormSchema, clearList } from './baseOperationLog.data';
   import EditModal from './Edit.vue';
+  import { RoleEnum } from '/@/enums/roleEnum';
 
   export default defineComponent({
     // 若需要开启页面缓存，请将此参数跟菜单名保持一致
@@ -170,6 +175,7 @@
         handleSuccess,
         handleBatchDelete,
         clearList,
+        RoleEnum,
       };
     },
   });

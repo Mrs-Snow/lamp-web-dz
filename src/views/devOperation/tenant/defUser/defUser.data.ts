@@ -118,7 +118,7 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       field: 'divider-selects1',
       component: 'Divider',
       label: '登录信息',
-      helpMessage: ['均可可用于登录'],
+      helpMessage: ['登录信息 均可可用于登录，初始密码为：123456'],
     },
     {
       label: t('devOperation.tenant.defUser.username'),

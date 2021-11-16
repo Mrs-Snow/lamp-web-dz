@@ -11,7 +11,7 @@
       <AppLogo :alwaysShowTitle="true" :applicationTitle="false" />
     </span>
 
-    <div class="container relative h-full py-2 mx-auto sm:px-10 sm:pb-20">
+    <div class="container relative h-full py-2 mx-auto sm:px-10">
       <div class="flex h-full">
         <div class="hidden min-h-full pl-4 mr-4 xl:flex xl:flex-col xl:w-6/12">
           <AppLogo class="-enter-x" :applicationTitle="false" />
@@ -30,7 +30,7 @@
               普通租户管理员账号： test1/lamp <br />
               普通管理员账号：test2/lamp <br />
               普通用户账号：test33/123456 <br />
-              新建的员工或用户登录名为用户名、手机号、邮箱、身份证，密码为：123456
+              新建的员工或用户登录名为用户名、手机号、 <br />邮箱、身份证，密码为：123456
             </div>
           </div>
         </div>
@@ -156,7 +156,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      margin-left: -62%;
+      margin-left: -48%;
       background-image: url(/@/assets/svg/login-bg.svg);
       background-position: 100%;
       background-repeat: no-repeat;

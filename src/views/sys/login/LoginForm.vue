@@ -14,13 +14,6 @@
     <FormItem name="key">
       <Input size="large" v-model:value="formData.key" :hidden="true" />
     </FormItem>
-    <!-- <FormItem name="tenantView" v-show="formState.isMultiTenant" class="enter-x">
-      <Input
-        size="large"
-        v-model:value="formData.tenantView"
-        :placeholder="t('sys.login.tenant')"
-      />
-    </FormItem> -->
     <FormItem name="username" class="enter-x">
       <Input
         size="large"
@@ -164,8 +157,8 @@
   });
 
   const formData = reactive({
-    username: 'lamp',
-    password: 'lamp',
+    username: '',
+    password: '',
     code: '',
     grantType: globSetting.showCaptcha === 'true' ? 'CAPTCHA' : 'PASSWORD',
     key: randomNum(24, 16),

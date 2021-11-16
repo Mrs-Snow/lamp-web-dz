@@ -6,11 +6,17 @@
           type="primary"
           color="error"
           preIcon="ant-design:delete-outlined"
+          v-hasAnyPermission="[RoleEnum.PARAMETER_DELETE]"
           @click="handleBatchDelete"
         >
           {{ t('common.title.delete') }}
         </a-button>
-        <a-button type="primary" preIcon="ant-design:plus-outlined" @click="handleAdd">
+        <a-button
+          type="primary"
+          preIcon="ant-design:plus-outlined"
+          v-hasAnyPermission="[RoleEnum.PARAMETER_ADD]"
+          @click="handleAdd"
+        >
           {{ t('common.title.add') }}
         </a-button>
       </template>
@@ -20,22 +26,26 @@
             {
               tooltip: t('common.title.view'),
               icon: 'ant-design:search-outlined',
+              auth: RoleEnum.PARAMETER_VIEW,
               onClick: handleView.bind(null, record),
             },
             {
               tooltip: t('common.title.edit'),
               icon: 'ant-design:edit-outlined',
+              auth: RoleEnum.PARAMETER_EDIT,
               onClick: handleEdit.bind(null, record),
             },
             {
               tooltip: t('common.title.copy'),
               icon: 'ant-design:copy-outlined',
+              auth: RoleEnum.PARAMETER_ADD,
               onClick: handleCopy.bind(null, record),
             },
             {
               tooltip: t('common.title.delete'),
               icon: 'ant-design:delete-outlined',
               color: 'error',
+              auth: RoleEnum.PARAMETER_DELETE,
               popConfirm: {
                 title: t('common.tips.confirmDelete'),
                 confirm: handleDelete.bind(null, record),
@@ -58,6 +68,7 @@
   import { useDrawer } from '/@/components/Drawer';
   import { handleFetchParams } from '/@/utils/lamp/common';
   import { ActionEnum } from '/@/enums/commonEnum';
+  import { RoleEnum } from '/@/enums/roleEnum';
   import { page, remove } from '/@/api/basic/base/baseParameter';
   import { columns, searchFormSchema } from './baseParameter.data';
   import EditModal from './Edit.vue';
@@ -186,6 +197,7 @@
         handleDelete,
         handleSuccess,
         handleBatchDelete,
+        RoleEnum,
       };
     },
   });

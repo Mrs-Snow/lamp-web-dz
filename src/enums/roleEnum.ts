@@ -13,15 +13,15 @@ export enum RoleEnum {
   TENANT_DATASOURCE_CONFIG_VIEW = 'tenant:tenant:datasourceConfig:view',
   TENANT_DATASOURCE_CONFIG_DEBUG = 'tenant:tenant:datasourceConfig:debug',
 
-  // 数据源维护
+  // 租户维护
   TENANT_TENANT_ADD = 'tenant:tenant:tenant:add',
   TENANT_TENANT_EDIT = 'tenant:tenant:tenant:edit',
   TENANT_TENANT_DELETE = 'tenant:tenant:tenant:delete',
-  TTENANT_TENANT_VIEW = 'tenant:tenant:tenant:view',
-  TTENANT_TENANT_INIT_DATA = 'tenant:tenant:tenant:initData',
-  TTENANT_TENANT_INIT_DATA_SOURCE = 'tenant:tenant:tenant:initDataSource',
-  TTENANT_TENANT_BIND_USER = 'tenant:tenant:tenant:bindUser',
-  TTENANT_TENANT_TO_EXAMINE = 'tenant:tenant:tenant:toExamine',
+  TENANT_TENANT_VIEW = 'tenant:tenant:tenant:view',
+  TENANT_TENANT_INIT_DATA = 'tenant:tenant:tenant:initData',
+  TENANT_TENANT_INIT_DATA_SOURCE = 'tenant:tenant:tenant:initDataSource',
+  TENANT_TENANT_BIND_USER = 'tenant:tenant:tenant:bindUser',
+  TENANT_TENANT_TO_EXAMINE = 'tenant:tenant:tenant:toExamine',
 
   // 用户维护
   TENANT_USER_ADD = 'tenant:tenant:user:add',
@@ -75,6 +75,15 @@ export enum RoleEnum {
   SYSTEM_LOGIN_LOG_VIEW = 'tenant:system:loginLog:view',
 
   // 基础平台
+  // 消息管理
+  MSG_MSG_ADD = 'basic:msg:msg:add',
+  MSG_MSG_EDIT = 'basic:msg:msg:edit',
+  MSG_MSG_DELETE = 'basic:msg:msg:delete',
+  MSG_MSG_VIEW = 'basic:msg:msg:view',
+  // 我的消息
+  MSG_MY_MSG_DELETE = 'basic:msg:myMsg:delete',
+  MSG_MY_MSG_VIEW = 'basic:msg:myMsg:edit',
+
   // 员工维护
   EMPLOYEE_ADD = 'basic:user:employee:add',
   EMPLOYEE_EDIT = 'basic:user:employee:edit',
@@ -102,12 +111,31 @@ export enum RoleEnum {
   BASIC_DICT_ITEM_EDIT = 'basic:base:dict:editItem',
   BASIC_DICT_ITEM_DELETE = 'basic:base:dict:deleteItem',
 
+  // 个性参数
+  PARAMETER_ADD = 'basic:base:parameter:add',
+  PARAMETER_EDIT = 'basic:base:parameter:edit',
+  PARAMETER_DELETE = 'basic:base:parameter:delete',
+  PARAMETER_VIEW = 'basic:base:parameter:view',
+
   // 角色权限维护
   ROLE_ADD = 'basic:system:role:add',
   ROLE_EDIT = 'basic:system:role:edit',
   ROLE_DELETE = 'basic:system:role:delete',
   ROLE_BING_USER = 'basic:system:role:bindUser',
   ROLE_BIND_RESOURCE = 'basic:system:role:bindResource',
+
+  // 附件管理
+  SYSTEM_APPENDIX_UPLOAD = 'basic:system:appendix:upload',
+  SYSTEM_APPENDIX_DEBUG_UPLOAD = 'basic:system:appendix:debug:upload',
+  SYSTEM_APPENDIX_DOWNLOAD = 'basic:system:appendix:download',
+  SYSTEM_APPENDIX_DELETE = 'basic:system:appendix:delete',
+
+  // 操作日志
+  SYSTEM_WEB_LOG_DELETE = 'basic:system:webLog:delete',
+  SYSTEM_WEB_LOG_VIEW = 'basic:system:webLog:view',
+  // 登录日志
+  BASIC_SYSTEM_LOGIN_LOG_DELETE = 'basic:system:loginLog:delete',
+  BASIC_SYSTEM_LOGIN_LOG_VIEW = 'basic:system:loginLog:view',
 }
 
 export enum PermModeEnum {

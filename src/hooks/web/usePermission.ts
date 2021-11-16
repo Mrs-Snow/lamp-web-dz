@@ -164,6 +164,10 @@ export function usePermission() {
   }
   /**
    * 判断权限
+   *
+   * @param value 需要具备的权限
+   * @param def  value 为空时，权限默认值
+   * @param mode 模式  可选值： 拥有所有 拥有任意 没有
    */
   function isPermission(
     value?: RoleEnum | RoleEnum[] | string | string[],

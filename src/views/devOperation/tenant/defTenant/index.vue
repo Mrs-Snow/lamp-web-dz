@@ -20,7 +20,7 @@
               ifShow: () => {
                 return [TenantStatusEnum.WAITING].includes(record?.status);
               },
-              auth: RoleEnum.TTENANT_TENANT_TO_EXAMINE,
+              auth: RoleEnum.TENANT_TENANT_TO_EXAMINE,
             },
             {
               icon: 'ant-design:database-outlined',
@@ -29,7 +29,7 @@
               ifShow: () => {
                 return [TenantStatusEnum.WAIT_INIT].includes(record?.status);
               },
-              auth: RoleEnum.TTENANT_TENANT_INIT_DATA,
+              auth: RoleEnum.TENANT_TENANT_INIT_DATA,
             },
             {
               icon: 'ant-design:cloud-upload-outlined',
@@ -38,7 +38,7 @@
               ifShow: () => {
                 return [TenantStatusEnum.NORMAL, TenantStatusEnum.AGREED].includes(record?.status);
               },
-              auth: RoleEnum.TTENANT_TENANT_INIT_DATA_SOURCE,
+              auth: RoleEnum.TENANT_TENANT_INIT_DATA_SOURCE,
             },
             {
               tooltip: t('common.title.edit'),
@@ -64,7 +64,7 @@
               ifShow: () => {
                 return [TenantStatusEnum.NORMAL].includes(record?.status);
               },
-              auth: RoleEnum.TTENANT_TENANT_BIND_USER,
+              auth: RoleEnum.TENANT_TENANT_BIND_USER,
             },
           ]"
           :stopButtonPropagation="true"

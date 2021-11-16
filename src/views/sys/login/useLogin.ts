@@ -79,7 +79,7 @@ export function useFormRules(formData?: Recordable) {
       mobile: mobileFormRule,
     };
     const loginRule = {
-      account: accountFormRule,
+      username: accountFormRule,
       password: passwordFormRule,
     };
     if (globSetting.multiTenantType !== 'NONE') {

@@ -7,10 +7,16 @@
           color="error"
           preIcon="ant-design:delete-outlined"
           @click="handleBatchDelete"
+          v-hasAnyPermission="[RoleEnum.MSG_MSG_DELETE]"
         >
           {{ t('common.title.delete') }}
         </a-button>
-        <a-button type="primary" preIcon="ant-design:plus-outlined" @click="handleAdd">
+        <a-button
+          type="primary"
+          v-hasAnyPermission="[RoleEnum.MSG_MSG_ADD]"
+          preIcon="ant-design:plus-outlined"
+          @click="handleAdd"
+        >
           {{ t('common.title.add') }}
         </a-button>
       </template>
@@ -21,16 +27,19 @@
               tooltip: t('common.title.view'),
               icon: 'ant-design:search-outlined',
               onClick: handleView.bind(null, record),
+              auth: RoleEnum.MSG_MSG_VIEW,
             },
             {
               tooltip: t('common.title.copy'),
               icon: 'ant-design:copy-outlined',
               onClick: handleCopy.bind(null, record),
+              auth: RoleEnum.MSG_MSG_ADD,
             },
             {
               tooltip: t('common.title.delete'),
               icon: 'ant-design:delete-outlined',
               color: 'error',
+              auth: RoleEnum.MSG_MSG_DELETE,
               popConfirm: {
                 title: t('common.tips.confirmDelete'),
                 confirm: handleDelete.bind(null, record),
@@ -55,7 +64,7 @@
   import { page, remove } from '/@/api/basic/msg/eMsg';
   import { columns, searchFormSchema } from './eMsg.data';
   import { RouteEnum } from '/@/enums/biz/tenant';
-
+  import { RoleEnum } from '/@/enums/roleEnum';
   export default defineComponent({
     // 若需要开启页面缓存，请将此参数跟菜单名保持一致
     name: 'EMsgManagement',
@@ -181,6 +190,7 @@
         handleDelete,
         handleSuccess,
         handleBatchDelete,
+        RoleEnum,
       };
     },
   });

@@ -5,22 +5,35 @@
       titleHelpMessage="“调试上传”按钮：用于开发人员测试上传接口是否支持所有的参数。 “上传”按钮：用于演示如何直接上传附件"
     >
       <template #toolbar>
-        <a-button type="primary" preIcon="ant-design:delete-outlined" @click="handleBatchDelete">
+        <a-button
+          type="primary"
+          v-hasAnyPermission="[RoleEnum.SYSTEM_APPENDIX_DELETE]"
+          preIcon="ant-design:delete-outlined"
+          @click="handleBatchDelete"
+        >
           {{ t('common.title.delete') }}
         </a-button>
         <a-button
           type="primary"
           preIcon="ant-design:download-outlined"
+          v-hasAnyPermission="[RoleEnum.SYSTEM_APPENDIX_DOWNLOAD]"
           @click="handleBatchDownload"
         >
           {{ t('common.title.download') }}
         </a-button>
-        <a-button type="primary" preIcon="ant-design:upload-outlined" @click="handleUpload">
+        <a-button
+          type="primary"
+          v-hasAnyPermission="[RoleEnum.SYSTEM_APPENDIX_DEBUG_UPLOAD]"
+          preIcon="ant-design:upload-outlined"
+          @click="handleUpload"
+        >
           调试上传
         </a-button>
+
         <BasicUpload
           :maxSize="20"
           :maxNumber="10"
+          v-hasAnyPermission="[RoleEnum.SYSTEM_APPENDIX_UPLOAD]"
           :uploadParams="{ bizType: FileBizTypeEnum.BASE_FILE }"
           :api="uploadToTenant"
           :showPreviewButton="false"
@@ -40,12 +53,14 @@
             {
               tooltip: t('common.title.download'),
               icon: 'ant-design:download-outlined',
+              auth: RoleEnum.SYSTEM_APPENDIX_DOWNLOAD,
               onClick: handleDownload.bind(null, record),
             },
             {
               tooltip: t('common.title.delete'),
               icon: 'ant-design:delete-outlined',
               color: 'error',
+              auth: RoleEnum.SYSTEM_APPENDIX_DELETE,
               popConfirm: {
                 title: t('common.tips.confirmDelete'),
                 confirm: handleDelete.bind(null, record),
@@ -68,18 +83,26 @@
   import { PageWrapper } from '/@/components/Page';
   import { handleFetchParams, downloadFile } from '/@/utils/lamp/common';
   import { FileBizTypeEnum } from '/@/enums/commonEnum';
+  import { RoleEnum } from '/@/enums/roleEnum';
   import { useModal } from '/@/components/Modal';
-  import EditModal from './Edit.vue';
-
   import ThumbUrl from '/@/components/Upload/src/ThumbUrl.vue';
   import { page, remove, download } from '/@/api/basic/system/baseFile';
   import { uploadToTenant } from '/@/api/lamp/file/upload';
   import { columns, searchFormSchema } from './baseFile.data';
+  import EditModal from './Edit.vue';
 
   export default defineComponent({
     // 若需要开启页面缓存，请将此参数跟菜单名保持一致
     name: 'BaseFileManagement',
-    components: { BasicTable, BasicUpload, PageWrapper, TableAction, ThumbUrl, EditModal },
+    components: {
+      BasicTable,
+
+      BasicUpload,
+      PageWrapper,
+      TableAction,
+      ThumbUrl,
+      EditModal,
+    },
     setup() {
       const { t } = useI18n();
       const { createMessage, createConfirm } = useMessage();
@@ -200,6 +223,7 @@
         FileBizTypeEnum,
         handleUpload,
         registerModal,
+        RoleEnum,
       };
     },
   });
