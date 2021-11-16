@@ -7,6 +7,7 @@
           color="error"
           preIcon="ant-design:delete-outlined"
           @click="handleBatchDelete"
+          v-hasAnyPermission="[RoleEnum.SYSTEM_LOGIN_LOG_DELETE]"
         >
           {{ t('common.title.delete') }}
         </a-button>
@@ -16,6 +17,7 @@
           :dropMenuList="clearList"
           @menu-event="handleClearEvent"
           overlayClassName="app-locale-picker-overlay"
+          v-hasAnyPermission="[RoleEnum.SYSTEM_LOGIN_LOG_DELETE]"
         >
           <a-button type="primary">清理日志</a-button>
         </Dropdown>
@@ -27,11 +29,13 @@
               tooltip: t('common.title.view'),
               icon: 'ant-design:search-outlined',
               onClick: handleView.bind(null, record),
+              auth: RoleEnum.SYSTEM_LOGIN_LOG_VIEW,
             },
             {
               tooltip: t('common.title.delete'),
               icon: 'ant-design:delete-outlined',
               color: 'error',
+              auth: RoleEnum.SYSTEM_LOGIN_LOG_DELETE,
               popConfirm: {
                 title: t('common.tips.confirmDelete'),
                 confirm: handleDelete.bind(null, record),
@@ -55,6 +59,7 @@
   import { useDrawer } from '/@/components/Drawer';
   import { handleFetchParams } from '/@/utils/lamp/common';
   import { ActionEnum } from '/@/enums/commonEnum';
+  import { RoleEnum } from '/@/enums/roleEnum';
   import { page, remove, clear } from '/@/api/devOperation/system/defLoginLog';
   import { columns, searchFormSchema, clearList } from './defLoginLog.data';
   import EditModal from './Edit.vue';
@@ -168,6 +173,7 @@
         handleSuccess,
         handleBatchDelete,
         clearList,
+        RoleEnum,
       };
     },
   });

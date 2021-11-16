@@ -2,9 +2,13 @@
   <PageWrapper dense contentFullHeight>
     <BasicTable @register="registerTable">
       <template #toolbar>
-        <a-button type="primary" preIcon="ant-design:plus-outlined" @click="handleAdd">{{
-          t('common.title.add')
-        }}</a-button>
+        <a-button
+          type="primary"
+          preIcon="ant-design:plus-outlined"
+          v-hasAnyPermission="[RoleEnum.TENANT_TENANT_ADD]"
+          @click="handleAdd"
+          >{{ t('common.title.add') }}</a-button
+        >
       </template>
       <template #action="{ record }">
         <TableAction
@@ -16,6 +20,7 @@
               ifShow: () => {
                 return [TenantStatusEnum.WAITING].includes(record?.status);
               },
+              auth: RoleEnum.TTENANT_TENANT_TO_EXAMINE,
             },
             {
               icon: 'ant-design:database-outlined',
@@ -24,6 +29,7 @@
               ifShow: () => {
                 return [TenantStatusEnum.WAIT_INIT].includes(record?.status);
               },
+              auth: RoleEnum.TTENANT_TENANT_INIT_DATA,
             },
             {
               icon: 'ant-design:cloud-upload-outlined',
@@ -32,11 +38,13 @@
               ifShow: () => {
                 return [TenantStatusEnum.NORMAL, TenantStatusEnum.AGREED].includes(record?.status);
               },
+              auth: RoleEnum.TTENANT_TENANT_INIT_DATA_SOURCE,
             },
             {
               tooltip: t('common.title.edit'),
               icon: 'clarity:note-edit-line',
               onClick: handleEdit.bind(null, record),
+              auth: RoleEnum.TENANT_TENANT_EDIT,
             },
             {
               tooltip: t('common.title.delete'),
@@ -46,6 +54,7 @@
                 title: t('common.tips.confirmDelete'),
                 confirm: handleDelete.bind(null, record),
               },
+              auth: RoleEnum.TENANT_TENANT_DELETE,
             },
             {
               tooltip: '绑定用户',
@@ -55,6 +64,7 @@
               ifShow: () => {
                 return [TenantStatusEnum.NORMAL].includes(record?.status);
               },
+              auth: RoleEnum.TTENANT_TENANT_BIND_USER,
             },
           ]"
           :stopButtonPropagation="true"
@@ -81,6 +91,7 @@
   import { TenantStatusEnum } from '/@/enums/biz/tenant';
   import { page, remove } from '/@/api/devOperation/tenant/tenant';
   import { columns, searchFormSchema } from './tenant.data';
+  import { RoleEnum } from '/@/enums/roleEnum';
   import EditModal from './Edit.vue';
   import InitDataModal from './InitData.vue';
   import LinkDataSourceModal from './LinkDataSource.vue';
@@ -202,6 +213,7 @@
         handleLinkDataSource,
         handleBindUser,
         handleToExamine,
+        RoleEnum,
       };
     },
   });

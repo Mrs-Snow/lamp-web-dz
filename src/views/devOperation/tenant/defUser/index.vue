@@ -2,10 +2,19 @@
   <PageWrapper dense contentFullHeight>
     <BasicTable @register="registerTable">
       <template #toolbar>
-        <a-button type="primary" color="error" @click="handleBatchDelete">{{
-          t('common.title.delete')
-        }}</a-button>
-        <a-button type="primary" @click="handleAdd">{{ t('common.title.add') }}</a-button>
+        <a-button
+          type="primary"
+          color="error"
+          v-hasAnyPermission="[RoleEnum.TENANT_USER_DELETE]"
+          @click="handleBatchDelete"
+          >{{ t('common.title.delete') }}</a-button
+        >
+        <a-button
+          type="primary"
+          v-hasAnyPermission="[RoleEnum.TENANT_USER_ADD]"
+          @click="handleAdd"
+          >{{ t('common.title.add') }}</a-button
+        >
       </template>
       <template #action="{ record }">
         <TableAction
@@ -13,14 +22,17 @@
             {
               label: t('common.title.view'),
               onClick: handleView.bind(null, record),
+              auth: RoleEnum.TENANT_USER_VIEW,
             },
             {
               label: t('common.title.edit'),
               onClick: handleEdit.bind(null, record),
+              auth: RoleEnum.TENANT_USER_EDIT,
             },
             {
               label: t('common.title.copy'),
               onClick: handleCopy.bind(null, record),
+              auth: RoleEnum.TENANT_USER_ADD,
             },
             {
               label: t('common.title.delete'),
@@ -29,6 +41,7 @@
                 title: t('common.tips.confirmDelete'),
                 confirm: handleDelete.bind(null, record),
               },
+              auth: RoleEnum.TENANT_USER_DELETE,
             },
           ]"
         />
@@ -48,6 +61,7 @@
   import { ActionEnum } from '/@/enums/commonEnum';
   import { page, remove } from '/@/api/devOperation/tenant/defUser';
   import { columns, searchFormSchema } from './defUser.data';
+  import { RoleEnum } from '/@/enums/roleEnum';
   import EditModal from './Edit.vue';
 
   export default defineComponent({
@@ -164,6 +178,7 @@
         handleDelete,
         handleSuccess,
         handleBatchDelete,
+        RoleEnum,
       };
     },
   });

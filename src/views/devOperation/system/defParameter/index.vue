@@ -2,10 +2,19 @@
   <PageWrapper dense contentFullHeight>
     <BasicTable @register="registerTable">
       <template #toolbar>
-        <a-button type="primary" color="error" @click="handleBatchDelete">{{
-          t('common.title.delete')
-        }}</a-button>
-        <a-button type="primary" @click="handleAdd">{{ t('common.title.add') }}</a-button>
+        <a-button
+          type="primary"
+          v-hasAnyPermission="[RoleEnum.SYSTEM_PARAM_DELETE]"
+          color="error"
+          @click="handleBatchDelete"
+          >{{ t('common.title.delete') }}</a-button
+        >
+        <a-button
+          type="primary"
+          v-hasAnyPermission="[RoleEnum.SYSTEM_PARAM_ADD]"
+          @click="handleAdd"
+          >{{ t('common.title.add') }}</a-button
+        >
       </template>
       <template #state="{ record }">
         <Tag :color="record.state ? 'success' : 'error'">
@@ -18,14 +27,17 @@
             {
               label: t('common.title.view'),
               onClick: handleView.bind(null, record),
+              auth: RoleEnum.SYSTEM_PARAM_VIEW,
             },
             {
               label: t('common.title.edit'),
               onClick: handleEdit.bind(null, record),
+              auth: RoleEnum.SYSTEM_PARAM_EDIT,
             },
             {
               label: t('common.title.copy'),
               onClick: handleCopy.bind(null, record),
+              auth: RoleEnum.SYSTEM_PARAM_ADD,
             },
             {
               label: t('common.title.delete'),
@@ -34,6 +46,7 @@
                 title: t('common.tips.confirmDelete'),
                 confirm: handleDelete.bind(null, record),
               },
+              auth: RoleEnum.SYSTEM_PARAM_DELETE,
             },
           ]"
         />
@@ -52,6 +65,7 @@
   import { useDrawer } from '/@/components/Drawer';
   import { handleFetchParams } from '/@/utils/lamp/common';
   import { ActionEnum } from '/@/enums/commonEnum';
+  import { RoleEnum } from '/@/enums/roleEnum';
   import { page, remove } from '/@/api/devOperation/system/defParameter';
   import { columns, searchFormSchema } from './defParameter.data';
   import EditModal from './Edit.vue';
@@ -171,6 +185,7 @@
         handleDelete,
         handleSuccess,
         handleBatchDelete,
+        RoleEnum,
       };
     },
   });

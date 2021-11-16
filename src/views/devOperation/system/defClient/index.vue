@@ -2,10 +2,19 @@
   <PageWrapper dense contentFullHeight>
     <BasicTable @register="registerTable">
       <template #toolbar>
-        <a-button type="primary" color="error" @click="handleBatchDelete">{{
-          t('common.title.delete')
-        }}</a-button>
-        <a-button type="primary" @click="handleAdd">{{ t('common.title.add') }}</a-button>
+        <a-button
+          type="primary"
+          color="error"
+          v-hasAnyPermission="[RoleEnum.SYSTEM_CLIENT_DELETE]"
+          @click="handleBatchDelete"
+          >{{ t('common.title.delete') }}</a-button
+        >
+        <a-button
+          type="primary"
+          @click="handleAdd"
+          v-hasAnyPermission="[RoleEnum.SYSTEM_CLIENT_ADD]"
+          >{{ t('common.title.add') }}</a-button
+        >
       </template>
       <template #state="{ record }">
         <Tag :color="record.state ? 'success' : 'error'">
@@ -18,18 +27,22 @@
             {
               label: t('common.title.view'),
               onClick: handleView.bind(null, record),
+              auth: RoleEnum.SYSTEM_CLIENT_VIEW,
             },
             {
               label: t('common.title.edit'),
               onClick: handleEdit.bind(null, record),
+              auth: RoleEnum.SYSTEM_CLIENT_EDIT,
             },
             {
               label: t('common.title.copy'),
               onClick: handleCopy.bind(null, record),
+              auth: RoleEnum.SYSTEM_CLIENT_ADD,
             },
             {
               label: t('common.title.delete'),
               color: 'error',
+              auth: RoleEnum.SYSTEM_CLIENT_DELETE,
               popConfirm: {
                 title: t('common.tips.confirmDelete'),
                 confirm: handleDelete.bind(null, record),
@@ -55,6 +68,7 @@
   import { page, remove } from '/@/api/devOperation/system/defClient';
   import { columns, searchFormSchema } from './defClient.data';
   import EditModal from './Edit.vue';
+  import { RoleEnum } from '/@/enums/roleEnum';
 
   export default defineComponent({
     // 若需要开启页面缓存，请将此参数跟菜单名保持一致
@@ -171,6 +185,7 @@
         handleDelete,
         handleSuccess,
         handleBatchDelete,
+        RoleEnum,
       };
     },
   });

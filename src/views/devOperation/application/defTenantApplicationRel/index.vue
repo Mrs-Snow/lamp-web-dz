@@ -2,13 +2,23 @@
   <PageWrapper dense contentFullHeight>
     <BasicTable @register="registerTable">
       <template #toolbar>
-        <a-button color="error" @click="handleBatchCancelAuthorize">取消授权</a-button>
-        <a-button type="primary" @click="handleAuthorize">授权</a-button>
+        <a-button
+          color="error"
+          @click="handleBatchCancelAuthorize"
+          v-hasAnyPermission="[RoleEnum.APPLICATION_AUTHORIZE_CANCEL]"
+          >取消授权</a-button
+        >
+        <a-button
+          type="primary"
+          @click="handleAuthorize"
+          v-hasAnyPermission="[RoleEnum.APPLICATION_AUTHORIZE_GRANT]"
+          >授权</a-button
+        >
       </template>
       <template #expired="{ record }">
-        <Tag :color="record.expired ? 'warning' : 'success'">{{
-          record.expired ? '已过期' : '未过期'
-        }}</Tag>
+        <Tag :color="record.expired ? 'warning' : 'success'">
+          {{ record.expired ? '已过期' : '未过期' }}
+        </Tag>
       </template>
       <template #action="{ record }">
         <TableAction
@@ -16,10 +26,12 @@
             {
               label: '续期',
               onClick: handleRenewal.bind(null, record),
+              auth: RoleEnum.APPLICATION_AUTHORIZE_RENEWAL,
             },
             {
               label: '取消授权',
               color: 'error',
+              auth: RoleEnum.APPLICATION_AUTHORIZE_CANCEL,
               popConfirm: {
                 title: '是否确认取消授权？',
                 confirm: handleCancelAuthorize.bind(null, record),
@@ -42,6 +54,7 @@
   import { PageWrapper } from '/@/components/Page';
   import { useDrawer } from '/@/components/Drawer';
   import { handleFetchParams } from '/@/utils/lamp/common';
+  import { RoleEnum } from '/@/enums/roleEnum';
   import { ActionEnum } from '/@/enums/commonEnum';
   import { page, cancel } from '/@/api/devOperation/application/defTenantApplicationRel';
   import { columns, searchFormSchema } from './defTenantApplicationRel.data';
@@ -143,6 +156,7 @@
         handleCancelAuthorize,
         handleBatchCancelAuthorize,
         handleSuccess,
+        RoleEnum,
       };
     },
   });

@@ -34,7 +34,7 @@
   import { useMessage } from '/@/hooks/web/useMessage';
   import { usePermission } from '/@/hooks/web/usePermission';
   import { BasicForm, useForm } from '/@/components/Form';
-  import { ActionEnum } from '/@/enums/commonEnum';
+  import { ActionEnum, VALIDATE_API } from '/@/enums/commonEnum';
   import MetaJson from './meta/MetaJson.vue';
   import ResourceApi from './api/ResourceApi.vue';
 
@@ -56,12 +56,14 @@
       const title = ref<string>('未选中任何资源');
       const { hasAnyPermission } = usePermission();
 
-      const [register, { setFieldsValue, getFieldsValue, resetFields, updateSchema, validate }] =
-        useForm({
-          labelWidth: 110,
-          showActionButtonGroup: false,
-          schemas: editFormSchema(type),
-        });
+      const [
+        register,
+        { setFieldsValue, getFieldsValue, resetFields, resetSchema, updateSchema, validate },
+      ] = useForm({
+        labelWidth: 110,
+        showActionButtonGroup: false,
+        schemas: editFormSchema(type),
+      });
 
       // 提交
       async function handleSubmit() {
@@ -84,7 +86,7 @@
         }
       }
 
-      async function resetForm(record) {
+      async function resetForm(record: Recordable) {
         await resetFields();
 
         show.value = false;
@@ -95,19 +97,27 @@
 
       // 设置回显数据
       async function setData(data: Recordable) {
+        await resetSchema(editFormSchema(type));
         await resetFields();
         type.value = data?.type;
 
         show.value = true;
         if (unref(type) === ActionEnum.EDIT) {
-          if (hasAnyPermission([RoleEnum.RESOURCE_EDIT, RoleEnum.APPLICATION_RESOURCE_EDIT])) {
+          if (
+            hasAnyPermission([
+              RoleEnum.RESOURCE_EDIT,
+              RoleEnum.RESOURCE_ADD,
+              RoleEnum.APPLICATION_RESOURCE_ADD,
+              RoleEnum.APPLICATION_RESOURCE_EDIT,
+            ])
+          ) {
             show.value = true;
           } else {
             show.value = false;
           }
         }
 
-        let validateApi = unref(type) !== ActionEnum.ADD ? Api.Update : Api.Save;
+        let validateApi = Api[VALIDATE_API[unref(type)]];
         const { parent } = data;
         let resourceVO = {};
         if (unref(type) !== ActionEnum.ADD) {

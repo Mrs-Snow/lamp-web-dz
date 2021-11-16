@@ -2,13 +2,18 @@
   <PageWrapper dense contentFullHeight>
     <BasicTable @register="registerTable">
       <template #toolbar>
-        <a-button type="primary" preIcon="ant-design:plus-outlined" @click="handleAdd">{{
-          t('common.title.add')
-        }}</a-button>
+        <a-button
+          type="primary"
+          preIcon="ant-design:plus-outlined"
+          v-hasAnyPermission="[RoleEnum.TENANT_DATASOURCE_CONFIG_ADD]"
+          @click="handleAdd"
+          >{{ t('common.title.add') }}</a-button
+        >
         <a-button
           preIcon="ant-design:delete-outlined"
           type="primary"
           color="error"
+          v-hasAnyPermission="[RoleEnum.TENANT_DATASOURCE_CONFIG_DELETE]"
           @click="handleBatchDelete"
           >{{ t('common.title.delete') }}</a-button
         >
@@ -20,21 +25,25 @@
               icon: 'ant-design:bug-outlined',
               tooltip: t('devOperation.tenant.defDatasourceConfig.testConnection'),
               onClick: handleConnection.bind(null, record),
+              auth: RoleEnum.TENANT_DATASOURCE_CONFIG_DEBUG,
             },
             {
               tooltip: t('common.title.copy'),
               icon: 'ant-design:copy-outlined',
               onClick: handleCopy.bind(null, record),
+              auth: RoleEnum.TENANT_DATASOURCE_CONFIG_ADD,
             },
             {
               tooltip: t('common.title.edit'),
               icon: 'clarity:note-edit-line',
               onClick: handleEdit.bind(null, record),
+              auth: RoleEnum.TENANT_DATASOURCE_CONFIG_EDIT,
             },
             {
               tooltip: t('common.title.delete'),
               icon: 'ant-design:delete-outlined',
               color: 'error',
+              auth: RoleEnum.TENANT_DATASOURCE_CONFIG_DELETE,
               popConfirm: {
                 title: t('common.tips.confirmDelete'),
                 confirm: handleDelete.bind(null, record),
@@ -56,6 +65,7 @@
   import { useModal } from '/@/components/Modal';
   import { useLoading } from '/@/components/Loading';
   import { handleFetchParams } from '/@/utils/lamp/common';
+  import { RoleEnum } from '/@/enums/roleEnum';
   import { ActionEnum } from '/@/enums/commonEnum';
 
   import { page, remove, testConnect } from '/@/api/devOperation/tenant/datasourceConfig';
@@ -197,6 +207,7 @@
         handleSuccess,
         handleBatchDelete,
         t,
+        RoleEnum,
       };
     },
   });

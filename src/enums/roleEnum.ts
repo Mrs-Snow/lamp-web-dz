@@ -6,6 +6,29 @@ export enum RoleEnum {
   TEST = 'test',
 
   // 运营系统
+  // 数据源维护
+  TENANT_DATASOURCE_CONFIG_ADD = 'tenant:tenant:datasourceConfig:add',
+  TENANT_DATASOURCE_CONFIG_EDIT = 'tenant:tenant:datasourceConfig:edit',
+  TENANT_DATASOURCE_CONFIG_DELETE = 'tenant:tenant:datasourceConfig:delete',
+  TENANT_DATASOURCE_CONFIG_VIEW = 'tenant:tenant:datasourceConfig:view',
+  TENANT_DATASOURCE_CONFIG_DEBUG = 'tenant:tenant:datasourceConfig:debug',
+
+  // 数据源维护
+  TENANT_TENANT_ADD = 'tenant:tenant:tenant:add',
+  TENANT_TENANT_EDIT = 'tenant:tenant:tenant:edit',
+  TENANT_TENANT_DELETE = 'tenant:tenant:tenant:delete',
+  TTENANT_TENANT_VIEW = 'tenant:tenant:tenant:view',
+  TTENANT_TENANT_INIT_DATA = 'tenant:tenant:tenant:initData',
+  TTENANT_TENANT_INIT_DATA_SOURCE = 'tenant:tenant:tenant:initDataSource',
+  TTENANT_TENANT_BIND_USER = 'tenant:tenant:tenant:bindUser',
+  TTENANT_TENANT_TO_EXAMINE = 'tenant:tenant:tenant:toExamine',
+
+  // 用户维护
+  TENANT_USER_ADD = 'tenant:tenant:user:add',
+  TENANT_USER_EDIT = 'tenant:tenant:user:edit',
+  TENANT_USER_DELETE = 'tenant:tenant:user:delete',
+  TENANT_USER_VIEW = 'tenant:tenant:user:view',
+
   // 应用
   APPLICATION_ADD = 'tenant:application:application:add',
   APPLICATION_DELETE = 'tenant:application:application:delete',
@@ -21,6 +44,35 @@ export enum RoleEnum {
   RESOURCE_ADD = 'tenant:application:resource:add',
   RESOURCE_EDIT = 'tenant:application:resource:edit',
   RESOURCE_DELETE = 'tenant:application:resource:delete',
+  // 应用授权
+  APPLICATION_AUTHORIZE_GRANT = 'tenant:application:authorize:grant',
+  APPLICATION_AUTHORIZE_RENEWAL = 'tenant:application:authorize:renewal',
+  APPLICATION_AUTHORIZE_CANCEL = 'tenant:application:authorize:cancel',
+
+  // 字典
+  SYSTEM_DICT_ADD = 'tenant:system:dict:add',
+  SYSTEM_DICT_EDIT = 'tenant:system:dict:edit',
+  SYSTEM_DICT_DELETE = 'tenant:system:dict:delete',
+  SYSTEM_DICT_ADD_ITEM = 'tenant:system:dict:addItem',
+  SYSTEM_DICT_EDIT_ITEM = 'tenant:system:dict:editItem',
+  SYSTEM_DICT_DELETE_ITEM = 'tenant:system:dict:deleteItem',
+  // 参数维护
+  SYSTEM_PARAM_ADD = 'tenant:system:param:add',
+  SYSTEM_PARAM_EDIT = 'tenant:system:param:edit',
+  SYSTEM_PARAM_DELETE = 'tenant:system:param:delete',
+  SYSTEM_PARAM_VIEW = 'tenant:system:param:view',
+  // 地区维护
+  SYSTEM_AREA_ADD = 'tenant:system:area:add',
+  SYSTEM_AREA_EDIT = 'tenant:system:area:edit',
+  SYSTEM_AREA_DELETE = 'tenant:system:area:delete',
+  // 客户端维护
+  SYSTEM_CLIENT_ADD = 'tenant:system:client:add',
+  SYSTEM_CLIENT_EDIT = 'tenant:system:client:edit',
+  SYSTEM_CLIENT_DELETE = 'tenant:system:client:delete',
+  SYSTEM_CLIENT_VIEW = 'tenant:system:client:view',
+  // 客户端维护
+  SYSTEM_LOGIN_LOG_DELETE = 'tenant:system:loginLog:delete',
+  SYSTEM_LOGIN_LOG_VIEW = 'tenant:system:loginLog:view',
 
   // 基础平台
   // 员工维护

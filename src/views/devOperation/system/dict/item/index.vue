@@ -7,16 +7,20 @@
           preIcon="ant-design:delete-outlined"
           v-if="dictId"
           color="error"
+          v-hasAnyPermission="[RoleEnum.SYSTEM_DICT_DELETE_ITEM]"
           @click="handleBatchDelete"
-          >{{ t('common.title.delete') }}</a-button
         >
+          {{ t('common.title.delete') }}
+        </a-button>
         <a-button
           type="primary"
           preIcon="ant-design:plus-outlined"
           v-if="dictId"
           @click="handleAdd"
-          >{{ t('common.title.add') }}</a-button
+          v-hasAnyPermission="[RoleEnum.SYSTEM_DICT_ADD_ITEM]"
         >
+          {{ t('common.title.add') }}
+        </a-button>
       </template>
       <template #state="{ record }">
         <Badge
@@ -31,11 +35,13 @@
               tooltip: t('common.title.edit'),
               icon: 'clarity:note-edit-line',
               onClick: handleEdit.bind(null, record),
+              auth: RoleEnum.SYSTEM_DICT_EDIT_ITEM,
             },
             {
               tooltip: t('common.title.copy'),
               icon: 'ant-design:copy-outlined',
               onClick: handleCopy.bind(null, record),
+              auth: RoleEnum.SYSTEM_DICT_ADD_ITEM,
             },
             {
               tooltip: t('common.title.delete'),
@@ -45,6 +51,7 @@
                 title: t('common.tips.confirmDelete'),
                 confirm: handleDelete.bind(null, record),
               },
+              auth: RoleEnum.SYSTEM_DICT_DELETE_ITEM,
             },
           ]"
           :stopButtonPropagation="true"
@@ -61,6 +68,7 @@
   import { useMessage } from '/@/hooks/web/useMessage';
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
   import { useDrawer } from '/@/components/Drawer';
+  import { RoleEnum } from '/@/enums/roleEnum';
   import { handleFetchParams } from '/@/utils/lamp/common';
   import { ActionEnum } from '/@/enums/commonEnum';
   import { page, remove } from '/@/api/devOperation/system/defDictItem';
@@ -223,6 +231,7 @@
         handleDelete,
         handleSuccess,
         handleBatchDelete,
+        RoleEnum,
       };
     },
   });

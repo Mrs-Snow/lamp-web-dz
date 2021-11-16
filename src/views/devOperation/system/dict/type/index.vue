@@ -12,15 +12,27 @@
           preIcon="ant-design:delete-outlined"
           type="primary"
           color="error"
+          v-hasAnyPermission="[RoleEnum.SYSTEM_DICT_DELETE]"
           @click="handleBatchDelete"
-          >{{ t('common.title.delete') }}</a-button
         >
-        <a-button preIcon="ant-design:plus-outlined" type="primary" @click="handleAdd">{{
-          t('common.title.add')
-        }}</a-button>
-        <a-button type="primary" preIcon="clarity:note-edit-line" @click="handleEdit">{{
-          t('common.title.edit')
-        }}</a-button>
+          {{ t('common.title.delete') }}
+        </a-button>
+        <a-button
+          preIcon="ant-design:plus-outlined"
+          v-hasAnyPermission="[RoleEnum.SYSTEM_DICT_ADD]"
+          type="primary"
+          @click="handleAdd"
+        >
+          {{ t('common.title.add') }}
+        </a-button>
+        <a-button
+          type="primary"
+          v-hasAnyPermission="[RoleEnum.SYSTEM_DICT_EDIT]"
+          preIcon="clarity:note-edit-line"
+          @click="handleEdit"
+        >
+          {{ t('common.title.edit') }}
+        </a-button>
       </template>
       <template #state="{ record }">
         <Badge
@@ -41,6 +53,7 @@
   import { useDrawer } from '/@/components/Drawer';
   import { handleFetchParams } from '/@/utils/lamp/common';
   import { ActionEnum } from '/@/enums/commonEnum';
+  import { RoleEnum } from '/@/enums/roleEnum';
   import { page, remove } from '/@/api/devOperation/system/defDict';
   import { columns, searchFormSchema } from './defDict.data';
   import EditModal from './Edit.vue';
@@ -186,6 +199,7 @@
         handleRowClick,
         handleRowDbClick,
         onFetchSuccess,
+        RoleEnum,
       };
     },
   });

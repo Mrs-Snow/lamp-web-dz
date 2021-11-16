@@ -1,8 +1,15 @@
 <template>
   <div class="bg-white m-4 mr-2 overflow-hidden">
     <div class="m-4">
-      <a-button @click="handleAdd()" class="mr-2">{{ t('common.title.addRoot') }}</a-button>
-      <a-button @click="handleBatchDelete()" class="mr-2">{{ t('common.title.delete') }}</a-button>
+      <a-button @click="handleAdd()" v-hasAnyPermission="[RoleEnum.SYSTEM_AREA_ADD]" class="mr-2">{{
+        t('common.title.addRoot')
+      }}</a-button>
+      <a-button
+        @click="handleBatchDelete()"
+        v-hasAnyPermission="[RoleEnum.SYSTEM_AREA_DELETE]"
+        class="mr-2"
+        >{{ t('common.title.delete') }}</a-button
+      >
     </div>
     <BasicTree
       :title="t('devOperation.system.defArea.table.title')"
@@ -25,6 +32,7 @@
   import { PlusOutlined, DeleteOutlined } from '@ant-design/icons-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
+  import { RoleEnum } from '/@/enums/roleEnum';
   import {
     BasicTree,
     TreeItem,
@@ -79,6 +87,7 @@
       // 悬停图标
       const actionList: ActionItem[] = [
         {
+          auth: [RoleEnum.SYSTEM_AREA_ADD],
           render: (node) => {
             return h(PlusOutlined, {
               class: 'ml-2',
@@ -91,6 +100,7 @@
           },
         },
         {
+          auth: [RoleEnum.SYSTEM_AREA_DELETE],
           render: (node) => {
             return h(DeleteOutlined, {
               class: 'ml-2',
@@ -109,6 +119,7 @@
         return [
           {
             label: t('common.title.addChildren'),
+            auth: [RoleEnum.SYSTEM_AREA_ADD],
             handler: () => {
               emit('add', findNodeByKey(unref(node.$attrs).id, treeData.value));
             },
@@ -116,6 +127,7 @@
           },
           {
             label: t('common.title.delete'),
+            auth: [RoleEnum.SYSTEM_AREA_DELETE],
             handler: () => {
               batchDelete([unref(node.$attrs).id]);
             },
@@ -165,6 +177,7 @@
         getRightMenuList,
         actionList,
         handleSelect,
+        RoleEnum,
       };
     },
   });

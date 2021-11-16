@@ -45,7 +45,6 @@
   import { defineComponent, onMounted, ref, unref, h, reactive } from 'vue';
   import { Select } from 'ant-design-vue';
   import { useRouter } from 'vue-router';
-  import { PlusOutlined, DeleteOutlined } from '@ant-design/icons-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { PermModeEnum, RoleEnum } from '/@/enums/roleEnum';
@@ -108,7 +107,7 @@
         if (!!applicationId) {
           treeData.value = (await tree({ applicationId })) as unknown as TreeItem[];
           setTimeout(() => {
-            getTree().filterByLevel(2);
+            // getTree().filterByLevel(2);
             getTree().setCheckedKeys({ checked: [], halfChecked: [] });
           }, 0);
         } else {
@@ -133,31 +132,39 @@
           auth: [RoleEnum.RESOURCE_ADD, RoleEnum.APPLICATION_RESOURCE_ADD],
           authMode: PermModeEnum.HasAny,
           render: (node) => {
-            return h(PlusOutlined, {
-              class: 'ml-2',
-              onClick: (e: Event) => {
-                e?.stopPropagation();
-                e?.preventDefault();
-                emit('add', findNodeByKey(node.id, treeData.value), {
-                  applicationId: applicationRef.value,
-                  applicationName: applicationRef.label,
-                });
+            return h(
+              'a',
+              {
+                class: 'ml-2',
+                onClick: (e: Event) => {
+                  e?.stopPropagation();
+                  e?.preventDefault();
+                  emit('add', findNodeByKey(node.id, treeData.value), {
+                    applicationId: applicationRef.value,
+                    applicationName: applicationRef.label,
+                  });
+                },
               },
-            });
+              t('common.title.add'),
+            );
           },
         },
         {
           auth: [RoleEnum.RESOURCE_DELETE, RoleEnum.APPLICATION_RESOURCE_DELETE],
           authMode: PermModeEnum.HasAny,
           render: (node) => {
-            return h(DeleteOutlined, {
-              class: 'ml-2',
-              onClick: (e: Event) => {
-                e?.stopPropagation();
-                e?.preventDefault();
-                batchDelete([node.id]);
+            return h(
+              'a',
+              {
+                class: 'ml-2',
+                onClick: (e: Event) => {
+                  e?.stopPropagation();
+                  e?.preventDefault();
+                  batchDelete([node.id]);
+                },
               },
-            });
+              t('common.title.delete'),
+            );
           },
         },
       ];
