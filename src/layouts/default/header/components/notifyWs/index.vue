@@ -46,9 +46,12 @@
       const userId = userStore.getUserInfo.id;
       const tenantId = userStore.getTenantId;
 
-      let host = window.location.host;
+      const host = window.location.host;
+      const protocol = window.location.protocol;
       const state = reactive({
-        server: `ws://${host}/api/wsMsg/anno/myMsg/${tenantId}/${userId}`,
+        server: `${
+          protocol.includes('https') ? 'wss' : 'ws'
+        }://${host}/api/wsMsg/anno/myMsg/${tenantId}/${userId}`,
         sendValue: '',
         recordList: [] as { id: number; time: number; res: string }[],
       });

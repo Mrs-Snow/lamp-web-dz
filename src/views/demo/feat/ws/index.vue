@@ -68,10 +68,11 @@
     },
     setup() {
       let host = window.location.host;
+      const protocol = window.location.protocol;
       const state = reactive({
-        // server: 'ws://localhost:8760/api/wsMsg/anno/test',
-        server: `ws://${host}/api/wsMsg/anno/test`,
-        // server: 'ws://localhost:8768/anno/test',
+        // server: '${protocol.includes('https') ? 'wss' : 'ws'}://localhost:8760/api/wsMsg/anno/test',
+        server: `${protocol.includes('https') ? 'wss' : 'ws'}://${host}/api/wsMsg/anno/test`,
+        // server: '${protocol.includes('https') ? 'wss' : 'ws'}://localhost:8768/anno/test',
         sendValue: '',
         recordList: [] as { id: number; time: number; res: string }[],
       });

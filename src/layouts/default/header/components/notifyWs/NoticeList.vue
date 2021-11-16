@@ -20,7 +20,10 @@
 
           <template #description>
             <div>
-              <div class="datetime">日期：{{ item.createdTime }} 发布者:{{ item.author }}</div>
+              <div class="datetime">
+                日期：{{ item.createdTime }}
+                <template v-if="item.author">发布者:{{ item.author }}</template>
+              </div>
             </div>
           </template>
         </a-list-item-meta>
