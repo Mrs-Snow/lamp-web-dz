@@ -56,7 +56,7 @@ export const Api = {
 export const page = (params: PageParams<BaseRolePageQuery>) =>
   defHttp.request<PageResult<BaseRoleResultVO>>({ ...Api.Page, params });
 
-export const query = (params: BaseRolePageQuery) =>
+export const query = (params?: BaseRolePageQuery) =>
   defHttp.request<BaseRoleResultVO[]>({ ...Api.Query, params });
 
 export const save = (params: BaseRoleSaveVO) =>

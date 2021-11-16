@@ -39,6 +39,9 @@ export enum RouteEnum {
   APPLICATION_GRANT = '应用授权',
 
   BASIC_DICT_ITEM = '个性字典项',
+  BASIC_MSG_ADD = '发布消息',
+  BASIC_MY_MSG_VIEW = '查看我的消息',
+  BASIC_MSG = '消息管理',
 }
 
 //0-过期 1-有效

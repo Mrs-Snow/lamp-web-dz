@@ -9,7 +9,6 @@ import { defHttp } from '/@/utils/http/axios';
 import { RequestEnum } from '/@/enums/httpEnum';
 import { ServicePrefixEnum } from '/@/enums/commonEnum';
 import type { AxiosRequestConfig } from 'axios';
-import { GlobalUserPageDTO } from './model/userModel';
 
 const MODULAR = 'defUser';
 
@@ -59,7 +58,7 @@ export const Api = {
 export const page = (params: PageParams<DefUserPageQuery>) =>
   defHttp.request<PageResult<DefUserResultVO>>({ ...Api.Page, params });
 
-export const query = (params: DefUserPageQuery) =>
+export const query = (params?: DefUserPageQuery) =>
   defHttp.request<DefUserResultVO[]>({ ...Api.Query, params });
 
 export const save = (params: DefUserSaveVO) =>
@@ -82,5 +81,5 @@ export const checkIdCard = (idCard: string, id?: string) =>
 export const checkMobile = (mobile: string, id?: string) =>
   defHttp.request<boolean>({ ...Api.CheckMobile, params: { mobile, id } });
 
-export const findNotUserByTenantId = (params: PageParams<GlobalUserPageDTO>) =>
+export const findNotUserByTenantId = (params: PageParams<DefUserPageQuery>) =>
   defHttp.request<PageResult<DefUserResultVO>>({ ...Api.FindNotUserByTenantId, params });
