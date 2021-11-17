@@ -54,6 +54,8 @@
   import { ExpireStateEnum } from '/@/enums/biz/tenant';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { isUrl } from '/@/utils/is';
+  import { router } from '/@/router';
+  import { useTabs } from '/@/hooks/web/useTabs';
   import { FileBizTypeEnum } from '/@/enums/commonEnum';
   import { propTypes } from '/@/utils/propTypes';
   import { checkEmployeeHaveApplication } from '/@/api/lamp/common/oauth';
@@ -109,6 +111,8 @@
               userStore.setApplicationId(item.id as string);
               await userStore.getUserInfoAction();
               await refreshMenu();
+              const { closeAll } = useTabs(router);
+              await closeAll();
               createMessage.success(`成功切换到应用：[${item.name}]`);
 
               setTimeout(() => {
