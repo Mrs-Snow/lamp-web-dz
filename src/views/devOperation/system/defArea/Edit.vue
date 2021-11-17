@@ -17,7 +17,7 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { BasicForm, useForm } from '/@/components/Form';
-  import { ActionEnum } from '/@/enums/commonEnum';
+  import { ActionEnum, VALIDATE_API } from '/@/enums/commonEnum';
 
   import { getValidateRules } from '/@/api/lamp/common/formValidateService';
   import { Api, save, update } from '/@/api/devOperation/system/defArea';
@@ -47,7 +47,7 @@
           if (unref(type) === ActionEnum.EDIT) {
             await update(params);
           } else {
-            params.id = null;
+            params.id = undefined;
             await save(params);
           }
           createMessage.success(t(`common.tips.${type.value}Success`));
@@ -65,19 +65,18 @@
         await resetFields();
         type.value = data?.type;
 
-        let validateApi = unref(type) !== ActionEnum.ADD ? Api.Update : Api.Save;
-
-        const { record = {}, parent } = data;
+        const { record = {}, parent = {} } = data;
         record['parentName'] = parent?.name;
         record['parentId'] = parent?.id;
-        if (unref(type) !== ActionEnum.EDIT) {
-          record.id = undefined;
-        }
+
         await setFieldsValue({ ...record });
 
-        getValidateRules(validateApi, customFormSchemaRules(type)).then(async (rules) => {
-          rules && rules.length > 0 && (await updateSchema(rules));
-        });
+        if (unref(type) !== ActionEnum.VIEW) {
+          let validateApi = Api[VALIDATE_API[unref(type)]];
+          getValidateRules(validateApi, customFormSchemaRules(type)).then(async (rules) => {
+            rules && rules.length > 0 && (await updateSchema(rules));
+          });
+        }
       }
 
       return { register, resetFields, handleSubmit, setData, t, type, confirmLoading };

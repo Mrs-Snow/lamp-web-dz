@@ -1,12 +1,17 @@
 <template>
   <div class="bg-white m-4 mr-2 overflow-hidden">
     <div class="m-4">
-      <a-button @click="handleAdd()" v-hasAnyPermission="[RoleEnum.SYSTEM_AREA_ADD]" class="mr-2">{{
-        t('common.title.addRoot')
-      }}</a-button>
+      <a-button
+        @click="handleAdd()"
+        preIcon="ant-design:plus-outlined"
+        v-hasAnyPermission="[RoleEnum.SYSTEM_AREA_ADD]"
+        class="mr-2"
+        >{{ t('common.title.addRoot') }}</a-button
+      >
       <a-button
         @click="handleBatchDelete()"
         v-hasAnyPermission="[RoleEnum.SYSTEM_AREA_DELETE]"
+        preIcon="ant-design:delete-outlined"
         class="mr-2"
         >{{ t('common.title.delete') }}</a-button
       >
@@ -29,7 +34,6 @@
 </template>
 <script lang="ts">
   import { defineComponent, onMounted, ref, unref, h } from 'vue';
-  import { PlusOutlined, DeleteOutlined } from '@ant-design/icons-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { RoleEnum } from '/@/enums/roleEnum';
@@ -48,7 +52,7 @@
     name: 'DefAreaManagement',
     components: { BasicTree },
 
-    emits: ['select', 'add'],
+    emits: ['select', 'edit', 'add'],
     setup(_, { emit }) {
       const { t } = useI18n();
       const { createMessage, createConfirm } = useMessage();
@@ -87,29 +91,56 @@
       // 悬停图标
       const actionList: ActionItem[] = [
         {
-          auth: [RoleEnum.SYSTEM_AREA_ADD],
+          auth: RoleEnum.SYSTEM_AREA_ADD,
           render: (node) => {
-            return h(PlusOutlined, {
-              class: 'ml-2',
-              onClick: (e: Event) => {
-                e?.stopPropagation();
-                e?.preventDefault();
-                emit('add', findNodeByKey(node.id, treeData.value));
+            return h(
+              'a',
+              {
+                class: 'ml-2',
+                onClick: (e: Event) => {
+                  e?.stopPropagation();
+                  e?.preventDefault();
+                  emit('add', findNodeByKey(node.id, treeData.value));
+                },
               },
-            });
+              t('common.title.add'),
+            );
           },
         },
         {
-          auth: [RoleEnum.SYSTEM_AREA_DELETE],
+          auth: RoleEnum.SYSTEM_AREA_EDIT,
           render: (node) => {
-            return h(DeleteOutlined, {
-              class: 'ml-2',
-              onClick: (e: Event) => {
-                e?.stopPropagation();
-                e?.preventDefault();
-                batchDelete([node.id]);
+            return h(
+              'a',
+              {
+                class: 'ml-2',
+                onClick: (e: Event) => {
+                  e?.stopPropagation();
+                  e?.preventDefault();
+                  const current = findNodeByKey(node?.id, treeData.value);
+                  const parent = findNodeByKey(node?.parentId, treeData.value);
+                  emit('edit', parent, current);
+                },
               },
-            });
+              t('common.title.edit'),
+            );
+          },
+        },
+        {
+          auth: RoleEnum.SYSTEM_AREA_DELETE,
+          render: (node) => {
+            return h(
+              'a',
+              {
+                class: 'ml-2',
+                onClick: (e: Event) => {
+                  e?.stopPropagation();
+                  e?.preventDefault();
+                  batchDelete([node.id]);
+                },
+              },
+              t('common.title.delete'),
+            );
           },
         },
       ];
@@ -123,7 +154,17 @@
             handler: () => {
               emit('add', findNodeByKey(unref(node.$attrs).id, treeData.value));
             },
-            icon: 'bi:plus',
+            icon: 'ant-design:plus-outlined',
+          },
+          {
+            label: t('common.title.edit'),
+            auth: [RoleEnum.SYSTEM_AREA_EDIT],
+            handler: () => {
+              const current = findNodeByKey(unref(node.$attrs)?.id, treeData.value);
+              const parent = findNodeByKey(unref(node.$attrs)?.parentId, treeData.value);
+              emit('edit', parent, current);
+            },
+            icon: 'ant-design:edit-outlined',
           },
           {
             label: t('common.title.delete'),
@@ -131,7 +172,7 @@
             handler: () => {
               batchDelete([unref(node.$attrs).id]);
             },
-            icon: 'bx:bxs-folder-open',
+            icon: 'ant-design:delete-outlined',
           },
         ];
       }

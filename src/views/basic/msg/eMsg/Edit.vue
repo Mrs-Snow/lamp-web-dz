@@ -134,7 +134,6 @@
         if (![ActionEnum.ADD].includes(unref(type))) {
           const record = await get(data?.id);
           record.msgType = (record?.msgType as Enum)?.code as string;
-          record.id = undefined;
           await setFieldsValue({ ...record });
         }
 

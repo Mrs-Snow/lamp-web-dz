@@ -1,6 +1,12 @@
 <template>
   <PageWrapper dense contentFullHeight fixedHeight contentClass="flex">
-    <DefAreaTree class="md:w-1/2" @select="handleTreeSelect" @add="handleTreeAdd" ref="treeRef" />
+    <DefAreaTree
+      class="md:w-1/2"
+      @select="handleTreeSelect"
+      @edit="handleTreeEdit"
+      @add="handleTreeAdd"
+      ref="treeRef"
+    />
     <Edit class="md:w-1/2" @success="handleEditSuccess" ref="editRef" />
   </PageWrapper>
 </template>
@@ -33,9 +39,14 @@
         getTreeRef().fetch();
       }
 
+      // 编辑
+      function handleTreeEdit(parent = {}, record = {}) {
+        getEditRef().setData({ type: ActionEnum.EDIT, parent, record });
+      }
+
       // 选中树的节点
       function handleTreeSelect(parent = {}, record = {}) {
-        getEditRef().setData({ type: ActionEnum.EDIT, parent, record });
+        getEditRef().setData({ type: ActionEnum.VIEW, parent, record });
       }
 
       // 点击树的新增按钮
@@ -49,6 +60,7 @@
         handleEditSuccess,
         handleTreeSelect,
         handleTreeAdd,
+        handleTreeEdit,
       };
     },
   });

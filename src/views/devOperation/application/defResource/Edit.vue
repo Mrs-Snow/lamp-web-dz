@@ -2,7 +2,7 @@
   <div class="bg-white m-4 ml-2 overflow-hidden">
     <a-card :title="title" :bordered="false">
       <template #extra>
-        <div class="flex justify-center" v-if="show">
+        <div class="flex justify-center" v-if="type !== ActionEnum.VIEW">
           <a-button @click="resetFields">{{ t('common.resetText') }}</a-button>
           <a-button class="!ml-4" type="primary" @click="handleSubmit" :loading="confirmLoading">{{
             t('common.okText')
@@ -18,7 +18,7 @@
         </template>
       </BasicForm>
 
-      <div class="flex justify-center" v-if="show">
+      <div class="flex justify-center" v-if="type !== ActionEnum.VIEW">
         <a-button @click="resetFields">{{ t('common.resetText') }}</a-button>
         <a-button class="!ml-4" type="primary" @click="handleSubmit" :loading="confirmLoading">{{
           t('common.okText')
@@ -32,7 +32,6 @@
   import { Card } from 'ant-design-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { usePermission } from '/@/hooks/web/usePermission';
   import { BasicForm, useForm } from '/@/components/Form';
   import { ActionEnum, VALIDATE_API } from '/@/enums/commonEnum';
   import MetaJson from './meta/MetaJson.vue';
@@ -41,7 +40,6 @@
   import { getValidateRules } from '/@/api/lamp/common/formValidateService';
   import { Api, save, update, get } from '/@/api/devOperation/application/defResource';
   import { customFormSchemaRules, editFormSchema } from './defResource.data';
-  import { RoleEnum } from '/@/enums/roleEnum';
 
   export default defineComponent({
     name: 'DefResourceEdit',
@@ -52,10 +50,7 @@
       const { createMessage } = useMessage();
       const type = ref<ActionEnum>(ActionEnum.ADD);
       const confirmLoading = ref<boolean>(false);
-      const show = ref<boolean>(false);
       const title = ref<string>('未选中任何资源');
-      const { hasAnyPermission } = usePermission();
-
       const [
         register,
         { setFieldsValue, getFieldsValue, resetFields, resetSchema, updateSchema, validate },
@@ -79,7 +74,6 @@
 
           type.value = ActionEnum.ADD;
           await resetFields();
-          show.value = false;
           emit('success', params.applicationId);
         } finally {
           confirmLoading.value = false;
@@ -88,8 +82,6 @@
 
       async function resetForm(record: Recordable) {
         await resetFields();
-
-        show.value = false;
         if (record?.applicationName) {
           title.value = '未选中任何资源';
         }
@@ -101,23 +93,6 @@
         await resetFields();
         type.value = data?.type;
 
-        show.value = true;
-        if (unref(type) === ActionEnum.EDIT) {
-          if (
-            hasAnyPermission([
-              RoleEnum.RESOURCE_EDIT,
-              RoleEnum.RESOURCE_ADD,
-              RoleEnum.APPLICATION_RESOURCE_ADD,
-              RoleEnum.APPLICATION_RESOURCE_EDIT,
-            ])
-          ) {
-            show.value = true;
-          } else {
-            show.value = false;
-          }
-        }
-
-        let validateApi = Api[VALIDATE_API[unref(type)]];
         const { parent } = data;
         let resourceVO = {};
         if (unref(type) !== ActionEnum.ADD) {
@@ -144,11 +119,14 @@
 
         await setFieldsValue({ ...record });
 
-        getValidateRules(validateApi, customFormSchemaRules(type, getFieldsValue)).then(
-          async (rules) => {
-            rules && rules.length > 0 && (await updateSchema(rules));
-          },
-        );
+        if (unref(type) !== ActionEnum.VIEW) {
+          let validateApi = Api[VALIDATE_API[unref(type)]];
+          const rules = await getValidateRules(
+            validateApi,
+            customFormSchemaRules(type, getFieldsValue),
+          );
+          rules && rules.length > 0 && (await updateSchema(rules));
+        }
       }
 
       return {
@@ -159,14 +137,15 @@
         t,
         title,
         confirmLoading,
-        show,
         resetForm,
+        type,
+        ActionEnum,
       };
     },
   });
 </script>
 <style lang="less" scoped>
-  #resourceApiList {
-    flex-direction: column;
-  }
+  //#resourceApiList {
+  //  flex-direction: column;
+  //}
 </style>

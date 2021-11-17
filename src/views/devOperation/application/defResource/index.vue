@@ -4,6 +4,7 @@
       class="md:w-1/4"
       @select="handleTreeSelect"
       @add="handleTreeAdd"
+      @edit="handleTreeEdit"
       @change="handlerApplicationChange"
       ref="treeRef"
     />
@@ -43,6 +44,11 @@
 
       // 选中树的节点
       function handleTreeSelect(parent = {}, record = {}) {
+        getEditRef().setData({ type: ActionEnum.VIEW, parent, record });
+      }
+
+      // 编辑
+      function handleTreeEdit(parent = {}, record = {}) {
         getEditRef().setData({ type: ActionEnum.EDIT, parent, record });
       }
 
@@ -65,6 +71,7 @@
         handleEditSuccess,
         handleTreeSelect,
         handleTreeAdd,
+        handleTreeEdit,
         handlerApplicationChange,
       };
     },
