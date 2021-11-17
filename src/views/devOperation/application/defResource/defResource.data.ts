@@ -132,7 +132,6 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       defaultValue: true,
       componentProps: {
         ...stateComponentProps(),
-        size: 'default',
         'checked-children': t('lamp.common.enable'),
         'un-checked-children': t('lamp.common.disable'),
       },

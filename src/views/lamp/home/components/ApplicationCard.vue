@@ -18,13 +18,25 @@
         </span>
         <div class="flex mt-2 h-10 text-secondary" :title="item.remark">{{ item.introduce }}</div>
         <div class="flex justify-between text-secondary">
-          <span>{{
-            item.state === ExpireStateEnum.EFFECTIVE
-              ? ' '
-              : item.state === ExpireStateEnum.EXPIRED
-              ? '已过期'
-              : '申请开通'
-          }}</span>
+          <span>
+            <Tag
+              :color="
+                item.state === ExpireStateEnum.EFFECTIVE
+                  ? 'success'
+                  : item.state === ExpireStateEnum.EXPIRED
+                  ? 'error'
+                  : 'processing'
+              "
+            >
+              {{
+                item.state === ExpireStateEnum.EFFECTIVE
+                  ? '正常使用'
+                  : item.state === ExpireStateEnum.EXPIRED
+                  ? '已过期'
+                  : '申请开通'
+              }}
+            </Tag>
+          </span>
           <span v-if="item.state === ExpireStateEnum.EXPIRED">{{ item.expirationTime }}</span>
         </div>
       </CardGrid>
@@ -34,7 +46,7 @@
 </template>
 <script lang="ts">
   import { defineComponent, onMounted, ref } from 'vue';
-  import { Card, Empty } from 'ant-design-vue';
+  import { Card, Empty, Tag } from 'ant-design-vue';
   import { usePermission } from '/@/hooks/web/usePermission';
   import { useUserStore } from '/@/store/modules/user';
   import ThumbUrl from '/@/components/Upload/src/ThumbUrl.vue';
@@ -47,7 +59,7 @@
   import { checkEmployeeHaveApplication } from '/@/api/lamp/common/oauth';
 
   export default defineComponent({
-    components: { Card, CardGrid: Card.Grid, Empty, ThumbUrl },
+    components: { Card, CardGrid: Card.Grid, Empty, ThumbUrl, Tag },
     props: {
       title: propTypes.string.def('我的应用'),
       description: propTypes.string.def('暂未开通任何应用, 联系您公司管理员开通'),
