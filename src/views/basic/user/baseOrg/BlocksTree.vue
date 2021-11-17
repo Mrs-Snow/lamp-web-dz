@@ -2,7 +2,7 @@
   <div class="bg-white m-4 mr-2 overflow-hidden">
     <div class="m-4">
       <Space>
-        <a-button class="mr-2" @click="changeDisplay()"> 切换 </a-button>
+        <a-button type="primary" class="mr-2" @click="changeDisplay()"> 切换 </a-button>
         <!-- 垂直展示 -->
         <Checkbox v-model:checked="isHorizontal">垂直展示</Checkbox>
         <!-- 折叠节点 -->

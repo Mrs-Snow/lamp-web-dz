@@ -112,13 +112,13 @@ export function findNodeByKey(key: any, list: any[]) {
   if (key === '0') {
     return {
       id: '0',
-      label: '根节点',
+      name: '根节点',
     };
   }
   if (!key) {
     return {
       id: key,
-      label: '根节点',
+      name: '根节点',
     };
   }
 

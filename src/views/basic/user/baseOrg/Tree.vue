@@ -1,13 +1,19 @@
 <template>
   <div class="bg-white m-4 mr-2 overflow-hidden">
     <div class="m-4">
-      <a-button @click="changeDisplay()" class="mr-2"> 切换 </a-button>
-      <a-button @click="handleAdd()" v-hasAnyPermission="[RoleEnum.ORG_ADD]" class="mr-2">
+      <a-button type="primary" @click="changeDisplay()" class="mr-2"> 切换 </a-button>
+      <a-button
+        @click="handleAdd()"
+        preIcon="ant-design:plus-outlined"
+        v-hasAnyPermission="[RoleEnum.ORG_ADD]"
+        class="mr-2"
+      >
         {{ t('common.title.addRoot') }}
       </a-button>
       <a-button
         @click="handleBatchDelete()"
         v-hasAnyPermission="[RoleEnum.ORG_DELETE]"
+        preIcon="ant-design:delete-outlined"
         class="mr-2"
       >
         {{ t('common.title.delete') }}
@@ -49,7 +55,7 @@
     name: 'BaseOrgManagement',
     components: { BasicTree },
 
-    emits: ['select', 'add', 'change'],
+    emits: ['select', 'add', 'edit', 'change'],
     setup(_, { emit }) {
       const { t } = useI18n();
       const { createMessage, createConfirm } = useMessage();
@@ -105,6 +111,25 @@
           },
         },
         {
+          auth: RoleEnum.ORG_EDIT,
+          render: (node) => {
+            return h(
+              'a',
+              {
+                class: 'ml-2',
+                onClick: (e: Event) => {
+                  e?.stopPropagation();
+                  e?.preventDefault();
+                  const current = findNodeByKey(node?.id, treeData.value);
+                  const parent = findNodeByKey(node?.parentId, treeData.value);
+                  emit('edit', parent, current);
+                },
+              },
+              t('common.title.edit'),
+            );
+          },
+        },
+        {
           auth: RoleEnum.ORG_DELETE,
           render: (node) => {
             return h(
@@ -132,7 +157,17 @@
             handler: () => {
               emit('add', findNodeByKey(unref(node.$attrs).id, treeData.value));
             },
-            icon: 'bi:plus',
+            icon: 'ant-design:plus-outlined',
+          },
+          {
+            label: t('common.title.edit'),
+            auth: [RoleEnum.ORG_EDIT],
+            handler: () => {
+              const current = findNodeByKey(unref(node.$attrs)?.id, treeData.value);
+              const parent = findNodeByKey(unref(node.$attrs)?.parentId, treeData.value);
+              emit('edit', parent, current);
+            },
+            icon: 'ant-design:edit-outlined',
           },
           {
             label: t('common.title.delete'),
@@ -140,7 +175,7 @@
             handler: () => {
               batchDelete([unref(node.$attrs).id]);
             },
-            icon: 'bx:bxs-folder-open',
+            icon: 'ant-design:delete-outlined',
           },
         ];
       }

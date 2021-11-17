@@ -47,7 +47,7 @@
           if (unref(type) === ActionEnum.EDIT) {
             await update(params);
           } else {
-            params.id = null;
+            params.id = undefined;
             await save(params);
           }
           createMessage.success(t(`common.tips.${type.value}Success`));
@@ -65,12 +65,10 @@
         await resetFields();
         type.value = data?.type;
 
-        const { record = {}, parent } = data;
+        const { record = {}, parent = {} } = data;
         record['parentName'] = parent?.name;
         record['parentId'] = parent?.id;
-        if (unref(type) !== ActionEnum.EDIT) {
-          record.id = undefined;
-        }
+
         await setFieldsValue({ ...record });
 
         if (unref(type) !== ActionEnum.VIEW) {
