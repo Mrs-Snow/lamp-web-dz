@@ -48,7 +48,7 @@
   import { handleFetchParams } from '/@/utils/lamp/common';
   import { ActionEnum } from '/@/enums/commonEnum';
   import { pageMyMsg, deleteMyMsg } from '/@/api/basic/msg/eMsg';
-  import { columns, searchFormSchema } from './eMsg.data';
+  import { columns, searchFormSchema } from './myMsg.data';
   import { RouteEnum } from '/@/enums/biz/tenant';
   import { RoleEnum } from '/@/enums/roleEnum';
   export default defineComponent({
@@ -86,7 +86,7 @@
           columnWidth: 40,
         },
         actionColumn: {
-          width: 200,
+          width: 100,
           title: t('common.column.action'),
           dataIndex: 'action',
           slots: { customRender: 'action' },

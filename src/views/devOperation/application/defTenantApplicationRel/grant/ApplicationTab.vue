@@ -171,9 +171,9 @@
         const checkeds = isArray(checkedKeys) ? checkedKeys : checkedKeys.checked;
         if (checked) {
           // 查找当前节点
-          const item = getById(node?.eventKey, props.resourceList);
+          const current = getById(node?.eventKey, props.resourceList);
           // 查找当前节点的所有父Id
-          let parentKeys = item?.keyLinks?.filter((item) => !checkeds.includes(item));
+          let parentKeys = current?.keyLinks?.filter((item) => !checkeds.includes(item));
           if (parentKeys) {
             // 同时勾选上所有的父节点
             const newKeys = getCheckedKeys().concat(parentKeys);
@@ -202,12 +202,22 @@
         e?.preventDefault();
         const childrenIds = findChildrenByParentId(id, props.resourceList);
         if (containsAll(childrenIds)) {
+          // 取消全选
+
           // const newKeys = getCheckedKeys().filter((item) => !childrenIds.includes(item));
           const newKeys = difference(getCheckedKeys(), childrenIds);
           getTree().setCheckedKeys(newKeys);
         } else {
+          // 全选
+
           const newKeys = getCheckedKeys().concat(childrenIds);
-          getTree().setCheckedKeys(uniq(newKeys));
+
+          // 查找当前节点
+          const current = getById(id, props.resourceList);
+          // 查找当前节点的所有父Id
+          const parentAndChildrenIds = newKeys.concat(current?.keyLinks);
+
+          getTree().setCheckedKeys(uniq(parentAndChildrenIds));
         }
 
         computedCheckAll();

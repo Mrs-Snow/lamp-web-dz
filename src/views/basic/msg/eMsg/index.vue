@@ -100,7 +100,7 @@
           columnWidth: 40,
         },
         actionColumn: {
-          width: 200,
+          width: 140,
           title: t('common.column.action'),
           dataIndex: 'action',
           slots: { customRender: 'action' },

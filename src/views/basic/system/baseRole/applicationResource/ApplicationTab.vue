@@ -57,7 +57,7 @@
   import { eachTree, findChildrenByParentId, getById } from '/@/utils/helper/treeHelper';
   import { ResourceTypeEnum } from '/@/enums/biz/tenant';
   const replaceFields: ReplaceFields = { key: 'id', title: 'name' };
-  
+
   export default defineComponent({
     name: 'ApplicationResourceTab',
     components: {
@@ -139,7 +139,7 @@
         }
       }
 
-      function changeHandler(_checkKeys) {
+      function changeHandler(_) {
         computedIndeterminate();
         computedCheckAll();
       }
@@ -176,54 +176,70 @@
 
       /**
        * 选中tree的复选框
-       * 1. 选中某个节点，将其所有的父节点都选中
-       * 2. 取消某个节点，将其所有子节点全部取消
+       * 1. 选中某个节点: 将其所有的父节点都选中
+       * 2. 取消某个节点: 将其所有子节点全部取消
        *
        * @param checkedKeys 已选中的key
        * @param checked 选中还是取消
        * @param node 当前节点
        */
-      function checkNode(checkedKeys, { checked, node }) {
-        const checkeds = isArray(checkedKeys) ? checkedKeys : checkedKeys.checked;
+      function checkNode(_, { checked, node }) {
+        // 当前已经勾选的所有id
+        // const checkeds = isArray(checkedKeys) ? checkedKeys : checkedKeys.checked;
         if (checked) {
+          // 选中
+
           // 查找当前节点
-          const item = getById(node?.eventKey, props.resourceList);
+          const current = getById(node?.eventKey, props.resourceList);
           // 查找当前节点的所有父Id
-          let parentKeys = item?.keyLinks?.filter((item) => !checkeds.includes(item));
-          if (parentKeys) {
-            // 同时勾选上所有的父节点
-            const newKeys = getCheckedKeys().concat(parentKeys);
-            getTree().setCheckedKeys(uniq(newKeys));
-          }
+
+          // 同时勾选上所有的父节点
+          const newKeys = getCheckedKeys().concat(current?.keyLinks);
+          getTree().setCheckedKeys(uniq(newKeys));
         } else {
+          // 取消选中
+
           // 查找当前节点的所有子节点
           const childrenIds = findChildrenByParentId(node?.eventKey, props.resourceList);
-          // 将所有子节点取消勾选
-          // const newKeys = getCheckedKeys().filter((item) => !childrenIds.includes(item));
+          // 设置新的选中节点为： 当前已经选中节点 - 当前节点的子节点
           const newKeys = difference(getCheckedKeys(), childrenIds);
           getTree().setCheckedKeys(uniq(newKeys));
         }
-
-        // computedCheckAll();
-        // computedIndeterminate();
       }
 
       /**
-       * 全选或取消其子节点
+       * 全选或取消全选
+       *
+       * 全选逻辑：将所有子节点和父节点选中
+       *
+       * 取消全选逻辑：将所有子节点取消
+       *
        * @param id 节点id
        * @param e 事件
        */
       function selectAll(id: string, e: any) {
         e?.stopPropagation();
         e?.preventDefault();
+
+        // 查找当前节点的所有子节点id
         const childrenIds = findChildrenByParentId(id, props.resourceList);
         if (containsAll(childrenIds)) {
-          // const newKeys = getCheckedKeys().filter((item) => !childrenIds.includes(item));
+          // 取消全选
+
+          // 将已经选中的节点 - 当前节点的所有子节点
           const newKeys = difference(getCheckedKeys(), childrenIds);
           getTree().setCheckedKeys(newKeys);
         } else {
+          // 全选
+
           const newKeys = getCheckedKeys().concat(childrenIds);
-          getTree().setCheckedKeys(uniq(newKeys));
+
+          // 查找当前节点
+          const current = getById(id, props.resourceList);
+          // 查找当前节点的所有父Id
+          const parentAndChildrenIds = newKeys.concat(current?.keyLinks);
+
+          getTree().setCheckedKeys(uniq(parentAndChildrenIds));
         }
 
         computedCheckAll();
@@ -247,8 +263,6 @@
         if (!ids || !ids.length) {
           return false;
         }
-        // const checkedKeys = getCheckedKeys().filter((item) => ids.includes(item));
-        // return checkedKeys.length === ids.length;
         return intersection(getCheckedKeys(), ids).length == ids.length;
       }
 

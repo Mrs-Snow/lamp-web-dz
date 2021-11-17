@@ -1,5 +1,5 @@
 <template>
-  <div class="appResTabs bg-white m-4 ml-2 overflow-hidden">
+  <div class="m-4 ml-2 overflow-hidden bg-white appResTabs">
     <Card :title="title">
       <template #extra>
         <a-button
@@ -8,8 +8,10 @@
           type="primary"
           @click="handleSubmit"
           :loading="confirmLoading"
-          >{{ t('common.saveText') }}</a-button
+          v-hasAnyPermission="[RoleEnum.ROLE_BIND_RESOURCE]"
         >
+          {{ t('common.saveText') }}
+        </a-button>
       </template>
 
       <ApplicationTab
@@ -34,6 +36,7 @@
   import { findResourceIdByRoleId, saveRoleResource } from '/@/api/basic/system/baseRole';
   import { BaseRoleResourceRelSaveVO } from '/@/api/basic/system/model/baseRoleModel';
   import { useMessage } from '/@/hooks/web/useMessage';
+  import { RoleEnum } from '/@/enums/roleEnum';
   export default defineComponent({
     name: 'ApplicationResourceTabs',
     components: {
@@ -125,6 +128,7 @@
         itemRefs,
         getData,
         handleSubmit,
+        RoleEnum,
       };
     },
   });

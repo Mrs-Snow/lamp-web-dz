@@ -16,11 +16,11 @@
           />
           <span class="text-lg ml-4">{{ item.name }}</span>
         </span>
-        <div class="flex mt-2 h-10 text-secondary">{{ item.introduce }}</div>
+        <div class="flex mt-2 h-10 text-secondary" :title="item.remark">{{ item.introduce }}</div>
         <div class="flex justify-between text-secondary">
           <span>{{
             item.state === ExpireStateEnum.EFFECTIVE
-              ? '有效'
+              ? ' '
               : item.state === ExpireStateEnum.EXPIRED
               ? '已过期'
               : '申请开通'

@@ -58,18 +58,18 @@
 <script lang="ts">
   import { defineComponent, ref, onMounted, reactive } from 'vue';
   import { Select, Radio } from 'ant-design-vue';
+  import { PageWrapper } from '/@/components/Page';
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { PageWrapper } from '/@/components/Page';
-  import { ActionEnum, MsgTypeEnum } from '/@/enums/commonEnum';
-  import { get } from '/@/api/basic/msg/eMsg';
-  import { query as queryUser } from '/@/api/devOperation/tenant/defUser';
-  import { query as queryRole } from '/@/api/basic/system/baseRole';
-  import { editFormSchema } from './eMsg.data';
   import { useTabs } from '/@/hooks/web/useTabs';
   import { useRouter } from 'vue-router';
   import { Enum } from '/@/api/model/baseModel';
   import { RouteEnum } from '/@/enums/biz/tenant';
+  import { ActionEnum, MsgTypeEnum } from '/@/enums/commonEnum';
+  import { get } from '/@/api/basic/msg/eMsg';
+  import { query as queryUser } from '/@/api/devOperation/tenant/defUser';
+  import { query as queryRole } from '/@/api/basic/system/baseRole';
+  import { editFormSchema } from './myMsg.data';
 
   export default defineComponent({
     name: 'EMsgEdit',
