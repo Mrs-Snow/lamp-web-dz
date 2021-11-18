@@ -281,7 +281,7 @@
       }
 
       return {
-        columns: createTableColumns() as any[],
+        columns: createTableColumns(props.isDef) as any[],
         actionColumn: createActionColumn(handleRemove) as any,
         register,
         closeModal,

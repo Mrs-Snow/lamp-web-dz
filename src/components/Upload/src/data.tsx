@@ -10,7 +10,7 @@ import { FileResultVO } from '/@/api/lamp/file/model/uploadModel';
 const { t } = useI18n();
 
 // 文件上传列表
-export function createTableColumns(): BasicColumn[] {
+export function createTableColumns(isDef: boolean): BasicColumn[] {
   return [
     {
       dataIndex: 'thumbUrl',
@@ -18,7 +18,7 @@ export function createTableColumns(): BasicColumn[] {
       width: 100,
       customRender: ({ record }) => {
         const { thumbUrl } = (record as FileItem) || {};
-        return thumbUrl && <ThumbUrl fileUrl={thumbUrl} />;
+        return thumbUrl && <ThumbUrl fileUrl={thumbUrl} isDef={isDef} />;
       },
     },
     {
@@ -101,7 +101,7 @@ export function createActionColumn(handleRemove: Function): BasicColumn {
   };
 }
 // 文件预览列表
-export function createPreviewColumns(): BasicColumn[] {
+export function createPreviewColumns(isDef: boolean): BasicColumn[] {
   return [
     {
       dataIndex: 'url',
@@ -109,7 +109,7 @@ export function createPreviewColumns(): BasicColumn[] {
       width: 100,
       customRender: ({ record }) => {
         const { id, fileType } = (record as FileResultVO) || {};
-        return fileType?.code === 'IMAGE' && <ThumbUrl fileId={id} />;
+        return fileType?.code === 'IMAGE' && <ThumbUrl fileId={id} isDef={isDef} />;
       },
     },
     {

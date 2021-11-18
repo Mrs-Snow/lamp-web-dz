@@ -64,7 +64,7 @@
         register,
         closeModal,
         fileListRef,
-        columns: createPreviewColumns() as any[],
+        columns: createPreviewColumns(props.isDef) as any[],
         actionColumn: createPreviewActionColumn({ handleRemove, handleDownload }) as any,
       };
     },

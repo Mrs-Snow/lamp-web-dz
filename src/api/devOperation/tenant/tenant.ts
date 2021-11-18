@@ -97,13 +97,21 @@ export const remove = (params: string[]) => defHttp.request<boolean>({ ...Api.De
 export const check = (code: string) => defHttp.request<boolean>(Api.Check(code));
 
 export const initData = (params: DefTenantInitVO) =>
-  defHttp.request<boolean>({ ...Api.InitData, params });
+  defHttp.request<boolean>({ ...Api.InitData, params, timeout: 2 * 60 * 1000 });
 
 export const findOnlineServicePrefix = () =>
   defHttp.request<Recordable>({ ...Api.FindOnlineServicePrefix });
 
 export const initConnect = (serviceProfix: string, tenantId: string) =>
-  defHttp.request<boolean>({ ...Api.InitConnect(serviceProfix), params: { tenantId } });
+  defHttp.request<boolean>({
+    ...Api.InitConnect(serviceProfix),
+    params: { tenantId },
+    timeout: 2 * 60 * 1000,
+  });
 
 export const checkDs = (serviceProfix: string, tenantId: string) =>
-  defHttp.request<boolean>({ ...Api.CheckDs(serviceProfix), params: { tenantId } });
+  defHttp.request<boolean>({
+    ...Api.CheckDs(serviceProfix),
+    params: { tenantId },
+    timeout: 2 * 60 * 1000,
+  });
