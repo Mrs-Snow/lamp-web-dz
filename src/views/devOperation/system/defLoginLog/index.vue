@@ -17,9 +17,10 @@
           :dropMenuList="clearList"
           @menu-event="handleClearEvent"
           overlayClassName="app-locale-picker-overlay"
-          v-hasAnyPermission="[RoleEnum.SYSTEM_LOGIN_LOG_DELETE]"
         >
-          <a-button type="primary">清理日志</a-button>
+          <a-button type="primary" v-hasAnyPermission="[RoleEnum.SYSTEM_LOGIN_LOG_DELETE]">
+            清理日志
+          </a-button>
         </Dropdown>
       </template>
       <template #action="{ record }">

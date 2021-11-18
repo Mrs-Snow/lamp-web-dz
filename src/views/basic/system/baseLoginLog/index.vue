@@ -16,10 +16,11 @@
           :trigger="['click']"
           :dropMenuList="clearList"
           @menu-event="handleClearEvent"
-          v-hasAnyPermission="[RoleEnum.BASIC_SYSTEM_LOGIN_LOG_VIEW]"
           overlayClassName="app-locale-picker-overlay"
         >
-          <a-button type="primary">清理日志</a-button>
+          <a-button type="primary" v-hasAnyPermission="[RoleEnum.BASIC_SYSTEM_LOGIN_LOG_DELETE]">
+            清理日志
+          </a-button>
         </Dropdown>
       </template>
       <template #action="{ record }">
@@ -28,7 +29,7 @@
             {
               tooltip: t('common.title.view'),
               icon: 'ant-design:search-outlined',
-              auth: RoleEnum.SYSTEM_APPENDIX_DOWNLOAD,
+              auth: RoleEnum.BASIC_SYSTEM_LOGIN_LOG_VIEW,
               onClick: handleView.bind(null, record),
             },
 
