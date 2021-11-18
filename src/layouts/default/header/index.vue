@@ -37,16 +37,14 @@
 
     <!-- action  -->
     <div :class="`${prefixCls}-action`">
-      <div :class="`${prefixCls}-action__item `">
-        <Alert
-          class="tips"
-          v-if="globSetting.tips"
-          type="warning"
-          show-icon
-          :message="globSetting.tips"
-          :title="globSetting.tips"
-          closable
-        />
+      <div :class="`${prefixCls}-action__item tips-item`">
+        <!-- 引用： https://zhuanlan.zhihu.com/p/372052468 -->
+        <div class="ad" v-if="globSetting.tips">
+          <i class="iconfont">&#xe633;</i>
+          <p class="content" :title="globSetting.tips">
+            <span>{{ globSetting.tips }} </span>
+          </p>
+        </div>
       </div>
       <AppSearch :class="`${prefixCls}-action__item `" v-if="getShowSearch" />
 
@@ -74,7 +72,7 @@
 
   import { propTypes } from '/@/utils/propTypes';
 
-  import { Layout, Alert } from 'ant-design-vue';
+  import { Layout } from 'ant-design-vue';
   import { AppLogo } from '/@/components/Application';
   import LayoutMenu from '../menu/index.vue';
   import LayoutTrigger from '../trigger/index.vue';
@@ -109,7 +107,6 @@
     components: {
       Header: Layout.Header,
       AppLogo,
-      Alert,
       LayoutTrigger,
       LayoutBreadcrumb,
       TenantList,
@@ -228,27 +225,89 @@
   @prefix-cls: ~'@{namespace}-layout-header';
 
   .@{prefix-cls} {
-    &--light {
-      .ant-alert {
-        line-height: 1.15;
-      }
+    @font-face {
+      font-family: icon-horn;
+      src: url('//at.alicdn.com/t/font_2516453_g6qjhhqblt9.woff2?t=1620545333370') format('woff2'),
+        url('//at.alicdn.com/t/font_2516453_g6qjhhqblt9.woff?t=1620545333370') format('woff'),
+        url('//at.alicdn.com/t/font_2516453_g6qjhhqblt9.ttf?t=1620545333370') format('truetype');
     }
 
-    .tips {
-      max-width: 300px;
+    .iconfont {
+      font-family: icon-horn !important;
+      font-size: 16px;
+      font-style: normal;
+      -webkit-font-smoothing: antialiased;
+      -webkit-text-stroke-width: 0.2px;
+      -moz-osx-font-smoothing: grayscale;
+    }
 
-      .ant-alert-message {
+    .ad {
+      // 核心代码
+      @keyframes marquee {
+        0% {
+          transform: translateX(0);
+        }
+
+        100% {
+          transform: translateX(-100%);
+        }
+      }
+      @keyframes blink {
+        50% {
+          color: transparent;
+        }
+      }
+
+      max-width: 400px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-sizing: border-box;
+      height: 40px;
+      line-height: 40px;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 2px 1px 8px 1px rgb(228 232 235);
+
+      i {
+        color: #ff6146;
+        font-size: 20px;
+        margin-right: 10px;
+      }
+
+      .content {
+        flex: 1;
         overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        word-wrap: break-word;
-        word-break: break-all;
+        height: 100%;
+        margin: auto;
+
+        span {
+          display: block;
+          width: auto;
+          white-space: nowrap;
+          color: red;
+          animation: marquee 10s linear infinite, blink 1.5s linear infinite;
+
+          // background-image: -webkit-linear-gradient(bottom, red, #fd8403, yellow);
+          // -webkit-background-clip: text;
+          // background-clip: text;
+          // -webkit-text-fill-color: transparent;
+          // padding-left: 105%;
+          // padding-right: 120%;
+          &:hover {
+            animation-play-state: paused;
+          }
+        }
       }
     }
 
     &--dark {
-      .ant-alert {
-        line-height: 1.15;
+      .ad {
+        background: transparent;
+        box-shadow: 2px 1px 8px 1px @border-color-base;
       }
     }
   }
