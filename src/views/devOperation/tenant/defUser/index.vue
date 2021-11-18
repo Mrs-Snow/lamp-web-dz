@@ -97,6 +97,11 @@
           dataIndex: 'action',
           slots: { customRender: 'action' },
         },
+        titleHelpMessage: [
+          '1. 新增用户只存def_user表',
+          '2. 初始密码统一为：123456',
+          '3. 可以使用用户名、手机、邮箱、身份证登录',
+        ],
       });
 
       // 弹出复制页面

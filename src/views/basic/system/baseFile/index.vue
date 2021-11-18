@@ -2,7 +2,10 @@
   <PageWrapper dense contentFullHeight>
     <BasicTable
       @register="registerTable"
-      titleHelpMessage="“调试上传”按钮：用于开发人员测试上传接口是否支持所有的参数。 “上传”按钮：用于演示如何直接上传附件"
+      :titleHelpMessage="[
+        '1. “调试上传”按钮：用于开发人员测试上传接口是否支持所有的参数',
+        '2. “上传”按钮：用于演示如何直接上传附件',
+      ]"
     >
       <template #toolbar>
         <a-button
