@@ -149,7 +149,11 @@ export function useColumns(
     const columns = cloneDeep(viewColumns);
     return columns
       .filter((column) => {
-        return isPermission(column.auth, true, column.authMode) && isIfShow(column);
+        if (column.auth) {
+          return isPermission(column.auth, true, column.authMode) && isIfShow(column);
+        } else {
+          return isIfShow(column);
+        }
       })
       .map((column) => {
         const { slots, dataIndex, customRender, format, edit, editRow, flag } = column;

@@ -99,9 +99,8 @@ class WildcardPermission {
     return true;
   }
 }
-const map = {
-  permissionsOwns: [] as WildcardPermission[],
-};
+
+const permMap = {};
 
 // User permissions related operations
 export function usePermission() {
@@ -209,20 +208,27 @@ export function usePermission() {
 
       if (permissions != null && permissions.length > 0) {
         // 转换拥有的权限
-        let permissionsOwns: WildcardPermission[] = [];
-        if (map.permissionsOwns && map.permissionsOwns.length > 0) {
-          permissionsOwns = map.permissionsOwns;
-        } else {
-          for (const resource of resourceList) {
-            permissionsOwns.push(new WildcardPermission(resource, caseSensitive));
-          }
-          map.permissionsOwns = permissionsOwns;
+        const permissionsOwns: WildcardPermission[] = [];
+        // bug：从开发者系统退出后，登录基础平台都会提示无权限
+        // if (map.permissionsOwns && map.permissionsOwns.length > 0) {
+        //   permissionsOwns = map.permissionsOwns;
+        // } else {
+        for (const resource of resourceList) {
+          // let wp: WildcardPermission;
+          // if (permMap[resource]) {
+          //   wp = permMap[resource];
+          // } else {
+          //   wp = new WildcardPermission(resource, caseSensitive);
+          // }
+          permissionsOwns.push(new WildcardPermission(resource, caseSensitive));
         }
+        // map.permissionsOwns = permissionsOwns;
+        // }
 
         for (const strPerm of permissions) {
           let toBeVerified;
-          if (map[strPerm]) {
-            toBeVerified = map[strPerm];
+          if (permMap[strPerm]) {
+            toBeVerified = permMap[strPerm];
           } else {
             toBeVerified = new WildcardPermission(strPerm, caseSensitive);
           }

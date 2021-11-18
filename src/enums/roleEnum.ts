@@ -11,7 +11,7 @@ export enum RoleEnum {
   TENANT_DATASOURCE_CONFIG_EDIT = 'tenant:tenant:datasourceConfig:edit',
   TENANT_DATASOURCE_CONFIG_DELETE = 'tenant:tenant:datasourceConfig:delete',
   TENANT_DATASOURCE_CONFIG_VIEW = 'tenant:tenant:datasourceConfig:view',
-  TENANT_DATASOURCE_CONFIG_DEBUG = 'tenant:tenant:datasourceConfig:debug',
+  TENANT_DATASOURCE_CONFIG_DEBUG = 'tenant:tenant:datasourceConfig:test',
 
   // 租户维护
   TENANT_TENANT_ADD = 'tenant:tenant:tenant:add',

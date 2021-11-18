@@ -91,13 +91,13 @@ export const editFormSchema: FormSchema[] = [
     label: t('devOperation.tenant.defDatasourceConfig.url'),
     component: 'Input',
     defaultValue:
-      'jdbc:mysql://127.0.0.1:3306/lamp_base_1111?serverTimezone=CTT&characterEncoding=utf8&useUnicode=true&useSSL=false&autoReconnect=true&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&nullCatalogMeansCurrent=true',
+      'jdbc:mysql://127.0.0.1:3306/lamp_base_1111?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useUnicode=true&useSSL=false&autoReconnect=true&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&nullCatalogMeansCurrent=true',
   },
   {
     field: 'driverClassName',
     label: t('devOperation.tenant.defDatasourceConfig.driverClassName'),
     component: 'Select',
-    defaultValue: 'mysql6',
+    defaultValue: 'com.mysql.cj.jdbc.Driver',
     componentProps: {
       options: [
         {

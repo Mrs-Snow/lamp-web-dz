@@ -27,7 +27,7 @@
         :image="illustration"
       >
         <template #description>
-          <div style="font-size: 1.75rem" class="mx-auto mt-10 mb-10"> 您还不属于任意企业 </div>
+          <div style="font-size: 1.75rem" class="mx-auto mt-10 mb-10"> 您还不属于任何企业 </div>
         </template>
         <a-button type="primary" @click="handleTenant">注册企业</a-button>
         <a-button class="ml-20" type="primary" @click="handleEmployee">成为员工</a-button>
