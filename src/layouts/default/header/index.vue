@@ -225,13 +225,6 @@
   @prefix-cls: ~'@{namespace}-layout-header';
 
   .@{prefix-cls} {
-    @font-face {
-      font-family: icon-horn;
-      src: url('//at.alicdn.com/t/font_2516453_g6qjhhqblt9.woff2?t=1620545333370') format('woff2'),
-        url('//at.alicdn.com/t/font_2516453_g6qjhhqblt9.woff?t=1620545333370') format('woff'),
-        url('//at.alicdn.com/t/font_2516453_g6qjhhqblt9.ttf?t=1620545333370') format('truetype');
-    }
-
     .iconfont {
       font-family: icon-horn !important;
       font-size: 16px;
