@@ -43,7 +43,7 @@
               label: '绑定角色',
               icon: 'ant-design:search-outlined',
               onClick: handleBindRole.bind(null, record),
-              auth: RoleEnum.EMPLOYEE_VIEW,
+              auth: RoleEnum.EMPLOYEE_BIND_ROLE,
             },
           ]"
           :dropDownActions="[

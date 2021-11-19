@@ -89,6 +89,7 @@ export enum RoleEnum {
   EMPLOYEE_EDIT = 'basic:user:employee:edit',
   EMPLOYEE_DELETE = 'basic:user:employee:delete',
   EMPLOYEE_VIEW = 'basic:user:employee:view',
+  EMPLOYEE_BIND_ROLE = 'basic:user:employee:bindRole',
 
   // 机构维护
   ORG_ADD = 'basic:user:org:add',
