@@ -449,7 +449,7 @@
         });
       }
       return () => {
-        const { title, helpMessage, toolbar, search, checkable } = props;
+        const { title, helpMessage, toolbar, toolbarStrictly, search, checkable } = props;
         const showTitle = title || toolbar || search || slots.headerTitle;
         const scrollStyle: CSSProperties = { height: 'calc(100% - 38px)' };
         return (
@@ -462,6 +462,7 @@
                 title={title}
                 search={search}
                 toolbar={toolbar}
+                toolbarStrictly={toolbarStrictly}
                 helpMessage={helpMessage}
                 onStrictlyChange={onStrictlyChange}
                 onSearch={handleSearch}

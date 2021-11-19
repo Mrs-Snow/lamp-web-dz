@@ -26,6 +26,8 @@ export const basicProps = {
 
   title: propTypes.string,
   toolbar: propTypes.bool,
+  // 工具栏是否显示 层级关联
+  toolbarStrictly: propTypes.bool.def(true),
   search: propTypes.bool,
   searchValue: propTypes.string,
   checkStrictly: propTypes.bool,

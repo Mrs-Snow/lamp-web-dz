@@ -6,7 +6,7 @@
     </BasicTitle>
 
     <div
-      class="flex flex-1 justify-self-stretch items-center cursor-pointer"
+      class="flex items-center flex-1 cursor-pointer justify-self-stretch"
       v-if="search || toolbar"
     >
       <div :class="getInputSearchCls" v-if="search">
@@ -81,6 +81,8 @@
       checkAll: propTypes.func,
       expandAll: propTypes.func,
       searchText: propTypes.string,
+      // 工具栏是否显示 层级关联
+      toolbarStrictly: propTypes.bool.def(true),
     },
     emits: ['strictly-change', 'search'],
     setup(props, { emit, slots }) {
@@ -100,15 +102,22 @@
       });
 
       const toolbarList = computed(() => {
-        const { checkable } = props;
+        const { checkable, toolbarStrictly } = props;
         const defaultToolbarList = [
           { label: t('component.tree.expandAll'), value: ToolbarEnum.EXPAND_ALL },
           {
             label: t('component.tree.unExpandAll'),
             value: ToolbarEnum.UN_EXPAND_ALL,
-            divider: checkable,
+            divider: checkable && toolbarStrictly,
           },
         ];
+
+        const strictlyList = toolbarStrictly
+          ? [
+              { label: t('component.tree.checkStrictly'), value: ToolbarEnum.CHECK_STRICTLY },
+              { label: t('component.tree.checkUnStrictly'), value: ToolbarEnum.CHECK_UN_STRICTLY },
+            ]
+          : [];
 
         return checkable
           ? [
@@ -119,8 +128,7 @@
                 divider: checkable,
               },
               ...defaultToolbarList,
-              { label: t('component.tree.checkStrictly'), value: ToolbarEnum.CHECK_STRICTLY },
-              { label: t('component.tree.checkUnStrictly'), value: ToolbarEnum.CHECK_UN_STRICTLY },
+              ...strictlyList,
             ]
           : defaultToolbarList;
       });
