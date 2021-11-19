@@ -62,8 +62,8 @@ export enum FileBizTypeEnum {
  * 文件的 桶 （需要提前跟后端约定，并让后端配置到OSS中）
  */
 export enum FileBucketEnum {
-  //公开桶
-  public = 'public',
+  // 需要自行在华为云或minio等第三方对象存储提前创建 公开读写的桶
+  public = 'tt-public',
 }
 
 export enum EnumEnum {

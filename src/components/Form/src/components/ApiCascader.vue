@@ -42,7 +42,7 @@
     },
     props: {
       value: {
-        type: Array,
+        type: Array as PropType<any[]>,
       },
       api: {
         type: Function as PropType<(arg?: Recordable) => Promise<Option[]>>,
@@ -85,6 +85,14 @@
         (data) => {
           const opts = generatorOptions(data);
           options.value = opts;
+        },
+        { deep: true },
+      );
+
+      watch(
+        () => props.value,
+        (data) => {
+          emitData.value = data as any[];
         },
         { deep: true },
       );

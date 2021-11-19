@@ -437,8 +437,8 @@ export const initDataFormSchema = (onChange: Fn): FormSchema[] => {
         labelField: 'name',
         valueField: 'id',
       },
-      dynamicDisabled: ({ values }) => {
-        return values?.connectType === TenantConnectTypeEnum.SYSTEM;
+      ifShow: ({ values }) => {
+        return values?.connectType === TenantConnectTypeEnum.CUSTOM;
       },
     },
     {
@@ -450,8 +450,8 @@ export const initDataFormSchema = (onChange: Fn): FormSchema[] => {
         labelField: 'name',
         valueField: 'id',
       },
-      dynamicDisabled: ({ values }) => {
-        return values?.connectType === TenantConnectTypeEnum.SYSTEM;
+      ifShow: ({ values }) => {
+        return values?.connectType === TenantConnectTypeEnum.CUSTOM;
       },
     },
   ];
