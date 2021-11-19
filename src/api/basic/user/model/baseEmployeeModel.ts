@@ -5,6 +5,11 @@ export interface DefTenantBindUserVO {
   userIdList: string[];
   isBind: boolean;
 }
+export interface BaseEmployeeRoleRelSaveVO {
+  employeeId: string;
+  roleIdList: string[];
+  flag: boolean;
+}
 export interface BaseEmployeePageQuery {
   isDefault?: boolean;
   userId?: string;

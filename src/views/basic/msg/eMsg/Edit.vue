@@ -64,7 +64,7 @@
   import { PageWrapper } from '/@/components/Page';
   import { ActionEnum, MsgTypeEnum, VALIDATE_API } from '/@/enums/commonEnum';
   import { Api, save, get } from '/@/api/basic/msg/eMsg';
-  import { query as queryUser } from '/@/api/devOperation/tenant/defUser';
+  import { pageUser } from '/@/api/devOperation/tenant/defUser';
   import { query as queryRole } from '/@/api/basic/system/baseRole';
   import { getValidateRules } from '/@/api/lamp/common/formValidateService';
   import { customFormSchemaRules, editFormSchema } from './eMsg.data';
@@ -123,7 +123,8 @@
       });
 
       const loadList = async () => {
-        formState.userList = await queryUser();
+        const result = await pageUser({ model: {}, size: 1000, current: 1 });
+        formState.userList = result.records;
         formState.roleList = await queryRole();
       };
 

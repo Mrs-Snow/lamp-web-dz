@@ -49,6 +49,7 @@ export const columns = (): BasicColumn[] => {
   ];
 };
 
+// 员工表格搜索栏
 export const searchFormSchema = (): FormSchema[] => {
   return [
     {
@@ -438,7 +439,7 @@ export const userEditFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
   ];
 };
 
-// 前端自定义表单验证规则
+// 员工编辑页 前端自定义表单验证规则
 export const customFormSchemaRules = (type: Ref<ActionEnum>): Partial<FormSchemaExt>[] => {
   return [
     {
@@ -458,6 +459,57 @@ export const customFormSchemaRules = (type: Ref<ActionEnum>): Partial<FormSchema
           },
         },
       ],
+    },
+  ];
+};
+
+// 员工-角色列表字段
+export const employeeRoleColumns = (): BasicColumn[] => {
+  return [
+    {
+      title: t('basic.system.baseRole.code'),
+      dataIndex: 'code',
+      width: 180,
+    },
+    {
+      title: t('basic.system.baseRole.name'),
+      dataIndex: 'name',
+      // width: 180,
+    },
+    {
+      title: t('basic.system.baseRole.state'),
+      dataIndex: 'state',
+      format: (text) => {
+        return text ? t('lamp.common.enable') : t('lamp.common.disable');
+      },
+    },
+  ];
+};
+// 角色-员工搜索字段
+export const employeeRoleSearchFormSchema = (): FormSchema[] => {
+  return [
+    {
+      field: 'code',
+      label: t('basic.system.baseRole.code'),
+      component: 'Input',
+    },
+    {
+      field: 'name',
+      label: t('basic.system.baseRole.name'),
+      component: 'Input',
+    },
+    {
+      field: 'scope',
+      label: '范围',
+      component: 'RadioButtonGroup',
+      componentProps: {
+        options: [
+          { label: '全部', value: '-1' },
+          { label: '已绑定', value: '1' },
+          { label: '未绑定', value: '2' },
+        ],
+      },
+      defaultValue: '-1',
     },
   ];
 };

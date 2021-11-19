@@ -4,6 +4,7 @@ import {
   BaseEmployeeResultVO,
   BaseEmployeePageQuery,
   DefTenantBindUserVO,
+  BaseEmployeeRoleRelSaveVO,
 } from './model/baseEmployeeModel';
 import { PageParams, PageResult } from '/@/api/model/baseModel';
 import { defHttp } from '/@/utils/http/axios';
@@ -49,6 +50,14 @@ export const Api = {
     url: `${ServicePrefixEnum.BASE}/${MODULAR}/bindTenantAdmin`,
     method: RequestEnum.POST,
   } as AxiosRequestConfig,
+  EmployeeRole: {
+    url: `${ServicePrefixEnum.BASE}/${MODULAR}/employeeRole`,
+    method: RequestEnum.POST,
+  } as AxiosRequestConfig,
+  FindEmployeeRoleByEmployeeId: {
+    url: `${ServicePrefixEnum.BASE}/${MODULAR}/findEmployeeRoleByEmployeeId`,
+    method: RequestEnum.GET,
+  } as AxiosRequestConfig,
 };
 
 export const page = (params: PageParams<BaseEmployeePageQuery>) =>
@@ -74,3 +83,9 @@ export const bindUser = (params: DefTenantBindUserVO) =>
 // 绑定/解绑用户为企业的租户管理员
 export const bindTenantAdmin = (params: DefTenantBindUserVO) =>
   defHttp.request<boolean>({ ...Api.BindTenantAdmin, params });
+// 查询员工拥有的角色
+export const findEmployeeRoleByEmployeeId = (employeeId: string) =>
+  defHttp.request<string[]>({ ...Api.FindEmployeeRoleByEmployeeId, params: { employeeId } });
+// 给员工绑定角色
+export const saveEmployeeRole = (params: BaseEmployeeRoleRelSaveVO) =>
+  defHttp.request<string[]>({ ...Api.EmployeeRole, params });

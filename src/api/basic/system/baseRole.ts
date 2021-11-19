@@ -51,10 +51,18 @@ export const Api = {
     url: `${ServicePrefixEnum.BASE}/${MODULAR}/resourceList`,
     method: RequestEnum.GET,
   } as AxiosRequestConfig,
+  PageMyRole: {
+    url: `${ServicePrefixEnum.BASE}/${MODULAR}/pageMyRole`,
+    method: RequestEnum.POST,
+  } as AxiosRequestConfig,
 };
-
+// 查询全部角色
 export const page = (params: PageParams<BaseRolePageQuery>) =>
   defHttp.request<PageResult<BaseRoleResultVO>>({ ...Api.Page, params });
+
+// 查询全部角色 或 我的角色 或 未绑定的角色
+export const pageMyRole = (params: PageParams<BaseRolePageQuery>) =>
+  defHttp.request<PageResult<BaseRoleResultVO>>({ ...Api.PageMyRole, params });
 
 export const query = (params?: BaseRolePageQuery) =>
   defHttp.request<BaseRoleResultVO[]>({ ...Api.Query, params });

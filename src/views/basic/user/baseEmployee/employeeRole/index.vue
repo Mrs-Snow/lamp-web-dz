@@ -6,8 +6,7 @@
     width="70%"
     :keyboard="true"
     :maskClosable="true"
-    title="绑定员工"
-    :defaultFullscreen="true"
+    title="绑定角色"
     @ok="handleSubmit"
   >
     <div ref="wrapEl">
@@ -21,16 +20,16 @@
             :actions="[
               {
                 label: '绑定',
-                onClick: handleBindUser.bind(null, record),
+                onClick: handleBindRole.bind(null, record),
                 ifShow: () => {
-                  return formData.roleId && !formData.bindEmployeeIds.includes(record.id);
+                  return formData.employeeId && !formData.bindRoleIds.includes(record.id);
                 },
               },
               {
                 label: '取消绑定',
-                onClick: handleUnBindUser.bind(null, record),
+                onClick: handleUnBindRole.bind(null, record),
                 ifShow: () => {
-                  return formData.roleId && formData.bindEmployeeIds.includes(record.id);
+                  return formData.employeeId && formData.bindRoleIds.includes(record.id);
                 },
               },
             ]"
@@ -47,13 +46,13 @@
   import { useLoading } from '/@/components/Loading';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { page } from '/@/api/basic/user/baseEmployee';
-  import { findEmployeeIdByRoleId, saveRoleEmployee } from '/@/api/basic/system/baseRole';
-  import { roleEmployeeColumns, roleEmployeeSearchFormSchema } from '../baseRole.data';
+  import { pageMyRole } from '/@/api/basic/system/baseRole';
+  import { findEmployeeRoleByEmployeeId, saveEmployeeRole } from '/@/api/basic/user/baseEmployee';
+  import { employeeRoleColumns, employeeRoleSearchFormSchema } from '../baseEmployee.data';
   import { handleFetchParams } from '/@/utils/lamp/common';
 
   export default defineComponent({
-    name: 'RoleEmployeeIndex',
+    name: 'EmployeeRoleIndex',
     components: { BasicModal, BasicTable, TableAction },
     emits: ['success', 'register'],
     setup(_, { emit }) {
@@ -69,18 +68,19 @@
       });
 
       const formData = reactive({
-        roleId: '',
-        bindEmployeeIds: [] as string[],
+        employeeId: '',
+        bindRoleIds: [] as string[],
       });
 
       // 表格
       const [registerTable, { getSelectRowKeys }] = useTable({
-        title: t('basic.user.baseEmployee.table.title'),
-        api: page,
-        columns: roleEmployeeColumns(),
+        title: '角色列表',
+        api: pageMyRole,
+        columns: employeeRoleColumns(),
         formConfig: {
           labelWidth: 70,
-          schemas: roleEmployeeSearchFormSchema(),
+          schemas: employeeRoleSearchFormSchema(),
+          baseColProps: { xs: 24, sm: 12, md: 12, lg: 12, xl: 6 },
           autoSubmitOnEnter: true,
           resetButtonOptions: {
             preIcon: 'ant-design:rest-outlined',
@@ -98,7 +98,7 @@
           pageSize: 10,
         },
         searchInfo: {
-          roleId: toRef(formData, 'roleId'),
+          roleId: toRef(formData, 'employeeId'),
         },
         canResize: false,
         bordered: true,
@@ -119,9 +119,9 @@
         setModalProps({ confirmLoading: false });
 
         // 赋值
-        formData.roleId = data?.id;
-        if (formData.roleId) {
-          formData.bindEmployeeIds = await findEmployeeIdByRoleId(formData.roleId);
+        formData.employeeId = data?.id;
+        if (formData.employeeId) {
+          formData.bindRoleIds = await findEmployeeRoleByEmployeeId(formData.employeeId);
         } else {
           createMessage.warn('请选择角色');
         }
@@ -129,13 +129,13 @@
 
       function handleSuccess() {}
 
-      async function bindUser(flag: boolean, employeeIdList: string[]) {
+      async function bindRole(flag: boolean, roleIdList: string[]) {
         try {
           openWrapLoading();
-          formData.bindEmployeeIds = await saveRoleEmployee({
+          formData.bindRoleIds = await saveEmployeeRole({
             flag,
-            employeeIdList,
-            roleId: formData.roleId,
+            roleIdList,
+            employeeId: formData.employeeId,
           });
           createMessage.success('操作成功');
           handleSuccess();
@@ -154,16 +154,16 @@
         }
       }
 
-      function handleBindUser(record: Recordable, e: Event) {
+      function handleBindRole(record: Recordable, e: Event) {
         e?.stopPropagation();
         if (record?.id) {
-          bindUser(true, [record.id]);
+          bindRole(true, [record.id]);
         }
       }
-      function handleUnBindUser(record: Recordable, e: Event) {
+      function handleUnBindRole(record: Recordable, e: Event) {
         e?.stopPropagation();
         if (record?.id) {
-          bindUser(false, [record.id]);
+          bindRole(false, [record.id]);
         }
       }
 
@@ -175,9 +175,9 @@
         }
         createConfirm({
           iconType: 'warning',
-          content: '确认要批量绑定选中的员工吗?',
+          content: '确认要批量绑定选中的角色吗?',
           onOk: async () => {
-            await bindUser(false, ids);
+            await bindRole(false, ids);
           },
         });
       }
@@ -190,9 +190,9 @@
         }
         createConfirm({
           iconType: 'warning',
-          content: '确认要批量解绑选中的员工吗?',
+          content: '确认要批量解绑选中的角色吗?',
           onOk: async () => {
-            await bindUser(true, ids);
+            await bindRole(true, ids);
           },
         });
       }
@@ -203,8 +203,8 @@
         wrapEl,
         registerModal,
         registerTable,
-        handleBindUser,
-        handleUnBindUser,
+        handleBindRole,
+        handleUnBindRole,
         handleSubmit,
         handleBatchCancel,
         handleBatchChoice,

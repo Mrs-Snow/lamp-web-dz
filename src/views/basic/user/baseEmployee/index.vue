@@ -39,6 +39,12 @@
               onClick: handleView.bind(null, record),
               auth: RoleEnum.EMPLOYEE_VIEW,
             },
+            {
+              label: '绑定角色',
+              icon: 'ant-design:search-outlined',
+              onClick: handleBindRole.bind(null, record),
+              auth: RoleEnum.EMPLOYEE_VIEW,
+            },
           ]"
           :dropDownActions="[
             {
@@ -68,6 +74,7 @@
       </template>
     </BasicTable>
     <EditModal @register="registerDrawer" @success="handleSuccess" />
+    <EmployeeRole @register="registerModal" @success="handleSuccess" />
   </PageWrapper>
 </template>
 <script lang="ts">
@@ -79,21 +86,25 @@
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
   import { PageWrapper } from '/@/components/Page';
   import { useDrawer } from '/@/components/Drawer';
+  import { useModal } from '/@/components/Modal';
   import { handleFetchParams } from '/@/utils/lamp/common';
   import { ActionEnum } from '/@/enums/commonEnum';
   import { page, remove } from '/@/api/basic/user/baseEmployee';
+  import EmployeeRole from './employeeRole/index.vue';
   import { columns, searchFormSchema } from './baseEmployee.data';
   import EditModal from './Edit.vue';
 
   export default defineComponent({
     // 若需要开启页面缓存，请将此参数跟菜单名保持一致
     name: 'BaseEmployeeManagement',
-    components: { BasicTable, PageWrapper, EditModal, TableAction, Tag },
+    components: { BasicTable, PageWrapper, EditModal, TableAction, Tag, EmployeeRole },
     setup() {
       const { t } = useI18n();
       const { createMessage, createConfirm } = useMessage();
       // 编辑页弹窗
       const [registerDrawer, { openDrawer }] = useDrawer();
+      // 绑定角色
+      const [registerModal, { openModal }] = useModal();
 
       // 表格
       const [registerTable, { reload, getSelectRowKeys }] = useTable({
@@ -127,7 +138,7 @@
           '3. 可以使用用户名、手机、邮箱、身份证登录',
         ],
         actionColumn: {
-          width: 120,
+          width: 220,
           title: t('common.column.action'),
           dataIndex: 'action',
           slots: { customRender: 'action' },
@@ -166,6 +177,12 @@
           record,
           type: ActionEnum.EDIT,
         });
+      }
+
+      // 弹出绑定角色页面
+      function handleBindRole(record: Recordable, e: Event) {
+        e?.stopPropagation();
+        openModal(true, record);
       }
 
       // 新增或编辑成功回调
@@ -209,6 +226,7 @@
         t,
         registerTable,
         registerDrawer,
+        registerModal,
         handleView,
         handleAdd,
         handleCopy,
@@ -216,6 +234,7 @@
         handleDelete,
         handleSuccess,
         handleBatchDelete,
+        handleBindRole,
         RoleEnum,
       };
     },

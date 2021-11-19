@@ -53,6 +53,10 @@ export const Api = {
     url: `${ServicePrefixEnum.TENANT}/${MODULAR}/findNotUserByTenantId`,
     method: RequestEnum.POST,
   },
+  PageUser: {
+    url: `${ServicePrefixEnum.TENANT}/${MODULAR}/pageUser`,
+    method: RequestEnum.POST,
+  },
 };
 
 export const page = (params: PageParams<DefUserPageQuery>) =>
@@ -83,3 +87,6 @@ export const checkMobile = (mobile: string, id?: string) =>
 
 export const findNotUserByTenantId = (params: PageParams<DefUserPageQuery>) =>
   defHttp.request<PageResult<DefUserResultVO>>({ ...Api.FindNotUserByTenantId, params });
+
+export const pageUser = (params: PageParams<DefUserPageQuery>) =>
+  defHttp.request<PageResult<DefUserResultVO>>({ ...Api.PageUser, params });
