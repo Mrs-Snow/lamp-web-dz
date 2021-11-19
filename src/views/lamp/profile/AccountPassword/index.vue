@@ -38,13 +38,10 @@
       });
 
       const [registerModal, { setModalProps, closeModal }] = useModalInner(async (_) => {
-        debugger;
         await resetFields();
         setModalProps({ confirmLoading: false });
 
-        let validateApi = Api.UpdatePassword;
-
-        getValidateRules(validateApi).then((rules) => {
+        getValidateRules(Api.UpdatePassword).then((rules) => {
           rules && rules.length > 0 && updateSchema(rules);
         });
       });

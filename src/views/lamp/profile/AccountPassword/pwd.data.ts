@@ -36,7 +36,7 @@ export const formSchema: FormSchema[] = [
           required: true,
           validator: (_, value) => {
             if (!value) {
-              return Promise.reject('不能为空');
+              return Promise.reject('确认密码不能为空');
             }
             if (value !== values.password) {
               return Promise.reject('两次输入的密码不一致!');
