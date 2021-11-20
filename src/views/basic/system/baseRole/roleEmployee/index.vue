@@ -23,14 +23,14 @@
                 label: '绑定',
                 onClick: handleBindUser.bind(null, record),
                 ifShow: () => {
-                  return formData.roleId && !formData.bindEmployeeIds.includes(record.id);
+                  return !isEmpty(formData.roleId) && !formData.bindEmployeeIds.includes(record.id);
                 },
               },
               {
                 label: '取消绑定',
                 onClick: handleUnBindUser.bind(null, record),
                 ifShow: () => {
-                  return formData.roleId && formData.bindEmployeeIds.includes(record.id);
+                  return !isEmpty(formData.roleId) && formData.bindEmployeeIds.includes(record.id);
                 },
               },
             ]"
@@ -51,6 +51,7 @@
   import { findEmployeeIdByRoleId, saveRoleEmployee } from '/@/api/basic/system/baseRole';
   import { roleEmployeeColumns, roleEmployeeSearchFormSchema } from '../baseRole.data';
   import { handleFetchParams } from '/@/utils/lamp/common';
+  import { isEmpty } from '/@/utils/is';
 
   export default defineComponent({
     name: 'RoleEmployeeIndex',
@@ -200,6 +201,7 @@
       return {
         formData,
         t,
+        isEmpty,
         wrapEl,
         registerModal,
         registerTable,

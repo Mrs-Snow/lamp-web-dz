@@ -6,6 +6,7 @@
     width="70%"
     :keyboard="true"
     :maskClosable="true"
+    :defaultFullscreen="true"
     title="绑定角色"
     @ok="handleSubmit"
   >
@@ -22,14 +23,14 @@
                 label: '绑定',
                 onClick: handleBindRole.bind(null, record),
                 ifShow: () => {
-                  return formData.employeeId && !formData.bindRoleIds.includes(record.id);
+                  return !isEmpty(formData.employeeId) && !formData.bindRoleIds.includes(record.id);
                 },
               },
               {
                 label: '取消绑定',
                 onClick: handleUnBindRole.bind(null, record),
                 ifShow: () => {
-                  return formData.employeeId && formData.bindRoleIds.includes(record.id);
+                  return !isEmpty(formData.employeeId) && formData.bindRoleIds.includes(record.id);
                 },
               },
             ]"
@@ -50,6 +51,7 @@
   import { findEmployeeRoleByEmployeeId, saveEmployeeRole } from '/@/api/basic/user/baseEmployee';
   import { employeeRoleColumns, employeeRoleSearchFormSchema } from '../baseEmployee.data';
   import { handleFetchParams } from '/@/utils/lamp/common';
+  import { isEmpty } from '/@/utils/is';
 
   export default defineComponent({
     name: 'EmployeeRoleIndex',
@@ -98,7 +100,7 @@
           pageSize: 10,
         },
         searchInfo: {
-          roleId: toRef(formData, 'employeeId'),
+          employeeId: toRef(formData, 'employeeId'),
         },
         canResize: false,
         bordered: true,
@@ -201,6 +203,7 @@
         formData,
         t,
         wrapEl,
+        isEmpty,
         registerModal,
         registerTable,
         handleBindRole,

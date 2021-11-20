@@ -1,4 +1,5 @@
 import { Ref, unref } from 'vue';
+import { Tag } from 'ant-design-vue';
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { ActionEnum, DictEnum } from '/@/enums/commonEnum';
@@ -469,7 +470,6 @@ export const employeeRoleColumns = (): BasicColumn[] => {
     {
       title: t('basic.system.baseRole.code'),
       dataIndex: 'code',
-      width: 180,
     },
     {
       title: t('basic.system.baseRole.name'),
@@ -479,8 +479,11 @@ export const employeeRoleColumns = (): BasicColumn[] => {
     {
       title: t('basic.system.baseRole.state'),
       dataIndex: 'state',
-      format: (text) => {
-        return text ? t('lamp.common.enable') : t('lamp.common.disable');
+      width: 100,
+      customRender: ({ record }) => {
+        const text = record.state ? t('lamp.common.enable') : t('lamp.common.disable');
+        const color = record.state ? 'success' : 'error';
+        return <Tag color={color}>{text}</Tag>;
       },
     },
   ];
