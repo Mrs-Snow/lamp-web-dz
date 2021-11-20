@@ -14,6 +14,12 @@
         <TableAction
           :actions="[
             {
+              icon: 'ant-design:search-outlined',
+              tooltip: '查看',
+              onClick: handleView.bind(null, record),
+              auth: RoleEnum.TENANT_TENANT_VIEW,
+            },
+            {
               icon: 'ant-design:audit-outlined',
               tooltip: '审核',
               onClick: handleToExamine.bind(null, record),
@@ -80,6 +86,7 @@
 </template>
 <script lang="ts">
   import { defineComponent } from 'vue';
+  import { useRouter } from 'vue-router';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
@@ -88,7 +95,7 @@
   import { useModal } from '/@/components/Modal';
   import { handleFetchParams } from '/@/utils/lamp/common';
   import { ActionEnum } from '/@/enums/commonEnum';
-  import { TenantStatusEnum } from '/@/enums/biz/tenant';
+  import { RouteEnum, TenantStatusEnum } from '/@/enums/biz/tenant';
   import { page, remove } from '/@/api/devOperation/tenant/tenant';
   import { columns, searchFormSchema } from './tenant.data';
   import { RoleEnum } from '/@/enums/roleEnum';
@@ -117,7 +124,7 @@
       const [registerToExamineModal, { openModal: openToExamineModal }] = useModal();
       const [registerLinkDrawer, { openDrawer: openLinkDrawer }] = useDrawer();
       const [registerInitDrawer, { openDrawer: openInitDrawer }] = useDrawer();
-
+      const { replace } = useRouter();
       const { createMessage } = useMessage();
 
       const [registerTable, { reload }] = useTable({
@@ -154,7 +161,7 @@
           type: 'checkbox',
         },
         actionColumn: {
-          width: 200,
+          width: 220,
           title: t('common.column.action'),
           dataIndex: 'action',
           slots: { customRender: 'action' },
@@ -171,6 +178,12 @@
       function handleAdd() {
         openDrawer(true, {
           type: ActionEnum.ADD,
+        });
+      }
+      function handleView(record: Recordable) {
+        replace({
+          name: RouteEnum.TENANT_VIEW,
+          params: { id: record.id },
         });
       }
 
@@ -213,6 +226,7 @@
         registerLinkDrawer,
         registerToExamineModal,
         handleAdd,
+        handleView,
         handleEdit,
         handleDelete,
         handleSuccess,

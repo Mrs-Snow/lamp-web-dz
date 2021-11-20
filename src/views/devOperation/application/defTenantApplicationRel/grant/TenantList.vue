@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white m-4 mr-2 overflow-hidden">
+  <div class="m-4 mr-2 overflow-hidden bg-white">
     <BasicTable
       @register="registerTable"
       :rowSelection="{
@@ -25,7 +25,8 @@
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent, ref } from 'vue';
+  import { defineComponent, onMounted, ref } from 'vue';
+  import { useRouter } from 'vue-router';
   import { Alert } from 'ant-design-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { BasicTable, useTable } from '/@/components/Table';
@@ -42,17 +43,27 @@
     emits: ['select'],
     setup(_) {
       const { t } = useI18n();
+      const { currentRoute } = useRouter();
       const checkedKeys = ref<Array<string | number>>([]);
-      const [registerTable, { getForm }] = useTable({
+      const tenantId = ref<string>('');
+      const [registerTable, { getForm, reload }] = useTable({
         title: t('devOperation.tenant.defTenant.table.title'),
         api: page,
         columns: getTenantColumns(),
         beforeFetch: handleFetchParams,
+        immediate: false,
         searchInfo: {
           status: TenantStatusEnum.NORMAL,
+          id: tenantId,
         },
         showIndexColumn: false,
         rowKey: 'id',
+      });
+
+      onMounted(() => {
+        const { query } = currentRoute.value;
+        tenantId.value = query.tenantId as string;
+        reload();
       });
 
       function onSelectChange(selectedRowKeys: (string | number)[]) {

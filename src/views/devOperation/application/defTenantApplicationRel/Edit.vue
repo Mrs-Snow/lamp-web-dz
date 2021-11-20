@@ -18,6 +18,9 @@
           :expandedKeys="checkedKeys"
           checkable
           checkStrictly
+          toolbar
+          search
+          highlight
         />
       </template>
     </BasicForm>
@@ -31,6 +34,7 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { ActionEnum } from '/@/enums/commonEnum';
+  import { isArray } from '/@/utils/is';
   import { Api, renewal, detail } from '/@/api/devOperation/application/defTenantApplicationRel';
   import { getValidateRules } from '/@/api/lamp/common/formValidateService';
   import { customFormSchemaRules, editFormSchema } from './defTenantApplicationRel.data';
@@ -80,6 +84,12 @@
         try {
           const params = await validate();
           setDrawerProps({ confirmLoading: true });
+
+          const checkedKeys = params.resourceIdList;
+          const resourceIdList = (
+            isArray(checkedKeys) ? checkedKeys : checkedKeys?.checked
+          ) as string[];
+          params.resourceIdList = resourceIdList;
           await renewal(params);
 
           createMessage.success('续期成功');

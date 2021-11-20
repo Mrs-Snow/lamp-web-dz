@@ -35,6 +35,7 @@ export const Api = {
     url: `${ServicePrefixEnum.TENANT}/${MODULAR}/query`,
     method: RequestEnum.POST,
   } as AxiosRequestConfig,
+
   UpdateState: {
     url: `${ServicePrefixEnum.TENANT}/${MODULAR}/updateState`,
     method: RequestEnum.POST,
@@ -49,6 +50,12 @@ export const Api = {
   Check: function (code: string) {
     return {
       url: `${ServicePrefixEnum.TENANT}/${MODULAR}/check/${code}`,
+      method: RequestEnum.GET,
+    } as AxiosRequestConfig;
+  },
+  Get: function (id: string) {
+    return {
+      url: `${ServicePrefixEnum.TENANT}/${MODULAR}/${id}`,
       method: RequestEnum.GET,
     } as AxiosRequestConfig;
   },
@@ -80,6 +87,8 @@ export const page = (params: PageParams<TenantPageQuery>) =>
 
 export const query = (params: TenantPageQuery) =>
   defHttp.request<Tenant[]>({ ...Api.Query, params });
+
+export const get = (id: string) => defHttp.request<Tenant>({ ...Api.Get(id) });
 
 export const save = (params: TenantSaveDTO) => defHttp.request<Tenant>({ ...Api.Save, params });
 

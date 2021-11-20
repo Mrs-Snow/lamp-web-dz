@@ -107,6 +107,8 @@ export interface Tenant {
 
   employeeState: boolean;
   isDefault: boolean;
+  logos?: AppendixSaveVO[];
+  area?: string[];
 }
 
 export interface DefTenantInitVO {

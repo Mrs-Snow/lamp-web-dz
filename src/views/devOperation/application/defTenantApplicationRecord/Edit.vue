@@ -8,46 +8,31 @@
     :title="t(`common.title.${type}`)"
     @ok="handleSubmit"
   >
-    <BasicForm @register="registerForm"
-      ><template #resourceIdList="{ model, field }">
-        <BasicTree
-          v-model:value="model[field]"
-          :treeData="treeData"
-          :replaceFields="{ title: 'name', key: 'id' }"
-          :checkedKeys="checkedKeys"
-          :expandedKeys="checkedKeys"
-          checkable
-          checkStrictly
-        />
-      </template>
-    </BasicForm>
+    <BasicForm @register="registerForm" />
   </BasicDrawer>
 </template>
 <script lang="ts">
   import { defineComponent, ref } from 'vue';
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
-  import { BasicTree, TreeItem } from '/@/components/Tree';
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { ActionEnum } from '/@/enums/commonEnum';
-  import { detail } from '/@/api/devOperation/application/defTenantApplicationRel';
   import { editFormSchema } from './defTenantApplicationRecord.data';
 
   export default defineComponent({
     name: 'DefTenantApplicationRecordEdit',
-    components: { BasicDrawer, BasicForm, BasicTree },
+    components: { BasicDrawer, BasicForm },
     emits: ['success', 'register'],
     setup(_, { emit }) {
       const { t } = useI18n();
       const type = ref<ActionEnum>(ActionEnum.VIEW);
       const { createMessage } = useMessage();
-      const treeData = ref<TreeItem[]>([]);
-      const checkedKeys = ref<string[]>([]);
       const [registerForm, { setFieldsValue, resetFields }] = useForm({
         labelWidth: 100,
         schemas: editFormSchema(type),
         showActionButtonGroup: false,
+        readonly: true,
         actionColOptions: {
           span: 23,
         },
@@ -59,11 +44,6 @@
           await resetFields();
           type.value = data?.type;
 
-          // 赋值
-          const result = await detail(data?.record.tenantApplicationRelId);
-
-          treeData.value = result.resourceList as TreeItem[];
-          checkedKeys.value = result.checkedList as string[];
           await setFieldsValue({ ...data?.record });
         } finally {
           setDrawerProps({ confirmLoading: false });
@@ -82,7 +62,7 @@
         }
       }
 
-      return { t, registerDrawer, registerForm, type, handleSubmit, treeData, checkedKeys };
+      return { t, registerDrawer, registerForm, type, handleSubmit };
     },
   });
 </script>

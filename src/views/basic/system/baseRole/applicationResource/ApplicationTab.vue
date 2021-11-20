@@ -20,6 +20,10 @@
       ref="treeRef"
       @check="checkNode"
       @change="changeHandler"
+      toolbar
+      :toolbarStrictly="false"
+      search
+      highlight
     >
       <template #title="item">
         <TreeIcon :icon="item.icon" v-if="item.icon" />

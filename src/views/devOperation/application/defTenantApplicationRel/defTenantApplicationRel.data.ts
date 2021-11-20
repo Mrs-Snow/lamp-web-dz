@@ -44,11 +44,6 @@ export const columns = (): BasicColumn[] => {
 export const getTenantColumns = (): BasicColumn[] => {
   return [
     {
-      title: t('devOperation.tenant.defTenant.code'),
-      dataIndex: 'code',
-      // width: 180,
-    },
-    {
       title: t('devOperation.tenant.defTenant.name'),
       dataIndex: 'name',
       // width: 180,

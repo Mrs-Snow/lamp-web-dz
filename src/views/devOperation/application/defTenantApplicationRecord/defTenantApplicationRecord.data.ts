@@ -107,43 +107,30 @@ export const editFormSchema = (_): FormSchema[] => {
       label: t('devOperation.application.defTenantApplicationRecord.tenantId'),
       field: 'tenantId',
       component: 'Input',
-      dynamicDisabled: true,
     },
     {
       label: t('devOperation.application.defTenantApplicationRecord.applicationId'),
       field: 'applicationId',
       component: 'Input',
-      dynamicDisabled: true,
     },
     {
       label: t('devOperation.application.defTenantApplicationRecord.applicationName'),
       field: 'applicationName',
       component: 'Input',
-      dynamicDisabled: true,
     },
     {
       label: t('devOperation.application.defTenantApplicationRecord.tenantName'),
       field: 'tenantName',
       component: 'Input',
-      dynamicDisabled: true,
     },
     {
       label: t('devOperation.application.defTenantApplicationRecord.operateByName'),
       field: 'operateByName',
       component: 'Input',
-      dynamicDisabled: true,
     },
     {
       label: t('devOperation.application.defTenantApplicationRecord.grantType'),
       field: 'grantType',
-      component: 'Input',
-      dynamicDisabled: true,
-    },
-
-    {
-      label: '分配的资源',
-      field: 'resourceIdList',
-      slot: 'resourceIdList',
       component: 'Input',
     },
   ];

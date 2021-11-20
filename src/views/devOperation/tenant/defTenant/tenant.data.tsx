@@ -1,6 +1,7 @@
 import { Ref, h } from 'vue';
 import moment, { Moment } from 'moment';
 import { BasicColumn, FormSchema } from '/@/components/Table';
+import { DescItem } from '/@/components/Description/index';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { useGlobSetting } from '/@/hooks/setting';
 import { ActionEnum, FileBizTypeEnum } from '/@/enums/commonEnum';
@@ -311,6 +312,124 @@ export const editFormSchema = (_: Ref<ActionEnum>): FormSchema[] => {
     },
   ];
 };
+
+// 查看页面表单字段
+export const viewFormSchema = (): DescItem[] => {
+  return [
+    {
+      field: 'name',
+      label: t('devOperation.tenant.defTenant.name'),
+    },
+    {
+      field: 'abbreviation',
+      label: t('devOperation.tenant.defTenant.abbreviation'),
+    },
+    {
+      field: 'expirationTime',
+      label: t('devOperation.tenant.defTenant.expirationTime'),
+    },
+
+    {
+      field: 'logos',
+      label: t('devOperation.tenant.defTenant.logo'),
+    },
+
+    {
+      field: 'contactPerson',
+      label: t('devOperation.tenant.defTenant.contactPerson'),
+    },
+
+    {
+      field: 'contactPhone',
+      label: t('devOperation.tenant.defTenant.contactPhone'),
+    },
+    {
+      field: 'contactEmail',
+      label: t('devOperation.tenant.defTenant.contactEmail'),
+    },
+    {
+      field: 'divider-selects3',
+
+      label: '地区信息',
+    },
+    {
+      field: 'area',
+      label: '地区',
+    },
+    {
+      field: 'address',
+      label: t('devOperation.tenant.defTenant.address'),
+    },
+
+    {
+      field: 'creditCode',
+      label: t('devOperation.tenant.defTenant.creditCode'),
+    },
+    {
+      field: 'createdName',
+      label: t('devOperation.tenant.defTenant.createdName'),
+    },
+    {
+      field: 'describe',
+      label: t('devOperation.tenant.defTenant.describe'),
+    },
+  ];
+};
+
+export const viewFormSchema2: DescItem[] = [
+  {
+    field: 'name',
+    label: t('devOperation.tenant.defTenant.name'),
+  },
+  {
+    field: 'abbreviation',
+    label: t('devOperation.tenant.defTenant.abbreviation'),
+  },
+  {
+    field: 'expirationTime',
+    label: t('devOperation.tenant.defTenant.expirationTime'),
+  },
+
+  {
+    field: 'logos',
+    label: t('devOperation.tenant.defTenant.logo'),
+  },
+
+  {
+    field: 'contactPerson',
+    label: t('devOperation.tenant.defTenant.contactPerson'),
+  },
+
+  {
+    field: 'contactPhone',
+    label: t('devOperation.tenant.defTenant.contactPhone'),
+  },
+  {
+    field: 'contactEmail',
+    label: t('devOperation.tenant.defTenant.contactEmail'),
+  },
+  {
+    field: 'area',
+    label: '地区',
+  },
+  {
+    field: 'address',
+    label: t('devOperation.tenant.defTenant.address'),
+  },
+
+  {
+    field: 'creditCode',
+    label: t('devOperation.tenant.defTenant.creditCode'),
+  },
+  {
+    field: 'createdName',
+    label: t('devOperation.tenant.defTenant.createdName'),
+  },
+  {
+    field: 'describe',
+    label: t('devOperation.tenant.defTenant.describe'),
+  },
+];
 
 // 额外的新增、编辑表单验证规则
 export const customFormSchemaRules = (_: Ref<ActionEnum>): Partial<FormSchemaExt>[] => {
