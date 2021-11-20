@@ -6,3 +6,7 @@ export enum LogTypeEnum {
   OPT = 'OPT',
   EX = 'EX',
 }
+export enum DataTypeEnum {
+  SYSTEM = '10',
+  BUSINESS = '20',
+}

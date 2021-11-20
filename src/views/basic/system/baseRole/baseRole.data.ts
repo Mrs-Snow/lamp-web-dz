@@ -5,6 +5,7 @@ import { stateComponentProps } from '/@/utils/lamp/common';
 import { ActionEnum } from '/@/enums/commonEnum';
 import { FormSchemaExt } from '/@/api/lamp/common/formValidateService';
 import { tree } from '/@/api/basic/user/baseOrg';
+import { DataTypeEnum } from '/@/enums/biz/base';
 
 const { t } = useI18n();
 // 列表页字段
@@ -39,19 +40,25 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       show: false,
     },
     {
+      field: 'type',
+      label: 'type',
+      component: 'Input',
+      show: false,
+    },
+    {
       label: t('basic.system.baseRole.code'),
       field: 'code',
       component: 'Input',
-      dynamicDisabled: () => {
-        return [ActionEnum.VIEW].includes(type.value);
+      dynamicDisabled: ({ model }) => {
+        return DataTypeEnum.SYSTEM === model.type || [ActionEnum.VIEW].includes(type.value);
       },
     },
     {
       label: t('basic.system.baseRole.name'),
       field: 'name',
       component: 'Input',
-      dynamicDisabled: () => {
-        return [ActionEnum.VIEW].includes(type.value);
+      dynamicDisabled: ({ model }) => {
+        return DataTypeEnum.SYSTEM === model.type || [ActionEnum.VIEW].includes(type.value);
       },
     },
     {

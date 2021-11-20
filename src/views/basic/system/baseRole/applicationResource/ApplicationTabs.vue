@@ -4,7 +4,7 @@
       <template #extra>
         <a-button
           class="!ml-4"
-          v-if="formData.roleId"
+          v-if="showSaveBtn"
           type="primary"
           @click="handleSubmit"
           :loading="confirmLoading"
@@ -12,6 +12,7 @@
         >
           {{ t('common.saveText') }}
         </a-button>
+        <span v-else>系统角色拥有全部权限</span>
       </template>
 
       <ApplicationTab
@@ -37,6 +38,7 @@
   import { BaseRoleResourceRelSaveVO } from '/@/api/basic/system/model/baseRoleModel';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { RoleEnum } from '/@/enums/roleEnum';
+  import { DataTypeEnum } from '/@/enums/biz/base';
   export default defineComponent({
     name: 'ApplicationResourceTabs',
     components: {
@@ -61,6 +63,7 @@
         title: '请选择角色',
         confirmLoading: false,
         appResMap: {},
+        showSaveBtn: false,
       });
 
       onMounted(async () => {
@@ -88,6 +91,7 @@
 
       async function fetch(role: Recordable) {
         if (role && role.id) {
+          state.showSaveBtn = DataTypeEnum.SYSTEM !== role.type;
           if (formData.roleId !== (role?.id as string)) {
             state.title = `【${role.name}】拥有的应用资源`;
             formData.roleId = role.id;
@@ -97,6 +101,7 @@
         } else {
           state.title = '请选择角色';
           formData.roleId = '';
+          state.showSaveBtn = false;
           const appResourceMap = {};
           for (const item of state.applicationResourceList) {
             appResourceMap[item.defApplication.id] = [];
@@ -109,7 +114,7 @@
         try {
           state.confirmLoading = true;
           const params = getData();
-          if (params.roleId) {
+          if (state.showSaveBtn) {
             await saveRoleResource(params);
 
             createMessage.success('配置成功');
