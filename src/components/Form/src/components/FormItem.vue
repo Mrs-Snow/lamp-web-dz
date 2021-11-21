@@ -87,9 +87,16 @@
       });
 
       const getDisable = computed(() => {
-        const { disabled: globDisabled } = props.formProps;
+        const { disabled: dynamicGlobDisabled } = props.formProps;
         const { dynamicDisabled } = props.schema;
         const { disabled: itemDisabled = false } = unref(getComponentsProps);
+        let globDisabled = false;
+        if (isBoolean(dynamicGlobDisabled)) {
+          globDisabled = dynamicGlobDisabled;
+        } else if (isFunction(dynamicGlobDisabled)) {
+          globDisabled = dynamicGlobDisabled(unref(getValues));
+        }
+
         let disabled = !!globDisabled || itemDisabled;
         if (isBoolean(dynamicDisabled)) {
           disabled = dynamicDisabled;
@@ -101,9 +108,16 @@
       });
 
       const getReadonly = computed(() => {
-        const { readonly: globReadonly } = props.formProps;
+        const { readonly: dynamicGlobReadonly } = props.formProps;
         const { dynamicReadonly } = props.schema;
         const { readonly: itemReadonly = false } = unref(getComponentsProps);
+        let globReadonly = false;
+        if (isBoolean(dynamicGlobReadonly)) {
+          globReadonly = dynamicGlobReadonly;
+        } else if (isFunction(dynamicGlobReadonly)) {
+          globReadonly = dynamicGlobReadonly(unref(getValues));
+        }
+
         let readonly = !!globReadonly || itemReadonly;
         if (isBoolean(dynamicReadonly)) {
           readonly = dynamicReadonly;

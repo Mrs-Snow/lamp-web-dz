@@ -82,9 +82,9 @@ export interface FormProps {
   // Internal component size of the form
   size?: 'default' | 'small' | 'large';
   // Whether to disable
-  disabled?: boolean;
+  disabled?: boolean | ((renderCallbackParams: RenderCallbackParams) => boolean);
   // Whether to readonly
-  readonly?: boolean;
+  readonly?: boolean | ((renderCallbackParams: RenderCallbackParams) => boolean);
   // Time interval fields are mapped into multiple
   fieldMapToTime?: FieldMapToTime;
   // Placeholder is set automatically
