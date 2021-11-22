@@ -93,7 +93,7 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
         span: 12,
       },
       dynamicDisabled: () => {
-        return type.value === ActionEnum.EDIT;
+        return [ActionEnum.EDIT, ActionEnum.VIEW].includes(type.value);
       },
     },
     {
@@ -266,9 +266,12 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
         },
         options: [{ value: 'LAYOUT' }, { value: 'IFRAME' }],
       },
+
       dynamicDisabled: ({ values }) => {
-        return [ResourceOpenWithEnum.INNER_CHAIN, ResourceOpenWithEnum.OUTER_CHAIN].includes(
-          values.openWith,
+        return (
+          [ResourceOpenWithEnum.INNER_CHAIN, ResourceOpenWithEnum.OUTER_CHAIN].includes(
+            values.openWith,
+          ) || [ActionEnum.VIEW].includes(type.value)
         );
       },
       ifShow: ({ values }) => {

@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white m-4 ml-2 overflow-hidden">
+  <div class="m-4 ml-2 overflow-hidden bg-white">
     <a-card :title="title" :bordered="false">
       <template #extra>
         <div class="flex justify-center" v-if="type !== ActionEnum.VIEW">
@@ -58,6 +58,9 @@
         labelWidth: 110,
         showActionButtonGroup: false,
         schemas: editFormSchema(type),
+        disabled: () => {
+          return unref(type) === ActionEnum.VIEW;
+        },
       });
 
       // 提交
