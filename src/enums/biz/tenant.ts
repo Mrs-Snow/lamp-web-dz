@@ -39,6 +39,13 @@ export enum ResourceOpenWithEnum {
   OUTER_CHAIN = '03',
 }
 
+// 10-应用授权 20-应用续期 30-取消授权
+export enum ApplicationGrantTypeEnum {
+  GRANT = '10',
+  RENEWAL = '20',
+  CANCEL = '30',
+}
+
 export enum RouteEnum {
   DICT_ITEM = '字典项维护',
   APPLICATION_RESOURCE = '应用资源维护',

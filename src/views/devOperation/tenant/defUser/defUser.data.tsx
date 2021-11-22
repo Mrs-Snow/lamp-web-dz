@@ -1,6 +1,8 @@
-import { Ref, unref } from 'vue';
+import { Ref, h, unref } from 'vue';
+import { Switch } from 'ant-design-vue';
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
+import { useMessage } from '/@/hooks/web/useMessage';
 import {
   dictComponentProps,
   stateComponentProps,
@@ -14,9 +16,12 @@ import {
   checkEmail,
   checkIdCard,
   checkMobile,
+  updateState,
 } from '/@/api/devOperation/tenant/defUser';
 
 const { t } = useI18n();
+const { createMessage } = useMessage();
+
 // 列表页字段
 export const columns = (): BasicColumn[] => {
   return [
@@ -51,8 +56,31 @@ export const columns = (): BasicColumn[] => {
       width: 80,
       filters: [...stateFilters()],
       filterMultiple: false,
-      format: (text) => {
-        return text ? t('lamp.common.enable') : t('lamp.common.disable');
+      customRender: ({ record }) => {
+        if (!Reflect.has(record, 'pendingStatus')) {
+          record.pendingStatus = false;
+        }
+        return h(Switch, {
+          checked: record.state,
+          checkedChildren: t('lamp.common.enable'),
+          unCheckedChildren: t('lamp.common.disable'),
+          loading: record.pendingStatus,
+          onChange(checked: boolean) {
+            record.pendingStatus = true;
+            const newState = checked;
+            updateState(record.id, newState)
+              .then(() => {
+                record.state = newState;
+                createMessage.success(t(`common.tips.editSuccess`));
+              })
+              .catch(() => {
+                createMessage.success(t(`common.tips.editFail`));
+              })
+              .finally(() => {
+                record.pendingStatus = false;
+              });
+          },
+        });
       },
     },
     {

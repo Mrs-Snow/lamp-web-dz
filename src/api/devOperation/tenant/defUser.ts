@@ -7,7 +7,7 @@ import {
 } from './model/defUserModel';
 import { PageParams, PageResult } from '/@/api/model/baseModel';
 import { defHttp } from '/@/utils/http/axios';
-import { RequestEnum } from '/@/enums/httpEnum';
+import { ContentTypeEnum, RequestEnum } from '/@/enums/httpEnum';
 import { ServicePrefixEnum } from '/@/enums/commonEnum';
 import type { AxiosRequestConfig } from 'axios';
 
@@ -62,6 +62,10 @@ export const Api = {
     url: `${ServicePrefixEnum.TENANT}/${MODULAR}/resetPassword`,
     method: RequestEnum.PUT,
   },
+  UpdateState: {
+    url: `${ServicePrefixEnum.TENANT}/${MODULAR}/updateState`,
+    method: RequestEnum.PUT,
+  },
 };
 
 export const page = (params: PageParams<DefUserPageQuery>) =>
@@ -75,6 +79,13 @@ export const save = (params: DefUserSaveVO) =>
 
 export const update = (params: DefUserUpdateVO) =>
   defHttp.request<DefUserResultVO>({ ...Api.Update, params });
+
+export const updateState = (id: string, state: boolean) =>
+  defHttp.request<boolean>({
+    ...Api.UpdateState,
+    params: { id, state },
+    headers: { 'Content-Type': ContentTypeEnum.FORM_URLENCODED },
+  });
 
 export const resetPassword = (params: DefUserPasswordResetVO) =>
   defHttp.request<boolean>({ ...Api.ResetPassword, params });

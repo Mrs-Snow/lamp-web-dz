@@ -15,15 +15,19 @@ import { lazyList } from '/@/api/devOperation/system/defArea';
 import { stateFilters } from '/@/utils/lamp/common';
 
 const { t } = useI18n();
+const { createMessage } = useMessage();
 const globSetting = useGlobSetting();
+
+const statusMap = new Map();
+statusMap.set(TenantStatusEnum.NORMAL, 'success');
+statusMap.set(TenantStatusEnum.WAIT_INIT, 'processing');
+statusMap.set(TenantStatusEnum.WITHDRAW, 'default');
+statusMap.set(TenantStatusEnum.WAITING, 'processing');
+statusMap.set(TenantStatusEnum.REFUSE, 'error');
+statusMap.set(TenantStatusEnum.AGREED, 'warning');
 
 // 列表页字段
 export const columns: BasicColumn[] = [
-  // {
-  //   title: t('devOperation.tenant.defTenant.code'),
-  //   dataIndex: 'code',
-  //   width: 180,
-  // },
   {
     title: t('devOperation.tenant.defTenant.name'),
     dataIndex: 'name',
@@ -48,7 +52,6 @@ export const columns: BasicColumn[] = [
         loading: record.pendingStatus,
         onChange(checked: boolean) {
           record.pendingStatus = true;
-          const { createMessage } = useMessage();
           const newState = checked;
           updateState(record.id, newState)
             .then(() => {
@@ -70,30 +73,7 @@ export const columns: BasicColumn[] = [
     dataIndex: 'status',
     width: 120,
     customRender: ({ record }) => {
-      let status: 'success' | 'processing' | 'error' | 'default' | 'warning' = 'success';
-      switch (record.status) {
-        case TenantStatusEnum.NORMAL: // 正常
-          status = 'success';
-          break;
-        case TenantStatusEnum.WAIT_INIT: //待初始化
-          status = 'processing';
-          break;
-        case TenantStatusEnum.WITHDRAW: // 已撤回
-          status = 'default';
-          break;
-        case TenantStatusEnum.WAITING: // 待审核
-          status = 'processing';
-          break;
-        case TenantStatusEnum.REFUSE: // 拒绝
-          status = 'error';
-          break;
-        case TenantStatusEnum.AGREED: // 已删除
-          status = 'warning';
-          break;
-        default:
-          status = 'success';
-          break;
-      }
+      const status = statusMap.get(record.status);
       return <Badge status={status} text={record.echoMap?.status} />;
     },
   },
@@ -131,11 +111,6 @@ export const columns: BasicColumn[] = [
 
 // 列表页搜索表单字段
 export const searchFormSchema: FormSchema[] = [
-  // {
-  //   field: 'code',
-  //   label: t('devOperation.tenant.defTenant.code'),
-  //   component: 'Input',
-  // },
   {
     field: 'name',
     label: t('devOperation.tenant.defTenant.name'),
@@ -163,17 +138,6 @@ export const editFormSchema = (_: Ref<ActionEnum>): FormSchema[] => {
       required: false,
       show: false,
     },
-    // {
-    //   field: 'code',
-    //   label: t('devOperation.tenant.defTenant.code'),
-    //   component: 'Input',
-    //   dynamicDisabled: (_) => {
-    //     return unref(type) !== ActionEnum.ADD;
-    //   },
-    //   colProps: {
-    //     span: 12,
-    //   },
-    // },
     {
       field: 'name',
       label: t('devOperation.tenant.defTenant.name'),
