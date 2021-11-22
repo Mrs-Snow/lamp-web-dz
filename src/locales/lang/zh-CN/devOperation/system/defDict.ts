@@ -1,5 +1,5 @@
 export default {
-  table: { title: '字典列表' },
+  table: { title: '系统字典列表' },
   id: '主键',
   classify: '分类',
   key: '字典标识',

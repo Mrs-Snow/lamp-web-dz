@@ -22,4 +22,5 @@ export default {
   parentId: 'parentId',
   sortValue: 'sortValue',
   apiList: 'apiList',
+  openWith: 'openWith',
 };

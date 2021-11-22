@@ -24,24 +24,34 @@
               onClick: handleView.bind(null, record),
               auth: RoleEnum.TENANT_USER_VIEW,
             },
+          ]"
+          :dropDownActions="[
+            {
+              label: '重置密码',
+              icon: 'ant-design:rest-filled',
+              onClick: handleResetPwd.bind(null, record),
+              auth: RoleEnum.TENANT_USER_RESET_PWD,
+            },
             {
               label: t('common.title.edit'),
+              icon: 'ant-design:edit-outlined',
               onClick: handleEdit.bind(null, record),
               auth: RoleEnum.TENANT_USER_EDIT,
             },
             {
               label: t('common.title.copy'),
+              icon: 'ant-design:copy-outlined',
               onClick: handleCopy.bind(null, record),
               auth: RoleEnum.TENANT_USER_ADD,
             },
             {
               label: t('common.title.delete'),
-              color: 'error',
+              icon: 'ant-design:delete-outlined',
+              auth: RoleEnum.TENANT_USER_DELETE,
               popConfirm: {
                 title: t('common.tips.confirmDelete'),
                 confirm: handleDelete.bind(null, record),
               },
-              auth: RoleEnum.TENANT_USER_DELETE,
             },
           ]"
         />
@@ -59,7 +69,7 @@
   import { useDrawer } from '/@/components/Drawer';
   import { handleFetchParams } from '/@/utils/lamp/common';
   import { ActionEnum } from '/@/enums/commonEnum';
-  import { page, remove } from '/@/api/devOperation/tenant/defUser';
+  import { page, remove, resetPassword } from '/@/api/devOperation/tenant/defUser';
   import { columns, searchFormSchema } from './defUser.data';
   import { RoleEnum } from '/@/enums/roleEnum';
   import EditModal from './Edit.vue';
@@ -92,7 +102,7 @@
           type: 'checkbox',
         },
         actionColumn: {
-          width: 200,
+          width: 120,
           title: t('common.column.action'),
           dataIndex: 'action',
           slots: { customRender: 'action' },
@@ -155,7 +165,17 @@
           batchDelete([record.id]);
         }
       }
-
+      // 重置密码
+      function handleResetPwd(record: Recordable) {
+        createConfirm({
+          iconType: 'warning',
+          content: `是否确认要重置${record.nickName}的密码？`,
+          onOk: async () => {
+            await resetPassword({ id: record.id, isUseSystemPassword: true });
+            createMessage.success('重置成功！密码已重置为系统参数配置的默认密码');
+          },
+        });
+      }
       // 点击批量删除
       function handleBatchDelete() {
         const ids = getSelectRowKeys();
@@ -183,6 +203,7 @@
         handleDelete,
         handleSuccess,
         handleBatchDelete,
+        handleResetPwd,
         RoleEnum,
       };
     },

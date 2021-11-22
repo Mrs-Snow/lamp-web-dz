@@ -51,6 +51,10 @@ export const Api = {
     url: `${ServicePrefixEnum.TENANT}/${MODULAR}/checkPath`,
     method: RequestEnum.GET,
   } as AxiosRequestConfig,
+  CheckName: {
+    url: `${ServicePrefixEnum.TENANT}/${MODULAR}/checkName`,
+    method: RequestEnum.GET,
+  } as AxiosRequestConfig,
 };
 
 export const tree = (params?: DefResourcePageQuery) =>
@@ -77,3 +81,5 @@ export const check = (code: string, id?: string) =>
 
 export const checkPath = (path: string, id?: string) =>
   defHttp.request<boolean>({ ...Api.CheckPath, params: { id, path } });
+export const checkName = (name: string, id?: string) =>
+  defHttp.request<boolean>({ ...Api.CheckName, params: { id, name } });

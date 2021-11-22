@@ -28,6 +28,7 @@ export enum RoleEnum {
   TENANT_USER_EDIT = 'tenant:tenant:user:edit',
   TENANT_USER_DELETE = 'tenant:tenant:user:delete',
   TENANT_USER_VIEW = 'tenant:tenant:user:view',
+  TENANT_USER_RESET_PWD = 'tenant:tenant:user:reset:password',
 
   // 应用
   APPLICATION_ADD = 'tenant:application:application:add',

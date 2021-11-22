@@ -23,4 +23,5 @@ export default {
   parentName: '父资源',
   sortValue: '排序',
   apiList: '接口',
+  openWith: '打开方式',
 };

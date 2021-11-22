@@ -195,6 +195,10 @@
       }
 
       function handleDelete(record: Recordable) {
+        if (record.readonly) {
+          createMessage.warn('内置超级租户，禁止删除');
+          return;
+        }
         remove([record.id]).then(() => {
           createMessage.success(t('common.tips.deleteSuccess'));
           handleSuccess();

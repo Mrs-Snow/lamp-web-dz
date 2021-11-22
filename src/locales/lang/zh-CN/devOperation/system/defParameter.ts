@@ -1,5 +1,5 @@
 export default {
-  table: { title: '参数配置列表' },
+  table: { title: '系统参数列表' },
   id: '主键',
   key: '参数键',
   value: '参数值',

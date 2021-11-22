@@ -127,9 +127,6 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       colProps: {
         span: 12,
       },
-      dynamicDisabled: () => {
-        return [ActionEnum.VIEW].includes(type.value);
-      },
     },
     {
       label: t('devOperation.tenant.defUser.email'),
@@ -137,9 +134,6 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       component: 'Input',
       colProps: {
         span: 12,
-      },
-      dynamicDisabled: () => {
-        return [ActionEnum.VIEW].includes(type.value);
       },
     },
     {
@@ -149,9 +143,6 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       colProps: {
         span: 12,
       },
-      dynamicDisabled: () => {
-        return [ActionEnum.VIEW].includes(type.value);
-      },
     },
     {
       label: t('devOperation.tenant.defUser.idCard'),
@@ -159,9 +150,6 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       component: 'Input',
       colProps: {
         span: 12,
-      },
-      dynamicDisabled: () => {
-        return [ActionEnum.VIEW].includes(type.value);
       },
     },
     {
@@ -197,9 +185,6 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       label: t('devOperation.tenant.defUser.nickName'),
       field: 'nickName',
       component: 'Input',
-      dynamicDisabled: () => {
-        return [ActionEnum.VIEW].includes(type.value);
-      },
     },
     {
       label: t('devOperation.tenant.defUser.sex'),
@@ -211,9 +196,6 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       defaultValue: 'M',
       colProps: {
         span: 12,
-      },
-      dynamicDisabled: () => {
-        return [ActionEnum.VIEW].includes(type.value);
       },
     },
     {
@@ -227,17 +209,11 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       colProps: {
         span: 12,
       },
-      dynamicDisabled: () => {
-        return [ActionEnum.VIEW].includes(type.value);
-      },
     },
     {
       label: t('devOperation.tenant.defUser.workDescribe'),
       field: 'workDescribe',
       component: 'InputTextArea',
-      dynamicDisabled: () => {
-        return [ActionEnum.VIEW].includes(type.value);
-      },
     },
     {
       field: 'divider-selects3',
@@ -254,7 +230,7 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       colProps: {
         span: 12,
       },
-      dynamicDisabled: true,
+
       ifShow: () => {
         return type.value === ActionEnum.VIEW;
       },
@@ -266,7 +242,7 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       colProps: {
         span: 12,
       },
-      dynamicDisabled: true,
+
       ifShow: () => {
         return type.value === ActionEnum.VIEW;
       },
@@ -278,7 +254,7 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       colProps: {
         span: 12,
       },
-      dynamicDisabled: true,
+
       ifShow: () => {
         return type.value === ActionEnum.VIEW;
       },
@@ -290,7 +266,7 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       colProps: {
         span: 12,
       },
-      dynamicDisabled: true,
+
       ifShow: () => {
         return type.value === ActionEnum.VIEW;
       },
@@ -305,7 +281,7 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       componentProps: {
         ...yesNoComponentProps(),
       },
-      dynamicDisabled: true,
+
       ifShow: () => {
         return type.value === ActionEnum.VIEW;
       },

@@ -13,7 +13,7 @@ import projectSetting from '/@/settings/projectSetting';
 
 import { PermissionModeEnum } from '/@/enums/appEnum';
 
-import { asyncRoutes, VbenRoutes } from '/@/router/routes';
+import { asyncRoutes, AfterRoutes } from '/@/router/routes';
 import { ERROR_LOG_ROUTE, PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
 
 import { filter } from '/@/utils/helper/treeHelper';
@@ -24,7 +24,7 @@ import { VisibleResourceVO } from '/@/api/lamp/common/model/menuModel';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { PageEnum } from '/@/enums/pageEnum';
 
-import { ConstRouter } from '/@/router/routes/index';
+import { BeforeRoutes } from '/@/router/routes/index';
 
 interface PermissionState {
   // Whether the route has been dynamically added
@@ -202,7 +202,7 @@ export const usePermissionStore = defineStore({
           routeList = transformObjToRoute(routeList);
 
           // 后台路由 + 前段写死的路由(一般是公共菜单)
-          routeList = [...ConstRouter, ...routeList, ...VbenRoutes];
+          routeList = [...BeforeRoutes, ...routeList, ...AfterRoutes];
 
           //  后台路由转菜单结构
           const backMenuList = transformRouteToMenu(routeList);

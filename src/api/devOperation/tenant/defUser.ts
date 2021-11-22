@@ -3,6 +3,7 @@ import {
   DefUserUpdateVO,
   DefUserResultVO,
   DefUserPageQuery,
+  DefUserPasswordResetVO,
 } from './model/defUserModel';
 import { PageParams, PageResult } from '/@/api/model/baseModel';
 import { defHttp } from '/@/utils/http/axios';
@@ -57,6 +58,10 @@ export const Api = {
     url: `${ServicePrefixEnum.TENANT}/${MODULAR}/pageUser`,
     method: RequestEnum.POST,
   },
+  ResetPassword: {
+    url: `${ServicePrefixEnum.TENANT}/${MODULAR}/resetPassword`,
+    method: RequestEnum.PUT,
+  },
 };
 
 export const page = (params: PageParams<DefUserPageQuery>) =>
@@ -70,6 +75,9 @@ export const save = (params: DefUserSaveVO) =>
 
 export const update = (params: DefUserUpdateVO) =>
   defHttp.request<DefUserResultVO>({ ...Api.Update, params });
+
+export const resetPassword = (params: DefUserPasswordResetVO) =>
+  defHttp.request<boolean>({ ...Api.ResetPassword, params });
 
 export const remove = (params: string[]) => defHttp.request<boolean>({ ...Api.Delete, params });
 

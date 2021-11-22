@@ -92,3 +92,10 @@ export interface DefUserResultVO {
   updatedTime?: string;
   echoMap?: Recordable;
 }
+
+export interface DefUserPasswordResetVO {
+  id: string;
+  isUseSystemPassword: boolean;
+  password?: string;
+  confirmPassword?: string;
+}

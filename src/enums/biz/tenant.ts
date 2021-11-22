@@ -32,6 +32,13 @@ export enum ResourceTypeEnum {
   API = '60',
 }
 
+// 01-内部组件 02-内链 03-外链
+export enum ResourceOpenWithEnum {
+  INNER_COMPONENT = '01',
+  INNER_CHAIN = '02',
+  OUTER_CHAIN = '03',
+}
+
 export enum RouteEnum {
   DICT_ITEM = '字典项维护',
   APPLICATION_RESOURCE = '应用资源维护',

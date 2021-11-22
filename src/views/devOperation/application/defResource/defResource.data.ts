@@ -4,8 +4,8 @@ import { useI18n } from '/@/hooks/web/useI18n';
 import { dictComponentProps, stateComponentProps, yesNoComponentProps } from '/@/utils/lamp/common';
 import { ActionEnum, DictEnum } from '/@/enums/commonEnum';
 import { FormSchemaExt, RuleType } from '/@/api/lamp/common/formValidateService';
-import { ResourceTypeEnum } from '/@/enums/biz/tenant';
-import { check, checkPath } from '/@/api/devOperation/application/defResource';
+import { ResourceOpenWithEnum, ResourceTypeEnum } from '/@/enums/biz/tenant';
+import { check, checkName, checkPath } from '/@/api/devOperation/application/defResource';
 import { isUrl } from '/@/utils/is';
 
 const { t } = useI18n();
@@ -169,12 +169,55 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       },
     },
     {
+      label: t('devOperation.application.defResource.openWith'),
+      field: 'openWith',
+      component: 'ApiRadioGroup',
+      defaultValue: ResourceOpenWithEnum.INNER_COMPONENT,
+      ifShow: ({ values }) => {
+        return [ResourceTypeEnum.MENU, ResourceTypeEnum.VIEW, ResourceTypeEnum.API].includes(
+          values.resourceType,
+        );
+      },
+      helpMessage: [
+        '组件：在框架内打开组件页面',
+        '内链：在框架内打开网页地址',
+        '外链：新开窗口打开网页地址',
+      ],
+      componentProps: ({ formActionType }) => {
+        return {
+          ...dictComponentProps(DictEnum.RESOURCE_OPEN_WITH),
+          onChange: (value: string) => {
+            const { setFieldsValue, validateFields } = formActionType;
+            switch (value) {
+              case ResourceOpenWithEnum.INNER_CHAIN:
+                setFieldsValue({
+                  component: 'IFRAME',
+                });
+                break;
+              case ResourceOpenWithEnum.OUTER_CHAIN:
+                setFieldsValue({
+                  component: 'IFRAME',
+                });
+                break;
+              default:
+                setFieldsValue({
+                  component: '',
+                });
+                break;
+            }
+            setFieldsValue({ openWith: value });
+            validateFields(['path']);
+          },
+        };
+      },
+    },
+    {
       label: t('devOperation.application.defResource.path'),
       field: 'path',
       component: 'Input',
-      helpMessage: ['http开头表示外链网页', '相对地址表示页面内嵌页面'],
+      helpMessage: ['http开头表示跳转到指定网页', '相对地址表示页面内嵌组件页面'],
       itemProps: {
-        extra: 'http开头表示外链网页，相对地址表示页面内嵌页面',
+        extra: 'http开头表示跳转到指定网页，相对地址表示页面内嵌页面',
       },
       colProps: {
         span: 12,
@@ -203,13 +246,30 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
     {
       label: t('devOperation.application.defResource.component'),
       field: 'component',
-      component: 'Input',
+      component: 'AutoComplete',
       itemProps: {
-        extra: '前端页面代码在src/views目录下的相对地址.',
+        extra: '前端页面代码在 src/views 目录下的相对地址.',
       },
-      helpMessage: ['http开头表示内嵌网页', ' LAYOUT表示父菜单.', 'IFRAME表示框架布局'],
+      helpMessage: [
+        '填写规则：',
+        '目录(折叠菜单)：LAYOUT',
+        '链接：IFRAME',
+        '页面： 位于 src/views 目录下的相对路径',
+      ],
       colProps: {
         span: 12,
+      },
+      componentProps: {
+        allowClear: true,
+        filterOption: (input: string, option) => {
+          return option.value.toUpperCase().indexOf(input.toUpperCase()) >= 0;
+        },
+        options: [{ value: 'LAYOUT' }, { value: 'IFRAME' }],
+      },
+      dynamicDisabled: ({ values }) => {
+        return [ResourceOpenWithEnum.INNER_CHAIN, ResourceOpenWithEnum.OUTER_CHAIN].includes(
+          values.openWith,
+        );
       },
       ifShow: ({ values }) => {
         return [ResourceTypeEnum.MENU, ResourceTypeEnum.VIEW].includes(values.resourceType);
@@ -366,6 +426,31 @@ export const customFormSchemaRules = (
       ],
     },
     {
+      field: 'name',
+      type: RuleType.append,
+      rules: [
+        {
+          trigger: ['change', 'blur'],
+          async validator(_, value) {
+            if (value) {
+              if (
+                [ResourceTypeEnum.VIEW, ResourceTypeEnum.MENU].includes(
+                  getFieldsValue().resourceType,
+                )
+              ) {
+                if (await checkName(value, getFieldsValue()?.id)) {
+                  return Promise.reject(
+                    t('devOperation.application.defResource.name') + '已经存在',
+                  );
+                }
+              }
+            }
+            return Promise.resolve();
+          },
+        },
+      ],
+    },
+    {
       field: 'path',
       type: RuleType.append,
       rules: [
@@ -377,21 +462,39 @@ export const customFormSchemaRules = (
           trigger: ['change', 'blur'],
           async validator(_, value) {
             if (value) {
-              if (isUrl(value) && isUrl(getFieldsValue()?.component)) {
-                return Promise.reject(
-                  t('devOperation.application.defResource.path') +
-                    '和' +
-                    t('devOperation.application.defResource.component') +
-                    '不能同时配置成连接',
-                );
-              }
-              if (getFieldsValue()?.parentId === '0' && !isUrl(value) && !value.startsWith('/')) {
-                return Promise.reject(
-                  '1级资源的' + t('devOperation.application.defResource.path') + '必须以/开头',
-                );
-              }
-              if (await checkPath(value, getFieldsValue()?.id)) {
-                return Promise.reject(t('devOperation.application.defResource.path') + '已经存在');
+              if (isUrl(value)) {
+                if (isUrl(getFieldsValue()?.component)) {
+                  return Promise.reject(
+                    t('devOperation.application.defResource.path') +
+                      '和' +
+                      t('devOperation.application.defResource.component') +
+                      '不能同时配置成连接',
+                  );
+                }
+                if (
+                  ![ResourceOpenWithEnum.OUTER_CHAIN, ResourceOpenWithEnum.INNER_CHAIN].includes(
+                    getFieldsValue()?.openWith,
+                  )
+                ) {
+                  return Promise.reject(
+                    t('devOperation.application.defResource.path') +
+                      `是网址时，${t(
+                        'devOperation.application.defResource.openWith',
+                      )}必选选择外链或内链`,
+                  );
+                }
+              } else {
+                if (getFieldsValue()?.parentId === '0' && !value.startsWith('/')) {
+                  return Promise.reject(
+                    '1级资源的' + t('devOperation.application.defResource.path') + '必须以/开头',
+                  );
+                }
+
+                if (await checkPath(value, getFieldsValue()?.id)) {
+                  return Promise.reject(
+                    t('devOperation.application.defResource.path') + '已经存在',
+                  );
+                }
               }
             }
             return Promise.resolve();
@@ -457,6 +560,7 @@ export const editMetaFormSchema = (): FormSchema[] => {
       field: 'key',
       component: 'AutoComplete',
       required: true,
+      helpMessage: ['新增key的选项后，同时也需要后端在RouterMeta实体类中新增字段'],
       componentProps: {
         allowClear: true,
         filterOption: (input: string, option) => {

@@ -19,19 +19,6 @@ Object.keys(modules).forEach((key) => {
 
 export const asyncRoutes = [PAGE_NOT_FOUND_ROUTE, ...routeModuleList];
 
-export const VbenRoutes: AppRouteModule[] = [
-  {
-    path: '/vben',
-    name: '更多功能',
-    component: LAYOUT,
-    meta: {
-      icon: 'ant-design:table-outlined',
-      title: '更多功能',
-    },
-    children: routeModuleList,
-  },
-];
-
 export const RootRoute: AppRouteRecordRaw = {
   path: '/',
   name: 'Root',
@@ -51,9 +38,9 @@ export const LoginRoute: AppRouteRecordRaw = {
 };
 
 /**
- * 前端路由，不会显示到菜单
+ * 拼接在后端路由之前的前端路由
  */
-export const ConstRouter: AppRouteRecordRaw[] = [
+export const BeforeRoutes: AppRouteRecordRaw[] = [
   {
     path: '/home',
     name: 'Home',
@@ -98,6 +85,12 @@ export const ConstRouter: AppRouteRecordRaw[] = [
       },
     ],
   },
+];
+
+/**
+ * 拼接在后端路由之后的前端路由
+ */
+export const AfterRoutes: AppRouteModule[] = [
   {
     path: '/myTenant',
     name: 'myTenant',
@@ -121,58 +114,16 @@ export const ConstRouter: AppRouteRecordRaw[] = [
       },
     ],
   },
-  // {
-  //   path: '/resources',
-  //   name: 'resources',
-  //   component: LAYOUT,
-  //   redirect: '/resources/msg',
-  //   meta: {
-  //     title: '资源管理',
-  //   },
-  //   children: [
-  //     {
-  //       path: 'sms/:id',
-  //       name: 'smsEdit',
-  //       component: () => import('/@/views/lamp/resources/sms/Edit.vue'),
-  //       meta: {
-  //         title: '发送短信',
-  //         hideMenu: true,
-  //         currentActiveMenu: '/resources/sms',
-  //       },
-  //     },
-  //     {
-  //       path: 'msg/:id',
-  //       name: 'msgEdit',
-  //       component: () => import('/@/views/lamp/resources/msg/Edit.vue'),
-  //       meta: {
-  //         title: '发送消息',
-  //         hideMenu: true,
-  //         currentActiveMenu: '/resources/msg',
-  //       },
-  //     },
-  //   ],
-  // },
-  // {
-  //   path: '/workbench',
-  //   name: 'workbench',
-  //   component: LAYOUT,
-  //   redirect: '/workbench/notice',
-  //   meta: {
-  //     title: '通知公告',
-  //   },
-  //   children: [
-  //     {
-  //       path: 'notice/:id',
-  //       name: 'noticeView',
-  //       component: () => import('/@/views/lamp/workbench/notice/View.vue'),
-  //       meta: {
-  //         title: '我的消息',
-  //         hideMenu: true,
-  //         currentActiveMenu: '/workbench/notice',
-  //       },
-  //     },
-  //   ],
-  // },
+  {
+    path: '/vben',
+    name: '更多功能',
+    component: LAYOUT,
+    meta: {
+      icon: 'ant-design:table-outlined',
+      title: '更多功能',
+    },
+    children: routeModuleList,
+  },
 ];
 
 // Basic routing without permission
