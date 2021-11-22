@@ -157,8 +157,7 @@
       // 计算 半选状态
       function computedIndeterminate() {
         const checkedKeys = getCheckedKeys();
-        const flag = checkedKeys.length > 0 && checkedKeys.length < state.allKeys.length;
-        state.indeterminate = flag;
+        state.indeterminate = checkedKeys.length > 0 && checkedKeys.length < state.allKeys.length;
       }
       // 计算 选中状态
       function computedCheckAll() {

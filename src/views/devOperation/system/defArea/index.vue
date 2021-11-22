@@ -1,5 +1,5 @@
 <template>
-  <PageWrapper dense contentFullHeight fixedHeight contentClass="flex">
+  <PageWrapper dense fixedHeight contentClass="flex">
     <DefAreaTree
       class="md:w-1/2"
       @select="handleTreeSelect"

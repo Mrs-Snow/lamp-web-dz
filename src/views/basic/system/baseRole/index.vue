@@ -1,5 +1,5 @@
 <template>
-  <PageWrapper dense contentFullHeight>
+  <PageWrapper dense>
     <div class="overflow-hidden flex" ref="wrapEl">
       <RoleList class="md:w-1/3" @select="handleRoleSelect" ref="roleListRef" />
       <ApplicationTabs class="md:w-2/3" ref="applicationResourceRef" />
