@@ -68,7 +68,7 @@
 
         if (!matched || matched.length === 0) return;
 
-        const breadcrumbList = filterItem(matched);
+        const breadcrumbList = filterItem(matched, currentRoute);
 
         if (currentRoute.value.meta?.currentActiveMenu) {
           breadcrumbList.push({
@@ -95,13 +95,21 @@
         return metched;
       }
 
-      function filterItem(list: RouteLocationMatched[]) {
+      function filterItem(list: RouteLocationMatched[], currentRoute) {
         return filter(list, (item) => {
           const { meta, name } = item;
           if (!meta) {
             return !!name;
           }
           const { title, hideBreadcrumb, hideMenu } = meta;
+          // 解决访问视图时，不隐藏自己
+          if (currentRoute.value.name === name) {
+            if (!title || hideBreadcrumb) {
+              return false;
+            }
+            return true;
+          }
+
           if (!title || hideBreadcrumb || hideMenu) {
             return false;
           }
