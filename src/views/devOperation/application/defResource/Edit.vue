@@ -51,17 +51,15 @@
       const type = ref<ActionEnum>(ActionEnum.ADD);
       const confirmLoading = ref<boolean>(false);
       const title = ref<string>('未选中任何资源');
-      const [
-        register,
-        { setFieldsValue, getFieldsValue, resetFields, resetSchema, updateSchema, validate },
-      ] = useForm({
-        labelWidth: 110,
-        showActionButtonGroup: false,
-        schemas: editFormSchema(type),
-        disabled: () => {
-          return unref(type) === ActionEnum.VIEW;
-        },
-      });
+      const [register, { setFieldsValue, resetFields, resetSchema, updateSchema, validate }] =
+        useForm({
+          labelWidth: 110,
+          showActionButtonGroup: false,
+          schemas: editFormSchema(type),
+          disabled: () => {
+            return unref(type) === ActionEnum.VIEW;
+          },
+        });
 
       // 提交
       async function handleSubmit() {
@@ -77,6 +75,7 @@
 
           type.value = ActionEnum.ADD;
           await resetFields();
+          title.value = '未选中任何资源';
           emit('success', params.applicationId);
         } finally {
           confirmLoading.value = false;
@@ -124,10 +123,8 @@
 
         if (unref(type) !== ActionEnum.VIEW) {
           let validateApi = Api[VALIDATE_API[unref(type)]];
-          const rules = await getValidateRules(
-            validateApi,
-            customFormSchemaRules(type, getFieldsValue),
-          );
+
+          const rules = await getValidateRules(validateApi, customFormSchemaRules(type));
           rules && rules.length > 0 && (await updateSchema(rules));
         }
       }
@@ -147,8 +144,4 @@
     },
   });
 </script>
-<style lang="less" scoped>
-  //#resourceApiList {
-  //  flex-direction: column;
-  //}
-</style>
+<style lang="less" scoped></style>

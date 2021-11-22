@@ -67,6 +67,33 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       colProps: {
         span: 12,
       },
+      dynamicRules: ({ model }) => {
+        return [
+          { required: true, message: '不能为空' },
+          {
+            trigger: ['change', 'blur'],
+            validator: async (_, value) => {
+              if (type.value === ActionEnum.VIEW) {
+                return Promise.resolve();
+              }
+              if (model?.parentResourceType === ResourceTypeEnum.VIEW) {
+                if (value === ResourceTypeEnum.MENU) {
+                  return Promise.reject('资源下不能添加菜单');
+                }
+              } else if (model?.parentResourceType === ResourceTypeEnum.FUNCTION) {
+                if (value === ResourceTypeEnum.MENU) {
+                  return Promise.reject('资源下不能添加菜单');
+                } else if (value === ResourceTypeEnum.VIEW) {
+                  return Promise.reject('资源下不能添加视图');
+                }
+              } else if (model?.parentResourceType === ResourceTypeEnum.FIELD) {
+                return Promise.reject('字段下不能添加子资源');
+              }
+              return Promise.resolve();
+            },
+          },
+        ];
+      },
     },
     {
       label: t('devOperation.application.defResource.parentName'),
@@ -102,6 +129,29 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       component: 'Input',
       colProps: {
         span: 12,
+      },
+      dynamicRules: ({ model }) => {
+        return [
+          { required: true, message: '请填写名称' },
+          {
+            trigger: ['change', 'blur'],
+            async validator(_, value) {
+              if (type.value === ActionEnum.VIEW) {
+                return Promise.resolve();
+              }
+              if (value) {
+                if ([ResourceTypeEnum.VIEW, ResourceTypeEnum.MENU].includes(model.resourceType)) {
+                  if (await checkName(value, model?.id)) {
+                    return Promise.reject(
+                      t('devOperation.application.defResource.name') + '已经存在',
+                    );
+                  }
+                }
+              }
+              return Promise.resolve();
+            },
+          },
+        ];
       },
     },
     {
@@ -140,7 +190,6 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
         span: 12,
       },
     },
-
     {
       label: t('devOperation.application.defResource.isGeneral'),
       field: 'isGeneral',
@@ -190,9 +239,6 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
             const { setFieldsValue, validateFields } = formActionType;
             switch (value) {
               case ResourceOpenWithEnum.INNER_CHAIN:
-                setFieldsValue({
-                  component: 'IFRAME',
-                });
                 break;
               case ResourceOpenWithEnum.OUTER_CHAIN:
                 setFieldsValue({
@@ -200,13 +246,10 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
                 });
                 break;
               default:
-                setFieldsValue({
-                  component: '',
-                });
                 break;
             }
-            setFieldsValue({ openWith: value });
-            validateFields(['path']);
+            // setFieldsValue({ openWith: value });
+            validateFields(['path', 'component']);
           },
         };
       },
@@ -215,9 +258,9 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       label: t('devOperation.application.defResource.path'),
       field: 'path',
       component: 'Input',
-      helpMessage: ['http开头表示跳转到指定网页', '相对地址表示页面内嵌组件页面'],
+      helpMessage: ['http开头表示外链跳转到指定网页', '相对地址会自动拼接父级路径'],
       itemProps: {
-        extra: 'http开头表示跳转到指定网页，相对地址表示页面内嵌页面',
+        extra: '地址栏#号后显示的地址，可以是相对或绝对地址',
       },
       colProps: {
         span: 12,
@@ -236,11 +279,65 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
                 const { setFieldsValue } = formActionType;
                 setFieldsValue({
                   component: 'IFRAME',
+                  openWith: ResourceOpenWithEnum.OUTER_CHAIN,
                 });
               }
             }
           },
         };
+      },
+      dynamicRules: ({ model }) => {
+        return [
+          { required: true, message: '不能为空' },
+          {
+            trigger: ['change', 'blur'],
+            validator: async (_, value) => {
+              if (type.value === ActionEnum.VIEW) {
+                return Promise.resolve();
+              }
+              if (value) {
+                if (isUrl(value)) {
+                  if (isUrl(model?.component)) {
+                    return Promise.reject(
+                      t('devOperation.application.defResource.path') +
+                        '和' +
+                        t('devOperation.application.defResource.component') +
+                        '不能同时配置成连接',
+                    );
+                  }
+
+                  if (![ResourceOpenWithEnum.OUTER_CHAIN].includes(model?.openWith)) {
+                    return Promise.reject(
+                      t('devOperation.application.defResource.path') +
+                        `是网址时，${t(
+                          'devOperation.application.defResource.openWith',
+                        )}必选选择外链`,
+                    );
+                  }
+                } else {
+                  if (model.openWith === ResourceOpenWithEnum.OUTER_CHAIN) {
+                    return Promise.reject(
+                      `${t(
+                        'devOperation.application.defResource.openWith',
+                      )} 为外链时，只能填写网址`,
+                    );
+                  }
+                  if (model?.parentId === '0' && !value.startsWith('/')) {
+                    return Promise.reject(
+                      '1级资源的' + t('devOperation.application.defResource.path') + '必须以/开头',
+                    );
+                  }
+                  if (await checkPath(value, model?.id)) {
+                    return Promise.reject(
+                      t('devOperation.application.defResource.path') + '已经存在',
+                    );
+                  }
+                }
+              }
+              return Promise.resolve();
+            },
+          },
+        ];
       },
     },
     {
@@ -253,29 +350,82 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       helpMessage: [
         '填写规则：',
         '目录(折叠菜单)：LAYOUT',
-        '链接：IFRAME',
-        '页面： 位于 src/views 目录下的相对路径',
+        '外链：IFRAME',
+        '内链：配置http开头的网址',
+        '页面：位于 src/views 目录下的相对路径',
       ],
       colProps: {
         span: 12,
       },
-      componentProps: {
-        allowClear: true,
-        filterOption: (input: string, option) => {
-          return option.value.toUpperCase().indexOf(input.toUpperCase()) >= 0;
-        },
-        options: [{ value: 'LAYOUT' }, { value: 'IFRAME' }],
+      componentProps: ({ formActionType }) => {
+        return {
+          allowClear: true,
+          filterOption: (input: string, option) => {
+            return option.value.toUpperCase().indexOf(input.toUpperCase()) >= 0;
+          },
+          options: [{ value: 'LAYOUT' }, { value: 'IFRAME' }],
+          onChange: (value: string) => {
+            if (value) {
+              if (isUrl(value)) {
+                const { setFieldsValue } = formActionType;
+                setFieldsValue({
+                  openWith: ResourceOpenWithEnum.INNER_CHAIN,
+                });
+              }
+            }
+          },
+        };
       },
-
       dynamicDisabled: ({ values }) => {
         return (
-          [ResourceOpenWithEnum.INNER_CHAIN, ResourceOpenWithEnum.OUTER_CHAIN].includes(
-            values.openWith,
-          ) || [ActionEnum.VIEW].includes(type.value)
+          [ResourceOpenWithEnum.OUTER_CHAIN].includes(values.openWith) ||
+          [ActionEnum.VIEW].includes(type.value)
         );
       },
       ifShow: ({ values }) => {
         return [ResourceTypeEnum.MENU, ResourceTypeEnum.VIEW].includes(values.resourceType);
+      },
+      dynamicRules: ({ model }) => {
+        return [
+          { required: true, message: '不能为空' },
+          {
+            trigger: ['change', 'blur'],
+            async validator(_, value) {
+              if (type.value === ActionEnum.VIEW) {
+                return Promise.resolve();
+              }
+              if (value) {
+                if (isUrl(value)) {
+                  if (isUrl(model?.path)) {
+                    return Promise.reject(
+                      t('devOperation.application.defResource.path') +
+                        '和' +
+                        t('devOperation.application.defResource.component') +
+                        '不能同时配置成连接',
+                    );
+                  }
+
+                  if (model.openWith !== ResourceOpenWithEnum.INNER_CHAIN) {
+                    return Promise.reject(
+                      `配置为网址时，${t(
+                        'devOperation.application.defResource.openWith',
+                      )}必须设置为内链`,
+                    );
+                  }
+                } else {
+                  if (model.openWith === ResourceOpenWithEnum.INNER_CHAIN) {
+                    return Promise.reject(
+                      `${t(
+                        'devOperation.application.defResource.openWith',
+                      )} 为内链时，只能填写网址`,
+                    );
+                  }
+                }
+              }
+              return Promise.resolve();
+            },
+          },
+        ];
       },
     },
     {
@@ -373,36 +523,8 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
 const CODE_REG = /^[a-zA-Z0-9_:,;*]*$/;
 
 // 前端自定义表单验证规则
-export const customFormSchemaRules = (
-  type: Ref<ActionEnum>,
-  getFieldsValue: () => Recordable,
-): Partial<FormSchemaExt>[] => {
+export const customFormSchemaRules = (type: Ref<ActionEnum>): Partial<FormSchemaExt>[] => {
   return [
-    {
-      field: 'resourceType',
-      type: RuleType.append,
-      rules: [
-        {
-          trigger: ['change', 'blur'],
-          async validator(_, value) {
-            if (getFieldsValue()?.parentResourceType === ResourceTypeEnum.VIEW) {
-              if (value === ResourceTypeEnum.MENU) {
-                return Promise.reject('资源下不能添加菜单');
-              }
-            } else if (getFieldsValue()?.parentResourceType === ResourceTypeEnum.FUNCTION) {
-              if (value === ResourceTypeEnum.MENU) {
-                return Promise.reject('资源下不能添加菜单');
-              } else if (value === ResourceTypeEnum.VIEW) {
-                return Promise.reject('资源下不能添加视图');
-              }
-            } else if (getFieldsValue()?.parentResourceType === ResourceTypeEnum.FIELD) {
-              return Promise.reject('字段下不能添加子资源');
-            }
-            return Promise.resolve();
-          },
-        },
-      ],
-    },
     {
       field: 'code',
       type: RuleType.append,
@@ -423,109 +545,6 @@ export const customFormSchemaRules = (
               }
             }
 
-            return Promise.resolve();
-          },
-        },
-      ],
-    },
-    {
-      field: 'name',
-      type: RuleType.append,
-      rules: [
-        {
-          trigger: ['change', 'blur'],
-          async validator(_, value) {
-            if (value) {
-              if (
-                [ResourceTypeEnum.VIEW, ResourceTypeEnum.MENU].includes(
-                  getFieldsValue().resourceType,
-                )
-              ) {
-                if (await checkName(value, getFieldsValue()?.id)) {
-                  return Promise.reject(
-                    t('devOperation.application.defResource.name') + '已经存在',
-                  );
-                }
-              }
-            }
-            return Promise.resolve();
-          },
-        },
-      ],
-    },
-    {
-      field: 'path',
-      type: RuleType.append,
-      rules: [
-        {
-          trigger: ['change', 'blur'],
-          required: true,
-        },
-        {
-          trigger: ['change', 'blur'],
-          async validator(_, value) {
-            if (value) {
-              if (isUrl(value)) {
-                if (isUrl(getFieldsValue()?.component)) {
-                  return Promise.reject(
-                    t('devOperation.application.defResource.path') +
-                      '和' +
-                      t('devOperation.application.defResource.component') +
-                      '不能同时配置成连接',
-                  );
-                }
-                if (
-                  ![ResourceOpenWithEnum.OUTER_CHAIN, ResourceOpenWithEnum.INNER_CHAIN].includes(
-                    getFieldsValue()?.openWith,
-                  )
-                ) {
-                  return Promise.reject(
-                    t('devOperation.application.defResource.path') +
-                      `是网址时，${t(
-                        'devOperation.application.defResource.openWith',
-                      )}必选选择外链或内链`,
-                  );
-                }
-              } else {
-                if (getFieldsValue()?.parentId === '0' && !value.startsWith('/')) {
-                  return Promise.reject(
-                    '1级资源的' + t('devOperation.application.defResource.path') + '必须以/开头',
-                  );
-                }
-
-                if (await checkPath(value, getFieldsValue()?.id)) {
-                  return Promise.reject(
-                    t('devOperation.application.defResource.path') + '已经存在',
-                  );
-                }
-              }
-            }
-            return Promise.resolve();
-          },
-        },
-      ],
-    },
-    {
-      field: 'component',
-      type: RuleType.append,
-      rules: [
-        {
-          trigger: ['change', 'blur'],
-          required: true,
-        },
-        {
-          trigger: ['change', 'blur'],
-          async validator(_, value) {
-            if (value) {
-              if (isUrl(value) && isUrl(getFieldsValue()?.path)) {
-                return Promise.reject(
-                  t('devOperation.application.defResource.path') +
-                    '和' +
-                    t('devOperation.application.defResource.component') +
-                    '不能同时配置成连接',
-                );
-              }
-            }
             return Promise.resolve();
           },
         },
