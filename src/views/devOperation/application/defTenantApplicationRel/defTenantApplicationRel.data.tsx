@@ -1,3 +1,4 @@
+import { Tag } from 'ant-design-vue';
 import moment from 'moment';
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
@@ -25,12 +26,13 @@ export const columns = (): BasicColumn[] => {
       dataIndex: 'expirationTime',
       width: 180,
       sorter: true,
-    },
-    {
-      title: t('devOperation.application.defTenantApplicationRel.expired'),
-      dataIndex: 'expired',
-      width: 80,
-      slots: { customRender: 'expired' },
+      customRender: ({ record }) => {
+        return (
+          <Tag color={record.expired ? 'warning' : 'success'}>
+            {record.expirationTime ?? '永久有效'}
+          </Tag>
+        );
+      },
     },
     {
       title: t('devOperation.application.defTenantApplicationRel.authorizationTime'),

@@ -29,6 +29,11 @@ export const columns = (): BasicColumn[] => {
       title: t('devOperation.application.defApplication.type'),
       dataIndex: 'echoMap.type',
       width: 100,
+      customRender: ({ record }) => {
+        return (
+          <Tag color={record.type === '10' ? 'success' : 'processing'}>{record.echoMap.type}</Tag>
+        );
+      },
     },
     {
       title: t('devOperation.application.defApplication.isVisible'),

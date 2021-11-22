@@ -1,11 +1,17 @@
+import { Tag } from 'ant-design-vue';
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { query as queryApplication } from '/@/api/devOperation/application/defApplication';
 import { query as queryTenant } from '/@/api/devOperation/tenant/tenant';
 import { FormSchemaExt } from '/@/api/lamp/common/formValidateService';
-import { TenantStatusEnum } from '/@/enums/biz/tenant';
+import { ApplicationGrantTypeEnum, TenantStatusEnum } from '/@/enums/biz/tenant';
 
 const { t } = useI18n();
+const grantTypeMap = new Map();
+grantTypeMap.set(ApplicationGrantTypeEnum.GRANT, 'success');
+grantTypeMap.set(ApplicationGrantTypeEnum.RENEWAL, 'processing');
+grantTypeMap.set(ApplicationGrantTypeEnum.CANCEL, 'warning');
+
 // 列表页字段
 export const columns = (): BasicColumn[] => {
   return [
@@ -28,6 +34,10 @@ export const columns = (): BasicColumn[] => {
       title: t('devOperation.application.defTenantApplicationRecord.grantType'),
       dataIndex: 'echoMap.grantType',
       width: 100,
+      customRender: ({ record }) => {
+        const color = grantTypeMap.get(record.grantType);
+        return <Tag color={color}>{record.echoMap.grantType}</Tag>;
+      },
     },
     {
       title: t('lamp.common.createdTime'),

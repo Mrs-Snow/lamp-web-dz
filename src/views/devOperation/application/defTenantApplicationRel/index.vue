@@ -15,11 +15,6 @@
           >授权</a-button
         >
       </template>
-      <template #expired="{ record }">
-        <Tag :color="record.expired ? 'warning' : 'success'">
-          {{ record.expired ? '已过期' : '未过期' }}
-        </Tag>
-      </template>
       <template #action="{ record }">
         <TableAction
           :actions="[
@@ -46,7 +41,6 @@
 </template>
 <script lang="ts">
   import { defineComponent } from 'vue';
-  import { Tag } from 'ant-design-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useRouter } from 'vue-router';
@@ -64,7 +58,7 @@
   export default defineComponent({
     // 若需要开启页面缓存，请将此参数跟菜单名保持一致
     name: 'DefTenantApplicationRelManager',
-    components: { BasicTable, PageWrapper, EditModal, TableAction, Tag },
+    components: { BasicTable, PageWrapper, EditModal, TableAction },
     setup() {
       const { t } = useI18n();
       const { createMessage, createConfirm } = useMessage();
