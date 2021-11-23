@@ -3,7 +3,11 @@
     <template #headerContent> <WorkbenchHeader /> </template>
     <div class="lg:flex" v-if="userinfo && userinfo.employeeId && userinfo.employeeId !== '0'">
       <div class="lg:w-7/10 w-full !mr-4 enter-y">
-        <ApplicationCard class="enter-y" :api="findMyApplication" />
+        <ApplicationCard
+          title="我的应用 (点击应用进行切换应用，体验不同应用的功能)"
+          class="enter-y"
+          :api="findMyApplication"
+        />
         <DynamicInfo :loading="loading" class="!my-4 enter-y" />
       </div>
       <div class="w-full lg:w-3/10 enter-y">

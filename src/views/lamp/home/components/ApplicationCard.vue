@@ -73,7 +73,7 @@
         required: true,
       },
       handleClick: {
-        type: Function as PropType<PromiseFn>,
+        type: Function as PropType<() => void>,
         default: null,
       },
     },
