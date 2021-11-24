@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white m-4 mr-2 overflow-hidden">
+  <div class="overflow-hidden">
     <BasicTable
       @register="registerTable"
       @selection-change="handleSelectionChange"

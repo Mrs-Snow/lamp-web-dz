@@ -17,7 +17,7 @@ export const columns = (): BasicColumn[] => {
     {
       title: t('devOperation.system.defDict.state'),
       dataIndex: 'state',
-      width: 100,
+      width: 90,
       filters: [...stateFilters()],
       slots: { customRender: 'state' },
       // format: (text) => {

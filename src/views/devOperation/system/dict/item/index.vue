@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white m-4 ml-2 overflow-hidden">
+  <div class="overflow-hidden">
     <BasicTable @register="registerTable">
       <template #toolbar>
         <a-button
@@ -106,7 +106,7 @@
         api: page,
         columns: columns(),
         formConfig: {
-          labelWidth: 100,
+          labelWidth: 80,
           schemas: searchFormSchema(),
           baseColProps: { xs: 24, sm: 12, md: 12, lg: 12, xl: 8 },
           autoSubmitOnEnter: true,
@@ -132,9 +132,10 @@
         rowKey: 'id',
         rowSelection: {
           type: 'checkbox',
+          columnWidth: 40,
         },
         actionColumn: {
-          width: 160,
+          width: 140,
           title: t('common.column.action'),
           dataIndex: 'action',
           slots: { customRender: 'action' },
@@ -236,3 +237,12 @@
     },
   });
 </script>
+<style scoped lang="less">
+  @prefix-cls: ~'@{namespace}-basic-table';
+
+  .@{prefix-cls} {
+    &-form-container {
+      padding: 16px 16px 16px 0;
+    }
+  }
+</style>

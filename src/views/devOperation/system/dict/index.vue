@@ -1,5 +1,5 @@
 <template>
-  <PageWrapper dense contentClass="flex">
+  <PageWrapper contentClass="flex" dense>
     <TypeTable class="md:w-1/3 xl:w-1/3" @select="handleTypeSelect" ref="typeRef" />
     <ItemTable class="md:w-2/3" ref="itemRef" />
   </PageWrapper>

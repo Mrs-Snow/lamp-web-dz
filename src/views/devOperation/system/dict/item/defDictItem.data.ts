@@ -21,7 +21,7 @@ export const columns = (): BasicColumn[] => {
     {
       title: t('devOperation.system.defDict.state'),
       dataIndex: 'state',
-      width: 100,
+      width: 80,
       filters: [...stateFilters()],
       slots: { customRender: 'state' },
     },
@@ -29,14 +29,14 @@ export const columns = (): BasicColumn[] => {
       title: t('devOperation.system.defDictItem.sortValue'),
       dataIndex: 'sortValue',
       sorter: true,
-      width: 100,
+      width: 80,
     },
-    {
-      title: t('lamp.common.createdTime'),
-      dataIndex: 'createdTime',
-      sorter: true,
-      width: 180,
-    },
+    // {
+    //   title: t('lamp.common.createdTime'),
+    //   dataIndex: 'createdTime',
+    //   sorter: true,
+    //   width: 180,
+    // },
   ];
 };
 
