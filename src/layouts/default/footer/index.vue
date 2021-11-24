@@ -7,7 +7,7 @@
 
       <a @click="openWindow(DOC_URL)">{{ t('layout.footer.onlineDocument') }}</a>
     </div>
-    <div>Copyright &copy;2021 zuihou</div>
+    <div :class="`${prefixCls}__copyright`">Copyright &copy;2021 zuihou</div>
   </Footer>
 </template>
 
@@ -64,19 +64,19 @@
 <style lang="less" scoped>
   @prefix-cls: ~'@{namespace}-layout-footer';
 
-  @normal-color: rgba(0, 0, 0, 0.45);
+  @current-normal-color: rgba(0, 0, 0, 0.5);
 
   @hover-color: rgba(0, 0, 0, 0.85);
 
   .@{prefix-cls} {
-    color: @normal-color;
+    color: @current-normal-color;
     text-align: center;
 
     &__links {
       margin-bottom: 8px;
 
       a {
-        color: @normal-color;
+        color: @current-normal-color;
 
         &:hover {
           color: @hover-color;
@@ -86,6 +86,14 @@
 
     &__github {
       margin: 0 30px;
+
+      &:hover {
+        color: @hover-color;
+      }
+    }
+
+    &__copyright {
+      color: @current-normal-color;
 
       &:hover {
         color: @hover-color;
