@@ -15,7 +15,7 @@
   import { useLoading } from '/@/components/Loading';
   export default defineComponent({
     // 若需要开启页面缓存，请将此参数跟菜单名保持一致
-    name: 'BaseRoleManagement',
+    name: '角色权限维护',
     components: { PageWrapper, RoleList, ApplicationTabs },
     setup() {
       const { t } = useI18n();

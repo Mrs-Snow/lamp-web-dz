@@ -57,7 +57,7 @@
 
   export default defineComponent({
     // 若需要开启页面缓存，请将此参数跟菜单名保持一致
-    name: 'DefTenantApplicationRelManager',
+    name: '应用授权管理',
     components: { BasicTable, PageWrapper, EditModal, TableAction },
     setup() {
       const { t } = useI18n();

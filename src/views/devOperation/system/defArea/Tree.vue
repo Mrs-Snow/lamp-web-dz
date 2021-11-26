@@ -80,7 +80,7 @@
       }
 
       // 选择节点
-      function handleSelect(keys: string[]) {
+      function handleSelect(keys: any) {
         if (keys[0]) {
           const node = findNodeByKey(keys[0], treeData.value);
           const parent = findNodeByKey(node?.parentId, treeData.value);

@@ -68,7 +68,7 @@
 
   export default defineComponent({
     // 若需要开启页面缓存，请将此参数跟菜单名保持一致
-    name: 'DefDictItemManagement',
+    name: '字典项维护',
     components: {
       BasicTable,
       PageWrapper,

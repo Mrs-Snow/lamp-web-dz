@@ -106,7 +106,7 @@
   import ToExamineModal from './ToExamineModal.vue';
 
   export default defineComponent({
-    name: 'TenantManagement',
+    name: '租户维护',
     components: {
       BasicTable,
       PageWrapper,

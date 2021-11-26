@@ -53,7 +53,7 @@
   import { RoleEnum } from '/@/enums/roleEnum';
   export default defineComponent({
     // 若需要开启页面缓存，请将此参数跟菜单名保持一致
-    name: 'EMsgManagement',
+    name: '我的消息',
     components: { BasicTable, PageWrapper, TableAction },
     setup() {
       const { t } = useI18n();

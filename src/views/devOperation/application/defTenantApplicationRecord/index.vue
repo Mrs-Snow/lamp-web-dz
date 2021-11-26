@@ -29,7 +29,7 @@
 
   export default defineComponent({
     // 若需要开启页面缓存，请将此参数跟菜单名保持一致
-    name: 'DefTenantApplicationRecordManagement',
+    name: '应用授权记录',
     components: { BasicTable, PageWrapper, EditModal, TableAction },
     setup() {
       const { t } = useI18n();

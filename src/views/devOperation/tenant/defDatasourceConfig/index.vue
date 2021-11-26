@@ -73,7 +73,7 @@
   import { columns, searchFormSchema } from './datasourceConfig.data';
 
   export default defineComponent({
-    name: 'DatasourceConfigManagement',
+    name: '数据源维护',
     components: { BasicTable, PageWrapper, EditModal, TableAction },
     setup() {
       const { t } = useI18n();

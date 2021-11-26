@@ -72,7 +72,7 @@
 
   export default defineComponent({
     // 若需要开启页面缓存，请将此参数跟菜单名保持一致
-    name: 'DefClientManagement',
+    name: '客户端维护',
     components: { BasicTable, PageWrapper, EditModal, TableAction, Tag },
     setup() {
       const { t } = useI18n();

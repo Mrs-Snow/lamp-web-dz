@@ -76,7 +76,7 @@
   import EditModal from './Edit.vue';
 
   export default defineComponent({
-    name: 'MyTenantManagement',
+    name: '我的企业',
     components: {
       BasicTable,
       PageWrapper,
