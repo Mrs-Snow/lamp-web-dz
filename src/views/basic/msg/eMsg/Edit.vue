@@ -42,7 +42,7 @@
             [MsgTypeEnum.NOTIFY, MsgTypeEnum.NOTICE].includes(model['msgType'])
           "
         >
-          <a-select-option v-for="item in formState.roleList" :key="item.code" :value="item.code">
+          <a-select-option v-for="item in formState.roleList" :key="item.id" :value="item.id">
             {{ item.name }} [{{ item.code }}]
           </a-select-option>
         </a-select>
@@ -95,7 +95,7 @@
       const formState = reactive({
         receiveType: 'user',
         userIdList: [] as string[],
-        roleCodeList: [] as string[],
+        roleIdList: [] as string[],
         userList: [] as any[],
         roleList: [] as any[],
       });
@@ -111,7 +111,7 @@
       function msgTypeChange(value) {
         if ([MsgTypeEnum.NOTIFY, MsgTypeEnum.NOTICE].includes(value)) {
           formState.userIdList = [];
-          formState.roleCodeList = [];
+          formState.roleIdList = [];
         }
       }
 
@@ -156,7 +156,7 @@
           if (formState.receiveType === 'user') {
             params['userIdList'] = formState.userIdList;
           } else {
-            params['roleCodeList'] = formState.roleCodeList;
+            params['roleIdList'] = formState.roleIdList;
           }
 
           openFullLoading();
