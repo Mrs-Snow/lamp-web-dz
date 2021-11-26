@@ -4,6 +4,6 @@ export default {
   classify: '分类',
   key: '标识',
   name: '名称',
-  state: '字典状态',
-  remark: '字典备注',
+  state: '状态',
+  remark: '备注',
 };

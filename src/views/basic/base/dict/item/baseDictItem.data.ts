@@ -26,7 +26,7 @@ export const columns = (): BasicColumn[] => {
     {
       title: t('basic.base.baseDict.state'),
       dataIndex: 'state',
-      width: 100,
+      width: 80,
       filters: [...stateFilters()],
       slots: { customRender: 'state' },
     },
@@ -34,7 +34,7 @@ export const columns = (): BasicColumn[] => {
       title: t('basic.base.baseDictItem.sortValue'),
       dataIndex: 'sortValue',
       sorter: true,
-      width: 100,
+      width: 80,
     },
     {
       title: t('lamp.common.createdTime'),
