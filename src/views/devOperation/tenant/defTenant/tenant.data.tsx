@@ -11,8 +11,8 @@ import { RuleType, FormSchemaExt } from '/@/api/lamp/common/formValidateService'
 import { query } from '/@/api/devOperation/tenant/datasourceConfig';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { updateState } from '/@/api/devOperation/tenant/tenant';
-import { lazyList } from '/@/api/devOperation/system/defArea';
 import { stateFilters } from '/@/utils/lamp/common';
+import cities from '/@/utils/lamp/cities.json';
 
 const { t } = useI18n();
 const { createMessage } = useMessage();
@@ -228,20 +228,25 @@ export const editFormSchema = (_: Ref<ActionEnum>): FormSchema[] => {
     {
       field: 'area',
       label: '地区',
-      component: 'ApiCascader',
+      // component: 'ApiCascader',
+      // componentProps: {
+      //   api: lazyList,
+      //   asyncFetchParamKey: 'parentId',
+      //   dataField: '',
+      //   labelField: 'name',
+      //   valueField: 'id',
+      //   initFetchParams: {
+      //     parentId: '0',
+      //   },
+      //   isLeaf: (record: Recordable) => {
+      //     return !(record.treeGrade < 2);
+      //   },
+      // },
+      component: 'Cascader',
       componentProps: {
-        api: lazyList,
-        asyncFetchParamKey: 'parentId',
-        dataField: '',
-        labelField: 'name',
-        valueField: 'id',
-        initFetchParams: {
-          parentId: '0',
-        },
-        isLeaf: (record: Recordable) => {
-          return !(record.treeGrade < 2);
-        },
+        options: cities,
       },
+      // defaultValue: [1, 3]
     },
     {
       field: 'address',
