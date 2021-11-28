@@ -29,7 +29,7 @@
   import TenantApplicationList from './TenantApplicationList.vue';
 
   export default defineComponent({
-    name: 'TenantViewIndex',
+    name: '查看企业信息',
     components: {
       PageWrapper,
       [Tabs.name]: Tabs,

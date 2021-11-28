@@ -47,7 +47,7 @@ export const columns = (): BasicColumn[] => {
     },
     {
       title: t('devOperation.tenant.defUser.sex'),
-      dataIndex: 'echoMap.sex',
+      dataIndex: ['echoMap', 'sex'],
       width: 80,
     },
     {

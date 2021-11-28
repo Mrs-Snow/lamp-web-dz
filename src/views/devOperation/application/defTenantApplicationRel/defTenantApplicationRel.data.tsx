@@ -13,12 +13,12 @@ export const columns = (): BasicColumn[] => {
   return [
     {
       title: t('devOperation.application.defTenantApplicationRel.tenantId'),
-      dataIndex: 'echoMap.tenantId',
+      dataIndex: ['echoMap', 'tenantId'],
       // width: 180,
     },
     {
       title: t('devOperation.application.defTenantApplicationRel.applicationId'),
-      dataIndex: 'echoMap.applicationId',
+      dataIndex: ['echoMap', 'applicationId'],
       // width: 180,
     },
     {

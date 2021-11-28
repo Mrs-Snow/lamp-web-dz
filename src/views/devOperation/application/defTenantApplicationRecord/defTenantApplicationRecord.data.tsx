@@ -32,7 +32,7 @@ export const columns = (): BasicColumn[] => {
     },
     {
       title: t('devOperation.application.defTenantApplicationRecord.grantType'),
-      dataIndex: 'echoMap.grantType',
+      dataIndex: ['echoMap', 'grantType'],
       width: 100,
       customRender: ({ record }) => {
         const color = grantTypeMap.get(record.grantType);

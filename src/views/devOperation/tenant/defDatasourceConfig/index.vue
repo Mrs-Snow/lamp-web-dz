@@ -22,6 +22,22 @@
         <TableAction
           :actions="[
             {
+              tooltip: t('common.title.delete'),
+              icon: 'ant-design:delete-outlined',
+              color: 'error',
+              auth: RoleEnum.TENANT_DATASOURCE_CONFIG_DELETE,
+              popConfirm: {
+                title: t('common.tips.confirmDelete'),
+                confirm: handleDelete.bind(null, record),
+              },
+            },
+            {
+              tooltip: t('common.title.edit'),
+              icon: 'clarity:note-edit-line',
+              onClick: handleEdit.bind(null, record),
+              auth: RoleEnum.TENANT_DATASOURCE_CONFIG_EDIT,
+            },
+            {
               icon: 'ant-design:bug-outlined',
               tooltip: t('devOperation.tenant.defDatasourceConfig.testConnection'),
               onClick: handleConnection.bind(null, record),
@@ -32,22 +48,6 @@
               icon: 'ant-design:copy-outlined',
               onClick: handleCopy.bind(null, record),
               auth: RoleEnum.TENANT_DATASOURCE_CONFIG_ADD,
-            },
-            {
-              tooltip: t('common.title.edit'),
-              icon: 'clarity:note-edit-line',
-              onClick: handleEdit.bind(null, record),
-              auth: RoleEnum.TENANT_DATASOURCE_CONFIG_EDIT,
-            },
-            {
-              tooltip: t('common.title.delete'),
-              icon: 'ant-design:delete-outlined',
-              color: 'error',
-              auth: RoleEnum.TENANT_DATASOURCE_CONFIG_DELETE,
-              popConfirm: {
-                title: t('common.tips.confirmDelete'),
-                confirm: handleDelete.bind(null, record),
-              },
             },
           ]"
         />

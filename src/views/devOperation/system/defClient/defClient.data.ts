@@ -21,7 +21,7 @@ export const columns = (): BasicColumn[] => {
     },
     {
       title: t('devOperation.system.defClient.type'),
-      dataIndex: 'echoMap.type',
+      dataIndex: ['echoMap', 'type'],
       // width: 180,
     },
     {

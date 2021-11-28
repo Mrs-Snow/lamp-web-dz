@@ -92,7 +92,6 @@
       );
 
       async function linkDataSource(servicePrefix: string, tenant: Recordable) {
-        console.log(servicePrefix, tenant);
         try {
           state.loading[servicePrefix] = true;
           state[servicePrefix] = await initConnect(servicePrefix, tenant.id);
