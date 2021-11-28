@@ -7,7 +7,7 @@
           format="YYYY-MM-DD HH:mm:ss"
           placeholder="有效期"
           valueFormat="YYYY-MM-DD HH:mm:ss"
-          :showTime="{ defaultValue: moment('00:00:00', 'HH:mm:ss') }"
+          :showTime="{ defaultValue: dateUtil('00:00:00', 'HH:mm:ss') }"
           :disabled-date="disabledDate"
         />
       </FormItem>
@@ -27,7 +27,7 @@
 <script lang="ts">
   import { defineComponent, onMounted, toRefs, reactive } from 'vue';
   import { DatePicker, Form, Empty } from 'ant-design-vue';
-  import moment, { Moment } from 'moment';
+  import { dateUtil } from '/@/utils/dateUtil';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { findApplicationResourceList } from '/@/api/devOperation/application/defApplication';
   import ApplicationTab from './ApplicationTab.vue';
@@ -79,14 +79,14 @@
         return formData;
       }
 
-      const disabledDate = (current: Moment) => {
-        return current && current < moment().endOf('day');
+      const disabledDate = (current) => {
+        return current && current < dateUtil().endOf('day');
       };
 
       return {
         ...toRefs(state),
         t,
-        moment,
+        dateUtil,
         disabledDate,
         formData,
         itemRefs,

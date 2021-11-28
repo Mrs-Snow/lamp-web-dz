@@ -64,6 +64,7 @@ specifiers:
   inquirer: ^8.2.0
   intro.js: ^4.3.0
   jest: ^27.3.1
+  js-base64: ^3.7.2
   less: ^4.1.2
   lint-staged: 12.1.2
   lodash-es: ^4.17.21
@@ -113,6 +114,7 @@ specifiers:
   vue-router: ^4.0.12
   vue-tsc: ^0.29.6
   vue-types: ^4.1.1
+  vue3-blocks-tree: ^0.5.2
   xlsx: ^0.17.4
 
 dependencies:
@@ -132,6 +134,7 @@ dependencies:
   dayjs: 1.10.7
   echarts: 5.2.2
   intro.js: 4.3.0
+  js-base64: 3.7.2
   lodash-es: 4.17.21
   mockjs: 1.1.0
   nprogress: 0.2.0
@@ -150,6 +153,7 @@ dependencies:
   vue-json-pretty: 2.0.6_vue@3.2.22
   vue-router: 4.0.12_vue@3.2.22
   vue-types: 4.1.1_vue@3.2.22
+  vue3-blocks-tree: 0.5.2_vue@3.2.22
   xlsx: 0.17.4
 
 devDependencies:
@@ -7535,6 +7539,10 @@ packages:
     resolution: {integrity: sha512-pZe//GGmwJndub7ZghVHz7vjb2LgC1m8B07Au3eYqeqv9emhESByMXxaEgkUkEqJe87oBbSniGYoQNIBklc7IQ==}
     dev: true
 
+  /js-base64/3.7.2:
+    resolution: {integrity: sha512-NnRs6dsyqUXejqk/yv2aiXlAvOs56sLkX6nUdeaNezI5LFFLlsZjOThmwnrcwh5ZZRwZlCMnVAY3CvhIhoVEKQ==}
+    dev: false
+
   /js-stringify/1.0.2:
     resolution: {integrity: sha1-Fzb939lyTyijaCrcYjCufk6Weds=}
     dev: true
@@ -11593,6 +11601,14 @@ packages:
       '@vue/runtime-dom': 3.2.22
       '@vue/server-renderer': 3.2.22_vue@3.2.22
       '@vue/shared': 3.2.22
+    dev: false
+
+  /vue3-blocks-tree/0.5.2_vue@3.2.22:
+    resolution: {integrity: sha512-IhG+RiKmqYvVU+nht7qW7tAWNFNsZA+R+DyoxdtYMF0LoKODnhrwTuqURNlpvKlZEIRLqOoycvtmn42NRG1aoA==}
+    peerDependencies:
+      vue: ^3.0.0
+    dependencies:
+      vue: 3.2.22
     dev: false
 
   /w3c-hr-time/1.0.2:

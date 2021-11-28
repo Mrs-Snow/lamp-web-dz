@@ -2,7 +2,7 @@ import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { FileBizTypeEnum } from '/@/enums/commonEnum';
 import { Tag } from 'ant-design-vue';
-import moment from 'moment';
+import { dateUtil } from '/@/utils/dateUtil';
 
 const { t } = useI18n();
 // 列表页字段
@@ -21,13 +21,13 @@ export const columns = (): BasicColumn[] => {
     {
       title: '有效期',
       dataIndex: 'state',
-      width: 120,
+      width: 150,
       customRender: ({ record }) => {
         if (record.expirationTime) {
-          if (moment(record.expirationTime).isBefore(Date.now())) {
+          if (dateUtil(record.expirationTime).isBefore(Date.now())) {
             return <Tag color="error">已过期</Tag>;
-          } else if (moment(record.expirationTime).isBefore(moment().add(30, 'days'))) {
-            const duration = moment.duration(moment(record.expirationTime).diff(Date.now()));
+          } else if (dateUtil(record.expirationTime).isBefore(dateUtil().add(30, 'days'))) {
+            const duration = dateUtil.duration(dateUtil(record.expirationTime).diff(Date.now()));
             if (duration.days() > 0) {
               return <Tag color="warning">{duration.days() + 1}天后到期</Tag>;
             } else {

@@ -1,5 +1,5 @@
 import { Ref, h } from 'vue';
-import moment, { Moment } from 'moment';
+import { dateUtil } from '/@/utils/dateUtil';
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { DescItem } from '/@/components/Description/index';
 import { useI18n } from '/@/hooks/web/useI18n';
@@ -84,10 +84,10 @@ export const columns: BasicColumn[] = [
     customRender: ({ record }) => {
       // 永久有效 已过期， 还剩2天到期  xxxx
       if (record.expirationTime) {
-        if (moment(record.expirationTime).isBefore(Date.now())) {
+        if (dateUtil(record.expirationTime).isBefore(Date.now())) {
           return <Tag color="error">已过期</Tag>;
-        } else if (moment(record.expirationTime).isBefore(moment().add(30, 'days'))) {
-          const duration = moment.duration(moment(record.expirationTime).diff(Date.now()));
+        } else if (dateUtil(record.expirationTime).isBefore(dateUtil().add(30, 'days'))) {
+          const duration = dateUtil.duration(dateUtil(record.expirationTime).diff(Date.now()));
           if (duration.days() > 0) {
             return <Tag color="warning">{duration.days() + 1}天后到期</Tag>;
           } else {
@@ -167,10 +167,10 @@ export const editFormSchema = (_: Ref<ActionEnum>): FormSchema[] => {
         },
         format: 'YYYY-MM-DD HH:mm:ss',
         valueFormat: 'YYYY-MM-DD HH:mm:ss',
-        disabledDate: (current: Moment) => {
-          return current && current < moment().endOf('day');
+        disabledDate: (current) => {
+          return current && current < dateUtil().endOf('day');
         },
-        showTime: { defaultValue: moment('00:00:00', 'HH:mm:ss') },
+        showTime: { defaultValue: dateUtil('00:00:00', 'HH:mm:ss') },
       },
     },
 

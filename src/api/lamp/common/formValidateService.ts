@@ -1,4 +1,4 @@
-import moment from 'moment';
+import { dateUtil } from '/@/utils/dateUtil';
 import { RuleObject } from 'ant-design-vue/lib/form/interface';
 import type { ConstraintInfo, FieldValidatorDesc } from './model/formValidateModel';
 import type { Rule, FormSchema } from '/@/components/Form/src/types/form';
@@ -23,7 +23,7 @@ export interface FormSchemaExt extends FormSchema {
  */
 function compareDate2Now(dateStr: string, timeType = 'YYYY-MM-DD HH:mm:ss', compareType = 'Past') {
   if (dateStr) {
-    const now = moment();
+    const now = dateUtil();
     let nowStr = '';
     if (timeType === 'Date') {
       nowStr = now.format('YYYY-MM-DD');

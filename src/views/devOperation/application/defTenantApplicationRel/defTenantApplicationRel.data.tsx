@@ -1,5 +1,5 @@
 import { Tag } from 'ant-design-vue';
-import moment from 'moment';
+import { dateUtil } from '/@/utils/dateUtil';
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { FormSchemaExt } from '/@/api/lamp/common/formValidateService';
@@ -135,7 +135,7 @@ export const editFormSchema = (_): FormSchema[] => {
         style: { width: '100%' },
         format: 'YYYY-MM-DD HH:mm:ss',
         valueFormat: 'YYYY-MM-DD HH:mm:ss',
-        showTime: { defaultValue: moment('00:00:00', 'HH:mm:ss') },
+        showTime: { defaultValue: dateUtil('00:00:00', 'HH:mm:ss') },
       },
     },
     {

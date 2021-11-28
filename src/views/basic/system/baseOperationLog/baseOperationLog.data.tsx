@@ -1,6 +1,6 @@
 import { Ref } from 'vue';
 import { Badge, Tag } from 'ant-design-vue';
-import moment from 'moment';
+import { dateUtil } from '/@/utils/dateUtil';
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { enumComponentProps } from '/@/utils/lamp/common';
@@ -239,7 +239,7 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       componentProps: {
         format: 'YYYY-MM-DD HH:mm:ss',
         valueFormat: 'YYYY-MM-DD HH:mm:ss',
-        showTime: { defaultValue: moment('00:00:00', 'HH:mm:ss') },
+        showTime: { defaultValue: dateUtil('00:00:00', 'HH:mm:ss') },
       },
     },
     {
@@ -252,7 +252,7 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       componentProps: {
         format: 'YYYY-MM-DD HH:mm:ss',
         valueFormat: 'YYYY-MM-DD HH:mm:ss',
-        showTime: { defaultValue: moment('00:00:00', 'HH:mm:ss') },
+        showTime: { defaultValue: dateUtil('00:00:00', 'HH:mm:ss') },
       },
     },
     {
