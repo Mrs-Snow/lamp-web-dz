@@ -1,3 +1,4 @@
+import qs from 'qs';
 import { BaseFileResultVO, BaseFilePageQuery } from './model/baseFileModel';
 import { PageParams, PageResult } from '/@/api/model/baseModel';
 import { defHttp } from '/@/utils/http/axios';
@@ -18,8 +19,8 @@ export const Api = {
   } as AxiosRequestConfig,
 
   Download: {
-    url: `${ServicePrefixEnum.FILE}/${MODULAR}/download`,
-    method: RequestEnum.POST,
+    url: `${ServicePrefixEnum.FILE}/${MODULAR}/anyone/download`,
+    method: RequestEnum.GET,
     responseType: 'blob',
   } as AxiosRequestConfig,
 };
@@ -29,5 +30,8 @@ export const page = (params: PageParams<BaseFilePageQuery>) =>
 
 export const remove = (params: string[]) => defHttp.request<boolean>({ ...Api.Delete, params });
 
-export const download = (params: string[]) =>
-  defHttp.request<void>({ ...Api.Download, params }, { isReturnNativeResponse: true });
+export const download = (ids: string[] | number[]) =>
+  defHttp.request<void>(
+    { ...Api.Download, params: qs.stringify({ ids }, { arrayFormat: 'repeat' }) },
+    { isReturnNativeResponse: true },
+  );
