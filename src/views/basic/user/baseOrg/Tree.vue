@@ -155,7 +155,7 @@
             label: t('common.title.addChildren'),
             auth: [RoleEnum.ORG_ADD],
             handler: () => {
-              emit('add', findNodeByKey(unref(node.$attrs).id, treeData.value));
+              emit('add', findNodeByKey(unref(node).id, treeData.value));
             },
             icon: 'ant-design:plus-outlined',
           },
@@ -163,8 +163,8 @@
             label: t('common.title.edit'),
             auth: [RoleEnum.ORG_EDIT],
             handler: () => {
-              const current = findNodeByKey(unref(node.$attrs)?.id, treeData.value);
-              const parent = findNodeByKey(unref(node.$attrs)?.parentId, treeData.value);
+              const current = findNodeByKey(unref(node)?.id, treeData.value);
+              const parent = findNodeByKey(unref(node)?.parentId, treeData.value);
               emit('edit', parent, current);
             },
             icon: 'ant-design:edit-outlined',
@@ -173,7 +173,7 @@
             label: t('common.title.delete'),
             auth: [RoleEnum.ORG_DELETE],
             handler: () => {
-              batchDelete([unref(node.$attrs).id]);
+              batchDelete([unref(node).id]);
             },
             icon: 'ant-design:delete-outlined',
           },

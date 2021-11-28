@@ -200,7 +200,7 @@
             authMode: PermModeEnum.HasAny,
             label: t('common.title.addChildren'),
             handler: () => {
-              emit('add', findNodeByKey(unref(node.$attrs).id, treeData.value), {
+              emit('add', findNodeByKey(unref(node).id, treeData.value), {
                 applicationId: applicationRef.value,
                 applicationName: applicationRef.label,
               });
@@ -211,8 +211,8 @@
             label: t('common.title.edit'),
             auth: [RoleEnum.RESOURCE_EDIT, RoleEnum.APPLICATION_RESOURCE_EDIT],
             handler: () => {
-              const current = findNodeByKey(unref(node.$attrs)?.id, treeData.value);
-              const parent = findNodeByKey(unref(node.$attrs)?.parentId, treeData.value);
+              const current = findNodeByKey(unref(node)?.id, treeData.value);
+              const parent = findNodeByKey(unref(node)?.parentId, treeData.value);
               current.applicationName = applicationRef.label;
               emit('edit', parent, current);
             },
@@ -221,7 +221,7 @@
           {
             label: t('common.title.delete'),
             handler: () => {
-              batchDelete([unref(node.$attrs).id]);
+              batchDelete([unref(node).id]);
             },
             icon: 'ant-design:delete-outlined',
             auth: [RoleEnum.RESOURCE_DELETE, RoleEnum.APPLICATION_RESOURCE_DELETE],
