@@ -5,7 +5,7 @@
       :title="title"
       v-bind="omit($attrs, 'class')"
       ref="headerRef"
-      v-if="content || $slots.headerContent || title || getHeaderSlots.length"
+      v-if="getShowHeader"
     >
       <template #default>
         <template v-if="content">
@@ -106,6 +106,10 @@
         ];
       });
 
+      const getShowHeader = computed(
+        () => props.content || slots?.headerContent || props.title || getHeaderSlots.value.length,
+      );
+
       const getShowFooter = computed(() => slots?.leftFooter || slots?.rightFooter);
 
       const getHeaderSlots = computed(() => {
@@ -157,6 +161,7 @@
         getClass,
         getHeaderSlots,
         prefixCls,
+        getShowHeader,
         getShowFooter,
         omit,
         getContentClass,

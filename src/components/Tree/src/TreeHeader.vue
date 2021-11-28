@@ -176,9 +176,6 @@
           }
         },
       );
-      // function handleSearch(e: ChangeEvent): void {
-      //   debounceEmitChange(e.target.value);
-      // }
 
       return { t, toolbarList, handleMenuClick, searchValue, getInputSearchCls };
     },
