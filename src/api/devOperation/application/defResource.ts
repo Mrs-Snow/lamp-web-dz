@@ -79,7 +79,7 @@ export const remove = (params: string[]) => defHttp.request<boolean>({ ...Api.De
 export const check = (code: string, id?: string) =>
   defHttp.request<boolean>({ ...Api.Check, params: { code, id } });
 
-export const checkPath = (path: string, id?: string) =>
-  defHttp.request<boolean>({ ...Api.CheckPath, params: { id, path } });
-export const checkName = (name: string, id?: string) =>
-  defHttp.request<boolean>({ ...Api.CheckName, params: { id, name } });
+export const checkPath = (path: string, applicationId: string, id?: string) =>
+  defHttp.request<boolean>({ ...Api.CheckPath, params: { id, applicationId, path } });
+export const checkName = (name: string, applicationId: string, id?: string) =>
+  defHttp.request<boolean>({ ...Api.CheckName, params: { id, applicationId, name } });

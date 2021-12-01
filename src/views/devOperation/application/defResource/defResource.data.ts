@@ -141,7 +141,7 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
               }
               if (value) {
                 if ([ResourceTypeEnum.VIEW, ResourceTypeEnum.MENU].includes(model.resourceType)) {
-                  if (await checkName(value, model?.id)) {
+                  if (await checkName(value, model.applicationId, model?.id)) {
                     return Promise.reject(
                       t('devOperation.application.defResource.name') + '已经存在',
                     );
@@ -327,7 +327,7 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
                       '1级资源的' + t('devOperation.application.defResource.path') + '必须以/开头',
                     );
                   }
-                  if (await checkPath(value, model?.id)) {
+                  if (await checkPath(value, model.applicationId, model?.id)) {
                     return Promise.reject(
                       t('devOperation.application.defResource.path') + '已经存在',
                     );

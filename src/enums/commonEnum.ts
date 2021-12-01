@@ -2,18 +2,16 @@
  * 后端服务请求 前缀
  */
 export enum ServicePrefixEnum {
-  // 租户服务
-  TENANT = '/tenant',
+  // 系统服务
+  TENANT = '/system',
   // 基础服务
   BASE = '/base',
   // 认证服务
   OAUTH = '/oauth',
   // 文件服务
-  FILE = '/file',
-  // 权限服务
-  AUTHORITY = '/authority',
+  FILE = '/base',
   // 消息服务
-  MSG = '/msg',
+  MSG = '/base',
   // 工作流服务
   ACTIVITI = '/activiti',
   // 网关
