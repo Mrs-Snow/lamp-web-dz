@@ -48,19 +48,13 @@
   import { Checkbox, Tag } from 'ant-design-vue';
   import type { TreeDataItem } from 'ant-design-vue/es/tree/Tree';
   import { CollapseContainer } from '/@/components/Container/index';
-  import {
-    BasicTree,
-    TreeActionType,
-    TreeIcon,
-    ReplaceFields,
-    CheckKeys,
-  } from '/@/components/Tree';
+  import { BasicTree, TreeActionType, TreeIcon, FieldNames, CheckKeys } from '/@/components/Tree';
   import { isArray } from '/@/utils/is';
   import { uniq, intersection, difference } from 'lodash-es';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { eachTree, findChildrenByParentId, getById } from '/@/utils/helper/treeHelper';
   import { ResourceTypeEnum } from '/@/enums/biz/tenant';
-  const replaceFields: ReplaceFields = { key: 'id', title: 'name' };
+  const replaceFields: FieldNames = { key: 'id', title: 'name' };
 
   export default defineComponent({
     name: 'ApplicationResourceTab',
