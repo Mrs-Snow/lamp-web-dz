@@ -13,6 +13,7 @@
     watch,
     onMounted,
   } from 'vue';
+  import TreeHeader from './TreeHeader.vue';
   import { Tree, Empty } from 'ant-design-vue';
   import { TreeIcon } from './TreeIcon';
   import { ScrollContainer } from '/@/components/Container';
@@ -24,7 +25,6 @@
   import { useContextMenu } from '/@/hooks/web/useContextMenu';
   import { usePermission } from '/@/hooks/web/usePermission';
   import { CreateContextOptions } from '/@/components/ContextMenu';
-  import TreeHeader from './TreeHeader.vue';
   import { treeEmits, treeProps } from './tree';
   import { createBEM } from '/@/utils/bem';
 
