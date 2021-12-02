@@ -52,7 +52,7 @@
       const getReplaceFields = computed(() => {
         const { childrenField, labelField, valueField } = props;
 
-        return { children: childrenField, title: labelField, key: valueField, value: valueField };
+        return { children: childrenField, label: labelField, key: valueField, value: valueField };
       });
 
       function handleChange(...args) {
