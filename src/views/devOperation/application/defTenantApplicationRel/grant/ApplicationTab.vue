@@ -15,7 +15,7 @@
       checkStrictly
       :clickRowToExpand="false"
       :treeData="resourceList"
-      :replaceFields="replaceFields"
+      :fieldNames="fieldNames"
       ref="treeRef"
       @check="checkNode"
       toolbar
@@ -46,13 +46,13 @@
   import { Checkbox, Tag } from 'ant-design-vue';
   import type { TreeDataItem } from 'ant-design-vue/es/tree/Tree';
   import { CollapseContainer } from '/@/components/Container/index';
-  import { BasicTree, TreeActionType, TreeIcon, ReplaceFields } from '/@/components/Tree';
+  import { BasicTree, TreeActionType, TreeIcon, FieldNames } from '/@/components/Tree';
   import { isArray } from '/@/utils/is';
   import { uniq, intersection, difference } from 'lodash-es';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { eachTree, findChildrenByParentId, getById } from '/@/utils/helper/treeHelper';
   import { ResourceTypeEnum } from '/@/enums/biz/tenant';
-  const replaceFields: ReplaceFields = { key: 'id', title: 'name' };
+  const fieldNames: FieldNames = { key: 'id', title: 'name' };
 
   export default defineComponent({
     name: 'ApplicationTab',
@@ -268,7 +268,7 @@
         checkNode,
         selectAll,
         isAllCheckedByKey,
-        replaceFields,
+        fieldNames,
         getTagColor,
       };
     },

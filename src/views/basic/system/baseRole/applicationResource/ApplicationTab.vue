@@ -10,12 +10,13 @@
         <Tag color="error">应用</Tag> {{ application.name }}</Checkbox
       >
     </template>
+
     <BasicTree
       checkable
       checkStrictly
       :clickRowToExpand="false"
       :treeData="resourceList"
-      :replaceFields="replaceFields"
+      :fieldNames="fieldNames"
       :checkedKeys="checkedKeys"
       ref="treeRef"
       @check="checkNode"
@@ -36,8 +37,9 @@
             v-if="item.children && item.children.length"
             @click="selectAll(item.id, $event)"
             style="margin-left: 30px"
-            >{{ isAllCheckedByKey(item.id) ? '取消全选' : '全选' }}</a
           >
+            {{ isAllCheckedByKey(item.id) ? '取消全选' : '全选' }}
+          </a>
         </span>
       </template>
     </BasicTree>
@@ -54,7 +56,7 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { eachTree, findChildrenByParentId, getById } from '/@/utils/helper/treeHelper';
   import { ResourceTypeEnum } from '/@/enums/biz/tenant';
-  const replaceFields: FieldNames = { key: 'id', title: 'name' };
+  const fieldNames: FieldNames = { key: 'id', title: 'name' };
 
   export default defineComponent({
     name: 'ApplicationResourceTab',
@@ -112,7 +114,7 @@
           (item, parent) => {
             keys.push(item.id);
             item.keyLinks = [...(parent.keyLinks || []), item.id];
-            item.slots = { title: 'title' };
+            // item.slots = { title: 'title' };
             return item;
           },
           {},
@@ -272,7 +274,7 @@
         checkNode,
         selectAll,
         isAllCheckedByKey,
-        replaceFields,
+        fieldNames,
         changeHandler,
         getTagColor,
       };

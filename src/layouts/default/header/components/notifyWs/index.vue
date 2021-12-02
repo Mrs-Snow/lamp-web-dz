@@ -90,6 +90,7 @@
           send('pull');
         }
       }
+
       const { send } = useWebSocket(state.server, {
         autoReconnect: true,
         heartbeat: false,

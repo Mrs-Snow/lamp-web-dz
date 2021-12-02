@@ -2,6 +2,7 @@ import type { ExtractPropTypes } from 'vue';
 import type { TreeDataItem } from 'ant-design-vue/es/tree/Tree';
 
 import { buildProps } from '/@/utils/props';
+import { PermModeEnum, RoleEnum } from '/@/enums/roleEnum';
 
 export enum ToolbarEnum {
   SELECT_ALL,
@@ -75,7 +76,11 @@ export const treeProps = buildProps({
     default: '',
   },
   defaultExpandAll: Boolean,
-
+  // 工具栏是否显示 层级关联
+  toolbarStrictly: {
+    type: Boolean,
+    default: true,
+  },
   fieldNames: {
     type: Object as PropType<FieldNames>,
   },
@@ -156,6 +161,8 @@ export interface TreeItem extends TreeDataItem {
 export interface TreeActionItem {
   render: (record: Recordable) => any;
   show?: boolean | ((record: Recordable) => boolean);
+  auth?: string | string[] | RoleEnum | RoleEnum[];
+  authMode?: PermModeEnum;
 }
 
 export interface InsertNodeParams {
