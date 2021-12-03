@@ -10,8 +10,8 @@ export interface EMsgPageQuery {
   handlerUrl?: string;
   handlerParams?: string;
   isSingleHandle?: boolean;
-  createTime?: string;
-  updateTime?: string;
+  createdTime?: string;
+  updatedTime?: string;
 }
 
 export interface EMsgSaveVO {
@@ -30,8 +30,8 @@ export interface MsgVO {
   handlerUrl: string;
   handlerParams: string;
   isSingleHandle: boolean;
-  createTime: string;
-  updateTime: string;
+  createdTime: string;
+  updatedTime: string;
 }
 
 export interface EMsgUpdateVO {
@@ -45,8 +45,8 @@ export interface EMsgUpdateVO {
   handlerUrl: string;
   handlerParams: string;
   isSingleHandle: boolean;
-  createTime: string;
-  updateTime: string;
+  createdTime: string;
+  updatedTime: string;
 }
 
 export interface MyMsgResult {
@@ -66,10 +66,11 @@ export interface EMsgResultVO {
   handlerUrl?: string;
   handlerParams?: string;
   isSingleHandle?: boolean;
-  createTime?: string;
-  updateTime?: string;
+  createdTime?: string;
+  updatedTime?: string;
   id: string;
   createdBy?: string;
   updatedBy?: string;
   echoMap?: Recordable;
+  isRead?: boolean;
 }

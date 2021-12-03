@@ -52,6 +52,7 @@
   import { PageResult } from '/@/api/model/baseModel';
   import { EMsgResultVO } from '/@/api/basic/msg/model/eMsgModel';
   import { MsgTypeEnum } from '/@/enums/commonEnum';
+  import { RouteEnum } from '/@/enums/biz/tenant';
 
   export default defineComponent({
     components: {
@@ -94,7 +95,7 @@
 
       function loadMore(msgType: string) {
         replace({
-          name: '通知公告',
+          name: RouteEnum.BASIC_MY_MSG,
           query: { msgType: msgType },
         });
       }
