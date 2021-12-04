@@ -30,7 +30,7 @@
             },
             {
               icon: 'ant-design:database-outlined',
-              tooltip: '初始化数据',
+              tooltip: '初始化租户数据库表结构和初始数据',
               onClick: handleInitData.bind(null, record),
               ifShow: () => {
                 return [TenantStatusEnum.WAIT_INIT].includes(record?.status);
@@ -39,7 +39,7 @@
             },
             {
               icon: 'ant-design:cloud-upload-outlined',
-              tooltip: '初始化数据源',
+              tooltip: '初始化其他服务的数据源',
               onClick: handleLinkDataSource.bind(null, record),
               ifShow: () => {
                 return [TenantStatusEnum.NORMAL, TenantStatusEnum.AGREED].includes(record?.status);
@@ -63,7 +63,7 @@
               auth: RoleEnum.TENANT_TENANT_DELETE,
             },
             {
-              tooltip: '绑定用户',
+              tooltip: '绑定用户为租户管理员',
               icon: 'ant-design:usergroup-add-outlined',
               color: 'warning',
               onClick: handleBindUser.bind(null, record),

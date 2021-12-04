@@ -19,6 +19,7 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { toExamineFormSchema } from './tenant.data';
   import { updateStatus } from '/@/api/devOperation/tenant/tenant';
+  import { TenantStatusEnum } from '/@/enums/biz/tenant';
 
   export default defineComponent({
     name: 'ToExamineModal',
@@ -26,7 +27,7 @@
     emits: ['success', 'register'],
     setup(_, { emit }) {
       const { t } = useI18n();
-      const { createSuccessModal } = useMessage();
+      const { createSuccessModal, createWarningModal } = useMessage();
       const [registerForm, { setFieldsValue, validate }] = useForm({
         labelWidth: 120,
         schemas: toExamineFormSchema(),
@@ -51,10 +52,14 @@
 
           await updateStatus(params);
 
-          createSuccessModal({
-            title: '审核成功',
-            content: `请执行以下操作,使用户能正常使用系统： <br/> 1. 初始化数据源 <br/> 2. 手动绑定用户【${params?.createdName}】为租户管理员`,
-          });
+          if (params.status === TenantStatusEnum.AGREED) {
+            createSuccessModal({
+              title: '审核成功',
+              content: `请执行以下操作,使用户能正常使用系统： <br/> 1. 初始化数据源 <br/> 2. 手动绑定用户【${params?.createdName}】为租户管理员`,
+            });
+          } else {
+            createWarningModal({ title: '拒绝成功' });
+          }
 
           closeModal();
           emit('success');
