@@ -45,7 +45,7 @@
         beforeFetch: handleFetchParams,
         immediate: false,
         searchInfo: {
-          id: tenantId,
+          tenantId,
         },
         useSearchForm: true,
         showTableSetting: true,

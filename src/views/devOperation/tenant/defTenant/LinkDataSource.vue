@@ -5,7 +5,7 @@
     showFooter
     width="30%"
     :maskClosable="false"
-    title="链接数据源"
+    title="初始化其他服务的数据源"
     @ok="handleSubmit"
   >
     <BasicForm @register="registerForm">
@@ -35,29 +35,37 @@
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { useMessage } from '/@/hooks/web/useMessage';
 
-  import { checkDs, initConnect, findOnlineServicePrefix } from '/@/api/devOperation/tenant/tenant';
+  import {
+    checkDs,
+    initConnect,
+    findOnlineServicePrefix,
+    updateStatus,
+  } from '/@/api/devOperation/tenant/tenant';
   import { linkFormSchema } from './tenant.data';
+  import { TenantStatusEnum } from '/@/enums/biz/tenant';
 
   export default defineComponent({
     name: 'TenantLinkDataSource',
     components: { BasicDrawer, BasicForm, Tag },
     emits: ['success', 'register'],
     setup(_, { emit }) {
-      const { createMessage } = useMessage();
+      const { createMessage, createWarningModal } = useMessage();
       const state = reactive<Recordable>({
         serviceMap: {},
         loading: {},
       });
 
-      const [registerForm, { setFieldsValue, resetFields, resetSchema, appendSchemaByField }] =
-        useForm({
-          labelWidth: 150,
-          schemas: linkFormSchema(),
-          showActionButtonGroup: false,
-          actionColOptions: {
-            span: 23,
-          },
-        });
+      const [
+        registerForm,
+        { setFieldsValue, resetFields, resetSchema, appendSchemaByField, validate },
+      ] = useForm({
+        labelWidth: 150,
+        schemas: linkFormSchema(),
+        showActionButtonGroup: false,
+        actionColOptions: {
+          span: 23,
+        },
+      });
 
       const [registerDrawer, { setDrawerProps, closeDrawer, changeLoading }] = useDrawerInner(
         async (data) => {
@@ -95,7 +103,7 @@
         try {
           state.loading[servicePrefix] = true;
           state[servicePrefix] = await initConnect(servicePrefix, tenant.id);
-          createMessage.success('链接成功');
+          createMessage.success(`${state[servicePrefix]}已成功连接数据源`);
         } finally {
           state.loading[servicePrefix] = false;
         }
@@ -104,6 +112,25 @@
       async function handleSubmit() {
         try {
           setDrawerProps({ confirmLoading: true });
+          const params = await validate();
+          if (params.status !== TenantStatusEnum.NORMAL) {
+            const { serviceMap } = state;
+            let flag = true;
+            for (const serviceName in serviceMap) {
+              const servicePrefix = serviceMap[serviceName];
+
+              flag = flag && state[servicePrefix];
+            }
+
+            if (flag) {
+              params.status = TenantStatusEnum.NORMAL;
+              await updateStatus(params);
+              createWarningModal({
+                title: '链接成功',
+                content: '全部服务的数据源均已成功链接，请立即为此租户绑定租户管理员',
+              });
+            }
+          }
 
           closeDrawer();
           emit('success');

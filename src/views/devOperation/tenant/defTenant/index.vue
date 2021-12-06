@@ -33,7 +33,7 @@
               tooltip: '初始化租户数据库表结构和初始数据',
               onClick: handleInitData.bind(null, record),
               ifShow: () => {
-                return [TenantStatusEnum.WAIT_INIT].includes(record?.status);
+                return [TenantStatusEnum.WAIT_INIT_SCHEMA].includes(record?.status);
               },
               auth: RoleEnum.TENANT_TENANT_INIT_DATA,
             },
@@ -42,7 +42,11 @@
               tooltip: '初始化其他服务的数据源',
               onClick: handleLinkDataSource.bind(null, record),
               ifShow: () => {
-                return [TenantStatusEnum.NORMAL, TenantStatusEnum.AGREED].includes(record?.status);
+                return [
+                  TenantStatusEnum.NORMAL,
+                  TenantStatusEnum.WAIT_INIT_DATASOURCE,
+                  TenantStatusEnum.AGREED,
+                ].includes(record?.status);
               },
               auth: RoleEnum.TENANT_TENANT_INIT_DATA_SOURCE,
             },

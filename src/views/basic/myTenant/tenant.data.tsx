@@ -41,7 +41,10 @@ export const columns: BasicColumn[] = [
         case TenantStatusEnum.NORMAL: // 正常
           status = 'success';
           break;
-        case TenantStatusEnum.WAIT_INIT: //待初始化
+        case TenantStatusEnum.WAIT_INIT_SCHEMA: //待初始化表结构和数据
+          status = 'processing';
+          break;
+        case TenantStatusEnum.WAIT_INIT_DATASOURCE: //待初始化数据源
           status = 'processing';
           break;
         case TenantStatusEnum.WITHDRAW: // 已撤回

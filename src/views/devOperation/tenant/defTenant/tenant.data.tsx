@@ -19,12 +19,13 @@ const { createMessage } = useMessage();
 const globSetting = useGlobSetting();
 
 const statusMap = new Map();
-statusMap.set(TenantStatusEnum.NORMAL, 'success');
-statusMap.set(TenantStatusEnum.WAIT_INIT, 'processing');
-statusMap.set(TenantStatusEnum.WITHDRAW, 'default');
-statusMap.set(TenantStatusEnum.WAITING, 'processing');
-statusMap.set(TenantStatusEnum.REFUSE, 'error');
-statusMap.set(TenantStatusEnum.AGREED, 'warning');
+statusMap.set(TenantStatusEnum.NORMAL, 'success'); //正常
+statusMap.set(TenantStatusEnum.WAIT_INIT_SCHEMA, 'processing'); // 待初始 表结构
+statusMap.set(TenantStatusEnum.WAIT_INIT_DATASOURCE, 'warning'); // 待初始 数据源
+statusMap.set(TenantStatusEnum.WITHDRAW, 'default'); // 已撤回
+statusMap.set(TenantStatusEnum.WAITING, 'gold'); // 待审核
+statusMap.set(TenantStatusEnum.REFUSE, 'error'); // 已拒绝
+statusMap.set(TenantStatusEnum.AGREED, 'default'); // 已同意
 
 // 列表页字段
 export const columns: BasicColumn[] = [
@@ -71,7 +72,7 @@ export const columns: BasicColumn[] = [
   {
     title: t('devOperation.tenant.defTenant.status'),
     dataIndex: 'status',
-    width: 120,
+    width: 140,
     customRender: ({ record }) => {
       const status = statusMap.get(record.status);
       return <Badge status={status} text={record.echoMap?.status} />;
@@ -529,19 +530,19 @@ export const initDataFormSchema = (onChange: Fn): FormSchema[] => {
         return values?.connectType === TenantConnectTypeEnum.CUSTOM;
       },
     },
-    {
-      field: 'extendDatasourceId',
-      label: '扩展库',
-      component: 'ApiSelect',
-      componentProps: {
-        api: query,
-        labelField: 'name',
-        valueField: 'id',
-      },
-      ifShow: ({ values }) => {
-        return values?.connectType === TenantConnectTypeEnum.CUSTOM;
-      },
-    },
+    // {
+    //   field: 'extendDatasourceId',
+    //   label: '扩展库',
+    //   component: 'ApiSelect',
+    //   componentProps: {
+    //     api: query,
+    //     labelField: 'name',
+    //     valueField: 'id',
+    //   },
+    //   ifShow: ({ values }) => {
+    //     return values?.connectType === TenantConnectTypeEnum.CUSTOM;
+    //   },
+    // },
   ];
 };
 
@@ -550,6 +551,13 @@ export const linkFormSchema = (): FormSchema[] => {
   return [
     {
       field: 'id',
+      label: 'ID',
+      component: 'Input',
+      required: false,
+      show: false,
+    },
+    {
+      field: 'status',
       label: 'ID',
       component: 'Input',
       required: false,

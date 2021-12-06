@@ -3,7 +3,7 @@
     v-bind="$attrs"
     okText="绑定"
     @register="registerModal"
-    title="绑定用户"
+    title="审核"
     @ok="handleSubmit"
     :maskClosable="false"
     :keyboard="true"

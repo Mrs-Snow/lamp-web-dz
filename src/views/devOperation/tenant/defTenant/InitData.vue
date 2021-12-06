@@ -5,7 +5,7 @@
     showFooter
     width="30%"
     :maskClosable="false"
-    title="初始化数据"
+    title="初始化租户数据库表结构和初始数据"
     @ok="handleSubmit"
   >
     <BasicForm @register="registerForm" />
