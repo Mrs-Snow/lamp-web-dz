@@ -3,10 +3,11 @@
     v-bind="$attrs"
     okText="绑定"
     @register="registerModal"
-    title="绑定用户"
+    title="将尚未成为该企业的用户，绑定为此企业的租户管理员"
     @ok="handleSubmit"
     :maskClosable="false"
     :keyboard="true"
+    defaultFullscreen
     width="80%"
   >
     <BasicTable @register="registerTable" />

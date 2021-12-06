@@ -54,12 +54,12 @@
         rowSelection: {
           type: 'checkbox',
         },
-        actionColumn: {
-          width: 200,
-          title: t('common.column.action'),
-          dataIndex: 'action',
-          slots: { customRender: 'action' },
-        },
+        // actionColumn: {
+        //   width: 200,
+        //   title: t('common.column.action'),
+        //   dataIndex: 'action',
+        //   slots: { customRender: 'action' },
+        // },
       });
 
       onMounted(() => {
