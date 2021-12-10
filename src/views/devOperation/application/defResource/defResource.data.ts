@@ -494,7 +494,9 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       component: 'Input',
       slot: 'resourceApiList',
       ifShow: ({ values }) => {
-        return [ResourceTypeEnum.MENU, ResourceTypeEnum.VIEW].includes(values.resourceType);
+        return [ResourceTypeEnum.MENU, ResourceTypeEnum.VIEW, ResourceTypeEnum.FUNCTION].includes(
+          values.resourceType,
+        );
       },
     },
     {
@@ -588,6 +590,7 @@ export const editMetaFormSchema = (): FormSchema[] => {
         filterOption: (input: string, option) => {
           return option.value.toUpperCase().indexOf(input.toUpperCase()) >= 0;
         },
+        getPopupContainer: () => document.body,
         options: [
           { value: 'title' },
           { value: 'ignoreKeepAlive' },
