@@ -362,54 +362,50 @@
       const treeData = computed(() => {
         const data = cloneDeep(getTreeData.value);
 
-        eachTree(
-          data,
-          (item, _parent) => {
-            const searchText = searchState.searchText;
-            const { highlight } = unref(props);
-            const {
-              title: titleField,
-              key: keyField,
-              children: childrenField,
-            } = unref(getFieldNames);
+        eachTree(data, (item, _parent) => {
+          const searchText = searchState.searchText;
+          const { highlight } = unref(props);
+          const {
+            title: titleField,
+            key: keyField,
+            children: childrenField,
+          } = unref(getFieldNames);
 
-            const icon = getIcon(item, item.icon);
-            const title = get(item, titleField);
+          const icon = getIcon(item, item.icon);
+          const title = get(item, titleField);
 
-            const searchIdx = searchText ? title.indexOf(searchText) : -1;
-            const isHighlight =
-              searchState.startSearch && !isEmpty(searchText) && highlight && searchIdx !== -1;
-            const highlightStyle = `color: ${isBoolean(highlight) ? '#f50' : highlight}`;
+          const searchIdx = searchText ? title.indexOf(searchText) : -1;
+          const isHighlight =
+            searchState.startSearch && !isEmpty(searchText) && highlight && searchIdx !== -1;
+          const highlightStyle = `color: ${isBoolean(highlight) ? '#f50' : highlight}`;
 
-            const titleDom = isHighlight ? (
-              <span class={unref(getBindValues)?.blockNode ? `${bem('content')}` : ''}>
-                <span>{title.substr(0, searchIdx)}</span>
-                <span style={highlightStyle}>{searchText}</span>
-                <span>{title.substr(searchIdx + (searchText as string).length)}</span>
-              </span>
-            ) : (
-              title
-            );
-            item.title = (
-              <span
-                class={`${bem('title')} pl-2`}
-                onClick={handleClickNode.bind(null, item[keyField], item[childrenField])}
-              >
-                {item.slots?.title ? (
-                  getSlot(slots, item.slots?.title, item)
-                ) : (
-                  <>
-                    {icon && <TreeIcon icon={icon} />}
-                    {titleDom}
-                    <span class={bem('actions')}>{renderAction(item)}</span>
-                  </>
-                )}
-              </span>
-            );
-            return item;
-          },
-          {},
-        );
+          const titleDom = isHighlight ? (
+            <span class={unref(getBindValues)?.blockNode ? `${bem('content')}` : ''}>
+              <span>{title.substr(0, searchIdx)}</span>
+              <span style={highlightStyle}>{searchText}</span>
+              <span>{title.substr(searchIdx + (searchText as string).length)}</span>
+            </span>
+          ) : (
+            title
+          );
+          item.title = (
+            <span
+              class={`${bem('title')} pl-2`}
+              onClick={handleClickNode.bind(null, item[keyField], item[childrenField])}
+            >
+              {item.slots?.title ? (
+                getSlot(slots, item.slots?.title, item)
+              ) : (
+                <>
+                  {icon && <TreeIcon icon={icon} />}
+                  {titleDom}
+                  <span class={bem('actions')}>{renderAction(item)}</span>
+                </>
+              )}
+            </span>
+          );
+          return item;
+        });
 
         return data;
       });
