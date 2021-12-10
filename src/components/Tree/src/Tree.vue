@@ -20,7 +20,7 @@
   import { omit, get, difference, cloneDeep } from 'lodash-es';
   import { isArray, isBoolean, isEmpty, isFunction } from '/@/utils/is';
   import { extendSlots, getSlot } from '/@/utils/helper/tsxHelper';
-  import { filter, treeToList } from '/@/utils/helper/treeHelper';
+  import { filter, treeToList, eachTree } from '/@/utils/helper/treeHelper';
   import { useTree } from './useTree';
   import { useContextMenu } from '/@/hooks/web/useContextMenu';
   import { usePermission } from '/@/hooks/web/usePermission';
@@ -361,49 +361,56 @@
 
       const treeData = computed(() => {
         const data = cloneDeep(getTreeData.value);
-        data.forEach((item) => {
-          const searchText = searchState.searchText;
-          const { highlight } = unref(props);
-          const {
-            title: titleField,
-            key: keyField,
-            children: childrenField,
-          } = unref(getFieldNames);
 
-          const icon = getIcon(item, item.icon);
-          const title = get(item, titleField);
+        eachTree(
+          data,
+          (item, _parent) => {
+            const searchText = searchState.searchText;
+            const { highlight } = unref(props);
+            const {
+              title: titleField,
+              key: keyField,
+              children: childrenField,
+            } = unref(getFieldNames);
 
-          const searchIdx = searchText ? title.indexOf(searchText) : -1;
-          const isHighlight =
-            searchState.startSearch && !isEmpty(searchText) && highlight && searchIdx !== -1;
-          const highlightStyle = `color: ${isBoolean(highlight) ? '#f50' : highlight}`;
+            const icon = getIcon(item, item.icon);
+            const title = get(item, titleField);
 
-          const titleDom = isHighlight ? (
-            <span class={unref(getBindValues)?.blockNode ? `${bem('content')}` : ''}>
-              <span>{title.substr(0, searchIdx)}</span>
-              <span style={highlightStyle}>{searchText}</span>
-              <span>{title.substr(searchIdx + (searchText as string).length)}</span>
-            </span>
-          ) : (
-            title
-          );
-          item.title = (
-            <span
-              class={`${bem('title')} pl-2`}
-              onClick={handleClickNode.bind(null, item[keyField], item[childrenField])}
-            >
-              {item.slots?.title ? (
-                getSlot(slots, item.slots?.title, item)
-              ) : (
-                <>
-                  {icon && <TreeIcon icon={icon} />}
-                  {titleDom}
-                  <span class={bem('actions')}>{renderAction(item)}</span>
-                </>
-              )}
-            </span>
-          );
-        });
+            const searchIdx = searchText ? title.indexOf(searchText) : -1;
+            const isHighlight =
+              searchState.startSearch && !isEmpty(searchText) && highlight && searchIdx !== -1;
+            const highlightStyle = `color: ${isBoolean(highlight) ? '#f50' : highlight}`;
+
+            const titleDom = isHighlight ? (
+              <span class={unref(getBindValues)?.blockNode ? `${bem('content')}` : ''}>
+                <span>{title.substr(0, searchIdx)}</span>
+                <span style={highlightStyle}>{searchText}</span>
+                <span>{title.substr(searchIdx + (searchText as string).length)}</span>
+              </span>
+            ) : (
+              title
+            );
+            item.title = (
+              <span
+                class={`${bem('title')} pl-2`}
+                onClick={handleClickNode.bind(null, item[keyField], item[childrenField])}
+              >
+                {item.slots?.title ? (
+                  getSlot(slots, item.slots?.title, item)
+                ) : (
+                  <>
+                    {icon && <TreeIcon icon={icon} />}
+                    {titleDom}
+                    <span class={bem('actions')}>{renderAction(item)}</span>
+                  </>
+                )}
+              </span>
+            );
+            return item;
+          },
+          {},
+        );
+
         return data;
       });
 
@@ -433,9 +440,7 @@
               </TreeHeader>
             )}
             <ScrollContainer style={scrollStyle} v-show={!unref(getNotFound)}>
-              <Tree {...unref(getBindValues)} showIcon={false} treeData={treeData.value}>
-                {extendSlots(slots)}
-              </Tree>
+              <Tree {...unref(getBindValues)} showIcon={false} treeData={treeData.value} />
             </ScrollContainer>
             <Empty v-show={unref(getNotFound)} image={Empty.PRESENTED_IMAGE_SIMPLE} class="!mt-4" />
           </div>

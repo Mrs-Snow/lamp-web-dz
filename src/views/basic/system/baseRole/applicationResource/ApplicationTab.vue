@@ -16,7 +16,6 @@
       checkStrictly
       :clickRowToExpand="false"
       :treeData="resourceList"
-      :fieldNames="fieldNames"
       :checkedKeys="checkedKeys"
       ref="treeRef"
       @check="checkNode"
@@ -113,8 +112,10 @@
           props.resourceList,
           (item, parent) => {
             keys.push(item.id);
+            item.key = item.id;
+            item.title = item.name;
             item.keyLinks = [...(parent.keyLinks || []), item.id];
-            // item.slots = { title: 'title' };
+            item.slots = { title: 'title' };
             return item;
           },
           {},

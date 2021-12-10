@@ -37,7 +37,6 @@
       :beforeRightClick="getRightMenuList"
       :clickRowToExpand="false"
       :treeData="treeData"
-      :fieldNames="{ key: 'id', title: 'name' }"
       @select="handleSelect"
       ref="treeRef"
     />
@@ -53,10 +52,11 @@
   import {
     BasicTree,
     TreeItem,
-    ActionItem,
+    TreeActionItem,
     TreeActionType,
     ContextMenuItem,
   } from '/@/components/Tree';
+  import { eachTree } from '/@/utils/helper/treeHelper';
   import { findNodeByKey } from '/@/utils/lamp/common';
   import { query } from '/@/api/devOperation/application/defApplication';
   import { tree, remove } from '/@/api/devOperation/application/defResource';
@@ -108,6 +108,17 @@
         applicationId = applicationId || applicationRef.value;
         if (!!applicationId) {
           treeData.value = (await tree({ applicationId })) as unknown as TreeItem[];
+
+          eachTree(
+            treeData.value,
+            (item, parent) => {
+              item.key = item.id;
+              item.title = item.name;
+              item.keyLinks = [...(parent.keyLinks || []), item.id];
+              return item;
+            },
+            {},
+          );
           setTimeout(() => {
             // getTree().filterByLevel(2);
             getTree().setCheckedKeys({ checked: [], halfChecked: [] });
@@ -129,7 +140,7 @@
       }
 
       // 悬停图标
-      const actionList: ActionItem[] = [
+      const actionList: TreeActionItem[] = [
         {
           auth: [RoleEnum.RESOURCE_ADD, RoleEnum.APPLICATION_RESOURCE_ADD],
           authMode: PermModeEnum.HasAny,
