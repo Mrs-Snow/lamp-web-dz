@@ -360,6 +360,7 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       componentProps: ({ formActionType }) => {
         return {
           allowClear: true,
+          getPopupContainer: () => document.body,
           filterOption: (input: string, option) => {
             return option.value.toUpperCase().indexOf(input.toUpperCase()) >= 0;
           },
@@ -587,10 +588,10 @@ export const editMetaFormSchema = (): FormSchema[] => {
       helpMessage: ['新增key的选项后，同时也需要后端在RouterMeta实体类中新增字段'],
       componentProps: {
         allowClear: true,
+        getPopupContainer: () => document.body,
         filterOption: (input: string, option) => {
           return option.value.toUpperCase().indexOf(input.toUpperCase()) >= 0;
         },
-        getPopupContainer: () => document.body,
         options: [
           { value: 'title' },
           { value: 'ignoreKeepAlive' },
@@ -659,13 +660,12 @@ export const selectResourceApiFormSchema = (
       component: 'Select',
       componentProps: () => {
         return {
+          getPopupContainer: () => document.body,
           onChange: handleServiceChange,
           options: [
             { value: 'base', label: '基础服务' },
             { value: 'oauth', label: '认证服务' },
-            { value: 'tenant', label: '租户服务' },
-            { value: 'msg', label: '消息服务' },
-            { value: 'file', label: '文件服务' },
+            { value: 'system', label: '租户服务' },
             { value: 'gateway', label: '网关服务' },
           ],
         };
@@ -676,6 +676,7 @@ export const selectResourceApiFormSchema = (
       field: 'controller',
       component: 'Select',
       componentProps: {
+        getPopupContainer: () => document.body,
         onChange: handleControllerChange,
       },
     },
@@ -688,6 +689,7 @@ export const selectResourceApiFormSchema = (
         onDeselect: handleUriDeselect,
         mode: 'multiple',
         'option-label-prop': 'label',
+        getPopupContainer: () => document.body,
       },
     },
   ];
@@ -702,12 +704,11 @@ export const editResourceApiFormSchema = (): FormSchema[] => {
       component: 'Select',
       componentProps: () => {
         return {
+          getPopupContainer: () => document.body,
           options: [
             { value: 'lamp-base-server', label: '基础服务' },
             { value: 'lamp-oauth-server', label: '认证服务' },
-            { value: 'lamp-tenant-server', label: '租户服务' },
-            { value: 'lamp-msg-server', label: '消息服务' },
-            { value: 'lamp-file-server', label: '文件服务' },
+            { value: 'lamp-system-server', label: '系统服务' },
             { value: 'lamp-gateway-server', label: '网关服务' },
           ],
         };
@@ -733,6 +734,7 @@ export const editResourceApiFormSchema = (): FormSchema[] => {
       required: true,
       componentProps: () => {
         return {
+          getPopupContainer: () => document.body,
           options: [
             { value: 'ALL', label: '所有' },
             { value: 'GET', label: 'GET' },
