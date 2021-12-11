@@ -2,7 +2,14 @@
   <div class="bg-white m-4 mr-2 overflow-hidden">
     <div class="m-4">
       <Space>
-        <a-button type="primary" class="mr-2" @click="changeDisplay()"> 切换 </a-button>
+        <a-button
+          type="primary"
+          class="mr-2"
+          @click="changeDisplay()"
+          v-hasAnyPermission="[RoleEnum.ORG_SWITCH]"
+        >
+          切换
+        </a-button>
         <!-- 垂直展示 -->
         <Checkbox v-model:checked="isHorizontal">垂直展示</Checkbox>
         <!-- 折叠节点 -->
@@ -45,6 +52,7 @@
   // 引入VueBlocksTree组件
   import VueBlocksTree from 'vue3-blocks-tree';
   import 'vue3-blocks-tree/dist/vue3-blocks-tree.css';
+  import { RoleEnum } from '/@/enums/roleEnum';
   import { tree } from '/@/api/basic/user/baseOrg';
 
   const SelectOption = Select.Option;

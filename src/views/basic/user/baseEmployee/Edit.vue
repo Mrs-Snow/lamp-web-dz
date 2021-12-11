@@ -63,7 +63,9 @@
         setDrawerProps({ confirmLoading: false });
         await resetSchema(editFormSchema(type));
         await resetFields();
-        await resetFieldsByUser();
+        if (unref(type) === ActionEnum.VIEW) {
+          await resetFieldsByUser();
+        }
         type.value = data?.type || ActionEnum.ADD;
 
         if (unref(type) !== ActionEnum.ADD) {
@@ -80,6 +82,7 @@
         if (unref(type) !== ActionEnum.VIEW) {
           let validateApi = Api[VALIDATE_API[unref(type)]];
           await getValidateRules(validateApi, customFormSchemaRules(type)).then(async (rules) => {
+            console.log(rules);
             rules && rules.length > 0 && (await updateSchema(rules));
           });
         }

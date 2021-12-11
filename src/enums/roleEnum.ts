@@ -96,7 +96,7 @@ export enum RoleEnum {
   ORG_ADD = 'basic:user:org:add',
   ORG_EDIT = 'basic:user:org:edit',
   ORG_DELETE = 'basic:user:org:delete',
-  ORG_VIEW = 'basic:user:org:view',
+  ORG_SWITCH = 'basic:user:org:switch',
 
   // 岗位维护
   POSITION_ADD = 'basic:user:position:add',

@@ -4,9 +4,9 @@
       <BasicForm @register="register" />
       <div class="flex justify-center">
         <a-button @click="resetFields">{{ t('common.resetText') }}</a-button>
-        <a-button class="!ml-4" type="primary" @click="handleSubmit" :loading="confirmLoading">{{
-          t('common.okText')
-        }}</a-button>
+        <a-button class="!ml-4" type="primary" @click="handleSubmit" :loading="confirmLoading">
+          {{ t('common.saveText') }}
+        </a-button>
       </div>
     </a-card>
   </div>

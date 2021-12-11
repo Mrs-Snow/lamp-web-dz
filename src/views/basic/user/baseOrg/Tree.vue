@@ -1,7 +1,14 @@
 <template>
   <div class="bg-white m-4 mr-2 overflow-hidden">
     <div class="m-4">
-      <a-button type="primary" @click="changeDisplay()" class="mr-2"> 切换 </a-button>
+      <a-button
+        v-hasAnyPermission="[RoleEnum.ORG_SWITCH]"
+        type="primary"
+        @click="changeDisplay()"
+        class="mr-2"
+      >
+        切换
+      </a-button>
       <a-button
         @click="handleAdd()"
         preIcon="ant-design:plus-outlined"
@@ -29,7 +36,6 @@
       :beforeRightClick="getRightMenuList"
       :clickRowToExpand="false"
       :treeData="treeData"
-      :fieldNames="{ key: 'id', title: 'name' }"
       @select="handleSelect"
       ref="treeRef"
     />
@@ -46,6 +52,7 @@
     TreeActionType,
     ContextMenuItem,
   } from '/@/components/Tree';
+  import { eachTree } from '/@/utils/helper/treeHelper';
   import { RoleEnum } from '/@/enums/roleEnum';
   import { findNodeByKey } from '/@/utils/lamp/common';
 
@@ -77,6 +84,11 @@
       // 加载数据
       async function fetch() {
         treeData.value = (await tree()) as unknown as TreeItem[];
+        eachTree(treeData.value, (item) => {
+          item.key = item.id;
+          item.title = item.name;
+          return item;
+        });
         setTimeout(() => {
           getTree().filterByLevel(2);
         }, 0);

@@ -448,7 +448,7 @@ export const customFormSchemaRules = (type: Ref<ActionEnum>): Partial<FormSchema
       type: RuleType.append,
       rules: [
         {
-          trigger: ['change', 'blur'],
+          trigger: 'blur',
           async validator(_, value) {
             if (unref(type) === ActionEnum.EDIT) {
               return Promise.resolve();

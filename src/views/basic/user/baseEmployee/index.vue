@@ -8,15 +8,17 @@
           color="error"
           v-hasAnyPermission="[RoleEnum.EMPLOYEE_DELETE]"
           @click="handleBatchDelete"
-          >{{ t('common.title.delete') }}</a-button
         >
+          {{ t('common.title.delete') }}
+        </a-button>
         <a-button
           type="primary"
           preIcon="ant-design:plus-outlined"
           v-hasAnyPermission="[RoleEnum.EMPLOYEE_ADD]"
           @click="handleAdd"
-          >{{ t('common.title.add') }}</a-button
         >
+          {{ t('common.title.add') }}
+        </a-button>
       </template>
       <template #orgIdList="{ record }">
         <span>
