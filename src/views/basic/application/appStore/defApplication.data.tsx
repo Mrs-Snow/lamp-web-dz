@@ -56,7 +56,7 @@ export const searchFormSchema = (): FormSchema[] => {
       label: t('devOperation.application.defApplication.name'),
       field: 'name',
       component: 'Input',
-      colProps: { span: 5 },
+      colProps: { span: 8 },
     },
   ];
 };

@@ -18,7 +18,7 @@ export const columns: BasicColumn[] = [
   },
   {
     title: t('devOperation.tenant.defTenant.registerType'),
-    dataIndex: 'registerType.desc',
+    dataIndex: ['registerType', 'desc'],
     width: 100,
   },
   {

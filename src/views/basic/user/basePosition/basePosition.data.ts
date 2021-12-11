@@ -17,7 +17,7 @@ export const columns = (): BasicColumn[] => {
     },
     {
       title: t('basic.user.basePosition.orgId'),
-      dataIndex: 'echoMap.orgId',
+      dataIndex: ['echoMap', 'orgId'],
       // width: 180,
     },
     {

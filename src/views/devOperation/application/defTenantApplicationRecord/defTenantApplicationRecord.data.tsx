@@ -36,7 +36,7 @@ export const columns = (): BasicColumn[] => {
       width: 100,
       customRender: ({ record }) => {
         const color = grantTypeMap.get(record.grantType);
-        return <Tag color={color}>{record.echoMap.grantType}</Tag>;
+        return <Tag color={color}>{record.echoMap?.grantType}</Tag>;
       },
     },
     {

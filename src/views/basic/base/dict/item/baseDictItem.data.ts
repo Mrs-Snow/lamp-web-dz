@@ -20,7 +20,7 @@ export const columns = (): BasicColumn[] => {
     },
     {
       title: t('basic.base.baseDictItem.classify'),
-      dataIndex: 'echoMap.classify',
+      dataIndex: ['echoMap', 'classify'],
       width: 120,
     },
     {

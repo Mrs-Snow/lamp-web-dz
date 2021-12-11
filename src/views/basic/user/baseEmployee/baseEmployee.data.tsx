@@ -20,7 +20,7 @@ export const columns = (): BasicColumn[] => {
     },
     {
       title: t('basic.user.baseEmployee.positionId'),
-      dataIndex: 'echoMap.positionId',
+      dataIndex: ['echoMap', 'positionId'],
       // width: 180,
     },
     {
@@ -30,7 +30,7 @@ export const columns = (): BasicColumn[] => {
     },
     {
       title: t('basic.user.baseEmployee.positionStatus'),
-      dataIndex: 'echoMap.positionStatus',
+      dataIndex: ['echoMap', 'positionStatus'],
       width: 100,
     },
     {

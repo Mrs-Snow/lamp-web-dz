@@ -31,12 +31,12 @@ export const columns = (): BasicColumn[] => {
     },
     {
       title: t('basic.system.baseFile.storageType'),
-      dataIndex: 'storageType.desc',
+      dataIndex: ['storageType', 'desc'],
       width: 100,
     },
     {
       title: t('basic.system.baseFile.fileType'),
-      dataIndex: 'fileType.desc',
+      dataIndex: ['fileType', 'desc'],
       width: 100,
     },
     {

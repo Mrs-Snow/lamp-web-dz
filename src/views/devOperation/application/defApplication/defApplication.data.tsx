@@ -31,7 +31,7 @@ export const columns = (): BasicColumn[] => {
       width: 100,
       customRender: ({ record }) => {
         return (
-          <Tag color={record.type === '10' ? 'success' : 'processing'}>{record.echoMap.type}</Tag>
+          <Tag color={record.type === '10' ? 'success' : 'processing'}>{record.echoMap?.type}</Tag>
         );
       },
     },
