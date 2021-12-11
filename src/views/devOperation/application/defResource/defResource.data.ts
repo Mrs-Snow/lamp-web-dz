@@ -662,6 +662,7 @@ export const selectResourceApiFormSchema = (
         return {
           getPopupContainer: () => document.body,
           onChange: handleServiceChange,
+          showSearch: true,
           options: [
             { value: 'base', label: '基础服务' },
             { value: 'oauth', label: '认证服务' },
@@ -678,6 +679,7 @@ export const selectResourceApiFormSchema = (
       componentProps: {
         getPopupContainer: () => document.body,
         onChange: handleControllerChange,
+        showSearch: true,
       },
     },
     {
