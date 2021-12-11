@@ -20,8 +20,9 @@
           color="error"
           v-hasPermission="[RoleEnum.BASIC_DICT_DELETE]"
           @click="handleBatchDelete"
-          >{{ t('common.title.delete') }}</a-button
         >
+          {{ t('common.title.delete') }}
+        </a-button>
         <a-button type="primary" v-hasPermission="[RoleEnum.BASIC_DICT_EDIT]" @click="handleEdit">
           {{ t('common.title.edit') }}
         </a-button>

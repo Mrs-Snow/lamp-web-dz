@@ -63,7 +63,7 @@
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent, ref, reactive } from 'vue';
+  import { defineComponent, ref, reactive, toRaw } from 'vue';
   import { Descriptions, Badge } from 'ant-design-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
@@ -97,7 +97,7 @@
       const dict = reactive<Recordable>({
         name: '',
         key: '',
-        remark: '',
+        id: '',
       });
 
       // 表格
@@ -148,7 +148,9 @@
         if (row && row.id) {
           if (dictId.value !== (row?.id as string)) {
             dictId.value = row?.id as string;
-            dict.name = (row?.name || '') as string;
+            dict.name = row?.name;
+            dict.key = row?.key;
+            dict.id = row?.id;
             reload();
           }
         } else {
@@ -165,6 +167,7 @@
         openDrawer(true, {
           record,
           type: ActionEnum.COPY,
+          parent: toRaw(dict),
         });
       }
 
@@ -173,6 +176,7 @@
         openDrawer(true, {
           type: ActionEnum.ADD,
           record: { parentId: dictId.value },
+          parent: toRaw(dict),
         });
       }
 
@@ -183,6 +187,7 @@
         openDrawer(true, {
           record,
           type: ActionEnum.EDIT,
+          parent: toRaw(dict),
         });
       }
 
