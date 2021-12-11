@@ -118,6 +118,12 @@ export const columns = (): BasicColumn[] => {
 export const searchFormSchema = (): FormSchema[] => {
   return [
     {
+      field: 'description',
+      label: t('basic.system.baseOperationLog.description'),
+      component: 'Input',
+      colProps: { span: 8 },
+    },
+    {
       field: 'userName',
       label: t('basic.system.baseOperationLog.userName'),
       component: 'Input',
@@ -139,13 +145,13 @@ export const searchFormSchema = (): FormSchema[] => {
       field: 'requestIp',
       label: t('basic.system.baseOperationLog.requestIp'),
       component: 'Input',
-      colProps: { span: 5 },
+      colProps: { span: 8 },
     },
     {
       field: 'createTimeRange',
       label: t('lamp.common.createdTime'),
       component: 'RangePicker',
-      colProps: { span: 6 },
+      colProps: { span: 8 },
     },
   ];
 };

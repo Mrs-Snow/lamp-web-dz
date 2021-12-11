@@ -15,7 +15,6 @@
       checkStrictly
       :clickRowToExpand="false"
       :treeData="resourceList"
-      :fieldNames="fieldNames"
       ref="treeRef"
       @check="checkNode"
       toolbar
@@ -34,8 +33,9 @@
             v-if="item.children && item.children.length"
             @click="selectAll(item.id, $event)"
             style="margin-left: 30px"
-            >{{ isAllCheckedByKey(item.id) ? '取消全选' : '全选' }}</a
           >
+            {{ isAllCheckedByKey(item.id) ? '取消全选' : '全选' }}
+          </a>
         </span>
       </template>
     </BasicTree>
@@ -107,6 +107,8 @@
           props.resourceList,
           (item, parent) => {
             keys.push(item.id);
+            item.key = item.id;
+            item.title = item.name;
             item.keyLinks = [...(parent.keyLinks || []), item.id];
             item.slots = { title: 'title' };
             return item;

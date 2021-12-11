@@ -42,7 +42,7 @@
   import {
     BasicTree,
     TreeItem,
-    ActionItem,
+    TreeActionItem,
     TreeActionType,
     ContextMenuItem,
   } from '/@/components/Tree';
@@ -92,7 +92,7 @@
       }
 
       // 悬停图标
-      const actionList: ActionItem[] = [
+      const actionList: TreeActionItem[] = [
         {
           auth: RoleEnum.ORG_ADD,
           render: (node) => {
