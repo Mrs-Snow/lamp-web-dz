@@ -4,25 +4,25 @@
       <template #extra>
         <div class="flex justify-center" v-if="type !== ActionEnum.VIEW">
           <a-button @click="resetFields">{{ t('common.resetText') }}</a-button>
-          <a-button class="!ml-4" type="primary" @click="handleSubmit" :loading="confirmLoading">{{
-            t('common.okText')
-          }}</a-button>
+          <a-button class="!ml-4" type="primary" @click="handleSubmit" :loading="confirmLoading">
+            {{ t('common.saveText') }}
+          </a-button>
         </div>
       </template>
       <BasicForm @register="register">
         <template #resourceApiList="{ model, field }">
-          <ResourceApi v-model:value="model[field]" />
+          <ResourceApi v-model:value="model[field]" :type="type" />
         </template>
         <template #metaJson="{ model, field }">
-          <MetaJson ref="meta" v-model:value="model[field]" />
+          <MetaJson ref="meta" v-model:value="model[field]" :type="type" />
         </template>
       </BasicForm>
 
       <div class="flex justify-center" v-if="type !== ActionEnum.VIEW">
         <a-button @click="resetFields">{{ t('common.resetText') }}</a-button>
-        <a-button class="!ml-4" type="primary" @click="handleSubmit" :loading="confirmLoading">{{
-          t('common.okText')
-        }}</a-button>
+        <a-button class="!ml-4" type="primary" @click="handleSubmit" :loading="confirmLoading">
+          {{ t('common.saveText') }}
+        </a-button>
       </div>
     </a-card>
   </div>
@@ -48,7 +48,7 @@
     setup(_, { emit }) {
       const { t } = useI18n();
       const { createMessage } = useMessage();
-      const type = ref<ActionEnum>(ActionEnum.ADD);
+      const type = ref<ActionEnum>(ActionEnum.VIEW);
       const confirmLoading = ref<boolean>(false);
       const title = ref<string>('未选中任何资源');
       const [register, { setFieldsValue, resetFields, resetSchema, updateSchema, validate }] =
@@ -73,7 +73,7 @@
           }
           createMessage.success(t(`common.tips.${type.value}Success`));
 
-          type.value = ActionEnum.ADD;
+          type.value = ActionEnum.VIEW;
           await resetFields();
           title.value = '未选中任何资源';
           emit('success', params.applicationId);

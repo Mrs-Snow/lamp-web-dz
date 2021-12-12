@@ -27,14 +27,19 @@
             <template #extra
               ><a href="javascript:void(0);" @click="delSelectedDataByCard(api)">删除</a></template
             >
-            <CardMeta :title="'服务：' + api.springApplicationName">
+            <CardMeta>
+              <template #title>
+                {{ t('devOperation.application.defResourceApi.springApplicationName') }}：
+                {{ api.springApplicationName }} <br />
+                {{ t('devOperation.application.defResourceApi.controller') }}：{{ api.controller }}
+              </template>
               <template #description>
                 <div
                   class="cardDesc"
-                  :alt="'(' + api.requestMethod + ')' + api.uri + '(' + api.controller + ')'"
+                  :title="'(' + api.requestMethod + ') ' + api.uri + ' (' + api.controller + ')'"
                 >
-                  <Tag color="processing">{{ api.requestMethod }}</Tag>
-                  {{ api.uri }} ({{ api.controller }})
+                  <Tag :color="HTTP_TAG_MAP.get(api.requestMethod)">{{ api.requestMethod }}</Tag>
+                  {{ api.uri }}
                 </div>
               </template>
             </CardMeta>
@@ -52,6 +57,7 @@
   import { split } from 'lodash-es';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { findSystemApi } from '/@/api/lamp/common/general';
+  import { HTTP_TAG_MAP } from '/@/enums/httpEnum';
   import { selectResourceApiFormSchema } from '../defResource.data';
 
   export default defineComponent({
@@ -242,7 +248,7 @@
 
       const [registerForm, { setFieldsValue, getFieldsValue, resetFields, updateSchema }] = useForm(
         {
-          labelWidth: 80,
+          // labelWidth: 80,
           layout: 'vertical',
           schemas: selectResourceApiFormSchema(
             handleServiceChange,
@@ -297,21 +303,19 @@
         handleSubmit,
         selectedData,
         delSelectedDataByCard,
+        HTTP_TAG_MAP,
       };
     },
   });
 </script>
 <style lang="less" scoped>
-  .ant-card-meta-title {
-    font-size: 12px;
-  }
-
   .cardDesc {
     background: rgba(97, 175, 254, 0.1);
-    font-size: 12px;
+    font-size: 14px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: '100%';
+    max-width: 100%;
+    font-weight: bold;
   }
 </style>

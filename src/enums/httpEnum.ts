@@ -22,6 +22,13 @@ export enum RequestEnum {
   DELETE = 'DELETE',
 }
 
+export const HTTP_TAG_MAP = new Map([
+  [RequestEnum.GET, 'success'],
+  [RequestEnum.POST, 'processing'],
+  [RequestEnum.PUT, 'warning'],
+  [RequestEnum.DELETE, 'error'],
+]);
+
 /**
  * @description:  contentTyp
  */

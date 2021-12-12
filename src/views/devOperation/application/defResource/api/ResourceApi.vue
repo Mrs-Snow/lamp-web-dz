@@ -2,14 +2,25 @@
   <div class="resource-api">
     <BasicTable @register="registerTable">
       <template #toolbar>
-        <a-button type="primary" @click="handleAdd">录入</a-button>
-        <a-button type="primary" @click="handleSelect">选择</a-button>
+        <a-button type="primary" @click="handleAdd" v-if="type !== ActionEnum.VIEW">录入</a-button>
+        <a-button type="primary" @click="handleSelect" v-if="type !== ActionEnum.VIEW">
+          选择
+        </a-button>
       </template>
-      <template #uri="{ record }">
-        <Tag color="processing">
-          {{ record.requestMethod }}
-        </Tag>
-        {{ record.uri }}
+      <template #uri="{ record: { uri, requestMethod, controller, springApplicationName, name } }">
+        <Tooltip>
+          <template #title>
+            服务： {{ springApplicationName }} <br />
+            名称：{{ controller }} <br />
+            接口名：{{ name }} <br />
+            地址： {{ uri }} <br />
+            请求方式： {{ requestMethod }}
+          </template>
+          <Tag :color="HTTP_TAG_MAP.get(requestMethod)">
+            {{ requestMethod }}
+          </Tag>
+          {{ uri }}
+        </Tooltip>
       </template>
       <template #action="{ record }">
         <TableAction
@@ -17,6 +28,7 @@
             {
               label: t('common.title.delete'),
               color: 'error',
+              ifShow: () => type !== ActionEnum.VIEW,
               popConfirm: {
                 title: t('common.tips.confirmDelete'),
                 confirm: handleDelete.bind(null, record),
@@ -34,20 +46,26 @@
 <script lang="ts">
   import { defineComponent, ref, watch, unref } from 'vue';
   import { BasicTable, TableAction, useTable } from '/@/components/Table';
-  import { Tag } from 'ant-design-vue';
+  import { Tag, Tooltip } from 'ant-design-vue';
   import { useModal } from '/@/components/Modal';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { resourceApiColumns } from '../defResource.data';
   import SelectModal from './ResourceApiSelect.vue';
   import EditModal from './ResourceApiEdit.vue';
+  import { ActionEnum } from '/@/enums/commonEnum';
+  import { HTTP_TAG_MAP } from '/@/enums/httpEnum';
   import { DefResourceApiVO } from '/@/api/devOperation/application/model/defResourceModel';
   export default defineComponent({
     name: 'DefResourceResourceApi',
-    components: { BasicTable, TableAction, SelectModal, EditModal, Tag },
+    components: { BasicTable, TableAction, SelectModal, EditModal, Tag, Tooltip },
     props: {
       value: {
         type: [Array] as PropType<DefResourceApiVO[]>,
+      },
+      type: {
+        type: String as PropType<ActionEnum>,
+        default: ActionEnum.ADD,
       },
     },
     emits: ['update:value', 'change'],
@@ -150,6 +168,8 @@
         registerEditModal,
         handleEditSuccess,
         t,
+        ActionEnum,
+        HTTP_TAG_MAP,
       };
     },
   });

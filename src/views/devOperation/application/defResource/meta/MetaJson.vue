@@ -2,7 +2,9 @@
   <div class="meta-input">
     <BasicTable @register="registerTable">
       <template #toolbar>
-        <a-button type="primary" @click="handleAdd">{{ t('common.title.add') }}</a-button>
+        <a-button type="primary" @click="handleAdd" v-if="type !== ActionEnum.VIEW">
+          {{ t('common.title.add') }}
+        </a-button>
       </template>
       <template #action="{ record }">
         <TableAction
@@ -10,6 +12,7 @@
             {
               label: t('common.title.delete'),
               color: 'error',
+              ifShow: () => type !== ActionEnum.VIEW,
               popConfirm: {
                 title: t('common.tips.confirmDelete'),
                 confirm: handleDelete.bind(null, record),
@@ -17,6 +20,7 @@
             },
             {
               label: t('common.title.edit'),
+              ifShow: () => type !== ActionEnum.VIEW,
               onClick: handleEdit.bind(null, record),
             },
           ]"
@@ -42,6 +46,10 @@
     props: {
       value: {
         type: [Object, String],
+      },
+      type: {
+        type: String as PropType<ActionEnum>,
+        default: ActionEnum.ADD,
       },
     },
     emits: ['update:value', 'change'],
@@ -140,6 +148,7 @@
         registerModal,
         registerTable,
         t,
+        ActionEnum,
       };
     },
   });

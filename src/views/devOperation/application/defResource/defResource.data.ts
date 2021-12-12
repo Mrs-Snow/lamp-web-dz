@@ -638,10 +638,13 @@ export const resourceApiColumns: BasicColumn[] = [
   {
     title: t('devOperation.application.defResourceApi.name'),
     dataIndex: 'name',
+    align: 'left',
   },
   {
     title: t('devOperation.application.defResourceApi.uri'),
     dataIndex: 'uri',
+    ellipsis: true,
+    align: 'left',
     slots: { customRender: 'uri' },
   },
 ];
@@ -664,9 +667,10 @@ export const selectResourceApiFormSchema = (
           onChange: handleServiceChange,
           showSearch: true,
           options: [
+            // 后端有几个服务，就写几个
             { value: 'base', label: '基础服务' },
             { value: 'oauth', label: '认证服务' },
-            { value: 'system', label: '租户服务' },
+            { value: 'system', label: '系统服务' },
             { value: 'gateway', label: '网关服务' },
           ],
         };
