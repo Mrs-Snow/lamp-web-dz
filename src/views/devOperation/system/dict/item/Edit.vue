@@ -18,7 +18,6 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { ActionEnum, VALIDATE_API } from '/@/enums/commonEnum';
-  import { get } from '/@/api/devOperation/system/defDict';
   import { Api, save, update } from '/@/api/devOperation/system/defDictItem';
   import { getValidateRules } from '/@/api/lamp/common/formValidateService';
   import { customFormSchemaRules, editFormSchema } from './defDictItem.data';
@@ -51,12 +50,12 @@
 
         // 赋值
         const record = { ...data?.record };
+        const parent = { ...data?.parent };
 
         if (!record.parentId) {
           createMessage.warn('请先创建字典');
           return;
         } else {
-          const parent = await get(record.parentId);
           record.parentId = parent.id;
           record.parentKey = parent.key;
           record.parentName = parent.name;

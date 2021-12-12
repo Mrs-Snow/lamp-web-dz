@@ -5,7 +5,7 @@
       <div class="flex justify-center">
         <a-button @click="resetFields">{{ t('common.resetText') }}</a-button>
         <a-button class="!ml-4" type="primary" @click="handleSubmit" :loading="confirmLoading">{{
-          t('common.okText')
+          t('common.saveText')
         }}</a-button>
       </div>
     </a-card>
