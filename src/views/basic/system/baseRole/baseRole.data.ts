@@ -94,12 +94,12 @@ export const roleEmployeeColumns = (): BasicColumn[] => {
   return [
     {
       title: t('devOperation.tenant.defUser.username'),
-      dataIndex: 'defUser.username',
+      dataIndex: ['defUser', 'username'],
       // width: 180,
     },
     {
       title: t('devOperation.tenant.defUser.mobile'),
-      dataIndex: 'defUser.mobile',
+      dataIndex: ['defUser', 'mobile'],
       // width: 180,
     },
     {
