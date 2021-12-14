@@ -165,7 +165,7 @@ export const customFormSchemaRules = (
             if (type.value === ActionEnum.EDIT) {
               return Promise.resolve();
             }
-            if (value && (await check(value, getFieldsValue()?.parentId))) {
+            if (value && (await check(value, getFieldsValue()?.parentId, getFieldsValue()?.id))) {
               return Promise.reject(t('basic.base.baseDict.key') + '已经存在');
             }
             return Promise.resolve();

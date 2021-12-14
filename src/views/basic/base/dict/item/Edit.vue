@@ -60,6 +60,9 @@
           record.parentKey = parent.key;
           record.parentName = parent.name;
         }
+        if (unref(type) === ActionEnum.COPY) {
+          record.id = null;
+        }
         await setFieldsValue({ ...record });
 
         if (unref(type) !== ActionEnum.VIEW) {
