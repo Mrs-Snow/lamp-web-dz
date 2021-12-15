@@ -152,6 +152,9 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       label: t('devOperation.tenant.defUser.username'),
       field: 'username',
       component: 'Input',
+      dynamicDisabled: () => {
+        return [ActionEnum.VIEW, ActionEnum.EDIT].includes(type.value);
+      },
       colProps: {
         span: 12,
       },
@@ -160,6 +163,9 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       label: t('devOperation.tenant.defUser.email'),
       field: 'email',
       component: 'Input',
+      dynamicDisabled: () => {
+        return [ActionEnum.VIEW, ActionEnum.EDIT].includes(type.value);
+      },
       colProps: {
         span: 12,
       },
@@ -168,6 +174,9 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       label: t('devOperation.tenant.defUser.mobile'),
       field: 'mobile',
       component: 'Input',
+      dynamicDisabled: () => {
+        return [ActionEnum.VIEW, ActionEnum.EDIT].includes(type.value);
+      },
       colProps: {
         span: 12,
       },
@@ -176,6 +185,9 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       label: t('devOperation.tenant.defUser.idCard'),
       field: 'idCard',
       component: 'Input',
+      dynamicDisabled: () => {
+        return [ActionEnum.VIEW, ActionEnum.EDIT].includes(type.value);
+      },
       colProps: {
         span: 12,
       },
