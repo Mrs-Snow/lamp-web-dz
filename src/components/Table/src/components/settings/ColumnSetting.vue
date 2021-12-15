@@ -6,7 +6,7 @@
     <Popover
       placement="bottomLeft"
       trigger="click"
-      @visible-change="handleVisibleChange"
+      @visibleChange="handleVisibleChange"
       :overlayClassName="`${prefixCls}__cloumn-list`"
       :getPopupContainer="getPopupContainer"
     >
@@ -120,6 +120,7 @@
   import { isFunction, isNullAndUnDef } from '/@/utils/is';
   import { getPopupContainer as getParentContainer } from '/@/utils';
   import { cloneDeep, omit } from 'lodash-es';
+  import { Sortable } from 'sortablejs';
 
   interface State {
     checkAll: boolean;
@@ -280,7 +281,7 @@
       }
 
       // Open the pop-up window for drag and drop initialization
-      function handleVisibleChange() {
+      async function handleVisibleChange() {
         if (inited) return;
         nextTick(() => {
           const columnListEl = unref(columnListRef);
