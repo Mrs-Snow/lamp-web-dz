@@ -116,11 +116,11 @@ export const AfterRoutes: AppRouteModule[] = [
   },
   {
     path: '/vben',
-    name: '更多功能',
+    name: '静态示例',
     component: LAYOUT,
     meta: {
       icon: 'ant-design:table-outlined',
-      title: '更多功能',
+      title: '静态示例',
     },
     children: routeModuleList,
   },
