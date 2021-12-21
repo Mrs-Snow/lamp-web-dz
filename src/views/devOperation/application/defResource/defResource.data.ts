@@ -78,13 +78,13 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
               }
               if (model?.parentResourceType === ResourceTypeEnum.VIEW) {
                 if (value === ResourceTypeEnum.MENU) {
-                  return Promise.reject('资源下不能添加菜单');
+                  return Promise.reject('视图下不能添加菜单');
                 }
               } else if (model?.parentResourceType === ResourceTypeEnum.FUNCTION) {
                 if (value === ResourceTypeEnum.MENU) {
-                  return Promise.reject('资源下不能添加菜单');
+                  return Promise.reject('功能下不能添加菜单');
                 } else if (value === ResourceTypeEnum.VIEW) {
-                  return Promise.reject('资源下不能添加视图');
+                  return Promise.reject('功能下不能添加视图');
                 }
               } else if (model?.parentResourceType === ResourceTypeEnum.FIELD) {
                 return Promise.reject('字段下不能添加子资源');
