@@ -170,13 +170,22 @@ export function usePermission() {
     return isPermission(value, def, PermModeEnum.Has);
   }
   /**
-   * 当不包含列出的权限时，渲染该元素
+   * 当不包含列出的所有权限时，渲染该元素
    */
   function withoutPermission(
     value?: RoleEnum | RoleEnum[] | string | string[],
     def = true,
   ): boolean {
     return isPermission(value, def, PermModeEnum.Without);
+  }
+  /**
+   * 当不包含列出的任意权限时，渲染该元素
+   */
+  function withoutAnyPermission(
+    value?: RoleEnum | RoleEnum[] | string | string[],
+    def = true,
+  ): boolean {
+    return isPermission(value, def, PermModeEnum.WithoutAny);
   }
   /**
    * 只要包含列出的任意一个权限，元素就会显示
@@ -221,7 +230,7 @@ export function usePermission() {
       }
 
       let flag = true;
-      if (mode === PermModeEnum.HasAny) {
+      if (mode === PermModeEnum.HasAny || mode === PermModeEnum.WithoutAny) {
         flag = false;
       }
       const resourceList = visibleResource.resourceList;
@@ -265,13 +274,18 @@ export function usePermission() {
               flag = false;
             }
           } else if (mode === PermModeEnum.Without) {
-            // 没有此权限
+            // 没有所有权限
             if (isPermitted(permissionsOwns, toBeVerified)) {
               flag = false;
             }
           } else if (mode === PermModeEnum.HasAny) {
             // 拥有任意一个权限
             if (isPermitted(permissionsOwns, toBeVerified)) {
+              flag = true;
+            }
+          } else if (mode === PermModeEnum.WithoutAny) {
+            // 没有任意一个权限
+            if (!isPermitted(permissionsOwns, toBeVerified)) {
               flag = true;
             }
           }
@@ -313,6 +327,7 @@ export function usePermission() {
     isPermission,
     hasPermission,
     withoutPermission,
+    withoutAnyPermission,
     hasAnyPermission,
     togglePermissionMode,
     refreshMenu,

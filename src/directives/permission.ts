@@ -37,6 +37,16 @@ function withoutPermission(el: Element, binding: any) {
   }
 }
 
+function withoutAnyPermission(el: Element, binding: any) {
+  const { withoutAnyPermission } = usePermission();
+
+  const value = binding.value;
+  if (!value) return;
+  if (!withoutAnyPermission(value)) {
+    el.parentNode?.removeChild(el);
+  }
+}
+
 function hasAnyPermission(el: Element, binding: any) {
   const { hasAnyPermission } = usePermission();
 
@@ -83,6 +93,12 @@ export function setupPermissionDirective(app: App) {
   app.directive('hasPermission', hasPermissionDirective);
   // 判断是否"没有"指定的"所有"权限
   app.directive('withoutPermission', withoutPermissionDirective);
+  // 判断是否"没有"指定的"任意"权限
+  app.directive('withoutAnyPermission', {
+    mounted: (el: Element, binding: DirectiveBinding<any>) => {
+      withoutAnyPermission(el, binding);
+    },
+  });
   // 判断是否"拥有"指定的"任意"权限
   app.directive('hasAnyPermission', hasAnyPermissionDirective);
 }
