@@ -125,7 +125,8 @@
         e?.preventDefault();
         createConfirm({
           iconType: 'warning',
-          content: `是否确认设置【${tenant?.name} 】为默认企业？`,
+          title: `是否确认设置【${tenant?.name} 】为默认企业？`,
+          content: `设置为默认企业后，下次登录将默认进入该企业！`,
           onOk: async () => {
             try {
               await updateDefaultTenant(tenant.id as string);
