@@ -68,7 +68,6 @@
         table = useTableContext();
       }
 
-      const { isPermission } = usePermission();
       function isIfShow(action: ActionItem): boolean {
         const ifShow = action.ifShow;
 
@@ -83,6 +82,7 @@
         return isIfShow;
       }
 
+      const { isPermission } = usePermission();
       const getActions = computed(() => {
         return (toRaw(props.actions) || [])
           .filter((action) => {
