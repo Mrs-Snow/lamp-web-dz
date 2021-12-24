@@ -216,7 +216,6 @@
               ...uploadParam,
               file: blob,
             });
-            debugger;
             emit('uploadSuccess', { source: previewSource.value, data: result?.data?.data });
             closeModal();
           } finally {

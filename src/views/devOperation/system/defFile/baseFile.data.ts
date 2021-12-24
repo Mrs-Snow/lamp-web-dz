@@ -1,6 +1,5 @@
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
-
 import { enumComponentProps, formatFileSize } from '/@/utils/lamp/common';
 import { EnumEnum } from '/@/enums/commonEnum';
 
@@ -167,7 +166,7 @@ export const editFormSchema = (param): FormSchema[] => {
         uploadParams: param,
         multiple: false,
         maxNumber: 1,
-        isDef: false,
+        isDef: true,
       },
     },
   ];
