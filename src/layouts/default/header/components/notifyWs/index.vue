@@ -91,11 +91,22 @@
         }
       }
 
-      const { send } = useWebSocket(state.server, {
-        autoReconnect: true,
-        heartbeat: false,
+      const ws = useWebSocket(state.server, {
+        autoReconnect: {
+          retries: 3,
+          delay: 10000,
+          onFailed() {
+            console.log('Failed to connect WebSocket after 3 retires');
+          },
+        },
+        heartbeat: {
+          message: 'ping',
+          interval: 5000,
+        },
         onMessage: onMessage,
       });
+
+      let send = ws.send;
 
       onMounted(() => {
         send('pull');
