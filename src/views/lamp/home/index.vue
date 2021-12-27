@@ -75,6 +75,7 @@
   }
 
   function handleStart() {
+    // 可以根据自身的需求，改成用户首次登陆系统时提示（可以通过redis记录用户是否首次登陆，或增加一张表来记录。）
     intro()
       .setOptions({
         //对应的按钮
