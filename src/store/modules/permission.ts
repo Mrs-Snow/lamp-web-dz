@@ -10,10 +10,10 @@ import { transformObjToRoute, flatMultiLevelRoutes } from '/@/router/helper/rout
 import { transformRouteToMenu } from '/@/router/helper/menuHelper';
 
 import projectSetting from '/@/settings/projectSetting';
-
+import { useGlobSetting } from '/@/hooks/setting';
 import { PermissionModeEnum } from '/@/enums/appEnum';
 
-import { asyncRoutes, AfterRoutes } from '/@/router/routes';
+import { asyncRoutes, AfterRoutes, AfterVbenRoutes, AfterMyTenantRoutes } from '/@/router/routes';
 import { ERROR_LOG_ROUTE, PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
 
 import { filter } from '/@/utils/helper/treeHelper';
@@ -25,6 +25,10 @@ import { useMessage } from '/@/hooks/web/useMessage';
 import { PageEnum } from '/@/enums/pageEnum';
 
 import { BeforeRoutes } from '/@/router/routes/index';
+
+const globSetting = useGlobSetting();
+const BASE_APP_ID = globSetting.baseApplicationId;
+const DEV_OPER_APP_ID = globSetting.devOperationApplicationId;
 
 interface PermissionState {
   // Whether the route has been dynamically added
@@ -187,12 +191,13 @@ export const usePermissionStore = defineStore({
             duration: 1,
           });
 
+          // 当前应用
+          const applicationId = userStore.getApplicationId;
           // !Simulate to obtain permission codes from the background,
           // this function may only need to be executed once, and the actual project can be put at the right time by itself
           let routeList: AppRouteRecordRaw[] = [];
           try {
             await this.changePermissionCode();
-            const applicationId = userStore.getApplicationId;
             routeList = (await findMenuList({ applicationId })) as AppRouteRecordRaw[];
           } catch (error) {
             console.error(error);
@@ -201,8 +206,16 @@ export const usePermissionStore = defineStore({
           // 动态引入组件
           routeList = transformObjToRoute(routeList);
 
-          // 后台路由 + 前段写死的路由(一般是公共菜单)
-          routeList = [...BeforeRoutes, ...routeList, ...AfterRoutes];
+          const isBase = applicationId === BASE_APP_ID; // 基础平台才显示 我的企业
+          const isDevOper = applicationId === DEV_OPER_APP_ID; // 开发运营系统才显示 vben官方的静态示例
+          // 后台路由(routeList) + 前段写死的路由(BeforeRoutes、AfterRoutes、AfterMyTenantRoutes)
+          const afterRouteList = [
+            ...AfterRoutes,
+            ...(isBase ? AfterMyTenantRoutes : []),
+            ...(isDevOper ? AfterVbenRoutes : []),
+          ];
+
+          routeList = [...BeforeRoutes, ...routeList, ...afterRouteList];
 
           //  后台路由转菜单结构
           const backMenuList = transformRouteToMenu(routeList);

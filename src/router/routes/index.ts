@@ -90,7 +90,7 @@ export const BeforeRoutes: AppRouteRecordRaw[] = [
 /**
  * 拼接在后端路由之后的前端路由
  */
-export const AfterRoutes: AppRouteModule[] = [
+export const AfterMyTenantRoutes: AppRouteModule[] = [
   {
     path: '/myTenant',
     name: 'myTenant',
@@ -114,6 +114,8 @@ export const AfterRoutes: AppRouteModule[] = [
       },
     ],
   },
+];
+export const AfterVbenRoutes: AppRouteModule[] = [
   {
     path: '/vben',
     name: '静态示例',
@@ -125,6 +127,8 @@ export const AfterRoutes: AppRouteModule[] = [
     children: routeModuleList,
   },
 ];
+// 后台动态路由之后的陆永
+export const AfterRoutes: AppRouteModule[] = [];
 
 // Basic routing without permission
 export const basicRoutes = [

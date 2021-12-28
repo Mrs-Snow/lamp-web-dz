@@ -152,6 +152,8 @@ export interface GlobConfig {
   showCaptcha?: string;
   tips?: string;
   defApplicationId: string;
+  baseApplicationId: string;
+  devOperationApplicationId: string;
   previewUrlPrefix?: string;
   tokenKey: string;
   tenantIdKey: string;
@@ -182,6 +184,10 @@ export interface GlobEnvConfig {
   VITE_GLOB_TIPS?: string;
   // 默认登录时加载的默认应用ID，此ID需要事先在def_application中配置
   VITE_GLOB_DEF_APPLICATION_ID: string;
+  // 基础平台的应用ID，此ID需要事先在def_application中配置
+  VITE_GLOB_BASE_APPLICATION_ID: string;
+  // 开发运营系统的应用ID，此ID需要事先在def_application中配置
+  VITE_GLOB_DEV_OPERATION_APPLICATION_ID: string;
   // 第三方文件预览服务 需要自行安装kkFileView（https://gitee.com/kekingcn/file-online-preview）
   VITE_GLOB_PREVIEW_URL_PREFIX?: string;
   // 请求头中携带的token(用户身份信息) key名称
