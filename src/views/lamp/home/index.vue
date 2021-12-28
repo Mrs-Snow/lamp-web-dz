@@ -111,7 +111,8 @@
         {
           title: '开发运营系统',
           element: document.querySelector(`.${prefixVar}-devOperation`)!,
-          intro: '开发者或运营者使用的系统，都是平台级功能，无需授权给租户使用。',
+          intro:
+            '开发者或运营者使用的系统，都是平台级功能；您可以在此给租户开通租户账号和应用权限等。',
         },
         {
           title: '业务系统',
