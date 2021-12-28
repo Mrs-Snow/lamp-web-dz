@@ -43,7 +43,7 @@
       const { replace } = useRouter();
       const listData = ref<TabItem[]>([]);
       const userStore = useUserStore();
-      const userId = userStore.getUserInfo.id;
+      const employeeId = userStore.getUserInfo.employeeId;
       const tenantId = userStore.getTenantId;
 
       const host = window.location.host;
@@ -51,7 +51,7 @@
       const state = reactive({
         server: `${
           protocol.includes('https') ? 'wss' : 'ws'
-        }://${host}/api/wsMsg/anno/myMsg/${tenantId}/${userId}`,
+        }://${host}/api/wsMsg/anno/myMsg/${tenantId}/${employeeId}`,
         sendValue: '',
         recordList: [] as { id: number; time: number; res: string }[],
       });

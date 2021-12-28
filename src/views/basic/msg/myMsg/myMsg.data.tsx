@@ -113,15 +113,6 @@ export const editFormSchema = (type: Ref<ActionEnum>, msgTypeChange: Fn): FormSc
       },
     },
     {
-      label: '接收人员',
-      field: 'receiveType',
-      component: 'Input',
-      colProps: {
-        span: 12,
-      },
-      slot: 'receiveType',
-    },
-    {
       label: t('basic.msg.eMsg.content'),
       field: 'content',
       component: 'Input',

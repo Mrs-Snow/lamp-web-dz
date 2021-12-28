@@ -1,53 +1,6 @@
 <template>
   <PageWrapper class="high-form" title="发送消息" contentBackground contentClass="p-4">
-    <BasicForm @register="registerForm">
-      <template #receiveType="{ model }">
-        <RadioGroup
-          v-model:value="formState.receiveType"
-          :disabled="
-            type === ActionEnum.VIEW ||
-            [MsgTypeEnum.NOTIFY, MsgTypeEnum.NOTICE].includes(model['msgType'])
-          "
-          button-style="solid"
-          style="margin-right: 2rem"
-        >
-          <RadioButton value="user">用户</RadioButton>
-          <RadioButton value="role">角色</RadioButton>
-        </RadioGroup>
-        <a-select
-          v-if="formState.receiveType === 'user'"
-          v-model:value="formState.userIdList"
-          class="pay-select"
-          placeholder="请选择用户"
-          style="width: 70%"
-          mode="multiple"
-          :disabled="
-            type === ActionEnum.VIEW ||
-            [MsgTypeEnum.NOTIFY, MsgTypeEnum.NOTICE].includes(model['msgType'])
-          "
-        >
-          <a-select-option v-for="item in formState.userList" :key="item.id" :value="item.id">
-            {{ item.nickName }} [{{ item.username }}]
-          </a-select-option>
-        </a-select>
-        <a-select
-          placeholder="请选择角色"
-          v-if="formState.receiveType === 'role'"
-          v-model:value="formState.roleIdList"
-          class="pay-select"
-          style="width: 70%"
-          mode="multiple"
-          :disabled="
-            type === ActionEnum.VIEW ||
-            [MsgTypeEnum.NOTIFY, MsgTypeEnum.NOTICE].includes(model['msgType'])
-          "
-        >
-          <a-select-option v-for="item in formState.roleList" :key="item.code" :value="item.code">
-            {{ item.name }} [{{ item.code }}]
-          </a-select-option>
-        </a-select>
-      </template>
-    </BasicForm>
+    <BasicForm @register="registerForm" />
     <template #rightFooter>
       <a-button v-if="type !== ActionEnum.VIEW" type="primary" @click="handleSubmit" class="ml-4">
         立即发送
@@ -57,7 +10,6 @@
 </template>
 <script lang="ts">
   import { defineComponent, ref, onMounted, reactive } from 'vue';
-  import { Select, Radio } from 'ant-design-vue';
   import { PageWrapper } from '/@/components/Page';
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { useI18n } from '/@/hooks/web/useI18n';
@@ -67,19 +19,13 @@
   import { RouteEnum } from '/@/enums/biz/tenant';
   import { ActionEnum, MsgTypeEnum } from '/@/enums/commonEnum';
   import { get } from '/@/api/basic/msg/eMsg';
-  import { query as queryUser } from '/@/api/devOperation/tenant/defUser';
-  import { query as queryRole } from '/@/api/basic/system/baseRole';
   import { editFormSchema } from './myMsg.data';
 
   export default defineComponent({
     name: 'EMsgEdit',
     components: {
       BasicForm,
-      [Select.name]: Select,
       PageWrapper,
-      ASelectOption: Select.Option,
-      RadioGroup: Radio.Group,
-      RadioButton: Radio.Button,
     },
     emits: ['success', 'register'],
     setup(_) {
@@ -90,9 +36,9 @@
 
       const formState = reactive({
         receiveType: 'user',
-        userIdList: [] as string[],
+        employeeIdList: [] as string[],
         roleCodeList: [] as string[],
-        userList: [] as any[],
+        employeeList: [] as any[],
         roleList: [] as any[],
       });
 
@@ -106,7 +52,7 @@
       });
       function msgTypeChange(value) {
         if ([MsgTypeEnum.NOTIFY, MsgTypeEnum.NOTICE].includes(value)) {
-          formState.userIdList = [];
+          formState.employeeIdList = [];
           formState.roleCodeList = [];
         }
       }
@@ -115,13 +61,7 @@
         const { params } = currentRoute.value;
         const id = params.id;
         load({ type: params?.type, id });
-        loadList();
       });
-
-      const loadList = async () => {
-        formState.userList = await queryUser();
-        formState.roleList = await queryRole();
-      };
 
       const load = async (data: Recordable) => {
         await resetFields();
@@ -129,7 +69,6 @@
 
         const record = await get(data?.id);
         record.msgType = (record?.msgType as Enum)?.code as string;
-        record.id = undefined;
         await setFieldsValue({ ...record });
       };
 
