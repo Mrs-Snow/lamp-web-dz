@@ -35,8 +35,12 @@ function compareDate2Now(dateStr: string, timeType = 'YYYY-MM-DD HH:mm:ss', comp
     if (nowStr) {
       if (compareType === 'Past') {
         return nowStr > dateStr;
+      } else if (compareType === 'PastOrPresent') {
+        return nowStr >= dateStr;
       } else if (compareType === 'Future') {
         return nowStr < dateStr;
+      } else if (compareType === 'FutureOrPresent') {
+        return nowStr <= dateStr;
       }
     }
   }
@@ -203,11 +207,37 @@ function decodeRules(fieldRules: Rule[], constraints: ConstraintInfo[], fieldTyp
             message: attrs.message,
           });
           break;
+        case 'PastOrPresent':
+          fieldRules.push({
+            type: 'method',
+            validator(_rule: RuleObject, value, _) {
+              if (compareDate2Now(value, fieldType, 'PastOrPresent')) {
+                return Promise.resolve();
+              } else {
+                return Promise.reject(attrs.message);
+              }
+            },
+            message: attrs.message,
+          });
+          break;
         case 'Future':
           fieldRules.push({
             type: 'method',
             validator(_rule: RuleObject, value, _) {
               if (compareDate2Now(value, fieldType, 'Future')) {
+                return Promise.resolve();
+              } else {
+                return Promise.reject(attrs.message);
+              }
+            },
+            message: attrs.message,
+          });
+          break;
+        case 'FutureOrPresent':
+          fieldRules.push({
+            type: 'method',
+            validator(_rule: RuleObject, value, _) {
+              if (compareDate2Now(value, fieldType, 'FutureOrPresent')) {
                 return Promise.resolve();
               } else {
                 return Promise.reject(attrs.message);
@@ -247,10 +277,10 @@ function transformationRules(data: FieldValidatorDesc[]): Partial<FormSchema>[] 
         message: `${field}必须是布尔类型`,
       });
     } else if (fieldType === 'Date') {
-      rules.push({
-        type: 'boolean',
-        message: `${field}必须是日期类型`,
-      });
+      // rules.push({
+      //   type: 'date',
+      //   message: `${field}必须是日期类型`,
+      // });
     }
     decodeRules(rules, constraints, fieldType);
 
