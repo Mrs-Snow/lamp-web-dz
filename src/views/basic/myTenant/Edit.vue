@@ -5,7 +5,7 @@
     showFooter
     width="50%"
     :maskClosable="false"
-    :title="t(`common.title.${type}`)"
+    title="申请创建自己的企业"
     @ok="handleSubmit"
   >
     <BasicForm @register="registerForm" />

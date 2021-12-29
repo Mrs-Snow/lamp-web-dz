@@ -63,16 +63,16 @@ export const Api = {
     url: `${ServicePrefixEnum.TENANT}/${MODULAR}/initData`,
     method: RequestEnum.POST,
   } as AxiosRequestConfig,
-  InitConnect: function (serviceProfix: string) {
+  InitConnect: function (servicePrefix: string) {
     return {
-      url: `/${serviceProfix}/ds/initDataSource`,
+      url: `/${servicePrefix}/ds/initDataSource`,
       method: RequestEnum.POST,
       headers: { 'Content-Type': ContentTypeEnum.FORM_URLENCODED },
     } as AxiosRequestConfig;
   },
-  CheckDs: function (serviceProfix: string) {
+  CheckDs: function (servicePrefix: string) {
     return {
-      url: `/${serviceProfix}/ds/check`,
+      url: `/${servicePrefix}/ds/check`,
       method: RequestEnum.GET,
     } as AxiosRequestConfig;
   },
@@ -118,9 +118,9 @@ export const initConnect = (serviceProfix: string, tenantId: string) =>
     timeout: 2 * 60 * 1000,
   });
 
-export const checkDs = (serviceProfix: string, tenantId: string) =>
+export const checkDs = (servicePrefix: string, tenantId: string) =>
   defHttp.request<boolean>({
-    ...Api.CheckDs(serviceProfix),
+    ...Api.CheckDs(servicePrefix),
     params: { tenantId },
     timeout: 2 * 60 * 1000,
   });

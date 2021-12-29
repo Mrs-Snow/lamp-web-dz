@@ -306,30 +306,32 @@ export const getValidateRules = async (
   Api: AxiosRequestConfig,
   customRules?: Partial<FormSchemaExt>[],
 ): Promise<Partial<FormSchema>[]> => {
-  const formValidateApi = { url: '', method: Api.method };
-  for (const sp in ServicePrefixEnum) {
-    // @ts-ignore
-    if (Api.url.startsWith(ServicePrefixEnum[sp])) {
+  return new Promise(async (resolve, _reject) => {
+    const formValidateApi = { url: '', method: Api.method };
+    for (const sp in ServicePrefixEnum) {
       // @ts-ignore
-      formValidateApi.url = Api.url.replace(
-        ServicePrefixEnum[sp],
-        `${ServicePrefixEnum[sp]}/form/validator`,
-      );
+      if (Api.url.startsWith(ServicePrefixEnum[sp])) {
+        // @ts-ignore
+        formValidateApi.url = Api.url.replace(
+          ServicePrefixEnum[sp],
+          `${ServicePrefixEnum[sp]}/form/validator`,
+        );
+      }
     }
-  }
-  try {
-    const key = formValidateApi.url + formValidateApi.method;
-    if (ruleMap.has(key)) {
-      return ruleMap.get(key);
-    }
+    try {
+      const key = formValidateApi.url + formValidateApi.method;
+      if (ruleMap.has(key)) {
+        return resolve(ruleMap.get(key));
+      }
 
-    const res = await defHttp.request<FieldValidatorDesc[]>({ ...formValidateApi });
-    if (res) {
-      const formSchemaRules = transformationRules(res);
-      const allRules = enhanceCustomRules(formSchemaRules, customRules);
-      ruleMap.set(key, allRules);
-      return allRules;
-    }
-  } catch (error) {}
-  return [];
+      const res = await defHttp.request<FieldValidatorDesc[]>({ ...formValidateApi });
+      if (res) {
+        const formSchemaRules = transformationRules(res);
+        const allRules = enhanceCustomRules(formSchemaRules, customRules);
+        ruleMap.set(key, allRules);
+        return resolve(allRules);
+      }
+    } catch (error) {}
+    return resolve([]);
+  });
 };

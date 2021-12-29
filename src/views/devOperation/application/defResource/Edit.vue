@@ -126,6 +126,10 @@
 
           const rules = await getValidateRules(validateApi, customFormSchemaRules(type));
           rules && rules.length > 0 && (await updateSchema(rules));
+          // getValidateRules(validateApi, customFormSchemaRules(type)).then(async (rules) => {
+          //   console.log(rules);
+          //   rules && rules.length > 0 && (await updateSchema(rules));
+          // });
         }
       }
 

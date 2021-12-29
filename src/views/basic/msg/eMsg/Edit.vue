@@ -16,7 +16,7 @@
         </RadioGroup>
         <a-select
           v-if="formState.receiveType === 'user'"
-          v-model:value="formState.userIdList"
+          v-model:value="formState.employeeIdList"
           class="pay-select"
           placeholder="请选择用户"
           style="width: 70%"
@@ -26,8 +26,8 @@
             [MsgTypeEnum.NOTIFY, MsgTypeEnum.NOTICE].includes(model['msgType'])
           "
         >
-          <a-select-option v-for="item in formState.userList" :key="item.id" :value="item.id">
-            {{ item.nickName }} [{{ item.username }}]
+          <a-select-option v-for="item in formState.employeeList" :key="item.id" :value="item.id">
+            {{ item.realName }}
           </a-select-option>
         </a-select>
         <a-select
@@ -56,16 +56,16 @@
   </PageWrapper>
 </template>
 <script lang="ts">
-  import { defineComponent, ref, unref, onMounted, reactive } from 'vue';
-  import { Select, Radio } from 'ant-design-vue';
+  import { defineComponent, onMounted, reactive, ref, unref } from 'vue';
+  import { Radio, Select } from 'ant-design-vue';
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { PageWrapper } from '/@/components/Page';
   import { ActionEnum, MsgTypeEnum, VALIDATE_API } from '/@/enums/commonEnum';
-  import { Api, save, get } from '/@/api/basic/msg/eMsg';
-  import { pageUser } from '/@/api/devOperation/tenant/defUser';
+  import { Api, get, save } from '/@/api/basic/msg/eMsg';
   import { query as queryRole } from '/@/api/basic/system/baseRole';
+  import { query as queryUser } from '/@/api/basic/user/baseEmployee';
   import { getValidateRules } from '/@/api/lamp/common/formValidateService';
   import { customFormSchemaRules, editFormSchema } from './eMsg.data';
   import { useTabs } from '/@/hooks/web/useTabs';
@@ -94,9 +94,9 @@
 
       const formState = reactive({
         receiveType: 'user',
-        userIdList: [] as string[],
+        employeeIdList: [] as string[],
         roleIdList: [] as string[],
-        userList: [] as any[],
+        employeeList: [] as any[],
         roleList: [] as any[],
       });
 
@@ -110,7 +110,7 @@
       });
       function msgTypeChange(value) {
         if ([MsgTypeEnum.NOTIFY, MsgTypeEnum.NOTICE].includes(value)) {
-          formState.userIdList = [];
+          formState.employeeIdList = [];
           formState.roleIdList = [];
         }
       }
@@ -123,8 +123,8 @@
       });
 
       const loadList = async () => {
-        const result = await pageUser({ model: {}, size: 1000, current: 1 });
-        formState.userList = result.records;
+        const result = await queryUser({});
+        formState.employeeList = result;
         formState.roleList = await queryRole();
       };
 
@@ -136,6 +136,8 @@
           const record = await get(data?.id);
           record.msgType = (record?.msgType as Enum)?.code as string;
           await setFieldsValue({ ...record });
+          formState.roleIdList = record.roleIdList as string[];
+          formState.employeeIdList = record.employeeIdList as string[];
         }
 
         if ([ActionEnum.ADD, ActionEnum.COPY].includes(unref(type))) {
@@ -154,7 +156,7 @@
 
           const params = { msgVO };
           if (formState.receiveType === 'user') {
-            params['userIdList'] = formState.userIdList;
+            params['employeeIdList'] = formState.employeeIdList;
           } else {
             params['roleIdList'] = formState.roleIdList;
           }

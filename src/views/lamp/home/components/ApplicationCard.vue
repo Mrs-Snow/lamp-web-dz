@@ -50,6 +50,7 @@
   import { defineComponent, onMounted, ref } from 'vue';
   import { Card, Empty, Tag } from 'ant-design-vue';
   import { usePermission } from '/@/hooks/web/usePermission';
+  import { useDesign } from '/@/hooks/web/useDesign';
   import { useUserStore } from '/@/store/modules/user';
   import ThumbUrl from '/@/components/Upload/src/ThumbUrl.vue';
   import { DefApplicationResultVO } from '/@/api/devOperation/application/model/defApplicationModel';
@@ -127,8 +128,11 @@
 
       const customClick = props.handleClick ? props.handleClick : handlerTurnToApplication;
 
+      const { prefixVar } = useDesign('');
+
       const getAppCardClass = (item: DefApplicationResultVO) => {
-        return userStore.getApplicationId === item?.id ? 'appDisabled' : '';
+        const appKeyCls = `${prefixVar}-${item.appKey}`;
+        return userStore.getApplicationId === item?.id ? [appKeyCls, 'appDisabled'] : [appKeyCls];
       };
 
       onMounted(async () => {

@@ -19,11 +19,12 @@ const { createMessage } = useMessage();
 const globSetting = useGlobSetting();
 
 const statusMap = new Map();
+const colorMap = new Map();
 statusMap.set(TenantStatusEnum.NORMAL, 'success'); //正常
 statusMap.set(TenantStatusEnum.WAIT_INIT_SCHEMA, 'processing'); // 待初始 表结构
 statusMap.set(TenantStatusEnum.WAIT_INIT_DATASOURCE, 'warning'); // 待初始 数据源
 statusMap.set(TenantStatusEnum.WITHDRAW, 'default'); // 已撤回
-statusMap.set(TenantStatusEnum.WAITING, 'gold'); // 待审核
+colorMap.set(TenantStatusEnum.WAITING, 'gold'); // 待审核
 statusMap.set(TenantStatusEnum.REFUSE, 'error'); // 已拒绝
 statusMap.set(TenantStatusEnum.AGREED, 'default'); // 已同意
 
@@ -75,7 +76,12 @@ export const columns: BasicColumn[] = [
     width: 140,
     customRender: ({ record }) => {
       const status = statusMap.get(record.status);
-      return <Badge status={status} text={record.echoMap?.status} />;
+      if (status) {
+        return <Badge status={status} text={record.echoMap?.status} />;
+      } else {
+        const color = colorMap.get(record.status);
+        return <Badge color={color} text={record.echoMap?.status} />;
+      }
     },
   },
   {

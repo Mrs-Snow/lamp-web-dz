@@ -75,6 +75,12 @@ export enum RoleEnum {
   SYSTEM_LOGIN_LOG_DELETE = 'tenant:system:loginLog:delete',
   SYSTEM_LOGIN_LOG_VIEW = 'tenant:system:loginLog:view',
 
+  // 附件管理
+  TENANT_SYSTEM_FILE_UPLOAD = 'tenant:system:file:upload',
+  TENANT_SYSTEM_FILE_DEBUG_UPLOAD = 'tenant:system:file:debug:upload',
+  TENANT_SYSTEM_FILE_DOWNLOAD = 'tenant:system:file:download',
+  TENANT_SYSTEM_FILE_DELETE = 'tenant:system:file:delete',
+
   // 基础平台
   // 消息管理
   MSG_MSG_ADD = 'basic:msg:msg:add',
@@ -143,8 +149,10 @@ export enum RoleEnum {
 export enum PermModeEnum {
   // 拥有所有
   Has = 'Has',
-  // 拥有任意
+  // 拥有任意一个
   HasAny = 'HasAny',
-  // 没有
+  // 没有所有
   Without = 'Without',
+  // 没有任意一个
+  WithoutAny = 'WithoutAny',
 }

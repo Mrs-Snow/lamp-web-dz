@@ -2,9 +2,9 @@
   <PageWrapper dense contentFullHeight>
     <BasicTable @register="registerTable">
       <template #toolbar>
-        <a-button type="primary" preIcon="ant-design:plus-outlined" @click="handleAdd">{{
-          t('common.title.add')
-        }}</a-button>
+        <a-button type="primary" preIcon="ant-design:plus-outlined" @click="handleAdd">
+          申请创建自己的企业
+        </a-button>
       </template>
       <template #action="{ record }">
         <TableAction
@@ -90,7 +90,7 @@
       const { createMessage } = useMessage();
 
       const [registerTable, { reload }] = useTable({
-        title: t('devOperation.tenant.defTenant.table.title'),
+        title: '我的企业',
         api: page,
         columns,
         formConfig: {

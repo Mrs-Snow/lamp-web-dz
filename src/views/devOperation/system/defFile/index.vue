@@ -5,13 +5,13 @@
       :titleHelpMessage="[
         '1. “调试上传”按钮：用于开发人员测试上传接口是否支持所有的参数',
         '2. “上传”按钮：用于演示如何直接上传附件',
-        '3. 这里查询的是base库 com_file 表的数据',
+        '3. 这里查询的是defaults库 com_file 表的数据',
       ]"
     >
       <template #toolbar>
         <a-button
           type="primary"
-          v-hasAnyPermission="[RoleEnum.SYSTEM_APPENDIX_DELETE]"
+          v-hasAnyPermission="[RoleEnum.TENANT_SYSTEM_FILE_DELETE]"
           preIcon="ant-design:delete-outlined"
           @click="handleBatchDelete"
         >
@@ -20,14 +20,14 @@
         <a-button
           type="primary"
           preIcon="ant-design:download-outlined"
-          v-hasAnyPermission="[RoleEnum.SYSTEM_APPENDIX_DOWNLOAD]"
+          v-hasAnyPermission="[RoleEnum.TENANT_SYSTEM_FILE_DOWNLOAD]"
           @click="handleBatchDownload"
         >
           {{ t('common.title.download') }}
         </a-button>
         <a-button
           type="primary"
-          v-hasAnyPermission="[RoleEnum.SYSTEM_APPENDIX_DEBUG_UPLOAD]"
+          v-hasAnyPermission="[RoleEnum.TENANT_SYSTEM_FILE_DEBUG_UPLOAD]"
           preIcon="ant-design:upload-outlined"
           @click="handleUpload"
         >
@@ -37,9 +37,9 @@
         <BasicUpload
           :maxSize="20"
           :maxNumber="10"
-          v-hasAnyPermission="[RoleEnum.SYSTEM_APPENDIX_UPLOAD]"
+          v-hasAnyPermission="[RoleEnum.TENANT_SYSTEM_FILE_UPLOAD]"
           :uploadParams="{ bizType: FileBizTypeEnum.BASE_FILE }"
-          :api="uploadToTenant"
+          :api="uploadToDef"
           :showPreviewButton="false"
           @change="handleChange"
         />
@@ -57,14 +57,14 @@
             {
               tooltip: t('common.title.download'),
               icon: 'ant-design:download-outlined',
-              auth: RoleEnum.SYSTEM_APPENDIX_DOWNLOAD,
+              auth: RoleEnum.TENANT_SYSTEM_FILE_DOWNLOAD,
               onClick: handleDownload.bind(null, record),
             },
             {
               tooltip: t('common.title.delete'),
               icon: 'ant-design:delete-outlined',
               color: 'error',
-              auth: RoleEnum.SYSTEM_APPENDIX_DELETE,
+              auth: RoleEnum.TENANT_SYSTEM_FILE_DELETE,
               popConfirm: {
                 title: t('common.tips.confirmDelete'),
                 confirm: handleDelete.bind(null, record),
@@ -90,8 +90,8 @@
   import { RoleEnum } from '/@/enums/roleEnum';
   import { useModal } from '/@/components/Modal';
   import ThumbUrl from '/@/components/Upload/src/ThumbUrl.vue';
-  import { page, remove, download } from '/@/api/basic/system/baseFile';
-  import { uploadToTenant } from '/@/api/lamp/file/upload';
+  import { page, remove, download } from '/@/api/devOperation/system/defFile';
+  import { uploadToDef } from '/@/api/lamp/file/upload';
   import { columns, searchFormSchema } from './baseFile.data';
   import EditModal from './Edit.vue';
 
@@ -114,7 +114,7 @@
 
       // 表格
       const [registerTable, { reload, getSelectRowKeys }] = useTable({
-        title: 'base库-' + t('basic.system.baseFile.table.title'),
+        title: 'defaluts库-文件上传记录',
         api: page,
         columns: columns(),
         formConfig: {
@@ -219,7 +219,7 @@
         handleSuccess,
         handleBatchDelete,
         handleBatchDownload,
-        uploadToTenant,
+        uploadToDef,
         handleChange: (list: string[]) => {
           createMessage.info(`已上传${list.length}个文件`);
           handleSuccess();

@@ -17,14 +17,27 @@ import { intersection } from 'lodash-es';
 import { isArray } from '/@/utils/is';
 import { useMultipleTabStore } from '/@/store/modules/multipleTab';
 
+/**
+ * maxList是否包含minList
+ *
+ * @param maxList 大数组
+ * @param minList 小数组
+ */
 function containsAll(maxList: string[], minList: string[]) {
   return intersection(maxList, minList).length == minList.length;
 }
 
+/**
+ * 判断是否有权限
+ *
+ * @param permissionsOwns  用户拥有的权限（后台/anyone/visible/resource接口查询出的权限集合）
+ * @param toBeVerified     待验证的权限（按钮上面写死的资源编码，如<a-button v-hasPermission="['system:menu:delete']">）
+ */
 function isPermitted(permissionsOwns: WildcardPermission[], toBeVerified: WildcardPermission) {
   if (permissionsOwns == null || permissionsOwns.length === 0) {
     return false;
   }
+  // 遍历用户拥有的权限，按个判断是否”包含“待验证的权限
   for (const owned of permissionsOwns) {
     if (owned.implies(toBeVerified)) {
       return true;
@@ -33,17 +46,29 @@ function isPermitted(permissionsOwns: WildcardPermission[], toBeVerified: Wildca
   return false;
 }
 
-const WILDCARD_TOKEN = '*';
-const PART_DIVIDER_TOKEN = ':';
-const SUBPART_DIVIDER_TOKEN = ',';
+const WILDCARD_TOKEN = '*'; // 通配符
+const PART_DIVIDER_TOKEN = ':'; // 模块分隔符
+const SUBPART_DIVIDER_TOKEN = ','; // 功能分隔符
 
+/**
+ * 通配符权限解析对象
+ */
 class WildcardPermission {
+  // 解析后的只包含 : 的权限集合
   parts: string[][];
+
+  /**
+   * 将 wildcardString 解析存储到 parts
+   *
+   * @param wildcardString 原始通配符字符串
+   * @param caseSensitive 是否区分大小写 true：区分；false：忽略大小写
+   */
   constructor(wildcardString: string, caseSensitive: boolean) {
     this.parts = [];
     this._init_(wildcardString, caseSensitive);
   }
 
+  // 解析通配符
   _init_(wildcardString: string, caseSensitive: boolean) {
     if (wildcardString == null || wildcardString.trim().length === 0) {
       throw new Error('权限编码通配符字符串不能为null或空。确保权限字符串的格式正确。');
@@ -73,6 +98,7 @@ class WildcardPermission {
     }
   }
 
+  // 真正的判断逻辑
   implies(toBeVerified: WildcardPermission) {
     const toBeVerifiedParts = toBeVerified.parts;
     let i = 0;
@@ -144,13 +170,22 @@ export function usePermission() {
     return isPermission(value, def, PermModeEnum.Has);
   }
   /**
-   * 当不包含列出的权限时，渲染该元素
+   * 当不包含列出的所有权限时，渲染该元素
    */
   function withoutPermission(
     value?: RoleEnum | RoleEnum[] | string | string[],
     def = true,
   ): boolean {
     return isPermission(value, def, PermModeEnum.Without);
+  }
+  /**
+   * 当不包含列出的任意权限时，渲染该元素
+   */
+  function withoutAnyPermission(
+    value?: RoleEnum | RoleEnum[] | string | string[],
+    def = true,
+  ): boolean {
+    return isPermission(value, def, PermModeEnum.WithoutAny);
   }
   /**
    * 只要包含列出的任意一个权限，元素就会显示
@@ -164,8 +199,8 @@ export function usePermission() {
   /**
    * 判断权限
    *
-   * @param value 需要具备的权限
-   * @param def  value 为空时，权限默认值
+   * @param value 需要判断当前用户是否拥有的资源编码
+   * @param def  value 为空时，默认是否拥有
    * @param mode 模式  可选值： 拥有所有 拥有任意 没有
    */
   function isPermission(
@@ -195,7 +230,7 @@ export function usePermission() {
       }
 
       let flag = true;
-      if (mode === PermModeEnum.HasAny) {
+      if (mode === PermModeEnum.HasAny || mode === PermModeEnum.WithoutAny) {
         flag = false;
       }
       const resourceList = visibleResource.resourceList;
@@ -232,16 +267,25 @@ export function usePermission() {
           } else {
             toBeVerified = new WildcardPermission(strPerm, caseSensitive);
           }
+          // 不同的模式，校验规则不一样
           if (mode === PermModeEnum.Has) {
+            // 拥有所有权限
             if (!isPermitted(permissionsOwns, toBeVerified)) {
               flag = false;
             }
           } else if (mode === PermModeEnum.Without) {
+            // 没有所有权限
             if (isPermitted(permissionsOwns, toBeVerified)) {
               flag = false;
             }
           } else if (mode === PermModeEnum.HasAny) {
+            // 拥有任意一个权限
             if (isPermitted(permissionsOwns, toBeVerified)) {
+              flag = true;
+            }
+          } else if (mode === PermModeEnum.WithoutAny) {
+            // 没有任意一个权限
+            if (!isPermitted(permissionsOwns, toBeVerified)) {
               flag = true;
             }
           }
@@ -283,6 +327,7 @@ export function usePermission() {
     isPermission,
     hasPermission,
     withoutPermission,
+    withoutAnyPermission,
     hasAnyPermission,
     togglePermissionMode,
     refreshMenu,

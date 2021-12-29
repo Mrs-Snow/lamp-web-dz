@@ -1,9 +1,9 @@
 <template>
   <div :class="[prefixCls, `${prefixCls}--${theme}`]">
     <Dropdown placement="bottomLeft" v-if="getTenantList && getTenantList.length > 0">
-      <span :title="getCurrentTenant?.name" class="tenantName">
-        {{ getTenantName(getCurrentTenant) }} <DownOutlined
-      /></span>
+      <div :title="getCurrentTenant?.name" :class="[tenantNameCls]">
+        {{ getTenantName(getCurrentTenant) }} <DownOutlined />
+      </div>
       <template #overlay>
         <Menu
           @click="switchTenantConfirm"
@@ -50,7 +50,9 @@
       theme: propTypes.oneOf(['dark', 'light']),
     },
     setup() {
-      const { prefixCls } = useDesign('layout-tenantList');
+      const { prefixCls, prefixVar } = useDesign('layout-tenant-list');
+      const tenantNameCls = `${prefixVar}-layout-tenant-name`;
+
       const userStore = useUserStore();
       const { createMessage, createConfirm } = useMessage();
 
@@ -125,7 +127,8 @@
         e?.preventDefault();
         createConfirm({
           iconType: 'warning',
-          content: `是否确认设置【${tenant?.name} 】为默认企业？`,
+          title: `是否确认设置【${tenant?.name} 】为默认企业？`,
+          content: `设置为默认企业后，下次登录将默认进入该企业！`,
           onOk: async () => {
             try {
               await updateDefaultTenant(tenant.id as string);
@@ -137,6 +140,7 @@
 
       return {
         prefixCls,
+        tenantNameCls,
         switchTenantConfirm,
         getTenantName,
         getTenantList,
@@ -148,7 +152,8 @@
   });
 </script>
 <style lang="less">
-  @prefix-cls: ~'@{namespace}-layout-tenantList';
+  @prefix-cls: ~'@{namespace}-layout-tenant-list';
+  @tenantName-cls: ~'@{namespace}-layout-tenant-name';
   @tenantList-item-normal-color: rgba(0, 0, 0, 0.85);
 
   .@{prefix-cls} {
@@ -157,13 +162,13 @@
     align-items: center;
 
     &--light {
-      .tenantName {
+      .@{tenantName-cls} {
         color: @tenantList-item-normal-color;
       }
     }
 
     &--dark {
-      .tenantName {
+      .@{tenantName-cls} {
         color: rgb(255 255 255 / 60%);
       }
     }

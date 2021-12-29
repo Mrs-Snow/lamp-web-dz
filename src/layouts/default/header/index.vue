@@ -38,7 +38,7 @@
     <!-- action  -->
     <div :class="`${prefixCls}-action`">
       <div :class="`${prefixCls}-action__item tips-item`">
-        <!-- 引用： https://zhuanlan.zhihu.com/p/372052468 -->
+        <!-- 样式引用： https://zhuanlan.zhihu.com/p/372052468 -->
         <div class="ad" v-if="globSetting.tips">
           <i class="iconfont">&#xe633;</i>
           <p class="content" :title="globSetting.tips">

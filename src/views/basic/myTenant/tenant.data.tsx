@@ -6,7 +6,7 @@ import { ActionEnum, FileBizTypeEnum } from '/@/enums/commonEnum';
 import { TenantStatusEnum } from '/@/enums/biz/tenant';
 import { Tag, Badge } from 'ant-design-vue';
 import { RuleType, FormSchemaExt } from '/@/api/lamp/common/formValidateService';
-import { lazyList } from '/@/api/devOperation/system/defArea';
+import cities from '/@/utils/lamp/cities.json';
 
 const { t } = useI18n();
 
@@ -201,19 +201,23 @@ export const editFormSchema = (_: Ref<ActionEnum>): FormSchema[] => {
     {
       field: 'area',
       label: '地区',
-      component: 'ApiCascader',
+      // component: 'ApiCascader',
+      // componentProps: {
+      //   api: lazyList,
+      //   asyncFetchParamKey: 'parentId',
+      //   dataField: '',
+      //   labelField: 'name',
+      //   valueField: 'id',
+      //   initFetchParams: {
+      //     parentId: '0',
+      //   },
+      //   isLeaf: (record: Recordable) => {
+      //     return !(record.treeGrade < 2);
+      //   },
+      // },
+      component: 'Cascader',
       componentProps: {
-        api: lazyList,
-        asyncFetchParamKey: 'parentId',
-        dataField: '',
-        labelField: 'name',
-        valueField: 'id',
-        initFetchParams: {
-          parentId: '0',
-        },
-        isLeaf: (record: Recordable) => {
-          return !(record.treeGrade < 2);
-        },
+        options: cities,
       },
     },
     {
