@@ -37,7 +37,6 @@ export function useFormEvents({
     if (!formEl) return;
 
     Object.keys(formModel).forEach((key) => {
-      // formModel[key] = defaultValueRef.value[key];
       const schema = unref(getSchema).find((item) => item.field === key);
       const isInput = schema?.component && defaultValueComponents.includes(schema.component);
       formModel[key] = isInput ? defaultValueRef.value[key] || '' : defaultValueRef.value[key];

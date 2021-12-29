@@ -155,8 +155,14 @@ export function useTable(tableProps?: Props): [
     expandAll: () => {
       getTableInstance().expandAll();
     },
+    expandRows: (keys: string[]) => {
+      getTableInstance().expandRows(keys);
+    },
     collapseAll: () => {
       getTableInstance().collapseAll();
+    },
+    scrollTo: (pos: string) => {
+      getTableInstance().scrollTo(pos);
     },
   };
 

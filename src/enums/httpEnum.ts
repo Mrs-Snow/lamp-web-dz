@@ -30,7 +30,7 @@ export const HTTP_TAG_MAP = new Map([
 ]);
 
 /**
- * @description:  contentTyp
+ * @description:  contentType
  */
 export enum ContentTypeEnum {
   // json
