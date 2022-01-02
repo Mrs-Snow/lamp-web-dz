@@ -494,6 +494,7 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       field: 'resourceApiList',
       component: 'Input',
       slot: 'resourceApiList',
+      defaultValue: [],
       ifShow: ({ values }) => {
         return [ResourceTypeEnum.MENU, ResourceTypeEnum.VIEW, ResourceTypeEnum.FUNCTION].includes(
           values.resourceType,
