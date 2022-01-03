@@ -72,7 +72,7 @@
     "vue-json-pretty": "^1.8.2",
     "vue-router": "^4.0.12",
     "vue-types": "^4.1.1",
-    "vue3-blocks-tree": "^0.5.2",
+    "vue3-blocks-tree": "^0.6.1",
     "xlsx": "^0.17.4"
   },
   "devDependencies": {
@@ -135,7 +135,7 @@
     "ts-jest": "^27.1.2",
     "ts-node": "^10.4.0",
     "typescript": "^4.5.4",
-    "vite": "^2.7.8",
+    "vite": "2.7.3",
     "vite-plugin-compression": "^0.4.0",
     "vite-plugin-html": "^2.1.2",
     "vite-plugin-imagemin": "^0.5.1",
