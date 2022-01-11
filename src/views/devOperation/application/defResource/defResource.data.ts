@@ -71,8 +71,9 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
         return [
           { required: true, message: '不能为空' },
           {
-            trigger: 'blur',
+            trigger: 'change',
             validator: async (_, value) => {
+              console.log('model=%s, value=%s', model.resourceType, value);
               if (type.value === ActionEnum.VIEW) {
                 return Promise.resolve();
               }
@@ -497,6 +498,30 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       },
       colProps: {
         span: 12,
+      },
+      helpMessage: [
+        '1. 自行创建一个类，并实现DataScopeProvider接口',
+        '2. 在实现类上标记注解：@Component("DATA_SCOPE_XXXX")',
+        '3. 在此参数上配置：DATA_SCOPE_XXXX',
+      ],
+      componentProps: {
+        placeholder: '以"DATA_SCOPE_"为前缀的自定义实现类',
+      },
+      dynamicRules: ({ model }) => {
+        return [
+          {
+            trigger: 'blur',
+            async validator(_, value) {
+              if (type.value === ActionEnum.VIEW) {
+                return Promise.resolve();
+              }
+              if (model.dataScope === DataScopeEnum.CUSTOM && !value) {
+                return Promise.reject('不能为空');
+              }
+              return Promise.resolve();
+            },
+          },
+        ];
       },
     },
 
