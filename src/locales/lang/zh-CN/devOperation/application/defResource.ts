@@ -24,4 +24,7 @@ export default {
   sortValue: '排序',
   apiList: '接口',
   openWith: '打开方式',
+  dataScope: '数据范围',
+  isDef: '是否默认',
+  customClass: '实现类',
 };

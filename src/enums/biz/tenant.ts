@@ -30,7 +30,7 @@ export enum ResourceTypeEnum {
   VIEW = '30',
   FUNCTION = '40',
   FIELD = '50',
-  API = '60',
+  DATA = '60',
 }
 
 // 01-内部组件 02-内链 03-外链
@@ -73,4 +73,15 @@ export enum LoginStatusEnum {
   CAPTCHA_ERROR = '02',
   PASSWORD_ERROR = '03',
   USER_ERROR = '04',
+}
+
+// 数据范围
+export enum DataScopeEnum {
+  ALL = '01',
+  SELF_COMPANY_CHILDREN = '02',
+  SELF_COMPANY = '03',
+  SELF_DEPT_CHILDREN = '04',
+  SELF_DEPT = '05',
+  SELF = '06',
+  CUSTOM = '07',
 }

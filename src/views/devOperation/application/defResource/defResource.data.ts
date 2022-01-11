@@ -4,7 +4,7 @@ import { useI18n } from '/@/hooks/web/useI18n';
 import { dictComponentProps, stateComponentProps, yesNoComponentProps } from '/@/utils/lamp/common';
 import { ActionEnum, DictEnum } from '/@/enums/commonEnum';
 import { FormSchemaExt, RuleType } from '/@/api/lamp/common/formValidateService';
-import { ResourceOpenWithEnum, ResourceTypeEnum } from '/@/enums/biz/tenant';
+import { DataScopeEnum, ResourceOpenWithEnum, ResourceTypeEnum } from '/@/enums/biz/tenant';
 import { check, checkName, checkPath } from '/@/api/devOperation/application/defResource';
 import { isUrl } from '/@/utils/is';
 
@@ -56,7 +56,7 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       component: 'ApiRadioGroup',
       defaultValue: ResourceTypeEnum.MENU,
       componentProps: {
-        ...dictComponentProps(DictEnum.RESOURCE_TYPE, ResourceTypeEnum.API),
+        ...dictComponentProps(DictEnum.RESOURCE_TYPE),
       },
       helpMessage: [
         '菜单：即左侧显示的菜单(肉眼可见的菜单)(包括N级菜单)',
@@ -71,7 +71,7 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
         return [
           { required: true, message: '不能为空' },
           {
-            trigger: ['change', 'blur'],
+            trigger: 'blur',
             validator: async (_, value) => {
               if (type.value === ActionEnum.VIEW) {
                 return Promise.resolve();
@@ -85,6 +85,8 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
                   return Promise.reject('功能下不能添加菜单');
                 } else if (value === ResourceTypeEnum.VIEW) {
                   return Promise.reject('功能下不能添加视图');
+                } else if (value === ResourceTypeEnum.DATA) {
+                  return Promise.reject('功能下不能添加数据');
                 }
               } else if (model?.parentResourceType === ResourceTypeEnum.FIELD) {
                 return Promise.reject('字段下不能添加子资源');
@@ -212,9 +214,12 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       label: '特性信息',
       helpMessage: ['每种类型拥有不同的字段'],
       ifShow: ({ values }) => {
-        return [ResourceTypeEnum.MENU, ResourceTypeEnum.VIEW, ResourceTypeEnum.FIELD].includes(
-          values.resourceType,
-        );
+        return [
+          ResourceTypeEnum.MENU,
+          ResourceTypeEnum.VIEW,
+          ResourceTypeEnum.FIELD,
+          ResourceTypeEnum.DATA,
+        ].includes(values.resourceType);
       },
     },
     {
@@ -223,9 +228,7 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       component: 'ApiRadioGroup',
       defaultValue: ResourceOpenWithEnum.INNER_COMPONENT,
       ifShow: ({ values }) => {
-        return [ResourceTypeEnum.MENU, ResourceTypeEnum.VIEW, ResourceTypeEnum.API].includes(
-          values.resourceType,
-        );
+        return [ResourceTypeEnum.MENU, ResourceTypeEnum.VIEW].includes(values.resourceType);
       },
       helpMessage: [
         '组件：在框架内打开组件页面',
@@ -266,9 +269,7 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
         span: 12,
       },
       ifShow: ({ values }) => {
-        return [ResourceTypeEnum.MENU, ResourceTypeEnum.VIEW, ResourceTypeEnum.API].includes(
-          values.resourceType,
-        );
+        return [ResourceTypeEnum.MENU, ResourceTypeEnum.VIEW].includes(values.resourceType);
       },
       componentProps: ({ formActionType }) => {
         return {
@@ -454,12 +455,57 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
     },
 
     {
+      label: t('devOperation.application.defResource.dataScope'),
+      field: 'dataScope',
+      component: 'ApiRadioGroup',
+      defaultValue: DataScopeEnum.SELF,
+      componentProps: {
+        ...dictComponentProps(DictEnum.RESOURCE_DATA_SCOPE),
+      },
+      ifShow: ({ values }) => {
+        return values.resourceType === ResourceTypeEnum.DATA;
+      },
+      colProps: {
+        span: 24,
+      },
+    },
+    {
+      label: t('devOperation.application.defResource.isDef'),
+      field: 'isDef',
+      component: 'Switch',
+      defaultValue: false,
+      componentProps: {
+        ...yesNoComponentProps(),
+        'checked-children': t('lamp.common.yes'),
+        'un-checked-children': t('lamp.common.no'),
+      },
+      ifShow: ({ values }) => {
+        return values.resourceType === ResourceTypeEnum.DATA;
+      },
+      colProps: {
+        span: 12,
+      },
+    },
+    {
+      label: t('devOperation.application.defResource.customClass'),
+      field: 'customClass',
+      component: 'Input',
+      ifShow: ({ values }) => {
+        return (
+          values.resourceType === ResourceTypeEnum.DATA && values.dataScope === DataScopeEnum.CUSTOM
+        );
+      },
+      colProps: {
+        span: 12,
+      },
+    },
+
+    {
       label: t('devOperation.application.defResource.fieldIsSecret'),
       field: 'fieldIsSecret',
       component: 'Switch',
       defaultValue: false,
       componentProps: {
-        // size: 'default',
         ...yesNoComponentProps(),
         'checked-children': t('lamp.common.yes'),
         'un-checked-children': t('lamp.common.no'),
@@ -477,7 +523,6 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       component: 'Switch',
       defaultValue: true,
       componentProps: {
-        // size: 'default',
         ...yesNoComponentProps(),
         'checked-children': t('lamp.common.yes'),
         'un-checked-children': t('lamp.common.no'),

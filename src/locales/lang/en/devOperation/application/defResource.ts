@@ -23,4 +23,7 @@ export default {
   sortValue: 'sortValue',
   apiList: 'apiList',
   openWith: 'openWith',
+  dataScope: 'dataScope',
+  isDef: 'isDef',
+  customClass: 'customClass',
 };
