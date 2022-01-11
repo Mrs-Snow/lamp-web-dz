@@ -18,6 +18,7 @@ import { useI18n } from '/@/hooks/web/useI18n';
 import { joinTimestamp, formatRequestDate } from './helper';
 import { useUserStoreWithOut } from '/@/store/modules/user';
 import { Base64 } from 'js-base64';
+import { router } from '/@/router';
 
 const globSetting = useGlobSetting();
 const { createMessage, createErrorModal } = useMessage();
@@ -173,6 +174,10 @@ const transform: AxiosTransform = {
     (config as Recordable).headers[authorizationKey] = `${Base64.encode(
       `${clientId}:${clientSecret}`,
     )}`;
+
+    (config as Recordable).headers['Path'] = router?.currentRoute?.value?.fullPath;
+
+    (config as Recordable).headers['gray_version'] = 'zuihou';
 
     return config;
   },
