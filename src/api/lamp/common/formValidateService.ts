@@ -15,6 +15,17 @@ export interface FormSchemaExt extends FormSchema {
   type?: RuleType;
 }
 
+const ruleTypeMap = new Map();
+ruleTypeMap.set('String', 'string');
+ruleTypeMap.set('Integer', 'number');
+ruleTypeMap.set('Boolean', 'boolean');
+ruleTypeMap.set('Integer', 'integer');
+ruleTypeMap.set('Float', 'float');
+ruleTypeMap.set('Array', 'object');
+ruleTypeMap.set('Date', 'date');
+ruleTypeMap.set('DateTime', 'date');
+ruleTypeMap.set('Time', 'date');
+
 /**
  * 时间与当前时间进行比较， 不存在的情况默认都是比较成功 返回true
  * @param dateStr 待比较日期
@@ -24,26 +35,6 @@ export interface FormSchemaExt extends FormSchema {
 function compareDate2Now(dateStr: string, _timeType = 'Date', compareType = 'Past') {
   if (dateStr) {
     const now = dateUtil();
-    // let nowStr = '';
-    // if (timeType === 'Date') {
-    //   nowStr = now.format('YYYY-MM-DD');
-    // } else if (timeType === 'DateTime') {
-    //   nowStr = now.format('YYYY-MM-DD HH:mm:ss');
-    // } else if (timeType === 'Time') {
-    //   nowStr = now.format('HH:mm:ss');
-    // }
-    // if (nowStr) {
-    //   if (compareType === 'Past') {
-    //     return nowStr > dateStr;
-    //   } else if (compareType === 'PastOrPresent') {
-    //     return nowStr >= dateStr;
-    //   } else if (compareType === 'Future') {
-    //     return nowStr < dateStr;
-    //   } else if (compareType === 'FutureOrPresent') {
-    //     return nowStr <= dateStr;
-    //   }
-    // }
-
     if (compareType === 'Past') {
       return now.isAfter(dateUtil(dateStr));
     } else if (compareType === 'PastOrPresent') {
@@ -165,8 +156,10 @@ function decodeRules(fieldRules: Rule[], constraints: ConstraintInfo[], fieldTyp
           });
           break;
         case 'NotNull':
+          const type = ruleTypeMap.get(fieldType) || 'string';
           fieldRules.push({
             required: true,
+            type: type,
             whitespace: true,
             message: attrs.message,
           });
