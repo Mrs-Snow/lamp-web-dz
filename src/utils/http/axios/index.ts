@@ -175,8 +175,10 @@ const transform: AxiosTransform = {
       `${clientId}:${clientSecret}`,
     )}`;
 
+    // 当前请求地址#号后的路径，需要用户后台判断该页面的数据权限
     (config as Recordable).headers['Path'] = router?.currentRoute?.value?.fullPath;
 
+    // 灰度参数，后台服务集群启动时，可以通过该参数固定请求某个节点！
     (config as Recordable).headers['gray_version'] = 'zuihou';
 
     return config;
