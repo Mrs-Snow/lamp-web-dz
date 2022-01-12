@@ -17,10 +17,9 @@ export interface FormSchemaExt extends FormSchema {
 
 const ruleTypeMap = new Map();
 ruleTypeMap.set('String', 'string');
-ruleTypeMap.set('Integer', 'number');
+ruleTypeMap.set('Integer', 'string');
 ruleTypeMap.set('Boolean', 'boolean');
-ruleTypeMap.set('Integer', 'integer');
-ruleTypeMap.set('Float', 'float');
+ruleTypeMap.set('Float', 'string');
 ruleTypeMap.set('Array', 'object');
 ruleTypeMap.set('Date', 'date');
 ruleTypeMap.set('DateTime', 'date');
