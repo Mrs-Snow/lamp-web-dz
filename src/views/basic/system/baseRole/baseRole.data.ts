@@ -1,11 +1,12 @@
 import { Ref } from 'vue';
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
-import { stateComponentProps } from '/@/utils/lamp/common';
-import { ActionEnum } from '/@/enums/commonEnum';
+import { dictComponentProps, stateComponentProps } from '/@/utils/lamp/common';
+import { ActionEnum, DictEnum } from '/@/enums/commonEnum';
 import { FormSchemaExt } from '/@/api/lamp/common/formValidateService';
 import { tree } from '/@/api/basic/user/baseOrg';
 import { DataTypeEnum } from '/@/enums/biz/base';
+import { RoleCategoryEnum } from '/@/enums/biz/tenant';
 
 const { t } = useI18n();
 // 列表页字段
@@ -57,6 +58,23 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       label: t('basic.system.baseRole.name'),
       field: 'name',
       component: 'Input',
+      dynamicDisabled: ({ model }) => {
+        return DataTypeEnum.SYSTEM === model.type || [ActionEnum.VIEW].includes(type.value);
+      },
+    },
+    {
+      label: t('basic.system.baseRole.category'),
+      field: 'category',
+      component: 'ApiRadioGroup',
+      defaultValue: RoleCategoryEnum.FUNCTION,
+      componentProps: {
+        ...dictComponentProps(DictEnum.ROLE_CATEGORY),
+      },
+      helpMessage: [
+        '功能角色：不同的角色，拥有不同的菜单、视图、按钮、URI权限',
+        '桌面角色：不同的角色，拥有不同的首页桌面（待开发）',
+        '数据角色：不同的角色，拥有不同数据权限',
+      ],
       dynamicDisabled: ({ model }) => {
         return DataTypeEnum.SYSTEM === model.type || [ActionEnum.VIEW].includes(type.value);
       },

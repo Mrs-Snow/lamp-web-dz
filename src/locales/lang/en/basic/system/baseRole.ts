@@ -9,4 +9,5 @@ export default {
   readonly: 'readonly',
   dsType: 'dsType',
   createdOrgId: 'createdOrgId',
+  category: 'category',
 };

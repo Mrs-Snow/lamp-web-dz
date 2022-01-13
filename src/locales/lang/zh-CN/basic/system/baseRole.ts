@@ -9,4 +9,5 @@ export default {
   readonly: '内置角色',
   dsType: '数据权限',
   createdOrgId: '创建人组织',
+  category: '角色类别',
 };

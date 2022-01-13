@@ -51,6 +51,10 @@ export const Api = {
     url: `${ServicePrefixEnum.BASE}/${MODULAR}/resourceList`,
     method: RequestEnum.GET,
   } as AxiosRequestConfig,
+  FindResourceDataScopeIdByRoleId: {
+    url: `${ServicePrefixEnum.BASE}/${MODULAR}/findResourceDataScopeIdByRoleId`,
+    method: RequestEnum.GET,
+  } as AxiosRequestConfig,
   PageMyRole: {
     url: `${ServicePrefixEnum.BASE}/${MODULAR}/pageMyRole`,
     method: RequestEnum.POST,
@@ -86,3 +90,6 @@ export const findEmployeeIdByRoleId = (roleId: string) =>
 
 export const findResourceIdByRoleId = (roleId: string) =>
   defHttp.request<Recordable>({ ...Api.FindResourceIdByRoleId, params: { roleId } });
+
+export const findResourceDataScopeIdByRoleId = (roleId: string) =>
+  defHttp.request<Recordable>({ ...Api.FindResourceDataScopeIdByRoleId, params: { roleId } });

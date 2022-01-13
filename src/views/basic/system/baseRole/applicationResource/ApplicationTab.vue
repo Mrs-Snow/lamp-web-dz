@@ -17,6 +17,7 @@
       :clickRowToExpand="false"
       :treeData="resourceList"
       :checkedKeys="checkedKeys"
+      :expandedKeys="checkedKeys"
       ref="treeRef"
       @check="checkNode"
       @change="changeHandler"
@@ -135,6 +136,8 @@
             return 'cyan';
           case ResourceTypeEnum.FIELD:
             return 'blue';
+          case ResourceTypeEnum.DATA:
+            return 'purple';
           default:
             return 'success';
         }

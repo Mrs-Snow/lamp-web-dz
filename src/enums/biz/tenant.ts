@@ -24,7 +24,7 @@ export enum MultiTenantTypeEnum {
   DATASOURCE_COLUMN = 'DATASOURCE_COLUMN',
 }
 
-// 20-菜单 30-视图 40-功能 50-字段 60-接口
+// 20-菜单 30-视图 40-功能 50-字段 60-数据
 export enum ResourceTypeEnum {
   MENU = '20',
   VIEW = '30',
@@ -84,4 +84,11 @@ export enum DataScopeEnum {
   SELF_DEPT = '05',
   SELF = '06',
   CUSTOM = '07',
+}
+
+// 角色类别
+export enum RoleCategoryEnum {
+  FUNCTION = '10',
+  DESKTOP = '20',
+  DATA_SCOPE = '30',
 }

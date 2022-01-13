@@ -10,13 +10,17 @@
         <Tag color="error">应用</Tag> {{ application.name }}</Checkbox
       >
     </template>
+
     <BasicTree
       checkable
       checkStrictly
       :clickRowToExpand="false"
       :treeData="resourceList"
+      :checkedKeys="checkedKeys"
+      :expandedKeys="checkedKeys"
       ref="treeRef"
       @check="checkNode"
+      @change="changeHandler"
       toolbar
       :toolbarStrictly="false"
       search
@@ -28,15 +32,9 @@
           <Tag :color="getTagColor(item?.resourceType)">{{ item.echoMap?.resourceType }}</Tag>
         </template>
         {{ item.name }}
-        <span>
-          <a
-            v-if="item.children && item.children.length"
-            @click="selectAll(item.id, $event)"
-            style="margin-left: 30px"
-          >
-            {{ isAllCheckedByKey(item.id) ? '取消全选' : '全选' }}
-          </a>
-        </span>
+        <template v-if="item.resourceType === ResourceTypeEnum.DATA && item.isDef">
+          <Tag style="margin-left: 10px" color="error">默认</Tag>
+        </template>
       </template>
     </BasicTree>
   </CollapseContainer>
@@ -46,7 +44,7 @@
   import { Checkbox, Tag } from 'ant-design-vue';
   import type { TreeDataItem } from 'ant-design-vue/es/tree/Tree';
   import { CollapseContainer } from '/@/components/Container/index';
-  import { BasicTree, TreeActionType, TreeIcon, FieldNames } from '/@/components/Tree';
+  import { BasicTree, TreeActionType, TreeIcon, FieldNames, CheckKeys } from '/@/components/Tree';
   import { isArray } from '/@/utils/is';
   import { uniq, intersection, difference } from 'lodash-es';
   import { useI18n } from '/@/hooks/web/useI18n';
@@ -55,7 +53,7 @@
   const fieldNames: FieldNames = { key: 'id', title: 'name' };
 
   export default defineComponent({
-    name: 'ApplicationTab',
+    name: 'ApplicationDataScopeTab',
     components: {
       BasicTree,
       Checkbox,
@@ -76,15 +74,17 @@
           return [] as TreeDataItem[];
         },
       },
+      checkedKeys: {
+        type: Array as PropType<CheckKeys>,
+        default: () => [],
+      },
     },
     setup(props) {
       const { t } = useI18n();
       const treeRef = ref<Nullable<TreeActionType>>(null);
       // 表单数据
-      const formData = reactive<Recordable>({
-        expirationTime: '',
-        applicationList: [],
-      });
+      const formData = reactive<Recordable>({});
+
       // 临时数据
       const state = reactive({
         indeterminate: false,
@@ -135,6 +135,11 @@
           default:
             return 'success';
         }
+      }
+
+      function changeHandler(_) {
+        computedIndeterminate();
+        computedCheckAll();
       }
 
       // 获取 树当前选中的节点key
@@ -197,9 +202,6 @@
           const newKeys = difference(getCheckedKeys(), childrenIds);
           getTree().setCheckedKeys(uniq(newKeys));
         }
-
-        computedCheckAll();
-        computedIndeterminate();
       }
 
       /**
@@ -258,8 +260,6 @@
         if (!ids || !ids.length) {
           return false;
         }
-        // const checkedKeys = getCheckedKeys().filter((item) => ids.includes(item));
-        // return checkedKeys.length === ids.length;
         return intersection(getCheckedKeys(), ids).length == ids.length;
       }
 
@@ -273,6 +273,8 @@
         selectAll,
         isAllCheckedByKey,
         fieldNames,
+        ResourceTypeEnum,
+        changeHandler,
         getTagColor,
       };
     },

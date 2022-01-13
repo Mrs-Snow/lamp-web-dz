@@ -48,6 +48,11 @@ export const Api = {
     url: `${ServicePrefixEnum.TENANT}/${MODULAR}/findAvailableApplicationResourceList`,
     method: RequestEnum.GET,
   } as AxiosRequestConfig,
+  // 角色授权时，查询当前企业拥有的应用和数据权限
+  FindAvailableApplicationDataScopeList: {
+    url: `${ServicePrefixEnum.TENANT}/${MODULAR}/findAvailableApplicationDataScopeList`,
+    method: RequestEnum.GET,
+  } as AxiosRequestConfig,
 };
 
 export const pageFindMyApplication = (params: PageParams<DefApplicationPageQuery>) =>
@@ -61,6 +66,9 @@ export const findApplicationResourceList = () =>
 
 export const findAvailableApplicationResourceList = () =>
   defHttp.request<ApplicationResourceResultVO[]>({ ...Api.FindAvailableApplicationResourceList });
+
+export const findAvailableApplicationDataScopeList = () =>
+  defHttp.request<ApplicationResourceResultVO[]>({ ...Api.FindAvailableApplicationDataScopeList });
 
 export const page = (params: PageParams<DefApplicationPageQuery>) =>
   defHttp.request<PageResult<DefApplicationResultVO>>({ ...Api.Page, params });
