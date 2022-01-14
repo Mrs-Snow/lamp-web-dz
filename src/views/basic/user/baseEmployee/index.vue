@@ -32,6 +32,13 @@
           </Tag>
         </span>
       </template>
+      <template #mainOrg="{ record }">
+        <span>
+          <Tag color="success" class="mr-2" v-if="record?.echoMap?.mainOrgId">
+            {{ record?.echoMap?.mainOrgId }}
+          </Tag>
+        </span>
+      </template>
       <template #action="{ record }">
         <TableAction
           :actions="[

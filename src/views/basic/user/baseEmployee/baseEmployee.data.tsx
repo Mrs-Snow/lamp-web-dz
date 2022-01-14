@@ -29,6 +29,11 @@ export const columns = (): BasicColumn[] => {
       slots: { customRender: 'orgIdList' },
     },
     {
+      title: '所属主部门',
+      dataIndex: 'mainOrg',
+      slots: { customRender: 'mainOrg' },
+    },
+    {
       title: t('basic.user.baseEmployee.positionStatus'),
       dataIndex: ['echoMap', 'positionStatus'],
       width: 100,
@@ -204,6 +209,22 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
         valueField: 'id',
         allowClear: true,
         multiple: true,
+      },
+      dynamicDisabled: () => {
+        return [ActionEnum.VIEW].includes(type.value);
+      },
+      colProps: {
+        span: 12,
+      },
+    },
+    {
+      label: '所属主部门',
+      field: 'mainOrgId',
+      component: 'ApiTreeSelect',
+      componentProps: {
+        api: tree,
+        labelField: 'name',
+        valueField: 'id',
       },
       dynamicDisabled: () => {
         return [ActionEnum.VIEW].includes(type.value);

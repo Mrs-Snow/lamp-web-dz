@@ -66,8 +66,8 @@
   import { RouteEnum } from '/@/enums/biz/tenant';
   import { RoleEnum } from '/@/enums/roleEnum';
   export default defineComponent({
-    // 若需要开启页面缓存，请将此参数跟菜单名保持一致
-    name: '消息管理',
+    // 若需要开启页面缓存，请将此参数跟菜单名保持一致,但开启缓存后，发布消息后重新进入此页面无法重新加载消息
+    name: '消息管理2',
     components: { BasicTable, PageWrapper, TableAction },
     setup() {
       const { t } = useI18n();
