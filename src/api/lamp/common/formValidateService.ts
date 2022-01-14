@@ -20,7 +20,7 @@ ruleTypeMap.set('String', 'string');
 ruleTypeMap.set('Integer', 'string');
 ruleTypeMap.set('Boolean', 'boolean');
 ruleTypeMap.set('Float', 'string');
-ruleTypeMap.set('Array', 'object');
+ruleTypeMap.set('Array', 'array');
 ruleTypeMap.set('Date', 'date');
 ruleTypeMap.set('DateTime', 'date');
 ruleTypeMap.set('Time', 'date');
