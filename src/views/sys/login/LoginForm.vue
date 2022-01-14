@@ -150,7 +150,7 @@
   const devFlag = ref<string>('');
 
   if (isDevMode()) {
-    devFlag.value = '(debug)';
+    devFlag.value = '(dev)';
   }
   onMounted(() => {
     loadCaptcha();
