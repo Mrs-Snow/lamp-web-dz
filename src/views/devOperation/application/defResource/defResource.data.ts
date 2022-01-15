@@ -63,6 +63,7 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
         '视图：即需要配置在路由中，但需要隐藏的菜单, 如 资源维护',
         '功能：即页面上的非视图的按钮',
         '字段：即列表页或编辑页的字段',
+        '数据：即页面或视图请求后台接口时，返回不同的数据，参考 消息管理',
       ],
       colProps: {
         span: 12,
@@ -77,6 +78,12 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
               if (type.value === ActionEnum.VIEW) {
                 return Promise.resolve();
               }
+              if (model?.parentId === '0' || !model?.parentId) {
+                if (value === ResourceTypeEnum.DATA) {
+                  return Promise.reject('根节点下不能添加数据');
+                }
+              }
+
               if (model?.parentResourceType === ResourceTypeEnum.VIEW) {
                 if (value === ResourceTypeEnum.MENU) {
                   return Promise.reject('视图下不能添加菜单');
@@ -466,6 +473,10 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       ifShow: ({ values }) => {
         return values.resourceType === ResourceTypeEnum.DATA;
       },
+      helpMessage: [
+        '每种数据范围对应一个DataScopeProvider接口的实现类，',
+        '“自定义”需要自己编写实现类，并implements DataScopeProvider',
+      ],
       colProps: {
         span: 24,
       },
@@ -483,6 +494,9 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       ifShow: ({ values }) => {
         return values.resourceType === ResourceTypeEnum.DATA;
       },
+      helpMessage: [
+        '若某个菜单或视图决定后台接口启用了数据权限，请至少为该菜单或视图配置一个默认数据权限',
+      ],
       colProps: {
         span: 12,
       },

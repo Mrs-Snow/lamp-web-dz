@@ -2,6 +2,16 @@
   <div class="m-4 ml-2 overflow-hidden bg-white appResTabs">
     <Card :title="title">
       <template #extra>
+        <BasicHelp
+          class="mr-2"
+          :text="[
+            '同一个菜单或视图下的数据权限，只建议授权一个',
+            '若同时给角色授权多个同级别的数据权限，会取sortValue最小的',
+            '若员工没有某页面的任何数据权限，则使用默认数据权限',
+          ]"
+          showIndex
+          placement="left"
+        />
         <a-button
           class="!ml-4"
           type="primary"
@@ -36,12 +46,14 @@
   import { BaseRoleResourceRelSaveVO } from '/@/api/basic/system/model/baseRoleModel';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { RoleEnum } from '/@/enums/roleEnum';
+  import { BasicHelp } from '/@/components/Basic';
   export default defineComponent({
     name: 'ApplicationDataScopeTabs',
     components: {
       Card,
       Empty,
       ApplicationTab,
+      BasicHelp,
     },
 
     emits: ['select'],
