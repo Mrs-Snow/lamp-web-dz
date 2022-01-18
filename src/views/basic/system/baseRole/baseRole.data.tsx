@@ -1,4 +1,5 @@
-import { Ref } from 'vue';
+import { Ref, h } from 'vue';
+import { Tag } from 'ant-design-vue';
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { dictComponentProps, stateComponentProps } from '/@/utils/lamp/common';
@@ -6,9 +7,14 @@ import { ActionEnum, DictEnum } from '/@/enums/commonEnum';
 import { FormSchemaExt } from '/@/api/lamp/common/formValidateService';
 import { tree } from '/@/api/basic/user/baseOrg';
 import { DataTypeEnum } from '/@/enums/biz/base';
-import { RoleCategoryEnum } from '/@/enums/biz/tenant';
+import { RoleCategoryEnum } from '/@/enums/biz/base';
 
 const { t } = useI18n();
+const categoryMap = new Map();
+categoryMap.set(RoleCategoryEnum.FUNCTION, 'success');
+categoryMap.set(RoleCategoryEnum.DATA_SCOPE, 'error');
+categoryMap.set(RoleCategoryEnum.DESKTOP, 'processing');
+
 // 列表页字段
 export const columns = (): BasicColumn[] => {
   return [
@@ -16,6 +22,40 @@ export const columns = (): BasicColumn[] => {
       title: t('basic.system.baseRole.name'),
       dataIndex: 'name',
       // width: 180,
+      ellipsis: true,
+      align: 'left',
+      customRender: ({ record }) => {
+        if (record.echoMap.category) {
+          return h(
+            'div',
+            {
+              title: record.name,
+              class: 'ant-table-cell-ellipsis',
+            },
+            [
+              h(Tag, { color: categoryMap.get(record.category) }, () => record.echoMap.category),
+              record.name,
+            ],
+          );
+        } else {
+          return record.name;
+        }
+      },
+    },
+    {
+      title: t('basic.system.baseRole.state'),
+      dataIndex: 'state',
+      ellipsis: true,
+      width: 60,
+      customRender: ({ record }) => {
+        return h(
+          Tag,
+          {
+            color: record.state ? 'processing' : 'error',
+          },
+          () => (record.state ? t('lamp.common.enable') : t('lamp.common.disable')),
+        );
+      },
     },
   ];
 };
@@ -26,6 +66,25 @@ export const searchFormSchema = (): FormSchema[] => {
       field: 'name',
       label: t('basic.system.baseRole.name'),
       component: 'Input',
+      colProps: { span: 12 },
+    },
+    {
+      field: 'category',
+      label: t('basic.system.baseRole.category'),
+      component: 'ApiSelect',
+      componentProps: {
+        ...dictComponentProps(DictEnum.ROLE_CATEGORY),
+      },
+      colProps: { span: 12 },
+    },
+    {
+      field: 'state',
+      label: t('basic.system.baseRole.state'),
+      component: 'Select',
+      componentProps: {
+        ...stateComponentProps(true),
+      },
+      defaultValue: null,
       colProps: { span: 12 },
     },
   ];

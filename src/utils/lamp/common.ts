@@ -219,13 +219,23 @@ export const dictComponentProps = (type: DictEnum, excludes?: string | string[])
   };
 };
 
-export const stateComponentProps = () => {
-  return {
-    options: [
-      { label: t('lamp.common.enable'), value: true },
-      { label: t('lamp.common.disable'), value: false },
-    ],
-  };
+export const stateComponentProps = (all?: boolean) => {
+  if (all) {
+    return {
+      options: [
+        { label: '所有', value: null },
+        { label: t('lamp.common.enable'), value: true },
+        { label: t('lamp.common.disable'), value: false },
+      ],
+    };
+  } else {
+    return {
+      options: [
+        { label: t('lamp.common.enable'), value: true },
+        { label: t('lamp.common.disable'), value: false },
+      ],
+    };
+  }
 };
 
 export const yesNoComponentProps = () => {

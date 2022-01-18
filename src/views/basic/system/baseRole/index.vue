@@ -25,7 +25,7 @@
   import ApplicationResourceTabs from './applicationResource/ApplicationTabs.vue';
   import ApplicationDataScopeTabs from './applicationDataScope/ApplicationTabs.vue';
   import { useLoading } from '/@/components/Loading';
-  import { RoleCategoryEnum } from '/@/enums/biz/tenant';
+  import { RoleCategoryEnum } from '/@/enums/biz/base';
   export default defineComponent({
     // 若需要开启页面缓存，请将此参数跟菜单名保持一致
     name: '角色权限维护',

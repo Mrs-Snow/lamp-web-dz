@@ -79,7 +79,7 @@
           api: page,
           columns: columns(),
           formConfig: {
-            labelWidth: 50,
+            labelWidth: 70,
             schemas: searchFormSchema(),
             autoSubmitOnEnter: true,
             showResetButton: false,

@@ -85,10 +85,3 @@ export enum DataScopeEnum {
   SELF = '06',
   CUSTOM = '07',
 }
-
-// 角色类别
-export enum RoleCategoryEnum {
-  FUNCTION = '10',
-  DESKTOP = '20',
-  DATA_SCOPE = '30',
-}
