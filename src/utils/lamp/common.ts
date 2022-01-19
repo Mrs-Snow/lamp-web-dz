@@ -32,10 +32,10 @@ export const handleFetchParams = (data: Recordable) => {
   for (const key in data) {
     if (PAGE_PARAMS.includes(key)) {
       tempData[key] = data[key];
-    } else if (key.endsWith('.desc')) {
-      model[key.split('.desc')[0]] = data[key];
-    } else if (key.startsWith('echoMap.')) {
-      const tempK = key.split('echoMap.')[1];
+    } else if (key.endsWith(',desc')) {
+      model[key.split(',desc')[0]] = data[key];
+    } else if (key.startsWith('echoMap,')) {
+      const tempK = key.split('echoMap,')[1];
       model[tempK.split('.')[0]] = data[key];
     } else if (key === 'createTimeRange') {
     } else {
