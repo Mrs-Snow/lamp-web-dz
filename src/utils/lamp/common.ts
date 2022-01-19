@@ -36,7 +36,7 @@ export const handleFetchParams = (data: Recordable) => {
       model[key.split(',desc')[0]] = data[key];
     } else if (key.startsWith('echoMap,')) {
       const tempK = key.split('echoMap,')[1];
-      model[tempK.split('.')[0]] = data[key];
+      model[tempK.split(',')[0]] = data[key];
     } else if (key === 'createTimeRange') {
     } else {
       model[key] = data[key];
