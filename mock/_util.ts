@@ -1,10 +1,10 @@
 // Interface data format used to return a unified format
 
-export function resultSuccess<T = Recordable>(result: T, { message = 'ok' } = {}) {
+export function resultSuccess<T = Recordable>(data: T, { msg = 'ok' } = {}) {
   return {
     code: 0,
-    result,
-    message,
+    data,
+    msg,
     type: 'success',
   };
 }
@@ -19,18 +19,20 @@ export function resultPageSuccess<T = any>(
 
   return {
     ...resultSuccess({
-      items: pageData,
+      records: pageData,
       total: list.length,
+      size: pageSize,
+      current: page,
     }),
     message,
   };
 }
 
-export function resultError(message = 'Request failed', { code = -1, result = null } = {}) {
+export function resultError(msg = 'Request failed', { code = -1, data = null } = {}) {
   return {
     code,
-    result,
-    message,
+    data,
+    msg,
     type: 'error',
   };
 }

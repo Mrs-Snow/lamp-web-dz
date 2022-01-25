@@ -6,3 +6,6 @@ export const DOC_URL = 'https://www.kancloud.cn/zuihou/zuihou-admin-cloud';
 
 // site url
 export const SITE_URL = 'https://tangyh.top/';
+
+// mock 数据的请求前缀。 此前缀一定不能跟后台网关的前缀一样！
+export const MOCK_API_URL = '/basic-api';
