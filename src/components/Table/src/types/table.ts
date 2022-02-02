@@ -442,7 +442,14 @@ export interface BasicColumn extends ColumnProps {
   editRow?: boolean;
   editable?: boolean;
   editComponent?: ComponentType;
-  editComponentProps?: Recordable;
+  editComponentProps?:
+    | ((opt: {
+        text: string | number | boolean | Recordable;
+        record: Recordable;
+        column: BasicColumn;
+        index: number;
+      }) => Recordable)
+    | Recordable;
   editRule?: boolean | ((text: string, record: Recordable) => Promise<string>);
   editValueMap?: (value: any) => string;
   onEditRow?: () => void;
@@ -451,6 +458,13 @@ export interface BasicColumn extends ColumnProps {
   authMode?: PermModeEnum;
   // 业务控制是否显示
   ifShow?: boolean | ((column: BasicColumn) => boolean);
+  // 自定义修改后显示的内容
+  editRender?: (opt: {
+    text: string | number | boolean | Recordable;
+    record: Recordable;
+    column: BasicColumn;
+    index: number;
+  }) => VNodeChild | JSX.Element;
 }
 
 export type ColumnChangeParam = {
