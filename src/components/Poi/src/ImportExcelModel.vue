@@ -40,7 +40,7 @@
               href: props.templateHref,
               target: '_blank',
             },
-            props.templateTitle
+            props.templateTitle,
           );
         },
       },
@@ -59,7 +59,7 @@
               fileList,
               props,
             },
-            h(Button, t('component.upload.upload'))
+            h(Button, t('component.upload.upload')),
           );
         },
       },
