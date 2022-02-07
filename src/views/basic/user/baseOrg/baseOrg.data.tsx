@@ -1,5 +1,6 @@
 import { Ref } from 'vue';
-import { FormSchema } from '/@/components/Table';
+import { Tag } from 'ant-design-vue';
+import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { ActionEnum, DictEnum } from '/@/enums/commonEnum';
 import { FormSchemaExt } from '/@/api/lamp/common/formValidateService';
@@ -92,4 +93,57 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
 // 前端自定义表单验证规则
 export const customFormSchemaRules = (_): Partial<FormSchemaExt>[] => {
   return [];
+};
+
+// 机构-角色列表字段
+export const orgRoleColumns = (): BasicColumn[] => {
+  return [
+    {
+      title: t('basic.system.baseRole.code'),
+      dataIndex: 'code',
+    },
+    {
+      title: t('basic.system.baseRole.name'),
+      dataIndex: 'name',
+      // width: 180,
+    },
+    {
+      title: t('basic.system.baseRole.state'),
+      dataIndex: 'state',
+      width: 100,
+      customRender: ({ record }) => {
+        const text = record.state ? t('lamp.common.enable') : t('lamp.common.disable');
+        const color = record.state ? 'success' : 'error';
+        return <Tag color={color}>{text}</Tag>;
+      },
+    },
+  ];
+};
+// 机构-角色搜索字段
+export const orgRoleSearchFormSchema = (): FormSchema[] => {
+  return [
+    {
+      field: 'code',
+      label: t('basic.system.baseRole.code'),
+      component: 'Input',
+    },
+    {
+      field: 'name',
+      label: t('basic.system.baseRole.name'),
+      component: 'Input',
+    },
+    {
+      field: 'scope',
+      label: '范围',
+      component: 'RadioButtonGroup',
+      componentProps: {
+        options: [
+          { label: '全部', value: '-1' },
+          { label: '已绑定', value: '1' },
+          { label: '未绑定', value: '2' },
+        ],
+      },
+      defaultValue: '-1',
+    },
+  ];
 };
