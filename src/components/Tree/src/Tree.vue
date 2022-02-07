@@ -403,6 +403,7 @@
               )}
             </span>
           );
+          delete item?.slots;
           return item;
         });
         return data;
