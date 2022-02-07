@@ -1,10 +1,10 @@
 <template>
   <div class="bg-white m-4 ml-2 overflow-hidden">
-    <a-card :title="t(`common.title.${type}`)" :bordered="false">
+    <a-card :bordered="false" :title="t(`common.title.${type}`)">
       <BasicForm @register="register" />
       <div class="flex justify-center">
         <a-button @click="resetFields">{{ t('common.resetText') }}</a-button>
-        <a-button class="!ml-4" type="primary" @click="handleSubmit" :loading="confirmLoading">
+        <a-button :loading="confirmLoading" class="!ml-4" type="primary" @click="handleSubmit">
           {{ t('common.saveText') }}
         </a-button>
       </div>

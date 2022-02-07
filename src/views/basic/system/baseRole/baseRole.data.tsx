@@ -6,14 +6,10 @@ import { dictComponentProps, stateComponentProps } from '/@/utils/lamp/common';
 import { ActionEnum, DictEnum } from '/@/enums/commonEnum';
 import { FormSchemaExt } from '/@/api/lamp/common/formValidateService';
 import { tree } from '/@/api/basic/user/baseOrg';
-import { DataTypeEnum } from '/@/enums/biz/base';
+import { DataTypeEnum, categoryMap } from '/@/enums/biz/base';
 import { RoleCategoryEnum } from '/@/enums/biz/base';
 
 const { t } = useI18n();
-const categoryMap = new Map();
-categoryMap.set(RoleCategoryEnum.FUNCTION, 'success');
-categoryMap.set(RoleCategoryEnum.DATA_SCOPE, 'error');
-categoryMap.set(RoleCategoryEnum.DESKTOP, 'processing');
 
 // 列表页字段
 export const columns = (): BasicColumn[] => {

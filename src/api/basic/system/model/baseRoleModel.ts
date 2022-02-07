@@ -1,5 +1,3 @@
-import { Enum } from '/@/api/model/baseModel';
-
 export interface BaseRolePageQuery {
   type?: string;
   name?: string;
@@ -7,8 +5,12 @@ export interface BaseRolePageQuery {
   remarks?: string;
   state?: boolean;
   readonly?: boolean;
-  dsType?: Enum;
+  category?: string;
   createdOrgId?: string;
+  orgId?: string;
+  employeeId?: string;
+  scope?: string;
+  scopeType?: string;
 }
 
 export interface BaseRoleSaveVO {
@@ -18,7 +20,7 @@ export interface BaseRoleSaveVO {
   remarks: string;
   state: boolean;
   readonly: boolean;
-  dsType: Enum;
+  category?: string;
   createdOrgId: string;
 }
 
@@ -30,7 +32,7 @@ export interface BaseRoleUpdateVO {
   remarks: string;
   state: boolean;
   readonly: boolean;
-  dsType: Enum;
+  category?: string;
   createdOrgId: string;
 }
 
@@ -41,7 +43,7 @@ export interface BaseRoleResultVO {
   remarks?: string;
   state?: boolean;
   readonly?: boolean;
-  dsType?: Enum;
+  category?: string;
   createdOrgId?: string;
   id?: string;
   createdBy?: string;

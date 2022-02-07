@@ -1,5 +1,5 @@
 <template>
-  <PageWrapper dense fixedHeight contentClass="flex">
+  <PageWrapper dense contentClass="flex">
     <BaseBlocksTree
       v-if="isBlocksTree"
       class="md:w-1/2"

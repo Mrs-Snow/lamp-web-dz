@@ -3,64 +3,67 @@
     <div class="m-4">
       <a-button
         v-hasAnyPermission="[RoleEnum.ORG_SWITCH]"
+        class="mr-2"
         type="primary"
         @click="changeDisplay()"
-        class="mr-2"
       >
         切换
       </a-button>
       <a-button
-        @click="handleAdd()"
-        preIcon="ant-design:plus-outlined"
         v-hasAnyPermission="[RoleEnum.ORG_ADD]"
         class="mr-2"
+        preIcon="ant-design:plus-outlined"
+        @click="handleAdd()"
       >
         {{ t('common.title.addRoot') }}
       </a-button>
       <a-button
-        @click="handleBatchDelete()"
         v-hasAnyPermission="[RoleEnum.ORG_DELETE]"
-        preIcon="ant-design:delete-outlined"
         class="mr-2"
+        preIcon="ant-design:delete-outlined"
+        @click="handleBatchDelete()"
       >
         {{ t('common.title.delete') }}
       </a-button>
     </div>
     <BasicTree
-      :title="t('basic.user.baseOrg.table.title')"
-      toolbar
-      checkable
-      search
-      checkStrictly
+      ref="treeRef"
       :actionList="actionList"
       :beforeRightClick="getRightMenuList"
       :clickRowToExpand="false"
+      :title="t('basic.user.baseOrg.table.title')"
       :treeData="treeData"
+      checkStrictly
+      checkable
+      search
+      toolbar
       @select="handleSelect"
-      ref="treeRef"
     />
+    <OrgRole @register="registerModal" @success="handleSuccess" />
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent, onMounted, ref, unref, h } from 'vue';
+  import { defineComponent, h, onMounted, ref, unref } from 'vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
   import {
     BasicTree,
-    TreeItem,
+    ContextMenuItem,
     TreeActionItem,
     TreeActionType,
-    ContextMenuItem,
+    TreeItem,
   } from '/@/components/Tree';
   import { eachTree } from '/@/utils/helper/treeHelper';
   import { RoleEnum } from '/@/enums/roleEnum';
   import { findNodeByKey } from '/@/utils/lamp/common';
 
-  import { tree, remove } from '/@/api/basic/user/baseOrg';
+  import { remove, tree } from '/@/api/basic/user/baseOrg';
+  import { useModal } from '/@/components/Modal';
+  import OrgRole from './orgRole/index.vue';
 
   export default defineComponent({
     name: 'BaseOrgManagement',
-    components: { BasicTree },
+    components: { BasicTree, OrgRole },
 
     emits: ['select', 'add', 'edit', 'change'],
     setup(_, { emit }) {
@@ -68,6 +71,8 @@
       const { createMessage, createConfirm } = useMessage();
       const treeRef = ref<Nullable<TreeActionType>>(null);
       const treeData = ref<TreeItem[]>([]);
+      // 绑定角色
+      const [registerModal, { openModal }] = useModal();
 
       function getTree() {
         const tree = unref(treeRef);
@@ -138,6 +143,25 @@
                 },
               },
               t('common.title.edit'),
+            );
+          },
+        },
+        {
+          // auth: RoleEnum.ORG_EDIT,
+          render: (node) => {
+            return h(
+              'a',
+              {
+                class: 'ml-2',
+                onClick: (e: Event) => {
+                  e?.stopPropagation();
+                  e?.preventDefault();
+                  const current = findNodeByKey(node?.id, treeData.value);
+                  // const parent = findNodeByKey(node?.parentId, treeData.value);
+                  openModal(true, current);
+                },
+              },
+              '绑定',
             );
           },
         },
@@ -230,6 +254,11 @@
         emit('change', '1');
       }
 
+      // 新增或编辑成功回调
+      function handleSuccess() {
+        fetch();
+      }
+
       return {
         t,
         treeRef,
@@ -242,6 +271,8 @@
         handleSelect,
         changeDisplay,
         RoleEnum,
+        registerModal,
+        handleSuccess,
       };
     },
   });

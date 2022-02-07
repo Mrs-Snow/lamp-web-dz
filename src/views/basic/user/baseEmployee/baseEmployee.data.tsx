@@ -1,4 +1,4 @@
-import { Ref, unref } from 'vue';
+import { h, Ref, unref } from 'vue';
 import { Tag } from 'ant-design-vue';
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
@@ -8,6 +8,7 @@ import { tree } from '/@/api/basic/user/baseOrg';
 import { query } from '/@/api/basic/user/basePosition';
 import { dictComponentProps, stateComponentProps, yesNoComponentProps } from '/@/utils/lamp/common';
 import { checkMobile } from '/@/api/devOperation/tenant/defUser';
+import { categoryMap } from '/@/enums/biz/base';
 
 const { t } = useI18n();
 // 列表页字段
@@ -496,6 +497,19 @@ export const employeeRoleColumns = (): BasicColumn[] => {
       title: t('basic.system.baseRole.name'),
       dataIndex: 'name',
       // width: 180,
+    },
+    {
+      title: t('basic.system.baseRole.category'),
+      dataIndex: ['echoMap', 'category'],
+      width: 180,
+      ellipsis: true,
+      customRender: ({ record }) => {
+        if (record.echoMap.category) {
+          return h(Tag, { color: categoryMap.get(record.category) }, () => record.echoMap.category);
+        } else {
+          return '-';
+        }
+      },
     },
     {
       title: t('basic.system.baseRole.state'),

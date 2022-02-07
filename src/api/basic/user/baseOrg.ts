@@ -1,8 +1,9 @@
 import {
+  BaseOrgPageQuery,
+  BaseOrgResultVO,
+  BaseOrgRoleRelSaveVO,
   BaseOrgSaveVO,
   BaseOrgUpdateVO,
-  BaseOrgResultVO,
-  BaseOrgPageQuery,
 } from './model/baseOrgModel';
 import { PageParams, PageResult } from '/@/api/model/baseModel';
 import { defHttp } from '/@/utils/http/axios';
@@ -37,6 +38,14 @@ export const Api = {
     url: `${ServicePrefixEnum.BASE}/${MODULAR}/query`,
     method: RequestEnum.POST,
   } as AxiosRequestConfig,
+  OrgRole: {
+    url: `${ServicePrefixEnum.BASE}/${MODULAR}/orgRole`,
+    method: RequestEnum.POST,
+  } as AxiosRequestConfig,
+  FindOrgRoleByOrgId: {
+    url: `${ServicePrefixEnum.BASE}/${MODULAR}/findOrgRoleByOrgId`,
+    method: RequestEnum.GET,
+  } as AxiosRequestConfig,
 };
 
 export const tree = (params?: BaseOrgPageQuery) =>
@@ -55,3 +64,10 @@ export const update = (params: BaseOrgUpdateVO) =>
   defHttp.request<BaseOrgResultVO>({ ...Api.Update, params });
 
 export const remove = (params: string[]) => defHttp.request<boolean>({ ...Api.Delete, params });
+
+// 查询机构拥有的角色
+export const findOrgRoleByOrgId = (orgId: string) =>
+  defHttp.request<string[]>({ ...Api.FindOrgRoleByOrgId, params: { orgId } });
+// 给机构绑定角色
+export const saveOrgRole = (params: BaseOrgRoleRelSaveVO) =>
+  defHttp.request<string[]>({ ...Api.OrgRole, params });

@@ -55,3 +55,9 @@ export interface BaseOrgResultVO {
   updatedBy?: string;
   echoMap?: Recordable;
 }
+
+export interface BaseOrgRoleRelSaveVO {
+  orgId: string;
+  roleIdList: string[];
+  flag: boolean;
+}

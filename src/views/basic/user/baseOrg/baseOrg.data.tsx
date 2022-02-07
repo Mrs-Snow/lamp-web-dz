@@ -1,8 +1,9 @@
-import { Ref } from 'vue';
+import { h, Ref } from 'vue';
 import { Tag } from 'ant-design-vue';
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { ActionEnum, DictEnum } from '/@/enums/commonEnum';
+import { categoryMap } from '/@/enums/biz/base';
 import { FormSchemaExt } from '/@/api/lamp/common/formValidateService';
 import { dictComponentProps, stateComponentProps } from '/@/utils/lamp/common';
 
@@ -106,6 +107,19 @@ export const orgRoleColumns = (): BasicColumn[] => {
       title: t('basic.system.baseRole.name'),
       dataIndex: 'name',
       // width: 180,
+    },
+    {
+      title: t('basic.system.baseRole.category'),
+      dataIndex: ['echoMap', 'category'],
+      width: 180,
+      ellipsis: true,
+      customRender: ({ record }) => {
+        if (record.echoMap.category) {
+          return h(Tag, { color: categoryMap.get(record.category) }, () => record.echoMap.category);
+        } else {
+          return '-';
+        }
+      },
     },
     {
       title: t('basic.system.baseRole.state'),
