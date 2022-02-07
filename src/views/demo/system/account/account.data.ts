@@ -79,6 +79,9 @@ export const accountFormSchema: FormSchema[] = [
     component: 'InputPassword',
     required: true,
     ifShow: false,
+    componentProps: {
+      autocomplete: 'off',
+    },
   },
   {
     label: '角色',

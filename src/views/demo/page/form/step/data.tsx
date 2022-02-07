@@ -59,5 +59,8 @@ export const step2Schemas: FormSchema[] = [
     label: '支付密码',
     required: true,
     defaultValue: '123456',
+    componentProps: {
+      autocomplete: 'off',
+    },
   },
 ];

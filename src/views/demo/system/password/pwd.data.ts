@@ -6,6 +6,9 @@ export const formSchema: FormSchema[] = [
     label: '当前密码',
     component: 'InputPassword',
     required: true,
+    componentProps: {
+      autocomplete: 'off',
+    },
   },
   {
     field: 'passwordNew',
@@ -25,7 +28,9 @@ export const formSchema: FormSchema[] = [
     field: 'confirmPassword',
     label: '确认密码',
     component: 'InputPassword',
-
+    componentProps: {
+      autocomplete: 'off',
+    },
     dynamicRules: ({ values }) => {
       return [
         {

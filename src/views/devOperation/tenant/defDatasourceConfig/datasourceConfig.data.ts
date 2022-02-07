@@ -85,6 +85,9 @@ export const editFormSchema: FormSchema[] = [
     field: 'password',
     label: t('devOperation.tenant.defDatasourceConfig.password'),
     component: 'InputPassword',
+    componentProps: {
+      autocomplete: 'off',
+    },
   },
   {
     field: 'url',
