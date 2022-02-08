@@ -58,5 +58,5 @@ export interface DefDictItemResultVO {
   createdTime?: string;
   updatedBy?: string;
   updatedTime?: string;
-  echoMap?: Recordable;
+  echoMap?: any;
 }

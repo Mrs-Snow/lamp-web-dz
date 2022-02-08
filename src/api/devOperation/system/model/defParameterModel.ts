@@ -38,5 +38,5 @@ export interface DefParameterResultVO {
   createdTime?: string;
   updatedBy?: string;
   updatedTime?: string;
-  echoMap?: Recordable;
+  echoMap?: any;
 }

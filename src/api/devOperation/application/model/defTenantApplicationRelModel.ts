@@ -28,7 +28,7 @@ export interface DefTenantApplicationRelResultVO {
   createdTime?: string;
   updatedBy?: string;
   updatedTime?: string;
-  echoMap?: Recordable;
+  echoMap?: any;
   expired?: boolean;
   resourceList?: DefResourceResultVO[];
   checkedList?: string[];

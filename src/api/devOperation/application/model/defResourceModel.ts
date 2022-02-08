@@ -84,7 +84,7 @@ export interface DefResourceResultVO {
   createdTime?: string;
   updatedBy?: string;
   updatedTime?: string;
-  echoMap?: Recordable;
+  echoMap?: any;
 }
 
 export interface DefResourceApiVO {

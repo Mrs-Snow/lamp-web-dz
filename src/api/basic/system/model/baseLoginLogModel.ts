@@ -31,5 +31,5 @@ export interface BaseLoginLogResultVO {
   createdBy?: string;
   updatedTime?: string;
   updatedBy?: string;
-  echoMap?: Recordable;
+  echoMap?: any;
 }

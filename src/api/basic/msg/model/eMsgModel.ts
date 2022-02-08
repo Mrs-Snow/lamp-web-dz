@@ -71,7 +71,7 @@ export interface EMsgResultVO {
   id: string;
   createdBy?: string;
   updatedBy?: string;
-  echoMap?: Recordable;
+  echoMap?: any;
   isRead?: boolean;
   employeeIdList?: string[];
   roleIdList?: string[];

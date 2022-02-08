@@ -50,7 +50,7 @@ export interface BaseEmployeeResultVO {
   createdTime?: string;
   updatedBy?: string;
   updatedTime?: string;
-  echoMap?: Recordable;
+  echoMap?: any;
   activeStatus?: string;
   orgIdList?: string[];
   defUser: DefUserResultVO;

@@ -35,5 +35,5 @@ export interface BaseFileResultVO {
   createdBy?: string;
   updatedTime?: string;
   updatedBy?: string;
-  echoMap?: Recordable;
+  echoMap?: any;
 }

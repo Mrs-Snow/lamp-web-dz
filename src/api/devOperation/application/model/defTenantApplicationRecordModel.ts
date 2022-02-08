@@ -19,5 +19,5 @@ export interface DefTenantApplicationRecordResultVO {
   createdTime?: string;
   updatedBy?: string;
   updatedTime?: string;
-  echoMap?: Recordable;
+  echoMap?: any;
 }

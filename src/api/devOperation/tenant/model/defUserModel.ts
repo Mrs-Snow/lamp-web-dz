@@ -90,7 +90,7 @@ export interface DefUserResultVO {
   createdTime?: string;
   updatedBy?: string;
   updatedTime?: string;
-  echoMap?: Recordable;
+  echoMap?: any;
 }
 
 export interface DefUserPasswordResetVO {

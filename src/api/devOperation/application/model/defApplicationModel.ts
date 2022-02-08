@@ -61,7 +61,7 @@ export interface DefApplicationResultVO {
   createdTime?: string;
   updatedBy?: string;
   updatedTime?: string;
-  echoMap?: Recordable;
+  echoMap?: any;
   // 扩展字段
   expirationTime: string;
   state: string;

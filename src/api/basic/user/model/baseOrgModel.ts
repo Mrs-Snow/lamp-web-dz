@@ -53,7 +53,7 @@ export interface BaseOrgResultVO {
   createdBy?: string;
   updatedTime?: string;
   updatedBy?: string;
-  echoMap?: Recordable;
+  echoMap?: any;
 }
 
 export interface BaseOrgRoleRelSaveVO {

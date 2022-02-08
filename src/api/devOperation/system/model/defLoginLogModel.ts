@@ -70,5 +70,5 @@ export interface DefLoginLogResultVO {
   createdBy?: string;
   updatedTime?: string;
   updatedBy?: string;
-  echoMap?: Recordable;
+  echoMap?: any;
 }
