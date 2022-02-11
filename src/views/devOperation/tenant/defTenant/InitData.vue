@@ -1,5 +1,5 @@
 <template>
-  <BasicDrawer
+  <BasicModal
     v-bind="$attrs"
     @register="registerDrawer"
     showFooter
@@ -9,11 +9,11 @@
     @ok="handleSubmit"
   >
     <BasicForm @register="registerForm" />
-  </BasicDrawer>
+  </BasicModal>
 </template>
 <script lang="ts">
   import { defineComponent } from 'vue';
-  import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
+  import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { TenantConnectTypeEnum } from '/@/enums/biz/tenant';
@@ -24,7 +24,7 @@
 
   export default defineComponent({
     name: 'TenantInitData',
-    components: { BasicDrawer, BasicForm },
+    components: { BasicModal, BasicForm },
     emits: ['success', 'register'],
     setup(_, { emit }) {
       const { createMessage } = useMessage();
@@ -49,12 +49,12 @@
           },
         });
 
-      const [registerDrawer, { setDrawerProps, closeDrawer, changeLoading }] = useDrawerInner(
+      const [registerDrawer, { setModalProps, closeModal, changeLoading }] = useModalInner(
         async (data) => {
           changeLoading(true);
           try {
             await resetFields();
-            setDrawerProps({ confirmLoading: false });
+            setModalProps({ confirmLoading: false });
 
             const record = { ...data.record };
 
@@ -75,15 +75,15 @@
       async function handleSubmit() {
         try {
           const params = await validate();
-          setDrawerProps({ confirmLoading: true });
+          setModalProps({ confirmLoading: true });
           let flag = await initData(params);
           if (flag) {
             createMessage.success('初始化数据库、表结构、默认数据成功，请尽快初始化各个服务的链接');
-            closeDrawer();
+            closeModal();
             emit('success');
           }
         } finally {
-          setDrawerProps({ confirmLoading: false });
+          setModalProps({ confirmLoading: false });
         }
       }
 

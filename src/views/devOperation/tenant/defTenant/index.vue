@@ -82,7 +82,7 @@
       </template>
     </BasicTable>
     <EditModal @register="registerDrawer" @success="handleSuccess" />
-    <InitDataModal @register="registerInitDrawer" @success="handleInitSuccess" />
+    <InitDataModal @register="registerInitModal" @success="handleInitSuccess" />
     <LinkDataSourceModal @register="registerLinkDrawer" @success="handleSuccess" />
     <BindUserModal @register="registerModal" @success="handleSuccess" />
     <ToExamineModal @register="registerToExamineModal" @success="handleSuccess" />
@@ -127,7 +127,8 @@
       const [registerModal, { openModal }] = useModal();
       const [registerToExamineModal, { openModal: openToExamineModal }] = useModal();
       const [registerLinkDrawer, { openDrawer: openLinkDrawer }] = useDrawer();
-      const [registerInitDrawer, { openDrawer: openInitDrawer }] = useDrawer();
+      const [registerInitModal, { openModal: openInitModal }] = useModal();
+
       const { replace } = useRouter();
       const { createMessage } = useMessage();
 
@@ -173,7 +174,7 @@
       });
 
       function handleInitData(record: Recordable) {
-        openInitDrawer(true, { record });
+        openInitModal(true, { record });
       }
       function handleLinkDataSource(record: Recordable) {
         openLinkDrawer(true, { record });
@@ -230,7 +231,7 @@
         registerTable,
         registerDrawer,
         registerModal,
-        registerInitDrawer,
+        registerInitModal,
         registerLinkDrawer,
         registerToExamineModal,
         handleAdd,
