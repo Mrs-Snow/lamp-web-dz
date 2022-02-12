@@ -113,7 +113,7 @@ export interface Tenant {
 
 export interface DefTenantInitVO {
   id: string;
-  connectType: Enum;
+  connectType?: Enum;
   baseDatasourceId?: string;
   extendDatasourceId?: string;
 }

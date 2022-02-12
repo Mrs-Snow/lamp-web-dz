@@ -44,7 +44,7 @@ export const Api = {
   },
   // 设置默认企业
   UpdateDefaultTenant: {
-    url: `${ServicePrefixEnum.TENANT}/anyone/updateDefaultTenant`,
+    url: `${ServicePrefixEnum.BASE}/anyone/updateDefaultTenant`,
   },
   // 检测员工是否拥有指定应用的权限
   CheckEmployeeHaveApplication: {

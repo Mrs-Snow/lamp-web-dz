@@ -1,6 +1,6 @@
 import { FormSchema } from '/@/components/Form/index';
-import { enumComponentProps, dictComponentProps } from '/@/utils/lamp/common';
-import { DictEnum, EnumEnum } from '/@/enums/commonEnum';
+import { dictComponentProps } from '/@/utils/lamp/common';
+import { DictEnum } from '/@/enums/commonEnum';
 
 export interface ListItem {
   key: string;
@@ -97,7 +97,7 @@ export const baseSetschemas: FormSchema[] = [
     label: '性别',
     colProps: { span: 18 },
     componentProps: {
-      ...enumComponentProps(EnumEnum.Sex),
+      ...dictComponentProps(DictEnum.SEX),
     },
   },
   {
