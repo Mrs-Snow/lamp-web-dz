@@ -25,14 +25,14 @@ export const columns = (): BasicColumn[] => {
       // width: 180,
     },
     {
-      title: t('basic.user.baseEmployee.orgId'),
-      dataIndex: 'orgNameList',
-      slots: { customRender: 'orgIdList' },
-    },
-    {
       title: '所属主部门',
       dataIndex: 'mainOrg',
       slots: { customRender: 'mainOrg' },
+    },
+    {
+      title: '所属部门',
+      dataIndex: 'orgNameList',
+      slots: { customRender: 'orgIdList' },
     },
     {
       title: t('basic.user.baseEmployee.positionStatus'),
@@ -201,15 +201,13 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       label: '职位信息',
     },
     {
-      label: t('basic.user.baseEmployee.orgId'),
-      field: 'orgIdList',
+      label: '所属主部门',
+      field: 'mainOrgId',
       component: 'ApiTreeSelect',
       componentProps: {
         api: tree,
         labelField: 'name',
         valueField: 'id',
-        allowClear: true,
-        multiple: true,
       },
       dynamicDisabled: () => {
         return [ActionEnum.VIEW].includes(type.value);
@@ -219,13 +217,15 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       },
     },
     {
-      label: '所属主部门',
-      field: 'mainOrgId',
+      label: '所属部门',
+      field: 'orgIdList',
       component: 'ApiTreeSelect',
       componentProps: {
         api: tree,
         labelField: 'name',
         valueField: 'id',
+        allowClear: true,
+        multiple: true,
       },
       dynamicDisabled: () => {
         return [ActionEnum.VIEW].includes(type.value);
