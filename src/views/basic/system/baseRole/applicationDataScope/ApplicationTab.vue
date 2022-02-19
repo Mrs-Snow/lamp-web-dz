@@ -27,11 +27,22 @@
       highlight
     >
       <template #title="item">
-        <TreeIcon :icon="item.icon" v-if="item.icon" />
-        <template v-if="item.echoMap?.resourceType">
-          <Tag :color="getTagColor(item?.resourceType)">{{ item.echoMap?.resourceType }}</Tag>
+        <template v-if="item.resourceType === ResourceTypeEnum.DATA">
+          <Tooltip :title="'优先级：' + item.sortValue" placement="right">
+            <TreeIcon :icon="item.icon" v-if="item.icon" />
+            <template v-if="item.echoMap?.resourceType">
+              <Tag :color="getTagColor(item?.resourceType)">{{ item.echoMap?.resourceType }}</Tag>
+            </template>
+            {{ item.name }}
+          </Tooltip>
         </template>
-        {{ item.name }}
+        <template v-else>
+          <TreeIcon :icon="item.icon" v-if="item.icon" />
+          <template v-if="item.echoMap?.resourceType">
+            <Tag :color="getTagColor(item?.resourceType)">{{ item.echoMap?.resourceType }}</Tag>
+          </template>
+          {{ item.name }}
+        </template>
         <template v-if="item.resourceType === ResourceTypeEnum.DATA && item.isDef">
           <Tag style="margin-left: 10px" color="error">默认</Tag>
         </template>
@@ -41,7 +52,7 @@
 </template>
 <script lang="ts">
   import { defineComponent, onMounted, ref, unref, toRefs, reactive } from 'vue';
-  import { Checkbox, Tag } from 'ant-design-vue';
+  import { Checkbox, Tag, Tooltip } from 'ant-design-vue';
   import type { TreeDataItem } from 'ant-design-vue/es/tree/Tree';
   import { CollapseContainer } from '/@/components/Container/index';
   import { BasicTree, TreeActionType, TreeIcon, FieldNames, CheckKeys } from '/@/components/Tree';
@@ -60,6 +71,7 @@
       CollapseContainer,
       TreeIcon,
       Tag,
+      Tooltip,
     },
     props: {
       application: {

@@ -1,6 +1,11 @@
 <template>
   <div class="bg-white m-4 mr-2 overflow-hidden">
     <BasicTable
+      :title-help-message="[
+        '一个员工同时拥有同一个菜单下的多个数据资源时，取优先级最低的',
+        '一个员工没有任何数据资源时，取默认数据权限',
+        '员工拥有自己的权限和部门下的角色',
+      ]"
       @register="registerTable"
       @selection-change="handleSelectionChange"
       @row-click="handleRowClick"
@@ -9,20 +14,20 @@
     >
       <template #toolbar>
         <a-button
-          type="primary"
-          color="error"
-          @click="handleBatchDelete"
-          preIcon="ant-design:delete-outlined"
           v-hasAnyPermission="[RoleEnum.ROLE_DELETE]"
-          >{{ t('common.title.delete') }}</a-button
-        >
-        <a-button
+          color="error"
+          preIcon="ant-design:delete-outlined"
           type="primary"
-          preIcon="ant-design:plus-outlined"
+          @click="handleBatchDelete"
+          >{{ t('common.title.delete') }}
+        </a-button>
+        <a-button
           v-hasAnyPermission="[RoleEnum.ROLE_ADD]"
+          preIcon="ant-design:plus-outlined"
+          type="primary"
           @click="handleAdd"
-          >{{ t('common.title.add') }}</a-button
-        >
+          >{{ t('common.title.add') }}
+        </a-button>
       </template>
       <template #action="{ record }">
         <TableAction
@@ -50,7 +55,7 @@
   import { defineComponent } from 'vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { BasicTable, useTable, TableAction } from '/@/components/Table';
+  import { BasicTable, TableAction, useTable } from '/@/components/Table';
   import { useModal } from '/@/components/Modal';
   import { handleFetchParams } from '/@/utils/lamp/common';
   import { RoleEnum } from '/@/enums/roleEnum';

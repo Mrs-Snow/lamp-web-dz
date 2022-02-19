@@ -41,7 +41,6 @@ export const columns = (): BasicColumn[] => {
     {
       title: t('basic.system.baseRole.state'),
       dataIndex: 'state',
-      ellipsis: true,
       width: 60,
       customRender: ({ record }) => {
         return h(
