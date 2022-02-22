@@ -56,7 +56,7 @@ export const navItems: NavItem[] = [
 export const dynamicInfoItems: DynamicInfoItem[] = [
   {
     avatar: 'dynamic-avatar-1|svg',
-    name: '4.4.0 即将发布：',
+    name: '4.4.0 已发布：',
     date: '2022-02-22',
     desc: `<a href="https://tangyh.top/">COLUMN模式上线，以租户ID字段隔离租户数据</a>`,
   },
