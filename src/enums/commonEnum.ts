@@ -16,6 +16,8 @@ export enum ServicePrefixEnum {
   ACTIVITI = '/activiti',
   // 网关
   GATEWAY = '/gateway',
+  // 代码生成器服务
+  GENERATOR = '/generator',
 }
 
 /**
