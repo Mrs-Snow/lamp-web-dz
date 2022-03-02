@@ -127,7 +127,7 @@ export const AfterVbenRoutes: AppRouteModule[] = [
     children: routeModuleList,
   },
 ];
-// 后台动态路由之后的陆永
+// 后台动态路由之后的路由
 export const AfterRoutes: AppRouteModule[] = [];
 
 // Basic routing without permission

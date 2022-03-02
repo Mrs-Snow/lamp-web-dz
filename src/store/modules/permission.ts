@@ -208,7 +208,7 @@ export const usePermissionStore = defineStore({
 
           const isBase = applicationId === BASE_APP_ID; // 基础平台才显示 我的企业
           const isDevOper = applicationId === DEV_OPER_APP_ID; // 开发运营系统才显示 vben官方的静态示例
-          // 后台路由(routeList) + 前段写死的路由(BeforeRoutes、AfterRoutes、AfterMyTenantRoutes)
+          // 后台路由(routeList) + 前端写死的路由(BeforeRoutes、AfterRoutes、AfterMyTenantRoutes)
           const afterRouteList = [
             ...AfterRoutes,
             ...(isBase ? AfterMyTenantRoutes : []),
