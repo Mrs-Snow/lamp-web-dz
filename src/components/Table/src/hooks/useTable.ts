@@ -4,7 +4,7 @@ import type { DynamicProps } from '/#/utils';
 import type { FormActionType } from '/@/components/Form';
 import type { WatchStopHandle } from 'vue';
 import { getDynamicProps } from '/@/utils';
-import { ref, onUnmounted, unref, watch, toRaw } from 'vue';
+import { ref, onUnmounted, unref, watch, toRaw, nextTick } from 'vue';
 import { isProdMode } from '/@/utils/env';
 import { error } from '/@/utils/log';
 
@@ -12,12 +12,14 @@ type Props = Partial<DynamicProps<BasicTableProps>>;
 
 type UseTableMethod = TableActionType & {
   getForm: () => FormActionType;
+  setFieldsValue: <T>(values: T) => Promise<void>;
 };
 
 export function useTable(tableProps?: Props): [
   (instance: TableActionType, formInstance: UseTableMethod) => void,
   TableActionType & {
     getForm: () => FormActionType;
+    setFieldsValue: <T>(values: T) => Promise<void>;
   },
 ] {
   const tableRef = ref<Nullable<TableActionType>>(null);
@@ -64,8 +66,20 @@ export function useTable(tableProps?: Props): [
     return table as TableActionType;
   }
 
+  async function getFormInstance() {
+    const form = unref(formRef);
+    if (!form) {
+      error(
+        'The form instance has not been obtained, please make sure that the form has been rendered when performing the form operation!',
+      );
+    }
+    await nextTick();
+    return form as UseTableMethod;
+  }
+
   const methods: TableActionType & {
     getForm: () => FormActionType;
+    setFieldsValue: <T>(values: T) => Promise<void>;
   } = {
     reload: async (opt?: FetchParams) => {
       return await getTableInstance().reload(opt);
@@ -145,6 +159,10 @@ export function useTable(tableProps?: Props): [
     },
     getForm: () => {
       return unref(formRef) as unknown as FormActionType;
+    },
+    setFieldsValue: async <T>(values: T) => {
+      const form = await getFormInstance();
+      form.setFieldsValue<T>(values);
     },
     setShowPagination: async (show: boolean) => {
       getTableInstance().setShowPagination(show);
