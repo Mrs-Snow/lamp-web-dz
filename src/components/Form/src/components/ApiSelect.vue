@@ -47,6 +47,10 @@
         type: Function as PropType<(arg?: Recordable | string) => Promise<OptionsItem[]>>,
         default: null,
       },
+      afterFetch: {
+        type: Function,
+        default: null,
+      },
       // api params
       params: {
         type: [Object, String] as PropType<Recordable | string>,
@@ -101,6 +105,7 @@
 
       async function fetch() {
         const api = props.api;
+        const afterFetch = props.afterFetch;
         if (!api || !isFunction(api)) return;
         options.value = [];
         try {
@@ -108,11 +113,17 @@
           const res = await api(props.params);
           if (Array.isArray(res)) {
             options.value = res;
+            if (afterFetch && isFunction(afterFetch)) {
+              await afterFetch(options.value);
+            }
             emitChange();
             return;
           }
           if (props.resultField) {
             options.value = get(res, props.resultField) || [];
+          }
+          if (afterFetch && isFunction(afterFetch)) {
+            await afterFetch(options.value);
           }
           emitChange();
         } catch (error) {
