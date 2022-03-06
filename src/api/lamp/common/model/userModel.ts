@@ -34,6 +34,7 @@ export interface LoginResultVO {
   uuid: string;
   tokenType: string;
   refreshToken: string;
+  applicationId: string;
   // name: string;
   // account: string;
   // avatarId: string;

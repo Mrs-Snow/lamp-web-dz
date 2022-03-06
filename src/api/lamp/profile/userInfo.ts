@@ -4,7 +4,7 @@ import {
   DefUserBaseInfoUpdateVO,
   DefUserPasswordUpdateVO,
 } from './model/userInfoModel';
-import { RequestEnum } from '/@/enums/httpEnum';
+import { ContentTypeEnum, RequestEnum } from '/@/enums/httpEnum';
 
 import { ServicePrefixEnum } from '/@/enums/commonEnum';
 import { AxiosRequestConfig } from 'axios';
@@ -31,10 +31,33 @@ export const Api = {
     url: `${ServicePrefixEnum.TENANT}/anyone/baseInfo`,
     method: RequestEnum.PUT,
   } as AxiosRequestConfig,
+  UpdateDefApp: {
+    url: `${ServicePrefixEnum.TENANT}/anyone/updateDefApp`,
+    method: RequestEnum.POST,
+  } as AxiosRequestConfig,
+  GetDefApp: {
+    url: `${ServicePrefixEnum.TENANT}/anyone/getDefApp`,
+    method: RequestEnum.GET,
+  } as AxiosRequestConfig,
 };
 
+export const updateDefApp = (applicationId: string) =>
+  defHttp.request<boolean>({
+    ...Api.UpdateDefApp,
+    params: { applicationId },
+    headers: {
+      'Content-Type': ContentTypeEnum.FORM_URLENCODED,
+    },
+  });
+
+export const getDefApp = () => defHttp.request<string>({ ...Api.GetDefApp });
+
 export const findMyApplication = (name?: string) =>
-  defHttp.request<DefApplicationResultVO[]>({ ...Api.FindMyApplication, params: { name } });
+  defHttp.request<DefApplicationResultVO[]>({
+    ...Api.FindMyApplication,
+    params: { name },
+    timeout: 60 * 1000,
+  });
 
 export const findRecommendApplication = (name?: string) =>
   defHttp.request<DefApplicationResultVO[]>({ ...Api.FindRecommendApplication, params: { name } });

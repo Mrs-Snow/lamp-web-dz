@@ -1,7 +1,12 @@
 <template>
   <PageWrapper>
     <div class="w-full enter-y">
-      <ApplicationCard title="我的应用" :api="findMyApplication" class="enter-y" />
+      <ApplicationCard
+        title="我的应用"
+        :api="findMyApplication"
+        class="enter-y"
+        :updateDef="true"
+      />
 
       <ApplicationCard
         title="推荐应用"
@@ -27,9 +32,11 @@
     setup() {
       const { t } = useI18n();
       const { createMessage } = useMessage();
+
       function handleClick() {
         createMessage.warn('快联系公司管理员开通我吧~');
       }
+
       return {
         t,
         handleClick,
