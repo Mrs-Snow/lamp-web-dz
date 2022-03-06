@@ -46,6 +46,10 @@ export const Api = {
     url: `${ServicePrefixEnum.BASE}/${MODULAR}/bindUser`,
     method: RequestEnum.POST,
   } as AxiosRequestConfig,
+  InvitationUser: {
+    url: `${ServicePrefixEnum.BASE}/${MODULAR}/invitationUser`,
+    method: RequestEnum.POST,
+  } as AxiosRequestConfig,
   BindTenantAdmin: {
     url: `${ServicePrefixEnum.BASE}/${MODULAR}/bindTenantAdmin`,
     method: RequestEnum.POST,
@@ -79,6 +83,10 @@ export const remove = (params: string[]) => defHttp.request<boolean>({ ...Api.De
 // 绑定/解绑用户为企业的员工，并设置为租户管理员
 export const bindUser = (params: DefTenantBindUserVO) =>
   defHttp.request<boolean>({ ...Api.BindUser, params });
+
+// 租户绑定或解绑用户
+export const invitationUser = (params: DefTenantBindUserVO) =>
+  defHttp.request<boolean>({ ...Api.InvitationUser, params });
 
 // 绑定/解绑用户为企业的租户管理员
 export const bindTenantAdmin = (params: DefTenantBindUserVO) =>

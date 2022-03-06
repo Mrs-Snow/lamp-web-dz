@@ -58,6 +58,10 @@ export const Api = {
     url: `${ServicePrefixEnum.TENANT}/${MODULAR}/pageUser`,
     method: RequestEnum.POST,
   },
+  QueryUser: {
+    url: `${ServicePrefixEnum.TENANT}/${MODULAR}/queryUser`,
+    method: RequestEnum.POST,
+  },
   ResetPassword: {
     url: `${ServicePrefixEnum.TENANT}/${MODULAR}/resetPassword`,
     method: RequestEnum.PUT,
@@ -109,3 +113,6 @@ export const findNotUserByTenantId = (params: PageParams<DefUserPageQuery>) =>
 
 export const pageUser = (params: PageParams<DefUserPageQuery>) =>
   defHttp.request<PageResult<DefUserResultVO>>({ ...Api.PageUser, params });
+
+export const queryUser = (params: DefUserPageQuery) =>
+  defHttp.request<DefUserResultVO[]>({ ...Api.QueryUser, params });
