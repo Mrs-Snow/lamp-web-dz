@@ -19,7 +19,12 @@
         >
           {{ t('common.title.add') }}
         </a-button>
-        <a-button type="primary" preIcon="ant-design:plus-outlined" @click="handleInvitation">
+        <a-button
+          type="primary"
+          preIcon="ant-design:plus-outlined"
+          @click="handleInvitation"
+          v-hasAnyPermission="[RoleEnum.INVITATION_USER]"
+        >
           邀请
         </a-button>
       </template>

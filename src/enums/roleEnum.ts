@@ -22,6 +22,7 @@ export enum RoleEnum {
   TENANT_TENANT_INIT_DATA_SOURCE = 'tenant:tenant:tenant:initDataSource',
   TENANT_TENANT_BIND_USER = 'tenant:tenant:tenant:bindUser',
   TENANT_TENANT_TO_EXAMINE = 'tenant:tenant:tenant:toExamine',
+  TENANT_TENANT_VIEW_UNBIND = 'tenant:tenant:tenant:view:unBind',
 
   // 用户维护
   TENANT_USER_ADD = 'tenant:tenant:user:add',
@@ -97,6 +98,7 @@ export enum RoleEnum {
   EMPLOYEE_DELETE = 'basic:user:employee:delete',
   EMPLOYEE_VIEW = 'basic:user:employee:view',
   EMPLOYEE_BIND_ROLE = 'basic:user:employee:bindRole',
+  INVITATION_USER = 'basic:user:employee:invitation',
 
   // 机构维护
   ORG_ADD = 'basic:user:org:add',

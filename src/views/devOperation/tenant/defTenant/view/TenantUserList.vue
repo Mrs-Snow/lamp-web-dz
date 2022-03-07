@@ -8,6 +8,7 @@
               tooltip: '解绑',
               icon: 'ant-design:unlock-outlined',
               color: 'error',
+              auth: RoleEnum.TENANT_TENANT_VIEW_UNBIND,
               popConfirm: {
                 title: '是否确认要解绑改用户？',
                 confirm: handleUnBind.bind(null, record),
@@ -28,6 +29,7 @@
   import { useMessage } from '/@/hooks/web/useMessage';
   import { PageWrapper } from '/@/components/Page';
   import { handleFetchParams } from '/@/utils/lamp/common';
+  import { RoleEnum } from '/@/enums/roleEnum';
   import { pageUser } from '/@/api/devOperation/tenant/defUser';
   import { userListColumns, userListSearchFormSchema } from './tenantView.data';
   import { bindUser } from '/@/api/basic/user/baseEmployee';
@@ -126,6 +128,7 @@
         registerTable,
         handleSuccess,
         handleUnBind,
+        RoleEnum,
       };
     },
   });
