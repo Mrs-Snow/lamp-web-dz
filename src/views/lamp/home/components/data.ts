@@ -56,9 +56,15 @@ export const navItems: NavItem[] = [
 export const dynamicInfoItems: DynamicInfoItem[] = [
   {
     avatar: 'dynamic-avatar-1|svg',
-    name: '4.4.0 即将发布：',
-    date: '刚刚',
-    desc: `<a href="https://tangyh.top/">正在开发中，敬请期待</a>`,
+    name: '4.4.1 已发布：',
+    date: '2022-03-07',
+    desc: `<a href="https://www.oschina.net/news/185326">修复 spring cloud gateway 漏洞</a>`,
+  },
+  {
+    avatar: 'dynamic-avatar-1|svg',
+    name: '4.4.0 已发布：',
+    date: '2022-02-22',
+    desc: `<a href="https://www.oschina.net/news/183551/lamp-cloud-4-4-released">COLUMN模式上线，以租户ID字段隔离租户数据</a>`,
   },
   {
     avatar: 'dynamic-avatar-2|svg',

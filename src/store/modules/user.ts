@@ -148,13 +148,13 @@ export const useUserStore = defineStore({
     async switchTenant(switchTenantId: string) {
       try {
         const data = await switchTenant(switchTenantId);
-        const { token, tenantId, refreshToken, expiration } = data;
+        const { token, tenantId, refreshToken, expiration, applicationId } = data;
         // save token
         this.setToken(token);
         this.setRefreshToken(refreshToken);
         this.setExpireTime(expiration);
         this.setTenantId(tenantId);
-        this.setApplicationId(DEF_APP_ID);
+        this.setApplicationId(applicationId ?? DEF_APP_ID);
         this.setSessionTimeout(false);
         const permissionStore = usePermissionStore();
         permissionStore.resetState();
@@ -181,14 +181,14 @@ export const useUserStore = defineStore({
       try {
         const { goHome = true, mode, ...loginParams } = params;
         const data = await loginApi(loginParams, mode);
-        const { token, tenantId, refreshToken, expiration } = data;
+        const { token, tenantId, refreshToken, expiration, applicationId } = data;
 
         // save token
         this.setToken(token);
         this.setRefreshToken(refreshToken);
         this.setExpireTime(expiration);
         this.setTenantId(tenantId);
-        this.setApplicationId(DEF_APP_ID);
+        this.setApplicationId(applicationId ?? DEF_APP_ID);
 
         return this.afterLoginAction(mode, goHome);
       } catch (error) {

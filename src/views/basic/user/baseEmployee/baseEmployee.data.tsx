@@ -551,3 +551,47 @@ export const employeeRoleSearchFormSchema = (): FormSchema[] => {
     },
   ];
 };
+
+// 邀请用户表单
+export const invitationUserFormSchema = (): FormSchema[] => {
+  return [
+    {
+      field: 'id',
+      label: 'ID',
+      component: 'Input',
+      show: false,
+    },
+    {
+      label: t('devOperation.tenant.defUser.mobile'),
+      field: 'mobile',
+      component: 'Input',
+      colProps: {
+        span: 12,
+      },
+    },
+    {
+      label: t('devOperation.tenant.defUser.username'),
+      field: 'username',
+      component: 'Input',
+      colProps: {
+        span: 12,
+      },
+    },
+    {
+      label: t('devOperation.tenant.defUser.email'),
+      field: 'email',
+      component: 'Input',
+      colProps: {
+        span: 12,
+      },
+    },
+    {
+      label: t('devOperation.tenant.defUser.idCard'),
+      field: 'idCard',
+      component: 'Input',
+      colProps: {
+        span: 12,
+      },
+    },
+  ];
+};

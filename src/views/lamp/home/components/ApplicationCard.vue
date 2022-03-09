@@ -2,7 +2,7 @@
   <Card :title="props.title" v-bind="$attrs" :loading="loading" hoverable>
     <template v-for="item in applicationList" :key="item.id">
       <CardGrid @click="customClick(item)" class="!md:w-1/3 !w-full" :class="getAppCardClass(item)">
-        <span class="flex">
+        <span class="flex" style="right: 0; position: relative">
           <ThumbUrl
             :width="50"
             :height="50"
@@ -15,6 +15,15 @@
             :isDef="true"
           />
           <span class="text-lg ml-4">{{ item.name }}</span>
+          <a
+            v-if="props.updateDef && defApplicationId !== item.id"
+            class="text-lg"
+            href="javascript:void(0);"
+            @click="handleUpdateDefApp(item, $event)"
+            style="right: 0; position: absolute"
+          >
+            设为默认
+          </a>
         </span>
         <div class="flex mt-2 mb-2 h-10 text-secondary" :title="item.remark">
           {{ item.introduce }}
@@ -61,12 +70,14 @@
   import { useTabs } from '/@/hooks/web/useTabs';
   import { FileBizTypeEnum } from '/@/enums/commonEnum';
   import { propTypes } from '/@/utils/propTypes';
+  import { updateDefApp, getDefApp } from '/@/api/lamp/profile/userInfo';
   import { checkEmployeeHaveApplication } from '/@/api/lamp/common/oauth';
 
   export default defineComponent({
     components: { Card, CardGrid: Card.Grid, Empty, ThumbUrl, Tag },
     props: {
       title: propTypes.string.def('我的应用'),
+      updateDef: propTypes.bool.def(false),
       description: propTypes.string.def('暂未开通任何应用, 联系您公司管理员开通'),
       api: {
         type: Function as PropType<PromiseFn>,
@@ -80,6 +91,7 @@
     },
     setup(props) {
       const applicationList = ref<DefApplicationResultVO[]>([]);
+      const defApplicationId = ref<string>('');
       const { createMessage, createConfirm } = useMessage();
       const { refreshMenu } = usePermission();
       const loading = ref<boolean>(true);
@@ -138,7 +150,18 @@
       onMounted(async () => {
         applicationList.value = await props.api();
         loading.value = false;
+        if (props.updateDef) {
+          defApplicationId.value = await getDefApp();
+        }
       });
+
+      async function handleUpdateDefApp(item, e: Event) {
+        e && e.stopPropagation();
+        console.log(item.id);
+        await updateDefApp(item.id);
+        defApplicationId.value = item.id;
+        createMessage.success(`修改成功`);
+      }
 
       return {
         props,
@@ -148,6 +171,8 @@
         applicationList,
         customClick,
         loading,
+        handleUpdateDefApp,
+        defApplicationId,
       };
     },
   });

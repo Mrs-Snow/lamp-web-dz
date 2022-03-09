@@ -1,6 +1,6 @@
 export interface DefUserPageQuery {
   username?: string;
-  name?: string;
+  nickName?: string;
   email?: string;
   mobile?: string;
   idCard?: string;
@@ -22,7 +22,7 @@ export interface DefUserPageQuery {
 
 export interface DefUserSaveVO {
   username: string;
-  name: string;
+  nickName: string;
   email: string;
   mobile: string;
   idCard: string;
@@ -45,7 +45,7 @@ export interface DefUserSaveVO {
 export interface DefUserUpdateVO {
   id: string;
   username: string;
-  name: string;
+  nickName: string;
   email: string;
   mobile: string;
   idCard: string;
@@ -67,7 +67,7 @@ export interface DefUserUpdateVO {
 
 export interface DefUserResultVO {
   username?: string;
-  name?: string;
+  nickName?: string;
   email?: string;
   mobile?: string;
   idCard?: string;
@@ -85,7 +85,7 @@ export interface DefUserResultVO {
   password?: string;
   salt?: string;
   lastLoginTime?: string;
-  id?: string;
+  id: string;
   createdBy?: string;
   createdTime?: string;
   updatedBy?: string;

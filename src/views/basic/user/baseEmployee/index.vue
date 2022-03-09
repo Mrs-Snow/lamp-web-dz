@@ -19,6 +19,14 @@
         >
           {{ t('common.title.add') }}
         </a-button>
+        <a-button
+          type="primary"
+          preIcon="ant-design:plus-outlined"
+          @click="handleInvitation"
+          v-hasAnyPermission="[RoleEnum.INVITATION_USER]"
+        >
+          邀请
+        </a-button>
       </template>
       <template #orgIdList="{ record }">
         <span>
@@ -83,6 +91,7 @@
       </template>
     </BasicTable>
     <EditModal @register="registerDrawer" @success="handleSuccess" />
+    <InvitationUserModal @register="registerInvitationModal" @success="handleSuccess" />
     <EmployeeRole @register="registerModal" @success="handleSuccess" />
   </PageWrapper>
 </template>
@@ -102,11 +111,20 @@
   import EmployeeRole from './employeeRole/index.vue';
   import { columns, searchFormSchema } from './baseEmployee.data';
   import EditModal from './Edit.vue';
+  import InvitationUserModal from './InvitationUser.vue';
 
   export default defineComponent({
     // 若需要开启页面缓存，请将此参数跟菜单名保持一致
     name: '员工维护',
-    components: { BasicTable, PageWrapper, EditModal, TableAction, Tag, EmployeeRole },
+    components: {
+      BasicTable,
+      PageWrapper,
+      EditModal,
+      InvitationUserModal,
+      TableAction,
+      Tag,
+      EmployeeRole,
+    },
     setup() {
       const { t } = useI18n();
       const { createMessage, createConfirm } = useMessage();
@@ -114,6 +132,7 @@
       const [registerDrawer, { openDrawer }] = useDrawer();
       // 绑定角色
       const [registerModal, { openModal }] = useModal();
+      const [registerInvitationModal, { openModal: openInvitationModal }] = useModal();
 
       // 表格
       const [registerTable, { reload, getSelectRowKeys }] = useTable({
@@ -194,6 +213,12 @@
         openModal(true, record);
       }
 
+      // 弹出邀请用户框
+      function handleInvitation(record: Recordable, e: Event) {
+        e?.stopPropagation();
+        openInvitationModal(true, record);
+      }
+
       // 新增或编辑成功回调
       function handleSuccess() {
         reload();
@@ -236,6 +261,7 @@
         registerTable,
         registerDrawer,
         registerModal,
+        registerInvitationModal,
         handleView,
         handleAdd,
         handleCopy,
@@ -244,6 +270,7 @@
         handleSuccess,
         handleBatchDelete,
         handleBindRole,
+        handleInvitation,
         RoleEnum,
       };
     },
