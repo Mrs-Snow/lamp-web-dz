@@ -88,6 +88,9 @@ export enum EnumEnum {
   LogType = 'LogType',
   DataScopeType = 'DataScopeType',
   HttpMethod = 'HttpMethod',
+
+  DateType = 'DateType',
+  TplEnum = 'TplEnum',
 }
 export enum DictEnum {
   // 全局

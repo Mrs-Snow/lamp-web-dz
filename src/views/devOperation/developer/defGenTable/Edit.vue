@@ -1,90 +1,67 @@
 <template>
-  <BasicDrawer
-    v-bind="$attrs"
-    @register="registerDrawer"
-    showFooter
-    width="30%"
-    :maskClosable="false"
-    :title="t(`common.title.${type}`)"
-    @ok="handleSubmit"
-  >
-    <BasicForm @register="registerForm" />
-  </BasicDrawer>
+  <PageWrapper dense contentClass="flex">
+    <div class="m-4 p-4 overflow-hidden bg-white">
+      <Tabs>
+        <TabPane tab="基本信息" key="basic">
+          <BasicForm @register="registerBasicForm" />
+        </TabPane>
+        <TabPane tab="配置信息" key="config">
+          <BasicForm @register="registerConfigForm" />
+        </TabPane>
+      </Tabs>
+    </div>
+  </PageWrapper>
 </template>
 <script lang="ts">
-  import { defineComponent, ref, unref } from 'vue';
-  import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
+  import { Tabs } from 'ant-design-vue';
+  import { defineComponent } from 'vue';
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { ActionEnum, VALIDATE_API } from '/@/enums/commonEnum';
-  import { Api, save, update } from '/@/api/devOperation/developer/defGenTable';
-  import { getValidateRules } from '/@/api/lamp/common/formValidateService';
-  import { customFormSchemaRules, editFormSchema } from './defGenTable.data';
+  import { PageWrapper } from '/@/components/Page';
+  import { baseEditFormSchema, globalEditFormSchema } from './defGenTable.data';
 
   export default defineComponent({
     name: 'DefGenTableEdit',
-    components: { BasicDrawer, BasicForm },
-    emits: ['success', 'register'],
-    setup(_, { emit }) {
+    components: {
+      BasicForm,
+      PageWrapper,
+      Tabs,
+      TabPane: Tabs.TabPane,
+    },
+    setup(_) {
       const { t } = useI18n();
-      const type = ref<ActionEnum>(ActionEnum.ADD);
       const { createMessage } = useMessage();
-      const [registerForm, { setFieldsValue, resetFields, updateSchema, validate, resetSchema }] =
-        useForm({
-          labelWidth: 100,
-          schemas: editFormSchema(type),
-          showActionButtonGroup: false,
-          disabled: (_) => {
-            return unref(type) === ActionEnum.VIEW;
-          },
-          actionColOptions: {
-            span: 23,
-          },
-        });
-
-      const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(async (data) => {
-        setDrawerProps({ confirmLoading: false });
-        await resetSchema(editFormSchema(type));
-        await resetFields();
-        type.value = data?.type || ActionEnum.ADD;
-
-        if (unref(type) !== ActionEnum.ADD) {
-          // 赋值
-          const record = { ...data?.record };
-          await setFieldsValue(record);
-        }
-
-        if (unref(type) !== ActionEnum.VIEW) {
-          let validateApi = Api[VALIDATE_API[unref(type)]];
-          await getValidateRules(validateApi, customFormSchemaRules(type)).then(async (rules) => {
-            rules && rules.length > 0 && (await updateSchema(rules));
-          });
-        }
+      const [registerBasicForm, { validate }] = useForm({
+        labelWidth: 100,
+        schemas: baseEditFormSchema(),
+        showActionButtonGroup: false,
+        actionColOptions: {
+          span: 23,
+        },
+      });
+      const [registerConfigForm, { validate: validateConfig }] = useForm({
+        labelWidth: 100,
+        schemas: globalEditFormSchema(),
+        showActionButtonGroup: false,
+        actionColOptions: {
+          span: 23,
+        },
       });
 
       async function handleSubmit() {
         try {
           const params = await validate();
-          setDrawerProps({ confirmLoading: true });
+          const params2 = await validateConfig();
 
-          if (unref(type) !== ActionEnum.VIEW) {
-            if (unref(type) === ActionEnum.EDIT) {
-              await update(params);
-            } else {
-              params.id = null;
-              await save(params);
-            }
-            createMessage.success(t(`common.tips.${type.value}Success`));
-          }
-          closeDrawer();
-          emit('success');
+          console.log(params);
+          console.log(params2);
+          createMessage.success('成功');
         } finally {
-          setDrawerProps({ confirmLoading: false });
         }
       }
 
-      return { type, t, registerDrawer, registerForm, handleSubmit };
+      return { t, registerBasicForm, registerConfigForm, handleSubmit };
     },
   });
 </script>

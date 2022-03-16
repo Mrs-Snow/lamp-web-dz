@@ -1,8 +1,7 @@
-import { Ref } from 'vue';
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
-import { stateComponentProps } from '/@/utils/lamp/common';
-import { ActionEnum } from '/@/enums/commonEnum';
+import { enumComponentProps, stateComponentProps, yesNoComponentProps } from '/@/utils/lamp/common';
+import { EnumEnum } from '/@/enums/commonEnum';
 import { FormSchemaExt } from '/@/api/lamp/common/formValidateService';
 import { query } from '/@/api/devOperation/tenant/datasourceConfig';
 
@@ -12,17 +11,17 @@ export const columns = (): BasicColumn[] => {
   return [
     {
       title: t('devOperation.developer.defGenTable.tableName'),
-      dataIndex: 'tableName',
+      dataIndex: 'name',
       // width: 180,
     },
     {
       title: t('devOperation.developer.defGenTable.tableComment'),
-      dataIndex: 'tableComment',
+      dataIndex: 'comment',
       // width: 180,
     },
     {
       title: t('devOperation.developer.defGenTable.className'),
-      dataIndex: 'className',
+      dataIndex: 'entityName',
       // width: 180,
     },
     {
@@ -37,13 +36,13 @@ export const columns = (): BasicColumn[] => {
 export const searchFormSchema = (): FormSchema[] => {
   return [
     {
-      field: 'tableName',
+      field: 'name',
       label: t('devOperation.developer.defGenTable.tableName'),
       component: 'Input',
       colProps: { span: 8 },
     },
     {
-      field: 'tableComment',
+      field: 'comment',
       label: t('devOperation.developer.defGenTable.tableComment'),
       component: 'Input',
       colProps: { span: 8 },
@@ -62,12 +61,12 @@ export const importColumns = (): BasicColumn[] => {
   return [
     {
       title: t('devOperation.developer.defGenTable.tableName'),
-      dataIndex: 'tableName',
+      dataIndex: 'name',
       // width: 180,
     },
     {
       title: t('devOperation.developer.defGenTable.tableComment'),
-      dataIndex: 'tableComment',
+      dataIndex: 'comment',
       // width: 180,
     },
   ];
@@ -99,13 +98,13 @@ export const importSearchFormSchema = (dsNameChange: Fn, setFieldsValue): FormSc
       colProps: { span: 6 },
     },
     {
-      field: 'tableName',
+      field: 'name',
       label: t('devOperation.developer.defGenTable.tableName'),
       component: 'Input',
       colProps: { span: 6 },
     },
     {
-      field: 'tableComment',
+      field: 'comment',
       label: t('devOperation.developer.defGenTable.tableComment'),
       component: 'Input',
       colProps: { span: 6 },
@@ -120,7 +119,188 @@ export const importSearchFormSchema = (dsNameChange: Fn, setFieldsValue): FormSc
 };
 
 // 编辑页字段
-export const editFormSchema = (_: Ref<ActionEnum>): FormSchema[] => {
+export const baseEditFormSchema = (): FormSchema[] => {
+  return [
+    {
+      field: 'id',
+      label: 'ID',
+      component: 'Input',
+      show: false,
+    },
+    {
+      label: '表名',
+      field: 'name',
+      component: 'Input',
+      dynamicDisabled: true,
+      colProps: {
+        span: 12,
+      },
+    },
+    {
+      label: '表注释',
+      field: 'comment',
+      component: 'Input',
+      colProps: {
+        span: 12,
+      },
+    },
+    {
+      label: '实体名称',
+      field: 'entityName',
+      component: 'Input',
+      dynamicDisabled: true,
+      colProps: {
+        span: 12,
+      },
+    },
+    {
+      label: '作者',
+      field: 'author',
+      component: 'Input',
+      colProps: {
+        span: 12,
+      },
+    },
+    {
+      label: '数据源名',
+      field: 'dsName',
+      component: 'Input',
+      dynamicDisabled: true,
+      colProps: {
+        span: 12,
+      },
+    },
+  ];
+};
+
+export const globalEditFormSchema = (): FormSchema[] => {
+  return [
+    {
+      label: '生成方式',
+      field: 'genType',
+      component: 'Select',
+      componentProps: {
+        options: [
+          { label: '单表', value: 'SIMPLE' },
+          { label: '树结构', value: 'TREE' },
+          { label: '主从结构', value: 'MAIN_SUB' },
+        ],
+      },
+      colProps: {
+        span: 12,
+      },
+    },
+    {
+      label: '弹窗方式',
+      field: 'popupType',
+      component: 'Select',
+      componentProps: {
+        options: [
+          { label: '弹窗', value: 'MODAL' },
+          { label: '抽屉', value: 'DRAWER' },
+        ],
+      },
+      colProps: {
+        span: 12,
+      },
+      defaultValue: 'MODAL',
+    },
+    {
+      label: '打开输出目录',
+      field: 'open',
+      component: 'RadioGroup',
+      componentProps: {
+        ...yesNoComponentProps(),
+      },
+      defaultValue: false,
+      colProps: {
+        span: 12,
+      },
+    },
+    {
+      label: '输出路径',
+      field: 'outputDir',
+      component: 'Input',
+      colProps: {
+        span: 12,
+      },
+    },
+    {
+      label: 'swagger模式',
+      field: 'swagger',
+      component: 'RadioGroup',
+      componentProps: {
+        ...yesNoComponentProps(),
+      },
+      defaultValue: true,
+      colProps: {
+        span: 12,
+      },
+    },
+    {
+      label: '时间类型',
+      field: 'dateType',
+      component: 'Select',
+      componentProps: {
+        options: [
+          { label: 'java.time', value: 'TIME_PACK' },
+          { label: 'java.util', value: 'ONLY_DATE' },
+          { label: 'java.sql', value: 'SQL_PACK' },
+        ],
+      },
+      defaultValue: 'TIME_PACK',
+      colProps: {
+        span: 12,
+      },
+    },
+    {
+      label: '生成模板',
+      field: 'tplType',
+      component: 'Select',
+      componentProps: {
+        ...enumComponentProps(EnumEnum.TplEnum),
+      },
+      defaultValue: 'SIMPLE',
+      colProps: {
+        span: 12,
+      },
+    },
+    {
+      label: '指定父包名',
+      field: 'parentPackage',
+      component: 'Input',
+      colProps: {
+        span: 12,
+      },
+    },
+    {
+      label: '指定模块名称',
+      field: 'moduleName',
+      component: 'Input',
+      colProps: {
+        span: 12,
+      },
+    },
+    {
+      label: '子模块名称',
+      field: 'childModuleName',
+      component: 'Input',
+      colProps: {
+        span: 12,
+      },
+    },
+    {
+      label: '上级菜单',
+      field: 'parentId',
+      component: 'Input',
+      colProps: {
+        span: 12,
+      },
+    },
+  ];
+};
+
+export const editFormSchema2 = (): FormSchema[] => {
   return [
     {
       field: 'id',

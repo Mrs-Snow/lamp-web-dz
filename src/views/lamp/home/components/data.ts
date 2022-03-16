@@ -56,6 +56,12 @@ export const navItems: NavItem[] = [
 export const dynamicInfoItems: DynamicInfoItem[] = [
   {
     avatar: 'dynamic-avatar-1|svg',
+    name: '4.5.0 即将发布：',
+    date: '2022-04-??',
+    desc: `<a href="https://www.oschina.net/news/185326">可视化代码生成器</a>`,
+  },
+  {
+    avatar: 'dynamic-avatar-1|svg',
     name: '4.4.1 已发布：',
     date: '2022-03-07',
     desc: `<a href="https://www.oschina.net/news/185326">修复 spring cloud gateway 漏洞</a>`,

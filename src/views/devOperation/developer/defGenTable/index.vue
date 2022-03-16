@@ -18,9 +18,9 @@
         <TableAction
           :actions="[
             {
-              tooltip: t('common.title.preview'),
+              tooltip: '预览',
               icon: 'ant-design:search-outlined',
-              onClick: handleView.bind(null, record),
+              onClick: handlePreview.bind(null, record),
             },
             {
               tooltip: t('common.title.edit'),
@@ -51,8 +51,8 @@
         />
       </template>
     </BasicTable>
-    <EditModal @register="registerDrawer" @success="handleSuccess" />
     <ImportModal @register="registerModal" @success="handleSuccess" />
+    <Preview @register="registerPreviewModal" @success="handleSuccess" />
   </PageWrapper>
 </template>
 <script lang="ts">
@@ -61,25 +61,22 @@
   import { useMessage } from '/@/hooks/web/useMessage';
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
   import { PageWrapper } from '/@/components/Page';
-  import { useDrawer } from '/@/components/Drawer';
   import { useModal } from '/@/components/Modal';
   import { handleFetchParams } from '/@/utils/lamp/common';
-  import { ActionEnum } from '/@/enums/commonEnum';
   import { page, remove } from '/@/api/devOperation/developer/defGenTable';
   import { columns, searchFormSchema } from './defGenTable.data';
-  import EditModal from './Edit.vue';
   import ImportModal from './ImportIndex.vue';
+  import Preview from './Preview.vue';
 
   export default defineComponent({
     // 若需要开启页面缓存，请将此参数跟菜单名保持一致
     name: 'DefGenTableManagement',
-    components: { BasicTable, PageWrapper, EditModal, ImportModal, TableAction },
+    components: { BasicTable, PageWrapper, ImportModal, TableAction, Preview },
     setup() {
       const { t } = useI18n();
       const { createMessage, createConfirm } = useMessage();
-      // 编辑页弹窗
-      const [registerDrawer, { openDrawer }] = useDrawer();
       const [registerModal, { openModal }] = useModal();
+      const [registerPreviewModal, { openModal: openPreviewModal }] = useModal();
 
       // 表格
       const [registerTable, { reload, getSelectRowKeys }] = useTable({
@@ -117,10 +114,6 @@
       // 弹出复制页面
       function handleCopy(record: Recordable, e: Event) {
         e?.stopPropagation();
-        openDrawer(true, {
-          record,
-          type: ActionEnum.COPY,
-        });
       }
 
       // 弹出导入页面
@@ -128,22 +121,15 @@
         openModal(true, {});
       }
 
-      // 弹出查看页面
-      function handleView(record: Recordable, e: Event) {
+      // 弹出预览页面
+      function handlePreview(record: Recordable, e: Event) {
         e?.stopPropagation();
-        openDrawer(true, {
-          record,
-          type: ActionEnum.VIEW,
-        });
+        openPreviewModal(true, { record });
       }
 
       // 弹出编辑页面
       function handleEdit(record: Recordable, e: Event) {
         e?.stopPropagation();
-        openDrawer(true, {
-          record,
-          type: ActionEnum.EDIT,
-        });
       }
 
       // 新增或编辑成功回调
@@ -186,9 +172,9 @@
       return {
         t,
         registerTable,
-        registerDrawer,
         registerModal,
-        handleView,
+        registerPreviewModal,
+        handlePreview,
         handleImport,
         handleCopy,
         handleEdit,

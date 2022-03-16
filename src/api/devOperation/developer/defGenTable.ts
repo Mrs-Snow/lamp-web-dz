@@ -3,11 +3,10 @@ import {
   DefGenTableUpdateVO,
   DefGenTableResultVO,
   DefGenTablePageQuery,
-  DefGenTable,
 } from './model/defGenTableModel';
 import { PageParams, PageResult } from '/@/api/model/baseModel';
 import { defHttp } from '/@/utils/http/axios';
-import { RequestEnum } from '/@/enums/httpEnum';
+import { ContentTypeEnum, RequestEnum } from '/@/enums/httpEnum';
 import { ServicePrefixEnum } from '/@/enums/commonEnum';
 import type { AxiosRequestConfig } from 'axios';
 
@@ -38,13 +37,18 @@ export const Api = {
     url: `${ServicePrefixEnum.GENERATOR}/${MODULAR}/query`,
     method: RequestEnum.POST,
   } as AxiosRequestConfig,
+  PreviewCode: {
+    url: `${ServicePrefixEnum.GENERATOR}/${MODULAR}/previewCode`,
+    method: RequestEnum.POST,
+    headers: { 'Content-Type': ContentTypeEnum.FORM_URLENCODED },
+  } as AxiosRequestConfig,
 };
 
 export const page = (params: PageParams<DefGenTablePageQuery>) =>
   defHttp.request<PageResult<DefGenTableResultVO>>({ ...Api.Page, params });
 
 export const selectTableList = (params: PageParams<DefGenTablePageQuery>) =>
-  defHttp.request<PageResult<DefGenTable>>({ ...Api.SelectTableList, params });
+  defHttp.request<PageResult<DefGenTableResultVO>>({ ...Api.SelectTableList, params });
 
 export const query = (params: DefGenTablePageQuery) =>
   defHttp.request<DefGenTableResultVO[]>({
@@ -62,3 +66,9 @@ export const update = (params: DefGenTableUpdateVO) =>
   defHttp.request<DefGenTableResultVO>({ ...Api.Update, params });
 
 export const remove = (params: string[]) => defHttp.request<boolean>({ ...Api.Delete, params });
+
+export const previewCode = (id: string) =>
+  defHttp.request<any>({
+    ...Api.PreviewCode,
+    params: { id },
+  });
