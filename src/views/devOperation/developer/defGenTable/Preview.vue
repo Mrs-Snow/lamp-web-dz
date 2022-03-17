@@ -3,12 +3,12 @@
     v-bind="$attrs"
     @register="registerModal"
     showFooter
-    width="70%"
     :keyboard="true"
     :maskClosable="true"
     title="预览代码"
     :defaultFullscreen="true"
     @ok="handleSubmit"
+    :showCancelBtn="false"
   >
     <Tabs>
       <TabPane
@@ -38,6 +38,7 @@
   import xml from 'highlight.js/lib/languages/xml';
   import html from 'highlight.js/lib/languages/xml';
   import vue from 'highlight.js/lib/languages/xml';
+  import web from 'highlight.js/lib/languages/xml';
   import javascript from 'highlight.js/lib/languages/javascript';
   import sql from 'highlight.js/lib/languages/sql';
   // import 'highlight.js/styles/github.css';
@@ -50,6 +51,7 @@
   hljs.registerLanguage('vue', vue);
   hljs.registerLanguage('javascript', javascript);
   hljs.registerLanguage('sql', sql);
+  hljs.registerLanguage('web', web);
 
   export default defineComponent({
     // 若需要开启页面缓存，请将此参数跟菜单名保持一致
@@ -65,18 +67,25 @@
       const { createMessage } = useMessage();
       const { clipboardRef, copiedRef } = useCopyToClipboard();
 
-      const [registerModal, { setModalProps }] = useModalInner(async (row) => {
+      const [registerModal, { setModalProps, closeModal }] = useModalInner(async (row) => {
+        codeMap.value = {};
         setModalProps({ confirmLoading: false });
-        const map = await previewCode(row.record.id);
-        codeMap.value = map;
+        try {
+          const map = await previewCode(row.record.id);
+          codeMap.value = map;
+        } finally {
+          setModalProps({ confirmLoading: false });
+        }
       });
 
-      function handleSubmit() {}
+      function handleSubmit() {
+        setModalProps({ confirmLoading: false });
+        closeModal();
+      }
 
       function highlightedCode(code, key) {
         const ftlName = key.substring(key.lastIndexOf('/') + 1, key.indexOf('.ftl'));
-        var language = ftlName.substring(ftlName.indexOf('.') + 1, ftlName.length);
-        debugger;
+        const language = ftlName.substring(ftlName.indexOf('.') + 1, ftlName.length);
         const result = hljs.highlight(code || '', { language, ignoreIllegals: true });
         return result.value || '&nbsp;';
       }

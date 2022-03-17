@@ -10,7 +10,7 @@
         >
           {{ t('common.title.delete') }}
         </a-button>
-        <a-button type="primary" preIcon="ant-design:plus-outlined" @click="handleImport">
+        <a-button type="primary" preIcon="ant-design:cloud-upload-outlined" @click="handleImport">
           {{ t('common.title.import') }}
         </a-button>
       </template>
@@ -38,12 +38,12 @@
             },
             {
               tooltip: '同步',
-              icon: 'ant-design:copy-outlined',
+              icon: 'ant-design:cloud-sync-outlined',
               onClick: handleCopy.bind(null, record),
             },
             {
               tooltip: '生成代码',
-              icon: 'ant-design:copy-outlined',
+              icon: 'ant-design:download-outlined',
               onClick: handleCopy.bind(null, record),
             },
           ]"
