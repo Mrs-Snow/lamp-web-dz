@@ -25,6 +25,11 @@ export const columns = (): BasicColumn[] => {
       // width: 180,
     },
     {
+      title: '作者',
+      dataIndex: 'author',
+      // width: 180,
+    },
+    {
       title: t('lamp.common.createdTime'),
       dataIndex: 'createdTime',
       sorter: true,
@@ -39,19 +44,25 @@ export const searchFormSchema = (): FormSchema[] => {
       field: 'name',
       label: t('devOperation.developer.defGenTable.tableName'),
       component: 'Input',
-      colProps: { span: 8 },
+      colProps: { span: 6 },
     },
     {
       field: 'comment',
       label: t('devOperation.developer.defGenTable.tableComment'),
       component: 'Input',
-      colProps: { span: 8 },
+      colProps: { span: 6 },
+    },
+    {
+      field: 'author',
+      label: '作者',
+      component: 'Input',
+      colProps: { span: 6 },
     },
     {
       field: 'createTimeRange',
       label: t('lamp.common.createdTime'),
       component: 'RangePicker',
-      colProps: { span: 8 },
+      colProps: { span: 6 },
     },
   ];
 };
@@ -72,25 +83,25 @@ export const importColumns = (): BasicColumn[] => {
   ];
 };
 
-export const importSearchFormSchema = (dsNameChange: Fn, setFieldsValue): FormSchema[] => {
+export const importSearchFormSchema = (dsChange: Fn, setFieldsValue): FormSchema[] => {
   return [
     {
-      field: 'dsName',
+      field: 'dsId',
       label: '数据源',
       component: 'ApiSelect',
       componentProps: {
         api: query,
         afterFetch: (options) => {
           if (options && options.length > 0) {
-            setFieldsValue({ dsName: options[0]?.name });
-            dsNameChange(options[0]?.name);
+            setFieldsValue({ dsId: options[0]?.id });
+            dsChange(options[0]?.id);
           }
         },
         labelField: 'name',
-        valueField: 'name',
+        valueField: 'id',
         showSearch: true,
         allowClear: false,
-        onChange: dsNameChange,
+        onChange: dsChange,
         filterOption: (input: string, option: any) => {
           return option.label.toUpperCase().indexOf(input.toUpperCase()) >= 0;
         },
@@ -163,7 +174,7 @@ export const baseEditFormSchema = (): FormSchema[] => {
     },
     {
       label: '数据源名',
-      field: 'dsName',
+      field: 'dsId',
       component: 'Input',
       dynamicDisabled: true,
       colProps: {

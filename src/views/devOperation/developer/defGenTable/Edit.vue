@@ -13,8 +13,9 @@
   </PageWrapper>
 </template>
 <script lang="ts">
+  import { defineComponent, onMounted } from 'vue';
   import { Tabs } from 'ant-design-vue';
-  import { defineComponent } from 'vue';
+  import { useRouter } from 'vue-router';
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
@@ -32,6 +33,8 @@
     setup(_) {
       const { t } = useI18n();
       const { createMessage } = useMessage();
+      const { currentRoute } = useRouter();
+
       const [registerBasicForm, { validate }] = useForm({
         labelWidth: 100,
         schemas: baseEditFormSchema(),
@@ -48,6 +51,16 @@
           span: 23,
         },
       });
+
+      onMounted(async () => {
+        const routeQuery = currentRoute.value?.params;
+
+        await load(routeQuery.id as string);
+      });
+
+      async function load(_id: string) {
+
+      }
 
       async function handleSubmit() {
         try {

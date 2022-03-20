@@ -9,10 +9,9 @@
     title="绑定员工"
     :defaultFullscreen="true"
     @ok="handleSubmit"
+    @cancel="handleCancel"
   >
-    <PageWrapper dense contentFullHeight>
-      <BasicTable @register="registerTable" />
-    </PageWrapper>
+    <BasicTable @register="registerTable" />
   </BasicModal>
 </template>
 <script lang="ts">
@@ -21,21 +20,27 @@
   import { BasicTable, useTable } from '/@/components/Table';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { PageWrapper } from '/@/components/Page';
   import { handleFetchParams } from '/@/utils/lamp/common';
-  import { selectTableList } from '/@/api/devOperation/developer/defGenTable';
+  import {
+    importCheck,
+    importTable,
+    selectTableList
+  } from '/@/api/devOperation/developer/defGenTable';
   import { importColumns, importSearchFormSchema } from './defGenTable.data';
 
   export default defineComponent({
     // 若需要开启页面缓存，请将此参数跟菜单名保持一致
     name: 'DefGenTableManagement',
-    components: { BasicModal, BasicTable, PageWrapper },
-    setup() {
+    components: { BasicModal, BasicTable },
+    setup(_, { emit }) {
       const { t } = useI18n();
       const { createMessage, createConfirm } = useMessage();
 
       // 表格
-      const [registerTable, { reload, getSelectRowKeys, setFieldsValue }] = useTable({
+      const [
+        registerTable,
+        { reload, getSelectRowKeys, clearSelectedRowKeys, setFieldsValue, getForm },
+      ] = useTable({
         title: t('devOperation.developer.defGenTable.table.title'),
         api: selectTableList,
         columns: importColumns(),
@@ -43,7 +48,7 @@
           labelWidth: 120,
           schemas: importSearchFormSchema(
             (value) => {
-              reload({ searchInfo: { dsName: value } });
+              value && reload({ searchInfo: { dsId: value } });
             },
             (value) => {
               setFieldsValue(value);
@@ -62,7 +67,7 @@
         showTableSetting: true,
         bordered: true,
         immediate: false,
-        rowKey: 'tableName',
+        rowKey: 'name',
         rowSelection: {
           type: 'checkbox',
           columnWidth: 40,
@@ -74,21 +79,45 @@
       });
 
       // 点击批量删除
-      function handleSubmit() {
-        const names = getSelectRowKeys();
-        if (!names || names.length <= 0) {
+      async function handleSubmit() {
+        const tableNames = getSelectRowKeys();
+        if (!tableNames || tableNames.length <= 0) {
           createMessage.warning(t('common.tips.pleaseSelectTheData'));
           return;
         }
-        createConfirm({
-          iconType: 'warning',
-          content: '是否确认导入此表？',
-          onOk: async () => {
-            try {
-              closeModal();
-            } catch (e) {}
-          },
-        });
+        const dsId = getForm().getFieldsValue().dsId;
+        if (!dsId) {
+          createMessage.warning('请先选择数据源');
+          return;
+        }
+        try {
+          const flag = await importCheck(tableNames);
+          if (flag) {
+            await importTable({ dsId, tableNames });
+            await getForm().setFieldsValue({ name: '', comment: '', createTimeRange: null });
+            closeModal();
+            emit('success');
+          }
+        } catch (e) {
+          const msg = e?.response?.data?.msg ?? '是否确认导入此表？';
+          createConfirm({
+            iconType: 'warning',
+            content: msg,
+            onOk: async () => {
+              try {
+                await importTable({ dsId, tableNames });
+                await getForm().setFieldsValue({ name: '', comment: '', createTimeRange: null });
+                closeModal();
+                emit('success');
+              } catch (e) {}
+            },
+          });
+        }
+      }
+
+      async function handleCancel() {
+        await getForm().setFieldsValue({ name: '', comment: '', createTimeRange: null });
+        await clearSelectedRowKeys();
       }
 
       return {
@@ -96,6 +125,7 @@
         registerModal,
         registerTable,
         handleSubmit,
+        handleCancel,
       };
     },
   });

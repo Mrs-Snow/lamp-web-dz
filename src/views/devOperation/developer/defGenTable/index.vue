@@ -39,12 +39,15 @@
             {
               tooltip: '同步',
               icon: 'ant-design:cloud-sync-outlined',
-              onClick: handleCopy.bind(null, record),
+              popConfirm: {
+                title: '确定同步该表的字段吗？',
+                confirm: handleSync.bind(null, record),
+              },
             },
             {
               tooltip: '生成代码',
               icon: 'ant-design:download-outlined',
-              onClick: handleCopy.bind(null, record),
+              onClick: handleDownload.bind(null, record),
             },
           ]"
           :stopButtonPropagation="true"
@@ -57,16 +60,24 @@
 </template>
 <script lang="ts">
   import { defineComponent } from 'vue';
+  import { useRouter } from 'vue-router';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { BasicTable, useTable, TableAction } from '/@/components/Table';
+  import { BasicTable, TableAction, useTable } from '/@/components/Table';
   import { PageWrapper } from '/@/components/Page';
   import { useModal } from '/@/components/Modal';
-  import { handleFetchParams } from '/@/utils/lamp/common';
-  import { page, remove } from '/@/api/devOperation/developer/defGenTable';
+  import { downloadFile, handleFetchParams } from '/@/utils/lamp/common';
+  import {
+    downloadZip,
+    generatorCode,
+    page,
+    remove,
+    syncField,
+  } from '/@/api/devOperation/developer/defGenTable';
   import { columns, searchFormSchema } from './defGenTable.data';
   import ImportModal from './ImportIndex.vue';
   import Preview from './Preview.vue';
+  import { GenTypeEnum, RouteEnum } from '/@/enums/biz/tenant';
 
   export default defineComponent({
     // 若需要开启页面缓存，请将此参数跟菜单名保持一致
@@ -77,6 +88,7 @@
       const { createMessage, createConfirm } = useMessage();
       const [registerModal, { openModal }] = useModal();
       const [registerPreviewModal, { openModal: openPreviewModal }] = useModal();
+      const { replace } = useRouter();
 
       // 表格
       const [registerTable, { reload, getSelectRowKeys }] = useTable({
@@ -111,9 +123,26 @@
         },
       });
 
-      // 弹出复制页面
-      function handleCopy(record: Recordable, e: Event) {
+      // 同步字段
+      async function handleSync(record: Recordable, e: Event) {
         e?.stopPropagation();
+        await syncField(record.id);
+        createMessage.success('同步成功');
+        reload();
+      }
+
+      // 生成或下载代码
+      async function handleDownload(record: Recordable, e: Event) {
+        e?.stopPropagation();
+        const ids = [record.id];
+        if (record.genType?.code === GenTypeEnum.ZIP) {
+          const response = await downloadZip(ids);
+          downloadFile(response);
+          createMessage.success(t('common.tips.downloadSuccess'));
+        } else {
+          await generatorCode(ids);
+          createMessage.success('代码生成成功，请在' + record.outputDir + '查看');
+        }
       }
 
       // 弹出导入页面
@@ -130,6 +159,10 @@
       // 弹出编辑页面
       function handleEdit(record: Recordable, e: Event) {
         e?.stopPropagation();
+        replace({
+          name: RouteEnum.CODE_GENERATOR_EDIT,
+          params: { id: record.id },
+        });
       }
 
       // 新增或编辑成功回调
@@ -140,7 +173,7 @@
       async function batchDelete(ids: any[]) {
         await remove(ids);
         createMessage.success(t('common.tips.deleteSuccess'));
-        handleSuccess();
+        reload();
       }
 
       // 点击单行删除
@@ -176,7 +209,8 @@
         registerPreviewModal,
         handlePreview,
         handleImport,
-        handleCopy,
+        handleSync,
+        handleDownload,
         handleEdit,
         handleDelete,
         handleSuccess,

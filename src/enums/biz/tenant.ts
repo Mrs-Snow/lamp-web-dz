@@ -59,6 +59,7 @@ export enum RouteEnum {
   BASIC_MY_MSG_VIEW = '查看我的消息',
   BASIC_MSG = '消息管理',
   TENANT_VIEW = '查看企业信息',
+  CODE_GENERATOR_EDIT = '修改代码配置',
 }
 
 //0-过期 1-有效
@@ -84,4 +85,10 @@ export enum DataScopeEnum {
   SELF_DEPT = '05',
   SELF = '06',
   CUSTOM = '07',
+}
+
+// 代码生成方式
+export enum GenTypeEnum {
+  ZIP = '01',
+  GEN = '02',
 }

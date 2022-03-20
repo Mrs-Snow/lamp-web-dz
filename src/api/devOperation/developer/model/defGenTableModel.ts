@@ -50,6 +50,11 @@ export interface DefGenTableSaveVO {
   remark: string;
 }
 
+export interface DefGenTableImportVO {
+  tableNames: string[];
+  dsId: string;
+}
+
 export interface DefGenTableUpdateVO {
   id: string;
   tableName: string;

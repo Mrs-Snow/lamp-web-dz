@@ -1,14 +1,15 @@
 import {
-  DefGenTableSaveVO,
-  DefGenTableUpdateVO,
-  DefGenTableResultVO,
+  DefGenTableImportVO,
   DefGenTablePageQuery,
+  DefGenTableResultVO,
+  DefGenTableUpdateVO,
 } from './model/defGenTableModel';
 import { PageParams, PageResult } from '/@/api/model/baseModel';
 import { defHttp } from '/@/utils/http/axios';
 import { ContentTypeEnum, RequestEnum } from '/@/enums/httpEnum';
 import { ServicePrefixEnum } from '/@/enums/commonEnum';
 import type { AxiosRequestConfig } from 'axios';
+import qs from 'qs';
 
 const MODULAR = 'defGenTable';
 
@@ -21,10 +22,7 @@ export const Api = {
     url: `${ServicePrefixEnum.GENERATOR}/${MODULAR}/selectTableList`,
     method: RequestEnum.POST,
   } as AxiosRequestConfig,
-  Save: {
-    url: `${ServicePrefixEnum.GENERATOR}/${MODULAR}`,
-    method: RequestEnum.POST,
-  } as AxiosRequestConfig,
+
   Update: {
     url: `${ServicePrefixEnum.GENERATOR}/${MODULAR}`,
     method: RequestEnum.PUT,
@@ -42,6 +40,31 @@ export const Api = {
     method: RequestEnum.POST,
     headers: { 'Content-Type': ContentTypeEnum.FORM_URLENCODED },
   } as AxiosRequestConfig,
+  ImportTable: {
+    url: `${ServicePrefixEnum.GENERATOR}/${MODULAR}/importTable`,
+    method: RequestEnum.POST,
+  } as AxiosRequestConfig,
+  ImportCheck: {
+    url: `${ServicePrefixEnum.GENERATOR}/${MODULAR}/importCheck`,
+    method: RequestEnum.POST,
+  } as AxiosRequestConfig,
+  GeneratorCode: {
+    url: `${ServicePrefixEnum.GENERATOR}/${MODULAR}/generatorCode`,
+    method: RequestEnum.POST,
+  } as AxiosRequestConfig,
+  DownloadZip: {
+    url: `${ServicePrefixEnum.GENERATOR}/${MODULAR}/downloadZip`,
+    method: RequestEnum.GET,
+  } as AxiosRequestConfig,
+  syncField: {
+    url: `${ServicePrefixEnum.GENERATOR}/${MODULAR}/syncField`,
+    method: RequestEnum.POST,
+    headers: { 'Content-Type': ContentTypeEnum.FORM_URLENCODED },
+  } as AxiosRequestConfig,
+  Detail: {
+    url: `${ServicePrefixEnum.GENERATOR}/${MODULAR}/detail`,
+    method: RequestEnum.GET,
+  } as AxiosRequestConfig,
 };
 
 export const page = (params: PageParams<DefGenTablePageQuery>) =>
@@ -56,12 +79,6 @@ export const query = (params: DefGenTablePageQuery) =>
     params,
   });
 
-export const save = (params: DefGenTableSaveVO) =>
-  defHttp.request<DefGenTableResultVO>({
-    ...Api.Save,
-    params,
-  });
-
 export const update = (params: DefGenTableUpdateVO) =>
   defHttp.request<DefGenTableResultVO>({ ...Api.Update, params });
 
@@ -70,5 +87,48 @@ export const remove = (params: string[]) => defHttp.request<boolean>({ ...Api.De
 export const previewCode = (id: string) =>
   defHttp.request<any>({
     ...Api.PreviewCode,
+    params: { id },
+  });
+
+export const importCheck = (tableNames: string[]) =>
+  defHttp.request<boolean>(
+    {
+      ...Api.ImportCheck,
+      params: tableNames,
+    },
+    { errorMessageMode: 'none' },
+  );
+
+export const importTable = (params: DefGenTableImportVO) =>
+  defHttp.request<boolean>({
+    ...Api.ImportTable,
+    params,
+  });
+
+export const downloadZip = (ids: string[]) =>
+  defHttp.request<void>(
+    {
+      ...Api.DownloadZip,
+      responseType: 'blob',
+      params: qs.stringify({ ids }, { arrayFormat: 'repeat' }),
+    },
+    { isReturnNativeResponse: true },
+  );
+
+export const generatorCode = (params: string[]) =>
+  defHttp.request<boolean>({
+    ...Api.GeneratorCode,
+    params,
+  });
+
+export const syncField = (id: string) =>
+  defHttp.request<boolean>({
+    ...Api.syncField,
+    params: { id },
+  });
+
+export const detail = (id: string) =>
+  defHttp.request<DefGenTableResultVO>({
+    ...Api.Detail,
     params: { id },
   });
