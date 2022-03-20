@@ -42,7 +42,8 @@
   import javascript from 'highlight.js/lib/languages/javascript';
   import sql from 'highlight.js/lib/languages/sql';
   // import 'highlight.js/styles/github.css';
-  import 'highlight.js/styles/base16/darcula.css';
+  import 'highlight.js/styles/github-dark-dimmed.css';
+  // import 'highlight.js/styles/base16/darcula.css';
   // import 'highlight.js/styles/dark.css';
 
   hljs.registerLanguage('java', java);
