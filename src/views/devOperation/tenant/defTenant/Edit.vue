@@ -45,7 +45,7 @@
             span: 23,
           },
         });
-      // const area = ref<string[]>([]);
+
       const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(async (data) => {
         await resetSchema(editFormSchema(type));
         await resetFields();

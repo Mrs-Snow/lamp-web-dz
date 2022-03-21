@@ -89,6 +89,43 @@ export enum DataScopeEnum {
 
 // 代码生成方式
 export enum GenTypeEnum {
-  ZIP = '01',
-  GEN = '02',
+  GEN = 'GEN',
+  ZIP = 'ZIP',
+}
+// 弹窗方式
+export enum PopupTypeEnum {
+  MODAL = 'MODAL',
+  DRAWER = 'DRAWER',
+}
+// 父类实体类型
+export enum EntitySuperClassEnum {
+  SUPER_ENTITY = 'SUPER_ENTITY',
+  ENTITY = 'ENTITY',
+  TREE_ENTITY = 'TREE_ENTITY',
+  NONE = 'NONE',
+}
+// "SQL 比较条件常量定义类"
+export enum SqlConditionEnum {
+  EQUAL = 'EQUAL',
+  NOT_EQUAL = 'NOT_EQUAL',
+  LIKE = 'LIKE',
+  ORACLE_LIKE = 'ORACLE_LIKE',
+  LIKE_LEFT = 'LIKE_LEFT',
+  LIKE_RIGHT = 'LIKE_RIGHT',
+}
+// 父类
+export enum SuperClassEnum {
+  SUPER_CLASS = 'SUPER_CLASS',
+  SUPER_POI_CLASS = 'SUPER_POI_CLASS',
+  SUPER_CACHE_CLASS = 'SUPER_CACHE_CLASS',
+  SUPER_SIMPLE_CLASS = 'SUPER_SIMPLE_CLASS',
+  SUPER_READ_CLASS = 'SUPER_READ_CLASS',
+  NONE_CS = 'NONE_CS',
+  NONE = 'NONE',
+}
+// 模板类型
+export enum TplEnum {
+  SIMPLE = 'SIMPLE',
+  TREE = 'TREE',
+  MAIN_SUB = 'MAIN_SUB',
 }

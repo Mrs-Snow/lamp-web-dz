@@ -24,7 +24,7 @@
   import {
     importCheck,
     importTable,
-    selectTableList
+    selectTableList,
   } from '/@/api/devOperation/developer/defGenTable';
   import { importColumns, importSearchFormSchema } from './defGenTable.data';
 

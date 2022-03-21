@@ -90,7 +90,12 @@ export enum EnumEnum {
   HttpMethod = 'HttpMethod',
 
   DateType = 'DateType',
+  PopupTypeEnum = 'PopupTypeEnum',
   TplEnum = 'TplEnum',
+  EntitySuperClassEnum = 'EntitySuperClassEnum',
+  GenTypeEnum = 'GenTypeEnum',
+  SqlConditionEnum = 'SqlConditionEnum',
+  SuperClassEnum = 'SuperClassEnum',
 }
 export enum DictEnum {
   // 全局
