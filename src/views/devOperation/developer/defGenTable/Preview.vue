@@ -40,6 +40,7 @@
   import vue from 'highlight.js/lib/languages/xml';
   import web from 'highlight.js/lib/languages/xml';
   import javascript from 'highlight.js/lib/languages/javascript';
+  import typescript from 'highlight.js/lib/languages/typescript';
   import sql from 'highlight.js/lib/languages/sql';
   // import 'highlight.js/styles/github.css';
   import 'highlight.js/styles/github-dark-dimmed.css';
@@ -53,6 +54,7 @@
   hljs.registerLanguage('javascript', javascript);
   hljs.registerLanguage('sql', sql);
   hljs.registerLanguage('web', web);
+  hljs.registerLanguage('ts', typescript);
 
   export default defineComponent({
     // 若需要开启页面缓存，请将此参数跟菜单名保持一致
@@ -72,7 +74,7 @@
         codeMap.value = {};
         setModalProps({ confirmLoading: false });
         try {
-          const map = await previewCode(row.record.id);
+          const map = await previewCode(row.record.id, row.template);
           codeMap.value = map;
         } finally {
           setModalProps({ confirmLoading: false });

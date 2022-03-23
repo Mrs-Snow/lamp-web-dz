@@ -129,3 +129,8 @@ export enum TplEnum {
   TREE = 'TREE',
   MAIN_SUB = 'MAIN_SUB',
 }
+//代码模板
+export enum TemplateEnum {
+  BACKEND = 'BACKEND',
+  WEB_PLUS = 'WEB_PLUS',
+}

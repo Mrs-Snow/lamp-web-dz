@@ -18,11 +18,6 @@
         <TableAction
           :actions="[
             {
-              tooltip: '预览',
-              icon: 'ant-design:search-outlined',
-              onClick: handlePreview.bind(null, record),
-            },
-            {
               tooltip: t('common.title.edit'),
               icon: 'ant-design:edit-outlined',
               onClick: handleEdit.bind(null, record),
@@ -44,10 +39,27 @@
                 confirm: handleSync.bind(null, record),
               },
             },
+          ]"
+          :dropDownActions="[
             {
-              tooltip: '生成代码',
+              label: '预览后端',
+              icon: 'ant-design:search-outlined',
+              onClick: handlePreview.bind(null, record, TemplateEnum.BACKEND),
+            },
+            {
+              label: '预览前端',
+              icon: 'ant-design:search-outlined',
+              onClick: handlePreview.bind(null, record, TemplateEnum.WEB_PLUS),
+            },
+            {
+              label: '生成后端',
               icon: 'ant-design:download-outlined',
-              onClick: handleDownload.bind(null, record),
+              onClick: handleDownload.bind(null, record, TemplateEnum.BACKEND),
+            },
+            {
+              label: '生成前端',
+              icon: 'ant-design:download-outlined',
+              onClick: handleDownload.bind(null, record, TemplateEnum.WEB_PLUS),
             },
           ]"
           :stopButtonPropagation="true"
@@ -77,7 +89,7 @@
   import { columns, searchFormSchema } from './defGenTable.data';
   import ImportModal from './ImportIndex.vue';
   import Preview from './Preview.vue';
-  import { GenTypeEnum, RouteEnum } from '/@/enums/biz/tenant';
+  import { GenTypeEnum, RouteEnum, TemplateEnum } from '/@/enums/biz/tenant';
 
   export default defineComponent({
     // 若需要开启页面缓存，请将此参数跟菜单名保持一致
@@ -132,15 +144,15 @@
       }
 
       // 生成或下载代码
-      async function handleDownload(record: Recordable, e: Event) {
+      async function handleDownload(record: Recordable, template: string, e: Event) {
         e?.stopPropagation();
         const ids = [record.id];
         if (record.genType?.code === GenTypeEnum.ZIP) {
-          const response = await downloadZip(ids);
+          const response = await downloadZip(ids, template);
           downloadFile(response);
           createMessage.success(t('common.tips.downloadSuccess'));
         } else {
-          await generatorCode(ids);
+          await generatorCode(ids, template);
           createMessage.success('代码生成成功，请在' + record.outputDir + '查看');
         }
       }
@@ -151,9 +163,9 @@
       }
 
       // 弹出预览页面
-      function handlePreview(record: Recordable, e: Event) {
+      function handlePreview(record: Recordable, template: string, e: Event) {
         e?.stopPropagation();
-        openPreviewModal(true, { record });
+        openPreviewModal(true, { record, template });
       }
 
       // 弹出编辑页面
@@ -215,6 +227,7 @@
         handleDelete,
         handleSuccess,
         handleBatchDelete,
+        TemplateEnum,
       };
     },
   });

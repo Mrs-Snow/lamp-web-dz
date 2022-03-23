@@ -50,7 +50,7 @@ export const Api = {
   } as AxiosRequestConfig,
   GeneratorCode: {
     url: `${ServicePrefixEnum.GENERATOR}/${MODULAR}/generatorCode`,
-    method: RequestEnum.POST,
+    method: RequestEnum.GET,
   } as AxiosRequestConfig,
   DownloadZip: {
     url: `${ServicePrefixEnum.GENERATOR}/${MODULAR}/downloadZip`,
@@ -84,10 +84,10 @@ export const update = (params: DefGenTableUpdateVO) =>
 
 export const remove = (params: string[]) => defHttp.request<boolean>({ ...Api.Delete, params });
 
-export const previewCode = (id: string) =>
+export const previewCode = (id: string, template: string) =>
   defHttp.request<any>({
     ...Api.PreviewCode,
-    params: { id },
+    params: { id, template },
   });
 
 export const importCheck = (tableNames: string[]) =>
@@ -105,20 +105,20 @@ export const importTable = (params: DefGenTableImportVO) =>
     params,
   });
 
-export const downloadZip = (ids: string[]) =>
+export const downloadZip = (ids: string[], template: string) =>
   defHttp.request<void>(
     {
       ...Api.DownloadZip,
       responseType: 'blob',
-      params: qs.stringify({ ids }, { arrayFormat: 'repeat' }),
+      params: qs.stringify({ ids, template }, { arrayFormat: 'repeat' }),
     },
     { isReturnNativeResponse: true },
   );
 
-export const generatorCode = (params: string[]) =>
+export const generatorCode = (ids: string[], template: string) =>
   defHttp.request<boolean>({
     ...Api.GeneratorCode,
-    params,
+    params: qs.stringify({ ids, template }, { arrayFormat: 'repeat' }),
   });
 
 export const syncField = (id: string) =>
