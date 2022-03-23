@@ -99,19 +99,21 @@
             emit('success');
           }
         } catch (e) {
-          const msg = e?.response?.data?.msg ?? '是否确认导入此表？';
-          createConfirm({
-            iconType: 'warning',
-            content: msg,
-            onOk: async () => {
-              try {
-                await importTable({ dsId, tableNames });
-                await getForm().setFieldsValue({ name: '', comment: '', createTimeRange: null });
-                closeModal();
-                emit('success');
-              } catch (e) {}
-            },
-          });
+          if (e?.response?.data?.msg.indexOf('是否覆盖导入') > -1) {
+            const msg = e?.response?.data?.msg ?? '是否确认导入此表？';
+            createConfirm({
+              iconType: 'warning',
+              content: msg,
+              onOk: async () => {
+                try {
+                  await importTable({ dsId, tableNames });
+                  await getForm().setFieldsValue({ name: '', comment: '', createTimeRange: null });
+                  closeModal();
+                  emit('success');
+                } catch (e) {}
+              },
+            });
+          }
         }
       }
 

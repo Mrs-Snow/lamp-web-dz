@@ -62,7 +62,7 @@
       Tabs,
       TabPane: Tabs.TabPane,
     },
-    setup() {
+    setup(_, { emit }) {
       const { t } = useI18n();
       const codeMap = ref<any>({});
       const { createMessage } = useMessage();
@@ -82,6 +82,7 @@
       function handleSubmit() {
         setModalProps({ confirmLoading: false });
         closeModal();
+        emit('success');
       }
 
       function highlightedCode(code, key) {

@@ -220,6 +220,8 @@ export const baseEditFormSchema = (updateSchemaFn: Fn): FormSchema[] => {
       field: 'serviceName',
       component: 'Input',
       helpMessage: [
+        '1. 确保前端ServicePrefixEnum中的枚举值KEY 与 后端”服务名“和lamp-gateway-server.yml中“uri”保持一致',
+        '2. 确保前端ServicePrefixEnum中的枚举值VALUE 与 后端lamp-gateway-server.yml中“predicates”配置一致',
         '如： lamp-base、lamp-base-api、lamp-base-biz、lamp-base-controller、lamp-base-server 中的 base',
         '如： lamp-system-server 中的 system',
       ],

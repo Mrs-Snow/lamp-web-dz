@@ -4,18 +4,18 @@
 export enum ServicePrefixEnum {
   // 系统服务
   TENANT = '/system',
-  // 基础服务
-  BASE = '/base',
-  // 认证服务
-  OAUTH = '/oauth',
   // 文件服务
   FILE = '/base',
   // 消息服务
   MSG = '/base',
-  // 工作流服务
-  ACTIVITI = '/activiti',
   // 网关
   GATEWAY = '/gateway',
+  // 认证服务
+  OAUTH = '/oauth',
+  // 基础服务
+  BASE = '/base',
+  // 系统服务
+  SYSTEM = '/system',
   // 代码生成器服务
   GENERATOR = '/generator',
 }
