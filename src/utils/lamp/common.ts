@@ -1,5 +1,6 @@
 import { useMessage } from '/@/hooks/web/useMessage';
 import componentSetting from '/@/settings/componentSetting';
+import { SORT_FIELD } from '/@/settings/componentSetting';
 import { isArray, isFunction, isString } from '/@/utils/is';
 import { DictEnum, EnumEnum } from '/@/enums/commonEnum';
 import { asyncFindDictList, asyncFindEnumList } from '/@/api/lamp/common/general';
@@ -32,6 +33,13 @@ export const handleFetchParams = (data: Recordable) => {
   for (const key in data) {
     if (PAGE_PARAMS.includes(key)) {
       tempData[key] = data[key];
+      if (key === SORT_FIELD && isArray(data[SORT_FIELD])) {
+        if (data[SORT_FIELD][0] === 'echoMap') {
+          tempData[key] = data[SORT_FIELD][1];
+        } else {
+          tempData[key] = data[SORT_FIELD][0];
+        }
+      }
     } else if (key.endsWith(',desc')) {
       model[key.split(',desc')[0]] = data[key];
     } else if (key.startsWith('echoMap,')) {

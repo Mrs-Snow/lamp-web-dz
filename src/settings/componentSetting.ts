@@ -2,8 +2,8 @@
 
 import type { SorterResult } from '../components/Table';
 
-const SORT_FIELD = 'sort';
-const ORDER_FIELD = 'order';
+export const SORT_FIELD = 'sort';
+export const ORDER_FIELD = 'order';
 
 export default {
   // 表格配置
