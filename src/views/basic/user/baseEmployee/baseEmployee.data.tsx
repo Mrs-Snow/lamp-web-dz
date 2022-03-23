@@ -208,6 +208,9 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
         api: tree,
         labelField: 'name',
         valueField: 'id',
+        filterTreeNode: (input: string, treeNode: any) => {
+          return treeNode.name.toUpperCase().indexOf(input.toUpperCase()) >= 0;
+        },
       },
       dynamicDisabled: () => {
         return [ActionEnum.VIEW].includes(type.value);
@@ -226,6 +229,9 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
         valueField: 'id',
         allowClear: true,
         multiple: true,
+        filterTreeNode: (input: string, treeNode: any) => {
+          return treeNode.name.toUpperCase().indexOf(input.toUpperCase()) >= 0;
+        },
       },
       dynamicDisabled: () => {
         return [ActionEnum.VIEW].includes(type.value);
