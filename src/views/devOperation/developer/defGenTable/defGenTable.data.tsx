@@ -873,6 +873,10 @@ export const columnColumns = (): BasicColumn[] => {
       dataIndex: 'component',
       // width: 180,
       editRow: true,
+      editComponent: 'ApiSelect',
+      editComponentProps: {
+        ...enumComponentProps(EnumEnum.ComponentEnum),
+      },
     },
     {
       title: t('devOperation.developer.defGenTableColumn.dictType'),

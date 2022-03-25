@@ -96,6 +96,7 @@ export enum EnumEnum {
   GenTypeEnum = 'GenTypeEnum',
   SqlConditionEnum = 'SqlConditionEnum',
   SuperClassEnum = 'SuperClassEnum',
+  ComponentEnum = 'ComponentEnum',
 }
 export enum DictEnum {
   // 全局
