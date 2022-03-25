@@ -5,8 +5,12 @@ import { EnumEnum } from '/@/enums/commonEnum';
 import { FormSchemaExt } from '/@/api/lamp/common/formValidateService';
 import { query } from '/@/api/devOperation/tenant/datasourceConfig';
 import { GenTypeEnum, PopupTypeEnum, TplEnum } from '/@/enums/biz/tenant';
+import { lowerFirst } from 'lodash-es';
+import { useMessage } from '/@/hooks/web/useMessage';
+import { FormActionType } from '/@/components/Form';
 
 const { t } = useI18n();
+const { createMessage } = useMessage();
 // 列表页字段
 export const columns = (): BasicColumn[] => {
   return [
@@ -128,6 +132,32 @@ export const importSearchFormSchema = (dsChange: Fn, setFieldsValue): FormSchema
       colProps: { span: 6 },
     },
   ];
+};
+
+const getAuthCode = (formActionType: FormActionType, value: string, type: string) => {
+  const { getFieldsValue, setFieldsValue } = formActionType;
+  if (!value) {
+    const plusApplicationName = getFieldsValue().plusApplicationName;
+    const plusModuleName = getFieldsValue().plusModuleName;
+    const entityName = lowerFirst(getFieldsValue().entityName);
+    if (!plusApplicationName) {
+      createMessage.warn('请先填写【前端应用名】');
+      return;
+    }
+    if (!plusModuleName) {
+      createMessage.warn('请先填写【前端模块名】');
+      return;
+    }
+    if (!entityName) {
+      createMessage.warn('请先填写【实体名称】');
+      return;
+    }
+    const auth = `${plusApplicationName}:${plusModuleName}:${entityName}:${type}`;
+    const field = `${type}Auth`;
+    setFieldsValue({ [field]: auth });
+  } else {
+    createMessage.warn('无法生成！若您仍要采用系统规则生成，请先删除已输入的内容');
+  }
 };
 
 // 编辑页字段
@@ -518,9 +548,6 @@ export const baseEditFormSchema = (updateSchemaFn: Fn): FormSchema[] => {
       ifShow: ({ values }) => {
         return values.genType === GenTypeEnum.GEN;
       },
-      // required: ({ model }) => {
-      //   return model.genType === GenTypeEnum.GEN;
-      // },
     },
     {
       label: '前端生成路径',
@@ -529,9 +556,6 @@ export const baseEditFormSchema = (updateSchemaFn: Fn): FormSchema[] => {
       ifShow: ({ values }) => {
         return values.genType === GenTypeEnum.GEN;
       },
-      // required: ({ model }) => {
-      //   return model.genType === GenTypeEnum.GEN;
-      // },
     },
     {
       field: 'divider-selects3',
@@ -607,33 +631,81 @@ export const baseEditFormSchema = (updateSchemaFn: Fn): FormSchema[] => {
     {
       label: '新增按钮权限',
       field: 'addAuth',
-      component: 'Input',
+      component: 'InputSearch',
       colProps: {
         span: 12,
+      },
+      helpMessage: [
+        '文本框为空时，方可点击"生成"按钮，按系统建议的规则生成权限编码',
+        '系统规则：{前端应用名}:{前端模块名}:{实体名称}:add',
+      ],
+      componentProps: ({ formActionType }) => {
+        return {
+          enterButton: '生成',
+          onSearch: (value: string) => {
+            return getAuthCode(formActionType, value, 'add');
+          },
+        };
       },
     },
     {
       label: '编辑按钮权限',
       field: 'editAuth',
-      component: 'Input',
+      component: 'InputSearch',
       colProps: {
         span: 12,
+      },
+      helpMessage: [
+        '文本框为空时，方可点击"生成"按钮，按系统建议的规则生成权限编码',
+        '系统规则：{前端应用名}:{前端模块名}:{实体名称}:edit',
+      ],
+      componentProps: ({ formActionType }) => {
+        return {
+          enterButton: '生成',
+          onSearch: (value: string) => {
+            return getAuthCode(formActionType, value, 'edit');
+          },
+        };
       },
     },
     {
       label: '删除按钮权限',
       field: 'deleteAuth',
-      component: 'Input',
+      component: 'InputSearch',
       colProps: {
         span: 12,
+      },
+      helpMessage: [
+        '文本框为空时，方可点击"生成"按钮，按系统建议的规则生成权限编码',
+        '系统规则：{前端应用名}:{前端模块名}:{实体名称}:delete',
+      ],
+      componentProps: ({ formActionType }) => {
+        return {
+          enterButton: '生成',
+          onSearch: (value: string) => {
+            return getAuthCode(formActionType, value, 'delete');
+          },
+        };
       },
     },
     {
       label: '复制按钮权限',
       field: 'copyAuth',
-      component: 'Input',
+      component: 'InputSearch',
       colProps: {
         span: 12,
+      },
+      helpMessage: [
+        '文本框为空时，方可点击"生成"按钮，按系统建议的规则生成权限编码',
+        '系统规则：{前端应用名}:{前端模块名}:{实体名称}:copy',
+      ],
+      componentProps: ({ formActionType }) => {
+        return {
+          enterButton: '生成',
+          onSearch: (value: string) => {
+            return getAuthCode(formActionType, value, 'copy');
+          },
+        };
       },
     },
     {
@@ -747,6 +819,12 @@ export const columnColumns = (): BasicColumn[] => {
       title: t('devOperation.developer.defGenTableColumn.type'),
       dataIndex: 'type',
       // width: 180,
+    },
+    {
+      title: t('devOperation.developer.defGenTableColumn.javaType'),
+      dataIndex: 'javaType',
+      // width: 180,
+      editRow: true,
       editComponent: 'AutoComplete',
       editComponentProps: {
         allowClear: true,
@@ -768,12 +846,6 @@ export const columnColumns = (): BasicColumn[] => {
       },
     },
     {
-      title: t('devOperation.developer.defGenTableColumn.javaType'),
-      dataIndex: 'javaType',
-      // width: 180,
-      editRow: true,
-    },
-    {
       title: t('devOperation.developer.defGenTableColumn.javaField'),
       dataIndex: 'javaField',
       // width: 180,
@@ -784,6 +856,24 @@ export const columnColumns = (): BasicColumn[] => {
       dataIndex: 'tsType',
       // width: 180,
       editRow: true,
+      editComponent: 'AutoComplete',
+      editComponentProps: {
+        allowClear: true,
+        getPopupContainer: () => document.body,
+        filterOption: (input: string, option) => {
+          return option.value.toUpperCase().indexOf(input.toUpperCase()) >= 0;
+        },
+        options: [
+          { value: 'string' },
+          { value: 'number' },
+          { value: 'boolean' },
+          { value: 'string[]' },
+          { value: 'number[]' },
+          { value: 'any' },
+          { value: 'tuple' },
+          { value: 'enum' },
+        ],
+      },
     },
     {
       title: t('devOperation.developer.defGenTableColumn.size'),
@@ -833,6 +923,20 @@ export const columnColumns = (): BasicColumn[] => {
       dataIndex: 'fill',
       // width: 180,
       editRow: true,
+      editComponent: 'AutoComplete',
+      editComponentProps: {
+        allowClear: true,
+        getPopupContainer: () => document.body,
+        filterOption: (input: string, option) => {
+          return option.value.toUpperCase().indexOf(input.toUpperCase()) >= 0;
+        },
+        options: [
+          { value: 'DEFAULT' },
+          { value: 'INSERT' },
+          { value: 'UPDATE' },
+          { value: 'INSERT_UPDATE' },
+        ],
+      },
     },
     {
       title: t('devOperation.developer.defGenTableColumn.isEdit'),
@@ -867,6 +971,22 @@ export const columnColumns = (): BasicColumn[] => {
       dataIndex: 'queryType',
       // width: 180,
       editRow: true,
+      editComponent: 'AutoComplete',
+      editComponentProps: {
+        allowClear: true,
+        getPopupContainer: () => document.body,
+        filterOption: (input: string, option) => {
+          return option.value.toUpperCase().indexOf(input.toUpperCase()) >= 0;
+        },
+        options: [
+          { value: 'EQUAL' },
+          { value: 'NOT_EQUAL' },
+          { value: 'LIKE' },
+          { value: 'ORACLE_LIKE' },
+          { value: 'LIKE_LEFT' },
+          { value: 'LIKE_RIGHT' },
+        ],
+      },
     },
     {
       title: t('devOperation.developer.defGenTableColumn.component'),

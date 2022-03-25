@@ -8,7 +8,7 @@
         :background="background"
         :tip="tip"
       />
-      <Tabs defaultActiveKey="field" @change="changeTabs">
+      <Tabs @change="changeTabs" v-model:activeKey="activeKey">
         <TabPane tab="生成信息" key="basic">
           <BasicForm @register="registerBasicForm" />
         </TabPane>
@@ -30,7 +30,9 @@
           </BasicTable>
         </TabPane>
         <template #rightExtra>
-          <a-button type="primary" @click="handleSubmit">保存</a-button>
+          <a-button type="primary" v-if="activeKey === 'basic'" @click="handleSubmit"
+            >保存</a-button
+          >
         </template>
       </Tabs>
     </div>
@@ -69,7 +71,7 @@
   import { GenTypeEnum } from '/@/enums/biz/tenant';
 
   export default defineComponent({
-    name: 'DefGenTableEdit',
+    name: '修改生成配置',
     components: {
       BasicForm,
       PageWrapper,
@@ -85,6 +87,7 @@
       const { currentRoute } = useRouter();
       const currentEditKeyRef = ref('');
       const tableId = ref<string>('');
+      const activeKey = ref<string>('field');
       const compState = reactive({
         absolute: false,
         loading: false,
@@ -195,7 +198,7 @@
         try {
           setLoading(true);
           await load(routeQuery.id as string);
-          // changeTabs('sss');
+          // changeTabs('field');
         } finally {
           setLoading(false);
         }
@@ -219,7 +222,8 @@
         }
       }
 
-      async function changeTabs(key: string) {
+      async function changeTabs(key: 'basic' | 'field') {
+        console.log('changeTabs');
         try {
           setLoading(true);
           if (key === 'field') {
@@ -279,7 +283,6 @@
               });
             }
             getValidateRules(validateApi, customRules).then(async (rules) => {
-              console.log(rules);
               rules && rules.length > 0 && (await updateSchema(rules));
             });
           }
@@ -339,6 +342,7 @@
         handleEdit,
         handleSync,
         createActions,
+        activeKey,
         ...toRefs(compState),
       };
     },
