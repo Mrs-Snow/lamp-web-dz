@@ -4,6 +4,7 @@ export type ComponentType =
   | 'Select'
   | 'ApiSelect'
   | 'ApiTreeSelect'
+  | 'AutoComplete'
   | 'Checkbox'
   | 'Switch'
   | 'DatePicker'
