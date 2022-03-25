@@ -214,11 +214,44 @@ export const baseEditFormSchema = (updateSchemaFn: Fn): FormSchema[] => {
       field: 'divider-selects2',
       component: 'Divider',
       label: '生成信息',
+      helpMessage: [
+        '生成的后端文件位于： [{输出路径}/]{全局配置.项目前缀}-{服务名}-{全局配置.服务后缀}/src/main/java/{父包名}/{模块名}[/{全局配置.PackageInfoConfig}]/{子包名}/',
+        '[]: 表示可选项; {}: 表示占位符 ; 全局配置: 表示在后台yml或常量中配置',
+        '全局配置.项目前缀: 后端yml配置： generator.projectPrefix',
+        '全局配置.服务后缀: 后端代码常量： GenCodeConstant.XXX_SERVICE_SUFFIX',
+        '全局配置.PackageInfoConfig: 后端yml配置: generator.packageInfoConfig.xxx',
+      ],
     },
     {
       label: '服务名',
       field: 'serviceName',
-      component: 'Input',
+      component: 'AutoComplete',
+      componentProps: ({ formActionType }) => {
+        return {
+          allowClear: true,
+          getPopupContainer: () => document.body,
+          filterOption: (input: string, option) => {
+            return option.value.toUpperCase().indexOf(input.toUpperCase()) >= 0;
+          },
+          options: [
+            { value: 'base' },
+            { value: 'system' },
+            { value: 'gateway' },
+            { value: 'generator' },
+            { value: 'oauth' },
+          ],
+          onChange: (value: string) => {
+            if (value) {
+              const { setFieldsValue, getFieldsValue } = formActionType;
+              if (!getFieldsValue().moduleName) {
+                setFieldsValue({
+                  moduleName: value,
+                });
+              }
+            }
+          },
+        };
+      },
       helpMessage: [
         '1. 确保前端ServicePrefixEnum中的枚举值KEY 与 后端”服务名“和lamp-gateway-server.yml中“uri”保持一致',
         '2. 确保前端ServicePrefixEnum中的枚举值VALUE 与 后端lamp-gateway-server.yml中“predicates”配置一致',
@@ -244,18 +277,35 @@ export const baseEditFormSchema = (updateSchemaFn: Fn): FormSchema[] => {
     {
       label: '模块名',
       field: 'moduleName',
-      component: 'Input',
+      component: 'AutoComplete',
+      componentProps: () => {
+        return {
+          allowClear: true,
+          getPopupContainer: () => document.body,
+          filterOption: (input: string, option) => {
+            return option.value.toUpperCase().indexOf(input.toUpperCase()) >= 0;
+          },
+          options: [
+            { value: 'base' },
+            { value: 'system' },
+            { value: 'gateway' },
+            { value: 'generator' },
+            { value: 'oauth' },
+          ],
+        };
+      },
       colProps: {
         span: 12,
       },
       helpMessage: [
+        '建议跟{服务名一致}保持一致',
         '如："top.tangyh.lamp.base.dao.common" 中的 "base" ',
         '如："top.tangyh.lamp.file.dao" 中的 "file" ',
       ],
     },
     {
-      label: '子模块名称',
-      field: 'childModuleName',
+      label: '子包名',
+      field: 'childPackageName',
       component: 'Input',
       colProps: {
         span: 12,
@@ -266,6 +316,30 @@ export const baseEditFormSchema = (updateSchemaFn: Fn): FormSchema[] => {
       ],
     },
     {
+      label: '实体父类',
+      field: 'entitySuperClass',
+      component: 'ApiSelect',
+      componentProps: {
+        ...enumComponentProps(EnumEnum.EntitySuperClassEnum),
+      },
+      colProps: {
+        span: 12,
+      },
+      helpMessage: ['实体类需要继承谁？'],
+    },
+    {
+      label: '父类',
+      field: 'superClass',
+      component: 'ApiSelect',
+      componentProps: {
+        ...enumComponentProps(EnumEnum.SuperClassEnum),
+      },
+      colProps: {
+        span: 12,
+      },
+      helpMessage: ['非实体类需要继承谁？'],
+    },
+    {
       label: '@DS',
       field: 'isDs',
       component: 'RadioGroup',
@@ -273,19 +347,31 @@ export const baseEditFormSchema = (updateSchemaFn: Fn): FormSchema[] => {
         ...yesNoComponentProps(),
         onChange: (e) => {
           if (e.target.value) {
-            updateSchemaFn({
-              field: 'isDs',
-              colProps: {
-                span: 12,
+            updateSchemaFn([
+              {
+                field: 'dsValue',
+                required: true,
               },
-            });
+              {
+                field: 'isDs',
+                colProps: {
+                  span: 12,
+                },
+              },
+            ]);
           } else {
-            updateSchemaFn({
-              field: 'isDs',
-              colProps: {
-                span: 24,
+            updateSchemaFn([
+              {
+                field: 'dsValue',
+                required: false,
               },
-            });
+              {
+                field: 'isDs',
+                colProps: {
+                  span: 24,
+                },
+              },
+            ]);
           }
         },
       },
@@ -296,11 +382,26 @@ export const baseEditFormSchema = (updateSchemaFn: Fn): FormSchema[] => {
     },
     {
       label: '数据源',
-      field: 'dsName',
-      component: 'Input',
+      field: 'dsValue',
       colProps: {
         span: 12,
       },
+      component: 'AutoComplete',
+      componentProps: () => {
+        return {
+          allowClear: true,
+          getPopupContainer: () => document.body,
+          filterOption: (input: string, option) => {
+            return option.value.toUpperCase().indexOf(input.toUpperCase()) >= 0;
+          },
+          options: [
+            { value: 'DsConstant.BASE_TENANT' },
+            { value: 'DsConstant.DEFAULTS' },
+            { value: 'DsConstant.EXTEND_TENANT' },
+          ],
+        };
+      },
+      required: false,
       ifShow: ({ values }) => {
         return values.isDs;
       },
@@ -359,6 +460,31 @@ export const baseEditFormSchema = (updateSchemaFn: Fn): FormSchema[] => {
       component: 'ApiRadioGroup',
       componentProps: {
         ...enumComponentProps(EnumEnum.GenTypeEnum),
+        onChange: (value: string) => {
+          if (GenTypeEnum.GEN === value) {
+            updateSchemaFn([
+              {
+                field: 'outputDir',
+                required: true,
+              },
+              {
+                field: 'frontOutputDir',
+                required: true,
+              },
+            ]);
+          } else {
+            updateSchemaFn([
+              {
+                field: 'outputDir',
+                required: false,
+              },
+              {
+                field: 'frontOutputDir',
+                required: false,
+              },
+            ]);
+          }
+        },
       },
       colProps: {
         span: 12,
@@ -369,36 +495,89 @@ export const baseEditFormSchema = (updateSchemaFn: Fn): FormSchema[] => {
         '直接生成时，一定要确保lamp-generator服务在本地启动，否则无法生成到开发者的开发电脑',
       ],
     },
+    // {
+    //   label: '打开输出目录',
+    //   field: 'open',
+    //   component: 'RadioGroup',
+    //   componentProps: {
+    //     ...yesNoComponentProps(),
+    //   },
+    //   defaultValue: false,
+    //   colProps: {
+    //     span: 12,
+    //   },
+    //   ifShow: ({ values }) => {
+    //     return values.genType === GenTypeEnum.GEN;
+    //   },
+    //   helpMessage: ['生成完毕后，是否自动打开目录'],
+    // },
     {
-      label: '打开输出目录',
-      field: 'open',
-      component: 'RadioGroup',
-      componentProps: {
-        ...yesNoComponentProps(),
-      },
-      defaultValue: false,
-      colProps: {
-        span: 12,
-      },
-      ifShow: ({ values }) => {
-        return values.genType === GenTypeEnum.GEN;
-      },
-      helpMessage: ['生成完毕后，是否自动打开目录'],
-    },
-    {
-      label: '输出路径',
+      label: '后端生成路径',
       field: 'outputDir',
       component: 'Input',
       ifShow: ({ values }) => {
         return values.genType === GenTypeEnum.GEN;
       },
+      // required: ({ model }) => {
+      //   return model.genType === GenTypeEnum.GEN;
+      // },
     },
-
+    {
+      label: '前端生成路径',
+      field: 'frontOutputDir',
+      component: 'Input',
+      ifShow: ({ values }) => {
+        return values.genType === GenTypeEnum.GEN;
+      },
+      // required: ({ model }) => {
+      //   return model.genType === GenTypeEnum.GEN;
+      // },
+    },
     {
       field: 'divider-selects3',
       component: 'Divider',
       label: '前端信息',
     },
+    {
+      label: '前端应用名',
+      field: 'plusApplicationName',
+      component: 'AutoComplete',
+      componentProps: () => {
+        return {
+          allowClear: true,
+          getPopupContainer: () => document.body,
+          filterOption: (input: string, option) => {
+            return option.value.toUpperCase().indexOf(input.toUpperCase()) >= 0;
+          },
+          options: [{ value: 'devOperation' }, { value: 'basic' }],
+        };
+      },
+      colProps: {
+        span: 12,
+      },
+      helpMessage: [
+        '1. src/views/ 目录下的 basic 或 devOperation 或 其他 ',
+        '2. src/api/ 目录下的 basic 或 devOperation 或 其他 ',
+        '3. src/locales/lang/{语言}/ 目录下的 basic 或 devOperation 或 其他 ',
+        '4. 其他 表示其他应用',
+      ],
+    },
+    {
+      label: '前端模块名',
+      field: 'plusModuleName',
+      component: 'Input',
+      colProps: {
+        span: 12,
+      },
+      helpMessage: [
+        '1. src/api/{前端应用名} 目录下的文件夹名',
+        '2. src/views/{前端应用名} 目录下的文件夹名',
+        '3. src/locales/lang/{语言}/{前端应用名} 目录下的文件夹名',
+        '如：src/views/devOperation/ 下的 application、developer 等目录',
+        '如：src/api/devOperation/ 下的 application、developer 等目录',
+      ],
+    },
+
     {
       label: '弹窗方式',
       field: 'popupType',
@@ -505,11 +684,32 @@ export const baseEditFormSchema = (updateSchemaFn: Fn): FormSchema[] => {
         span: 12,
       },
     },
-
+    {
+      label: '显示详情按钮',
+      field: 'viewShow',
+      component: 'RadioGroup',
+      componentProps: {
+        ...yesNoComponentProps(),
+      },
+      defaultValue: true,
+      colProps: {
+        span: 12,
+      },
+    },
     {
       label: '上级菜单',
       field: 'parentId',
       component: 'Input',
+      helpMessage: ['当前功能生成后，显示在左侧菜单的位置'],
+      colProps: {
+        span: 12,
+      },
+    },
+    {
+      label: '当前菜单名',
+      field: 'menuName',
+      component: 'Input',
+      helpMessage: ['当前功能生成后，显示在左侧的菜单名'],
       colProps: {
         span: 12,
       },
@@ -517,11 +717,203 @@ export const baseEditFormSchema = (updateSchemaFn: Fn): FormSchema[] => {
   ];
 };
 
-export const globalEditFormSchema = (): FormSchema[] => {
+// 前端自定义表单验证规则
+export const customFormSchemaRules = (
+  _getFieldsValue: () => Recordable,
+): Partial<FormSchemaExt>[] => {
   return [];
 };
 
-// 前端自定义表单验证规则
-export const customFormSchemaRules = (_): Partial<FormSchemaExt>[] => {
-  return [];
+export const columnColumns = (): BasicColumn[] => {
+  return [
+    {
+      title: t('devOperation.developer.defGenTableColumn.name'),
+      dataIndex: 'name',
+      // width: 180,
+    },
+    {
+      title: t('devOperation.developer.defGenTableColumn.comment'),
+      dataIndex: 'comment',
+      // width: 180,
+      editRow: true,
+    },
+    {
+      title: t('devOperation.developer.defGenTableColumn.swaggerComment'),
+      dataIndex: 'swaggerComment',
+      // width: 180,
+      editRow: true,
+    },
+    {
+      title: t('devOperation.developer.defGenTableColumn.type'),
+      dataIndex: 'type',
+      // width: 180,
+    },
+    {
+      title: t('devOperation.developer.defGenTableColumn.javaType'),
+      dataIndex: 'javaType',
+      // width: 180,
+      editRow: true,
+    },
+    {
+      title: t('devOperation.developer.defGenTableColumn.javaField'),
+      dataIndex: 'javaField',
+      // width: 180,
+      editRow: true,
+    },
+    {
+      title: t('devOperation.developer.defGenTableColumn.tsType'),
+      dataIndex: 'tsType',
+      // width: 180,
+      editRow: true,
+    },
+    {
+      title: t('devOperation.developer.defGenTableColumn.size'),
+      dataIndex: 'size',
+      // width: 180,
+      editRow: true,
+    },
+    {
+      title: t('devOperation.developer.defGenTableColumn.isPk'),
+      dataIndex: 'isPk',
+      // width: 180,
+      editRow: true,
+    },
+    {
+      title: t('devOperation.developer.defGenTableColumn.isRequired'),
+      dataIndex: 'isRequired',
+      // width: 180,
+      editRow: true,
+    },
+
+    {
+      title: t('devOperation.developer.defGenTableColumn.isLogicDeleteField'),
+      dataIndex: 'isLogicDeleteField',
+      // width: 180,
+      editRow: true,
+    },
+    {
+      title: t('devOperation.developer.defGenTableColumn.isVersionField'),
+      dataIndex: 'isVersionField',
+      // width: 180,
+      editRow: true,
+    },
+    {
+      title: t('devOperation.developer.defGenTableColumn.isIncrement'),
+      dataIndex: 'isIncrement',
+      editRow: true,
+      // width: 180,
+    },
+    {
+      title: t('devOperation.developer.defGenTableColumn.fill'),
+      dataIndex: 'fill',
+      // width: 180,
+      editRow: true,
+    },
+    {
+      title: t('devOperation.developer.defGenTableColumn.isEdit'),
+      dataIndex: 'isEdit',
+      // width: 180,
+      editRow: true,
+    },
+    {
+      title: t('devOperation.developer.defGenTableColumn.isList'),
+      dataIndex: 'isList',
+      // width: 180,
+      editRow: true,
+    },
+    {
+      title: t('devOperation.developer.defGenTableColumn.isQuery'),
+      dataIndex: 'isQuery',
+      // width: 180,
+      editRow: true,
+    },
+    {
+      title: t('devOperation.developer.defGenTableColumn.width'),
+      dataIndex: 'width',
+      // width: 180,
+      editRow: true,
+    },
+    {
+      title: t('devOperation.developer.defGenTableColumn.queryType'),
+      dataIndex: 'queryType',
+      // width: 180,
+      editRow: true,
+    },
+    {
+      title: t('devOperation.developer.defGenTableColumn.component'),
+      dataIndex: 'component',
+      // width: 180,
+      editRow: true,
+    },
+    {
+      title: t('devOperation.developer.defGenTableColumn.dictType'),
+      dataIndex: 'dictType',
+      // width: 180,
+      editRow: true,
+    },
+    {
+      title: t('devOperation.developer.defGenTableColumn.echoStr'),
+      dataIndex: 'echoStr',
+      // width: 180,
+      editRow: true,
+    },
+    {
+      title: t('devOperation.developer.defGenTableColumn.enumStr'),
+      dataIndex: 'enumStr',
+      // width: 180,
+      editRow: true,
+    },
+    {
+      title: t('devOperation.developer.defGenTableColumn.editDefValue'),
+      dataIndex: 'editDefValue',
+      // width: 180,
+      editRow: true,
+    },
+    {
+      title: t('devOperation.developer.defGenTableColumn.editHelpMessage'),
+      dataIndex: 'editHelpMessage',
+      // width: 180,
+      editRow: true,
+    },
+    {
+      title: t('devOperation.developer.defGenTableColumn.indexHelpMessage'),
+      dataIndex: 'indexHelpMessage',
+      // width: 180,
+      editRow: true,
+    },
+    {
+      title: t('devOperation.developer.defGenTableColumn.sortValue'),
+      dataIndex: 'sortValue',
+      // width: 180,
+    },
+    {
+      title: t('lamp.common.createdTime'),
+      dataIndex: 'createdTime',
+      sorter: true,
+      width: 180,
+    },
+  ];
+};
+
+export const searchColumnFormSchema = (): FormSchema[] => {
+  return [
+    {
+      field: 'name',
+      label: t('devOperation.developer.defGenTableColumn.name'),
+      component: 'Input',
+      colProps: { span: 6 },
+    },
+    {
+      field: 'comment',
+      label: t('devOperation.developer.defGenTableColumn.comment'),
+      component: 'Input',
+      colProps: { span: 6 },
+    },
+    {
+      field: 'createTimeRange',
+      label: t('lamp.common.createdTime'),
+      component: 'RangePicker',
+      colProps: { span: 6 },
+    },
+  ];
 };

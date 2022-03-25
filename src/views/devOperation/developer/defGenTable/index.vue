@@ -153,7 +153,11 @@
           createMessage.success(t('common.tips.downloadSuccess'));
         } else {
           await generatorCode(ids, template);
-          createMessage.success('代码生成成功，请在' + record.outputDir + '查看');
+          if (template === TemplateEnum.BACKEND) {
+            createMessage.success('代码生成成功，请在' + record.outputDir + '查看');
+          } else {
+            createMessage.success('代码生成成功，请在' + record.frontOutputDir + '查看');
+          }
         }
       }
 

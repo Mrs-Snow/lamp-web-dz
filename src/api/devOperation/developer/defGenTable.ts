@@ -22,7 +22,6 @@ export const Api = {
     url: `${ServicePrefixEnum.GENERATOR}/${MODULAR}/selectTableList`,
     method: RequestEnum.POST,
   } as AxiosRequestConfig,
-
   Update: {
     url: `${ServicePrefixEnum.GENERATOR}/${MODULAR}`,
     method: RequestEnum.PUT,
