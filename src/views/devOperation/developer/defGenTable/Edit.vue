@@ -98,6 +98,7 @@
 
       const [registerBasicForm, { validate, getFieldsValue, setFieldsValue, updateSchema }] =
         useForm({
+          name: 'basic',
           labelWidth: 140,
           schemas: baseEditFormSchema((data) => {
             updateSchema(data);

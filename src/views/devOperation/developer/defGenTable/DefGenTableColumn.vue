@@ -55,6 +55,7 @@
         api: page,
         columns: columnColumns(),
         formConfig: {
+          name: 'column_search',
           labelWidth: 120,
           schemas: searchColumnFormSchema(),
           autoSubmitOnEnter: true,
