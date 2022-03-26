@@ -808,12 +808,14 @@ export const columnColumns = (): BasicColumn[] => {
       dataIndex: 'comment',
       // width: 180,
       editRow: true,
+      editRule: true,
     },
     {
       title: t('devOperation.developer.defGenTableColumn.swaggerComment'),
       dataIndex: 'swaggerComment',
       // width: 180,
       editRow: true,
+      editRule: true,
     },
     {
       title: t('devOperation.developer.defGenTableColumn.type'),
@@ -825,6 +827,7 @@ export const columnColumns = (): BasicColumn[] => {
       dataIndex: 'javaType',
       // width: 180,
       editRow: true,
+      editRule: true,
       editComponent: 'AutoComplete',
       editComponentProps: {
         allowClear: true,
@@ -848,6 +851,7 @@ export const columnColumns = (): BasicColumn[] => {
     {
       title: t('devOperation.developer.defGenTableColumn.javaField'),
       dataIndex: 'javaField',
+      editRule: true,
       // width: 180,
       editRow: true,
     },
@@ -856,6 +860,7 @@ export const columnColumns = (): BasicColumn[] => {
       dataIndex: 'tsType',
       // width: 180,
       editRow: true,
+      editRule: true,
       editComponent: 'AutoComplete',
       editComponentProps: {
         allowClear: true,

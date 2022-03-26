@@ -318,28 +318,25 @@
       async function handleSave(record: EditRecordRow, e: Event) {
         e?.stopPropagation();
         // 校验
-        const hide = createMessage.loading({ content: '正在保存...', duration: 0, key: 'saving' });
+        createMessage.loading({ content: '正在保存...', duration: 0, key: 'saving' });
+
         const valid = await record.onValid?.();
-        try {
-          if (valid) {
-            const data = cloneDeep(record.editValueRefs) as unknown as DefGenTableColumnUpdateVO;
-            console.log(data);
-            const params = { ...unref(record), ...data };
-            console.log(params);
+        if (valid) {
+          const data = cloneDeep(record.editValueRefs) as unknown as DefGenTableColumnUpdateVO;
+          console.log(data);
+          const params = { ...unref(record), ...data };
+          console.log(params);
 
-            await updateColumn(params);
+          await updateColumn(params);
 
-            // 保存之后提交编辑状态
-            const pass = await record.onEdit?.(false, true);
-            if (pass) {
-              currentEditKeyRef.value = '';
-            }
-            createMessage.success({ content: '数据已保存', key: 'saving' });
-          } else {
-            createMessage.error({ content: '请填写正确的数据', key: 'saving' });
+          // 保存之后提交编辑状态
+          const pass = await record.onEdit?.(false, true);
+          if (pass) {
+            currentEditKeyRef.value = '';
           }
-        } finally {
-          hide();
+          createMessage.success({ content: '数据已保存', key: 'saving' });
+        } else {
+          createMessage.error({ content: '请填写正确的数据', key: 'saving' });
         }
       }
 
