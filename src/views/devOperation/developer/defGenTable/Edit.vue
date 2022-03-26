@@ -1,24 +1,24 @@
 <template>
-  <PageWrapper dense contentClass="flex">
+  <PageWrapper contentClass="flex" dense>
     <div class="m-4 p-4 overflow-hidden bg-white">
       <Loading
-        :loading="loading"
         :absolute="absolute"
-        :theme="theme"
         :background="background"
+        :loading="loading"
+        :theme="theme"
         :tip="tip"
       />
-      <Tabs @change="changeTabs" v-model:activeKey="activeKey">
-        <TabPane tab="生成信息" key="basic">
+      <Tabs v-model:activeKey="activeKey" @change="changeTabs">
+        <TabPane key="basic" tab="生成信息">
           <BasicForm @register="registerBasicForm" />
         </TabPane>
-        <TabPane tab="配置信息" key="field">
+        <TabPane key="field" tab="配置信息">
           <BasicTable @register="registerTable">
             <template #toolbar>
               <a-button
-                type="primary"
                 color="error"
                 preIcon="ant-design:delete-outlined"
+                type="primary"
                 @click="handleBatchDelete"
               >
                 {{ t('common.title.delete') }}
@@ -30,9 +30,9 @@
           </BasicTable>
         </TabPane>
         <template #rightExtra>
-          <a-button type="primary" v-if="activeKey === 'basic'" @click="handleSubmit"
-            >保存</a-button
-          >
+          <a-button v-if="activeKey === 'basic'" type="primary" @click="handleSubmit"
+            >保存
+          </a-button>
         </template>
       </Tabs>
     </div>
@@ -45,7 +45,6 @@
   import { BasicForm, useForm } from '/@/components/Form/index';
   import {
     ActionItem,
-    BasicColumn,
     BasicTable,
     EditRecordRow,
     TableAction,
@@ -60,7 +59,12 @@
   import { ActionEnum, VALIDATE_API } from '/@/enums/commonEnum';
   import { getValidateRules, RuleType } from '/@/api/lamp/common/formValidateService';
   import { Api, detail, update } from '/@/api/devOperation/developer/defGenTable';
-  import { page, update as updateColumn } from '/@/api/devOperation/developer/defGenTableColumn';
+  import {
+    page,
+    remove,
+    syncField,
+    update as updateColumn,
+  } from '/@/api/devOperation/developer/defGenTableColumn';
   import {
     baseEditFormSchema,
     columnColumns,
@@ -71,7 +75,7 @@
   import { GenTypeEnum } from '/@/enums/biz/tenant';
 
   export default defineComponent({
-    name: '修改生成配置',
+    name: '修改代码配置',
     components: {
       BasicForm,
       PageWrapper,
@@ -88,6 +92,10 @@
       const currentEditKeyRef = ref('');
       const tableId = ref<string>('');
       const activeKey = ref<string>('field');
+      const cache = {
+        field: false,
+        basic: false,
+      };
       const compState = reactive({
         absolute: false,
         loading: false,
@@ -149,7 +157,7 @@
         },
       });
 
-      function createActions(record: EditRecordRow, column: BasicColumn): ActionItem[] {
+      function createActions(record: EditRecordRow): ActionItem[] {
         if (!record.editable) {
           return [
             {
@@ -158,35 +166,35 @@
               disabled: currentEditKeyRef.value ? currentEditKeyRef.value !== record.key : false,
               onClick: handleEdit.bind(null, record),
             },
+            {
+              tooltip: t('common.title.delete'),
+              icon: 'ant-design:delete-outlined',
+              color: 'error',
+              popConfirm: {
+                title: t('common.tips.confirmDelete'),
+                confirm: handleDelete.bind(null, record),
+              },
+            },
+            {
+              tooltip: '同步',
+              icon: 'ant-design:cloud-sync-outlined',
+              popConfirm: {
+                title: '同步字段会重新读取数据库中字段信息，覆盖已修改的配置，确定同步该字段吗？',
+                confirm: handleSync.bind(null, record),
+              },
+            },
           ];
         }
         return [
           {
             label: '保存',
-            onClick: handleSave.bind(null, record, column),
+            onClick: handleSave.bind(null, record),
           },
           {
             label: '取消',
             popConfirm: {
               title: '是否取消编辑',
-              confirm: handleCancel.bind(null, record, column),
-            },
-          },
-          {
-            tooltip: t('common.title.delete'),
-            icon: 'ant-design:delete-outlined',
-            color: 'error',
-            popConfirm: {
-              title: t('common.tips.confirmDelete'),
-              confirm: handleDelete.bind(null, record),
-            },
-          },
-          {
-            tooltip: '同步',
-            icon: 'ant-design:cloud-sync-outlined',
-            popConfirm: {
-              title: '确定同步该表的字段吗？',
-              confirm: handleSync.bind(null, record),
+              confirm: handleCancel.bind(null, record),
             },
           },
         ];
@@ -223,87 +231,103 @@
       }
 
       async function changeTabs(key: 'basic' | 'field') {
-        console.log('changeTabs');
-        try {
-          setLoading(true);
-          if (key === 'field') {
-            reload();
-          } else {
-            const record = await detail(tableId.value);
-            setFieldsValue(record);
+        if (!cache[key]) {
+          try {
+            setLoading(true);
+            if (key === 'field') {
+              reload();
+            } else {
+              const record = await detail(tableId.value);
+              setFieldsValue(record);
 
-            let validateApi = Api[VALIDATE_API[ActionEnum.EDIT]];
-            const customRules = customFormSchemaRules(getFieldsValue);
-            if (record.isDs) {
-              customRules.push({
-                field: 'dsValue',
-                type: RuleType.append,
-                rules: [{ required: true }],
-              });
-              updateSchema({
-                field: 'isDs',
-                colProps: {
-                  span: 12,
-                },
-              });
-            } else {
-              customRules.push({
-                field: 'dsValue',
-                type: RuleType.append,
-                rules: [{ required: false }],
-              });
-              updateSchema({
-                field: 'isDs',
-                colProps: {
-                  span: 24,
-                },
+              let validateApi = Api[VALIDATE_API[ActionEnum.EDIT]];
+              const customRules = customFormSchemaRules(getFieldsValue);
+              if (record.isDs) {
+                customRules.push({
+                  field: 'dsValue',
+                  type: RuleType.append,
+                  rules: [{ required: true }],
+                });
+                updateSchema({
+                  field: 'isDs',
+                  colProps: {
+                    span: 12,
+                  },
+                });
+              } else {
+                customRules.push({
+                  field: 'dsValue',
+                  type: RuleType.append,
+                  rules: [{ required: false }],
+                });
+                updateSchema({
+                  field: 'isDs',
+                  colProps: {
+                    span: 24,
+                  },
+                });
+              }
+              if (GenTypeEnum.GEN === record.genType) {
+                customRules.push({
+                  field: 'outputDir',
+                  type: RuleType.append,
+                  rules: [{ required: true }],
+                });
+                customRules.push({
+                  field: 'frontOutputDir',
+                  type: RuleType.append,
+                  rules: [{ required: true }],
+                });
+              } else {
+                customRules.push({
+                  field: 'outputDir',
+                  type: RuleType.append,
+                  rules: [{ required: false }],
+                });
+                customRules.push({
+                  field: 'frontOutputDir',
+                  type: RuleType.append,
+                  rules: [{ required: false }],
+                });
+              }
+              getValidateRules(validateApi, customRules).then(async (rules) => {
+                rules && rules.length > 0 && (await updateSchema(rules));
               });
             }
-            if (GenTypeEnum.GEN === record.genType) {
-              customRules.push({
-                field: 'outputDir',
-                type: RuleType.append,
-                rules: [{ required: true }],
-              });
-              customRules.push({
-                field: 'frontOutputDir',
-                type: RuleType.append,
-                rules: [{ required: true }],
-              });
-            } else {
-              customRules.push({
-                field: 'outputDir',
-                type: RuleType.append,
-                rules: [{ required: false }],
-              });
-              customRules.push({
-                field: 'frontOutputDir',
-                type: RuleType.append,
-                rules: [{ required: false }],
-              });
-            }
-            getValidateRules(validateApi, customRules).then(async (rules) => {
-              rules && rules.length > 0 && (await updateSchema(rules));
-            });
+          } finally {
+            cache[key] = true;
+            setLoading(false);
           }
-        } finally {
-          setLoading(false);
         }
       }
 
-      async function handleSync() {}
+      async function handleSync(record: EditRecordRow, e: Event) {
+        e?.stopPropagation();
+        await syncField(record.tableId, record.id);
+        createMessage.success('同步成功');
+        reload();
+      }
 
-      async function handleDelete() {}
+      async function handleDelete(record: EditRecordRow, e: Event) {
+        e?.stopPropagation();
+        await remove(record.id);
+        createMessage.success(t('common.tips.deleteSuccess'));
+        reload();
+      }
 
-      async function handleSave(record: EditRecordRow) {
+      async function handleSave(record: EditRecordRow, e: Event) {
+        e?.stopPropagation();
         // 校验
         const hide = createMessage.loading({ content: '正在保存...', duration: 0, key: 'saving' });
         const valid = await record.onValid?.();
         try {
           if (valid) {
             const data = cloneDeep(record.editValueRefs) as unknown as DefGenTableColumnUpdateVO;
+            console.log(data);
+            const params = { ...unref(record), ...data };
+            console.log(params);
 
-            await updateColumn({ ...unref(record), ...data });
+            await updateColumn(params);
 
             // 保存之后提交编辑状态
             const pass = await record.onEdit?.(false, true);

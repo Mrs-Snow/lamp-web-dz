@@ -1,11 +1,11 @@
 import {
-  DefGenTableColumnUpdateVO,
-  DefGenTableColumnResultVO,
   DefGenTableColumnPageQuery,
+  DefGenTableColumnResultVO,
+  DefGenTableColumnUpdateVO,
 } from './model/defGenTableColumnModel';
 import { PageParams, PageResult } from '/@/api/model/baseModel';
 import { defHttp } from '/@/utils/http/axios';
-import { RequestEnum } from '/@/enums/httpEnum';
+import { ContentTypeEnum, RequestEnum } from '/@/enums/httpEnum';
 import { ServicePrefixEnum } from '/@/enums/commonEnum';
 import type { AxiosRequestConfig } from 'axios';
 
@@ -15,6 +15,11 @@ export const Api = {
   Page: {
     url: `${ServicePrefixEnum.GENERATOR}/${MODULAR}/page`,
     method: RequestEnum.POST,
+  } as AxiosRequestConfig,
+  SyncField: {
+    url: `${ServicePrefixEnum.GENERATOR}/${MODULAR}/syncField`,
+    method: RequestEnum.POST,
+    headers: { 'Content-Type': ContentTypeEnum.FORM_URLENCODED },
   } as AxiosRequestConfig,
   Update: {
     url: `${ServicePrefixEnum.GENERATOR}/${MODULAR}`,
@@ -41,5 +46,8 @@ export const query = (params: DefGenTableColumnPageQuery) =>
 
 export const update = (params: DefGenTableColumnUpdateVO) =>
   defHttp.request<DefGenTableColumnResultVO>({ ...Api.Update, params });
+
+export const syncField = (tableId: string, id: string) =>
+  defHttp.request<DefGenTableColumnResultVO>({ ...Api.SyncField, params: { tableId, id } });
 
 export const remove = (params: string[]) => defHttp.request<boolean>({ ...Api.Delete, params });

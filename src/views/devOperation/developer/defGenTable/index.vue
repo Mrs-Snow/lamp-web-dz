@@ -93,7 +93,7 @@
 
   export default defineComponent({
     // 若需要开启页面缓存，请将此参数跟菜单名保持一致
-    name: 'DefGenTableManagement',
+    name: '代码生成',
     components: { BasicTable, PageWrapper, ImportModal, TableAction, Preview },
     setup() {
       const { t } = useI18n();
@@ -147,7 +147,7 @@
       async function handleDownload(record: Recordable, template: string, e: Event) {
         e?.stopPropagation();
         const ids = [record.id];
-        if (record.genType?.code === GenTypeEnum.ZIP) {
+        if (record.genType === GenTypeEnum.ZIP) {
           const response = await downloadZip(ids, template);
           downloadFile(response);
           createMessage.success(t('common.tips.downloadSuccess'));

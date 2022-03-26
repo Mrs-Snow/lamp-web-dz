@@ -888,6 +888,10 @@ export const columnColumns = (): BasicColumn[] => {
       width: 60,
       editRow: true,
       editComponent: 'Checkbox',
+      key: 'isPk',
+      editValueMap: (value) => {
+        return value ? t('lamp.common.yes') : t('lamp.common.no');
+      },
     },
     {
       title: t('devOperation.developer.defGenTableColumn.isRequired'),
@@ -895,6 +899,16 @@ export const columnColumns = (): BasicColumn[] => {
       width: 60,
       editRow: true,
       editComponent: 'Checkbox',
+      key: 'isRequired',
+      editValueMap: (value) => {
+        return value ? t('lamp.common.yes') : t('lamp.common.no');
+      },
+      editComponentProps: {
+        onChange: (a, b) => {
+          console.log(a);
+          console.log(b);
+        },
+      },
     },
 
     {
@@ -902,6 +916,9 @@ export const columnColumns = (): BasicColumn[] => {
       dataIndex: 'isLogicDeleteField',
       width: 80,
       editRow: true,
+      editValueMap: (value) => {
+        return value ? t('lamp.common.yes') : t('lamp.common.no');
+      },
       editComponent: 'Checkbox',
     },
     {
@@ -909,6 +926,9 @@ export const columnColumns = (): BasicColumn[] => {
       dataIndex: 'isVersionField',
       width: 60,
       editRow: true,
+      editValueMap: (value) => {
+        return value ? t('lamp.common.yes') : t('lamp.common.no');
+      },
       editComponent: 'Checkbox',
     },
     {
@@ -917,6 +937,9 @@ export const columnColumns = (): BasicColumn[] => {
       width: 60,
       editRow: true,
       editComponent: 'Checkbox',
+      editValueMap: (value) => {
+        return value ? t('lamp.common.yes') : t('lamp.common.no');
+      },
     },
     {
       title: t('devOperation.developer.defGenTableColumn.fill'),
@@ -944,6 +967,9 @@ export const columnColumns = (): BasicColumn[] => {
       width: 60,
       editRow: true,
       editComponent: 'Checkbox',
+      editValueMap: (value) => {
+        return value ? t('lamp.common.yes') : t('lamp.common.no');
+      },
     },
     {
       title: t('devOperation.developer.defGenTableColumn.isList'),
@@ -951,6 +977,9 @@ export const columnColumns = (): BasicColumn[] => {
       width: 60,
       editRow: true,
       editComponent: 'Checkbox',
+      editValueMap: (value) => {
+        return value ? t('lamp.common.yes') : t('lamp.common.no');
+      },
     },
     {
       title: t('devOperation.developer.defGenTableColumn.isQuery'),
@@ -958,6 +987,9 @@ export const columnColumns = (): BasicColumn[] => {
       width: 60,
       editRow: true,
       editComponent: 'Checkbox',
+      editValueMap: (value) => {
+        return value ? t('lamp.common.yes') : t('lamp.common.no');
+      },
     },
     {
       title: t('devOperation.developer.defGenTableColumn.width'),
