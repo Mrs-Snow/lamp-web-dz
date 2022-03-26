@@ -154,9 +154,9 @@
         } else {
           await generatorCode(ids, template);
           if (template === TemplateEnum.BACKEND) {
-            createMessage.success('代码生成成功，请在' + record.outputDir + '查看');
+            createMessage.success('后端代码生成成功，请在' + record.outputDir + '查看');
           } else {
-            createMessage.success('代码生成成功，请在' + record.frontOutputDir + '查看');
+            createMessage.success('前端代码生成成功，请在' + record.frontOutputDir + '查看');
           }
         }
       }
@@ -179,8 +179,8 @@
           name: RouteEnum.CODE_GENERATOR_EDIT,
           params: { id: record.id },
           query: {
-            title: '表名：' + record.name,
-            content: '实体类：' + record.name + ' 作者：' + record.author,
+            title: `表名：${record.name}`,
+            content: `实体类：${record.entityName}  作者：${record.author}`,
           },
         });
       }
