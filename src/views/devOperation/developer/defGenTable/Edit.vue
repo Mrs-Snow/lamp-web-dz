@@ -1,5 +1,16 @@
 <template>
-  <div class="m-4 p-4 overflow-hidden bg-white">
+  <PageWrapper :content="content" :title="title" contentBackground>
+    <template #extra>
+      <a-button v-if="activeKey === 'basic'" type="primary" @click="handleSubmit">保存</a-button>
+    </template>
+
+    <template #footer>
+      <Tabs v-model:activeKey="activeKey" @change="changeTabs">
+        <TabPane key="basic" tab="生成信息" />
+        <TabPane key="field" tab="配置信息" />
+      </Tabs>
+    </template>
+
     <Loading
       :absolute="absolute"
       :background="background"
@@ -7,23 +18,23 @@
       :theme="theme"
       :tip="tip"
     />
-    <Tabs v-model:activeKey="activeKey" @change="changeTabs">
-      <TabPane key="basic" tab="生成信息">
+
+    <div class="m-4 p-4 overflow-hidden bg-white">
+      <CollapseContainer ref="formCcRef" title="生成信息">
         <BasicForm @register="registerBasicForm" />
-      </TabPane>
-      <TabPane key="field" tab="配置信息">
+      </CollapseContainer>
+      <CollapseContainer ref="columnCcRef" class="" title="字段信息">
         <DefGenTableColumn ref="columnRef" />
-      </TabPane>
-      <template #rightExtra>
-        <a-button v-if="activeKey === 'basic'" type="primary" @click="handleSubmit">保存</a-button>
-      </template>
-    </Tabs>
-  </div>
+      </CollapseContainer>
+    </div>
+  </PageWrapper>
 </template>
 <script lang="ts">
   import { defineComponent, onMounted, reactive, ref, toRefs, unref } from 'vue';
   import { Tabs } from 'ant-design-vue';
   import { useRouter } from 'vue-router';
+  import { PageWrapper } from '/@/components/Page';
+  import { CollapseContainer } from '/@/components/Container/index';
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { Loading } from '/@/components/Loading';
   import { useI18n } from '/@/hooks/web/useI18n';
@@ -39,22 +50,27 @@
     name: '修改代码配置',
     components: {
       BasicForm,
+      PageWrapper,
       Loading,
       Tabs,
       TabPane: Tabs.TabPane,
       DefGenTableColumn,
+      CollapseContainer,
     },
     setup(_) {
       const { t } = useI18n();
       const { createMessage } = useMessage();
       const { currentRoute } = useRouter();
+      const formCcRef = ref<any>(null);
+      const columnCcRef = ref<any>(null);
       const columnRef = ref<any>(null);
       const tableId = ref<string>('');
-      const activeKey = ref<string>('field');
-      const cache = {
-        field: false,
-        basic: false,
-      };
+
+      const pageState = reactive({
+        title: '修改字段配置',
+        content: '',
+        activeKey: 'basic',
+      });
       const compState = reactive({
         absolute: false,
         loading: false,
@@ -66,6 +82,14 @@
       // 获取应用资源表单
       function getColumnRef() {
         return unref(columnRef);
+      }
+
+      function getFormCcRef() {
+        return unref(formCcRef);
+      }
+
+      function getColumnCcRef() {
+        return unref(columnCcRef);
       }
 
       function setLoading(loading: boolean) {
@@ -85,13 +109,19 @@
         });
 
       onMounted(async () => {
-        const routeQuery = currentRoute.value?.params;
-        tableId.value = routeQuery.id as string;
+        const routeParams = currentRoute.value?.params;
+        const routeQuery = currentRoute.value?.query;
+        tableId.value = routeParams.id as string;
+        pageState.title = routeQuery.title as string;
+        pageState.content = routeQuery.content as string;
+        setLoading(true);
         try {
-          setLoading(true);
-          console.log('onMounted', tableId.value);
-          await getColumnRef().load(routeQuery.id as string);
-          // changeTabs('field');
+          await loadDetail();
+        } catch (e) {
+          console.error(e);
+        }
+        try {
+          await getColumnRef().load(routeParams.id as string);
         } finally {
           setLoading(false);
         }
@@ -108,75 +138,72 @@
       }
 
       async function changeTabs(key: 'basic' | 'field') {
-        // if (true) {
-        if (!cache[key]) {
-          try {
-            setLoading(true);
-            if (key === 'field') {
-              await getColumnRef().load(unref(tableId));
-            } else {
-              const record = await detail(unref(tableId));
-              setFieldsValue(record);
-
-              let validateApi = Api[VALIDATE_API[ActionEnum.EDIT]];
-              const customRules = customFormSchemaRules(getFieldsValue);
-              if (record.isDs) {
-                customRules.push({
-                  field: 'dsValue',
-                  type: RuleType.append,
-                  rules: [{ required: true }],
-                });
-                updateSchema({
-                  field: 'isDs',
-                  colProps: {
-                    span: 12,
-                  },
-                });
-              } else {
-                customRules.push({
-                  field: 'dsValue',
-                  type: RuleType.append,
-                  rules: [{ required: false }],
-                });
-                updateSchema({
-                  field: 'isDs',
-                  colProps: {
-                    span: 24,
-                  },
-                });
-              }
-              if (GenTypeEnum.GEN === record.genType) {
-                customRules.push({
-                  field: 'outputDir',
-                  type: RuleType.append,
-                  rules: [{ required: true }],
-                });
-                customRules.push({
-                  field: 'frontOutputDir',
-                  type: RuleType.append,
-                  rules: [{ required: true }],
-                });
-              } else {
-                customRules.push({
-                  field: 'outputDir',
-                  type: RuleType.append,
-                  rules: [{ required: false }],
-                });
-                customRules.push({
-                  field: 'frontOutputDir',
-                  type: RuleType.append,
-                  rules: [{ required: false }],
-                });
-              }
-              getValidateRules(validateApi, customRules).then(async (rules) => {
-                rules && rules.length > 0 && (await updateSchema(rules));
-              });
-            }
-          } finally {
-            cache[key] = true;
-            setLoading(false);
-          }
+        if (key === 'field') {
+          getFormCcRef().handleExpand(false);
+          getColumnCcRef().handleExpand(true);
+        } else {
+          getFormCcRef().handleExpand(true);
+          getColumnCcRef().handleExpand(false);
         }
+      }
+
+      async function loadDetail() {
+        const record = await detail(unref(tableId));
+        setFieldsValue(record);
+
+        let validateApi = Api[VALIDATE_API[ActionEnum.EDIT]];
+        const customRules = customFormSchemaRules(getFieldsValue);
+        if (record.isDs) {
+          customRules.push({
+            field: 'dsValue',
+            type: RuleType.append,
+            rules: [{ required: true }],
+          });
+          updateSchema({
+            field: 'isDs',
+            colProps: {
+              span: 12,
+            },
+          });
+        } else {
+          customRules.push({
+            field: 'dsValue',
+            type: RuleType.append,
+            rules: [{ required: false }],
+          });
+          updateSchema({
+            field: 'isDs',
+            colProps: {
+              span: 24,
+            },
+          });
+        }
+        if (GenTypeEnum.GEN === record.genType) {
+          customRules.push({
+            field: 'outputDir',
+            type: RuleType.append,
+            rules: [{ required: true }],
+          });
+          customRules.push({
+            field: 'frontOutputDir',
+            type: RuleType.append,
+            rules: [{ required: true }],
+          });
+        } else {
+          customRules.push({
+            field: 'outputDir',
+            type: RuleType.append,
+            rules: [{ required: false }],
+          });
+          customRules.push({
+            field: 'frontOutputDir',
+            type: RuleType.append,
+            rules: [{ required: false }],
+          });
+        }
+        getValidateRules(validateApi, customRules).then(async (rules) => {
+          rules && rules.length > 0 && (await updateSchema(rules));
+        });
       }
 
       return {
@@ -184,9 +211,11 @@
         registerBasicForm,
         changeTabs,
         handleSubmit,
-        activeKey,
         columnRef,
         tableId,
+        formCcRef,
+        columnCcRef,
+        ...toRefs(pageState),
         ...toRefs(compState),
       };
     },

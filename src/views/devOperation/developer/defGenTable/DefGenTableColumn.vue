@@ -1,26 +1,23 @@
 <template>
-  <PageWrapper contentFullHeight dense>
-    <BasicTable @register="registerTable">
-      <template #toolbar>
-        <a-button
-          color="error"
-          preIcon="ant-design:delete-outlined"
-          type="primary"
-          @click="handleBatchDelete"
-        >
-          {{ t('common.title.delete') }}
-        </a-button>
-      </template>
-      <template #action="{ record, column }">
-        <TableAction :actions="createActions(record, column)" :stopButtonPropagation="true" />
-      </template>
-    </BasicTable>
-  </PageWrapper>
+  <BasicTable @register="registerTable">
+    <template #toolbar>
+      <a-button
+        color="error"
+        preIcon="ant-design:delete-outlined"
+        type="primary"
+        @click="handleBatchDelete"
+      >
+        {{ t('common.title.delete') }}
+      </a-button>
+    </template>
+    <template #action="{ record, column }">
+      <TableAction :actions="createActions(record, column)" :stopButtonPropagation="true" />
+    </template>
+  </BasicTable>
 </template>
 <script lang="ts">
   import { defineComponent, ref, unref } from 'vue';
   import { cloneDeep } from 'lodash-es';
-  import { PageWrapper } from '/@/components/Page';
   import {
     ActionItem,
     BasicTable,
@@ -43,18 +40,17 @@
   export default defineComponent({
     name: '修改代码配置',
     components: {
-      PageWrapper,
       BasicTable,
       TableAction,
     },
     setup() {
       const { t } = useI18n();
-      const { createMessage } = useMessage();
+      const { createMessage, createConfirm } = useMessage();
 
       const currentEditKeyRef = ref('');
       const tableId = ref<string>('');
 
-      const [registerTable, { reload }] = useTable({
+      const [registerTable, { reload, getSelectRowKeys }] = useTable({
         title: '字段',
         api: page,
         columns: columnColumns(),
@@ -83,6 +79,7 @@
           type: 'checkbox',
           columnWidth: 40,
         },
+        scroll: { y: 500 },
         actionColumn: {
           width: 200,
           title: t('common.column.action'),
@@ -193,7 +190,24 @@
         }
       }
 
-      async function handleBatchDelete() {}
+      async function handleBatchDelete() {
+        const ids = getSelectRowKeys();
+        if (!ids || ids.length <= 0) {
+          createMessage.warning(t('common.tips.pleaseSelectTheData'));
+          return;
+        }
+        createConfirm({
+          iconType: 'warning',
+          content: t('common.tips.confirmDelete'),
+          onOk: async () => {
+            try {
+              await remove(ids);
+              createMessage.success(t('common.tips.deleteSuccess'));
+              reload();
+            } catch (e) {}
+          },
+        });
+      }
 
       return {
         t,

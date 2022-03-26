@@ -801,7 +801,13 @@ export const columnColumns = (): BasicColumn[] => {
     {
       title: t('devOperation.developer.defGenTableColumn.name'),
       dataIndex: 'name',
+      fixed: 'left',
       // width: 180,
+    },
+    {
+      title: t('devOperation.developer.defGenTableColumn.type'),
+      dataIndex: 'type',
+      fixed: 'left',
     },
     {
       title: t('devOperation.developer.defGenTableColumn.comment'),
@@ -816,11 +822,6 @@ export const columnColumns = (): BasicColumn[] => {
       // width: 180,
       editRow: true,
       editRule: true,
-    },
-    {
-      title: t('devOperation.developer.defGenTableColumn.type'),
-      dataIndex: 'type',
-      // width: 180,
     },
     {
       title: t('devOperation.developer.defGenTableColumn.javaType'),

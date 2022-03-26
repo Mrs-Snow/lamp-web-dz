@@ -1,16 +1,16 @@
 <template>
-  <PageWrapper dense contentFullHeight>
+  <PageWrapper contentFullHeight dense>
     <BasicTable @register="registerTable">
       <template #toolbar>
         <a-button
-          type="primary"
           color="error"
           preIcon="ant-design:delete-outlined"
+          type="primary"
           @click="handleBatchDelete"
         >
           {{ t('common.title.delete') }}
         </a-button>
-        <a-button type="primary" preIcon="ant-design:cloud-upload-outlined" @click="handleImport">
+        <a-button preIcon="ant-design:cloud-upload-outlined" type="primary" @click="handleImport">
           {{ t('common.title.import') }}
         </a-button>
       </template>
@@ -178,6 +178,10 @@
         replace({
           name: RouteEnum.CODE_GENERATOR_EDIT,
           params: { id: record.id },
+          query: {
+            title: '表名：' + record.name,
+            content: '实体类：' + record.name + ' 作者：' + record.author,
+          },
         });
       }
 
