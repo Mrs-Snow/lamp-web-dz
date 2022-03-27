@@ -97,6 +97,8 @@ export enum EnumEnum {
   SqlConditionEnum = 'SqlConditionEnum',
   SuperClassEnum = 'SuperClassEnum',
   ComponentEnum = 'ComponentEnum',
+  ProductType = 'ProductType',
+  DefGenTestSimpleType2Enum = 'DefGenTestSimpleType2Enum',
 }
 export enum DictEnum {
   // 全局
@@ -122,6 +124,8 @@ export enum DictEnum {
   APPLICATION_TYPE = 'TENANT_APPLICATION_TYPE',
   CLIENT_TYPE = 'TENANT_CLIENT_TYPE',
   AREA_SOURCE = 'TENANT_AREA_SOURCE',
+  DictionaryType_Global_EDUCATION = 'GLOBAL_EDUCATION',
+  DictionaryType_Global_DATA_TYPE = 'DATA_TYPE',
 }
 
 export enum MsgTypeEnum {
