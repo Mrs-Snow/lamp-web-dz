@@ -1,39 +1,41 @@
 <template>
   <PageWrapper>
-    <template #headerContent> <WorkbenchHeader /> </template>
-    <div class="lg:flex" v-if="isUser">
+    <template #headerContent>
+      <WorkbenchHeader />
+    </template>
+    <div v-if="isUser" class="lg:flex">
       <div class="lg:w-7/10 w-full !mr-4 enter-y">
         <ApplicationCard
-          title="我的应用 (点击应用进行切换应用，体验不同应用的功能)"
-          :class="['enter-y', myAppCls]"
           :api="findMyApplication"
+          :class="['enter-y', myAppCls]"
+          title="我的应用 (点击应用进行切换应用，体验不同应用的功能)"
         />
         <DynamicInfo :loading="loading" class="!my-4 enter-y" />
       </div>
       <div class="w-full lg:w-3/10 enter-y">
         <QuickNav :loading="loading" class="enter-y" />
 
-        <Card class="!my-4 enter-y" :loading="loading">
-          <img class="mx-auto xl:h-50 h-30" :src="illustration" />
+        <Card :loading="loading" class="!my-4 enter-y">
+          <img :src="illustration" class="mx-auto xl:h-50 h-30" />
         </Card>
 
         <SaleRadar :loading="loading" class="enter-y" />
       </div>
     </div>
-    <div class="p-8" v-else>
+    <div v-else class="p-8">
       <Empty
+        :image="illustration"
         :image-style="{
           'justify-content': 'center',
           'align-items': 'center',
           display: 'flex',
           height: '250px',
         }"
-        :image="illustration"
       >
         <template #description>
-          <div style="font-size: 1.75rem" class="mx-auto mt-10 mb-10"> 您还不属于任何企业 </div>
+          <div class="mx-auto mt-10 mb-10" style="font-size: 1.75rem"> 您还不属于任何企业</div>
         </template>
-        <a-button type="primary" :class="[rtCls]" @click="handleTenant">注册企业</a-button>
+        <a-button :class="[rtCls]" type="primary" @click="handleTenant">注册企业</a-button>
         <a-button :class="[beCls, 'ml-20']" type="primary" @click="handleEmployee">
           成为员工
         </a-button>
@@ -55,6 +57,7 @@
   import DynamicInfo from './components/DynamicInfo.vue';
   import SaleRadar from './components/SaleRadar.vue';
   import { useUserStore } from '/@/store/modules/user';
+  import { isDevMode } from '/@/utils/env';
   import { useRouter } from 'vue-router';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useDesign } from '/@/hooks/web/useDesign';
@@ -64,11 +67,14 @@
 
   import intro from 'intro.js';
   import 'intro.js/minified/introjs.min.css';
+  import { useGlobSetting } from '/@/hooks/setting';
 
   const loading = ref(false);
   const userStore = useUserStore();
   const { createSuccessModal } = useMessage();
   const { replace } = useRouter();
+  const globSetting = useGlobSetting();
+  const BASE_APP_ID = globSetting.baseApplicationId;
   //const userinfo = computed(() => userStore.getUserInfo);
   const isUser = computed(
     () => userStore.getUserInfo?.employeeId && userStore.getUserInfo?.employeeId !== '0',
@@ -83,8 +89,6 @@
 
   function handleStart() {
     let steps = [] as intro.Step[];
-    console.log(`.${prefixVar}-businessSystem`);
-    console.log(document.querySelector(`.${prefixVar}-devOperation`)!);
     // 可以根据自身的需求，改成用户首次登陆系统时提示（可以通过redis记录用户是否首次登陆，或增加一张表来记录。）
     if (unref(isUser)) {
       steps = [
@@ -99,31 +103,32 @@
           position: 'right',
         },
         {
+          title: '用户功能区',
+          element: document.querySelector(`.${prefixVar}-layout-header-action`)!,
+          intro: '您可以在此修改您的个人信息。',
+        },
+        {
           title: '我的应用',
           element: document.querySelector(`.${myAppCls}`)!,
-          intro: '当您所在的企业购买了多个应用时，可以在此切换当前应用，每个应用拥有不同的功能。',
+          intro: '当您所在的企业购买了多个应用时，可以在此切换应用，每个应用拥有不同的功能。',
         },
         {
           title: '基础平台',
           element: document.querySelector(`.${prefixVar}-basicPlatform`)!,
-          intro: '租户的工作台，可以在此继续开发和完善整个平台最基础的功能。',
+          intro:
+            '企业(租户)的工作台，拥有平台最基础最核心的功能，开发者可以继续开发和完善平台的基础功能。',
         },
         {
           title: '开发运营系统',
           element: document.querySelector(`.${prefixVar}-devOperation`)!,
           intro:
-            '开发者或运营者使用的系统，都是平台级功能；您可以在此给租户开通租户账号和应用权限等。',
+            '开发者或运营者使用的系统，拥有平台级功能；开发者或运营者可以在此给企业（租户）开通企业账号和应用权限等。',
         },
         {
           title: '业务系统',
           element: document.querySelector(`.${prefixVar}-businessSystem`)!,
           intro:
-            '需要您根据自身的业务需求进行二次开发。开发完毕后，租户需要购买此应用，您在给租户授权使用此应用。',
-        },
-        {
-          title: '用户功能区',
-          element: document.querySelector(`.${prefixVar}-layout-header-action`)!,
-          intro: '您可以在此修改你的个人信息。',
+            '此系统是开发者根据自身的业务需求进行二次开发。开发完毕后，通过应用授权或购买的方式给企业开通访问权限。',
         },
       ];
     } else {
@@ -157,16 +162,18 @@
         },
       ];
     }
-    intro()
-      .setOptions({
-        //对应的按钮
-        prevLabel: '上一步 &larr;',
-        nextLabel: '下一步 &rarr;',
-        skipLabel: '跳过',
-        doneLabel: '结束',
-        steps,
-      })
-      .start();
+    if (userStore.getApplicationId === BASE_APP_ID && !isDevMode()) {
+      intro()
+        .setOptions({
+          //对应的按钮
+          prevLabel: '上一步 &larr;',
+          nextLabel: '下一步 &rarr;',
+          skipLabel: '跳过',
+          doneLabel: '结束',
+          steps,
+        })
+        .start();
+    }
   }
 
   onMounted(async () => {
