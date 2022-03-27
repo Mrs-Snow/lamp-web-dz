@@ -66,6 +66,10 @@
             preIcon: 'ant-design:search-outlined',
           },
         },
+        defSort: {
+          sort: 'sortValue',
+          order: 'ascend',
+        },
         searchInfo: {
           tableId: tableId,
         },

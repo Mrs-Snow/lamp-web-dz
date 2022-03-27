@@ -7,7 +7,7 @@
     <template #footer>
       <Tabs v-model:activeKey="activeKey" @change="changeTabs">
         <TabPane key="basic" tab="生成信息" />
-        <TabPane key="field" tab="配置信息" />
+        <TabPane key="field" tab="字段信息" />
       </Tabs>
     </template>
 

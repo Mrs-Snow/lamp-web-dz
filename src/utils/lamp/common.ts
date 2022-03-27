@@ -212,7 +212,7 @@ export const enumComponentProps = (type: EnumEnum, excludes?: string | string[])
   };
 };
 
-export const dictComponentProps = (type: DictEnum, excludes?: string | string[]) => {
+export const dictComponentProps = (type: DictEnum | string, excludes?: string | string[]) => {
   if (excludes && isString(excludes)) {
     excludes = [excludes];
   }

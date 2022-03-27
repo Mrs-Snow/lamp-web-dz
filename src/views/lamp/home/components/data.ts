@@ -56,8 +56,8 @@ export const navItems: NavItem[] = [
 export const dynamicInfoItems: DynamicInfoItem[] = [
   {
     avatar: 'dynamic-avatar-1|svg',
-    name: '4.5.0 即将发布：',
-    date: '2022-04-??',
+    name: '4.5.0 已发布：',
+    date: '2022-03-28',
     desc: `<a href="https://www.oschina.net/news/185326">可视化代码生成器</a>`,
   },
   {
