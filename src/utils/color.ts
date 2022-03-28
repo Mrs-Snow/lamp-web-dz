@@ -1,3 +1,5 @@
+import { ResourceTypeEnum } from '/@/enums/biz/tenant';
+
 /**
  * 判断是否 十六进制颜色值.
  * 输入形式可为 #fff000 #f00
@@ -148,4 +150,26 @@ function subtractLight(color: string, amount: number) {
   const cc = parseInt(color, 16) - amount;
   const c = cc < 0 ? 0 : cc;
   return c.toString(16).length > 1 ? c.toString(16) : `0${c.toString(16)}`;
+}
+
+/**
+ * 计算资源类型标签的颜色
+ * @param resourceType 资源类型
+ * @return Tag颜色
+ */
+export function getResourceTagColor(resourceType: string) {
+  switch (resourceType) {
+    case ResourceTypeEnum.MENU:
+      return 'success';
+    case ResourceTypeEnum.VIEW:
+      return 'processing';
+    case ResourceTypeEnum.FUNCTION:
+      return 'cyan';
+    case ResourceTypeEnum.FIELD:
+      return 'blue';
+    case ResourceTypeEnum.DATA:
+      return 'purple';
+    default:
+      return 'success';
+  }
 }

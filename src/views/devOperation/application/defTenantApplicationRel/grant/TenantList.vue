@@ -1,6 +1,7 @@
 <template>
   <div class="m-4 mr-2 overflow-hidden bg-white">
     <BasicTable
+      title-help-message="此页面会覆盖之前的授权，如需修改权限请使用'续期'功能"
       @register="registerTable"
       :rowSelection="{
         type: 'checkbox',
