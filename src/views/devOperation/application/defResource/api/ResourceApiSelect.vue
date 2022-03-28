@@ -52,9 +52,9 @@
 <script lang="ts">
   import { defineComponent, ref, unref } from 'vue';
   import { Row, Col, Tag, Card } from 'ant-design-vue';
+  import { split, uniqueId } from 'lodash-es';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, useForm } from '/@/components/Form';
-  import { split } from 'lodash-es';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { findSystemApi } from '/@/api/lamp/common/general';
   import { HTTP_TAG_MAP } from '/@/enums/httpEnum';
@@ -223,6 +223,8 @@
               uri: valueList[2],
               requestMethod: valueList[3],
               name: valueList[4],
+              isInput: false,
+              tempId: uniqueId(),
             });
           }
         } else {

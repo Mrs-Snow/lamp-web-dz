@@ -45,7 +45,7 @@
         try {
           const params = await validate();
           setModalProps({ confirmLoading: true });
-
+          params.isInput = true;
           closeModal();
           emit('success', params);
         } finally {

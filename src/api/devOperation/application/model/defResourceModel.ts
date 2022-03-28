@@ -94,4 +94,6 @@ export interface DefResourceApiVO {
   controller: string;
   springApplicationName: string;
   requestMethod: string;
+  isInput: boolean;
+  tempId?: string;
 }

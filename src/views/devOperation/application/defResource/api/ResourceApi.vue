@@ -34,6 +34,12 @@
                 confirm: handleDelete.bind(null, record),
               },
             },
+            {
+              label: t('common.title.edit'),
+              color: 'error',
+              ifShow: () => type !== ActionEnum.VIEW && !!record.isInput,
+              onClick: handleEdit.bind(null, record),
+            },
           ]"
         />
       </template>
@@ -47,15 +53,16 @@
   import { defineComponent, ref, watch, unref } from 'vue';
   import { BasicTable, TableAction, useTable } from '/@/components/Table';
   import { Tag, Tooltip } from 'ant-design-vue';
+  import { uniqueId } from 'lodash-es';
   import { useModal } from '/@/components/Modal';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { useMessage } from '/@/hooks/web/useMessage';
   import { resourceApiColumns } from '../defResource.data';
   import SelectModal from './ResourceApiSelect.vue';
   import EditModal from './ResourceApiEdit.vue';
   import { ActionEnum } from '/@/enums/commonEnum';
   import { HTTP_TAG_MAP } from '/@/enums/httpEnum';
   import { DefResourceApiVO } from '/@/api/devOperation/application/model/defResourceModel';
+
   export default defineComponent({
     name: 'DefResourceResourceApi',
     components: { BasicTable, TableAction, SelectModal, EditModal, Tag, Tooltip },
@@ -73,16 +80,16 @@
       const [registerModal, { openModal }] = useModal();
       const [registerEditModal, { openModal: openEditModal }] = useModal();
       const { t } = useI18n();
-      const { createMessage } = useMessage();
       const innerVal = ref<Recordable[]>([]);
 
-      const [registerTable, { getDataSource, setTableData }] = useTable({
+      const [registerTable, { setTableData }] = useTable({
         title: '资源关联的接口',
         dataSource: innerVal,
         scroll: { y: 250 },
         canResize: false,
         columns: resourceApiColumns,
         bordered: true,
+        rowKey: 'tempId',
         actionColumn: {
           width: 100,
           title: t('common.column.action'),
@@ -94,6 +101,7 @@
       watch(
         () => props.value,
         (value: DefResourceApiVO[] = []) => {
+          value.forEach((v) => (v.tempId = uniqueId()));
           innerVal.value = value;
         },
         { deep: true },
@@ -105,9 +113,18 @@
           selectedData: [...unref(innerVal)],
         });
       }
+
       // 手工录入
       function handleAdd() {
-        openEditModal(true, {});
+        openEditModal(true, {
+          record: { tempId: uniqueId() },
+        });
+      }
+
+      // 编辑录入
+      function handleEdit(record: Recordable, e: Event) {
+        e?.stopPropagation();
+        openEditModal(true, { record });
       }
 
       // 删除接口
@@ -123,8 +140,8 @@
 
         if (index > -1) {
           innerVal.value.splice(index, 1);
-          const data = getDataSource();
-          data.splice(index, 1);
+          // const data = getDataSource();
+          // data.splice(index, 1);
         }
 
         emit('change', innerVal.value);
@@ -138,28 +155,48 @@
         emit('change', selectedData);
         emit('update:value', selectedData);
       }
-      function handleEditSuccess(addData: DefResourceApiVO) {
-        const index = unref(innerVal).findIndex(
-          (selected) =>
-            selected.springApplicationName === addData.springApplicationName &&
-            selected.uri === addData.uri &&
-            selected.requestMethod === addData.requestMethod,
-        );
 
+      function handleEditSuccess(addData: DefResourceApiVO) {
+        if (!addData.isInput) {
+          return;
+        }
+        // const index = unref(innerVal).findIndex(
+        //   (selected) =>
+        //     selected.springApplicationName === addData.springApplicationName &&
+        //     selected.uri === addData.uri &&
+        //     selected.requestMethod === addData.requestMethod,
+        // );
+        const index = unref(innerVal).findIndex((selected) => selected.tempId === addData.tempId);
+
+        console.log('index=', index);
         if (index > -1) {
-          createMessage.warn('已存在该接口，请勿重复录入！');
+          unref(innerVal).forEach((selected) => {
+            if (selected.tempId === addData.tempId) {
+              selected.isInput = addData.isInput;
+              selected.tempId = addData.tempId;
+              selected.springApplicationName = addData.springApplicationName;
+              selected.controller = addData.controller;
+              selected.uri = addData.uri;
+              selected.requestMethod = addData.requestMethod;
+              selected.name = addData.name;
+            }
+          });
         } else {
           innerVal.value.push(addData);
-          const data = getDataSource();
-          data.push(addData);
+          // const data = getDataSource();
+          // console.log(data);
+          // data.push(addData);
         }
 
+        console.log(innerVal.value);
         emit('change', innerVal.value);
         emit('update:value', innerVal.value);
       }
 
       return {
+        t,
         handleAdd,
+        handleEdit,
         handleSelect,
         handleDelete,
         handleSuccess,
@@ -167,7 +204,6 @@
         registerTable,
         registerEditModal,
         handleEditSuccess,
-        t,
         ActionEnum,
         HTTP_TAG_MAP,
       };

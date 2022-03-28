@@ -1,8 +1,13 @@
 import { Ref } from 'vue';
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
-import { dictComponentProps, stateComponentProps, yesNoComponentProps } from '/@/utils/lamp/common';
-import { ActionEnum, DictEnum } from '/@/enums/commonEnum';
+import {
+  dictComponentProps,
+  enumComponentProps,
+  stateComponentProps,
+  yesNoComponentProps,
+} from '/@/utils/lamp/common';
+import { ActionEnum, DictEnum, EnumEnum } from '/@/enums/commonEnum';
 import { FormSchemaExt, RuleType } from '/@/api/lamp/common/formValidateService';
 import { DataScopeEnum, ResourceOpenWithEnum, ResourceTypeEnum } from '/@/enums/biz/tenant';
 import { check, checkName, checkPath } from '/@/api/devOperation/application/defResource';
@@ -729,7 +734,7 @@ export const resourceApiColumns: BasicColumn[] = [
   {
     title: t('devOperation.application.defResourceApi.uri'),
     dataIndex: 'uri',
-    ellipsis: true,
+    // ellipsis: true,
     align: 'left',
     slots: { customRender: 'uri' },
   },
@@ -799,6 +804,18 @@ export const selectResourceApiFormSchema = (
 export const editResourceApiFormSchema = (): FormSchema[] => {
   return [
     {
+      label: '是否手动录入',
+      field: 'isInput',
+      component: 'Input',
+      show: false,
+    },
+    {
+      label: '临时id',
+      field: 'tempId',
+      component: 'Input',
+      show: false,
+    },
+    {
       label: t('devOperation.application.defResourceApi.springApplicationName'),
       field: 'springApplicationName',
       component: 'ApiSelect',
@@ -810,13 +827,6 @@ export const editResourceApiFormSchema = (): FormSchema[] => {
         return {
           getPopupContainer: () => document.body,
           api: findOnlineService,
-          // valueField: 'value',
-          // options: [
-          //   { value: 'lamp-base-server', label: '基础服务' },
-          //   { value: 'lamp-oauth-server', label: '认证服务' },
-          //   { value: 'lamp-system-server', label: '系统服务' },
-          //   { value: 'lamp-gateway-server', label: '网关服务' },
-          // ],
         };
       },
       required: true,
@@ -836,18 +846,19 @@ export const editResourceApiFormSchema = (): FormSchema[] => {
     {
       label: t('devOperation.application.defResourceApi.requestMethod'),
       field: 'requestMethod',
-      component: 'Select',
+      component: 'ApiSelect',
       required: true,
       componentProps: () => {
         return {
           getPopupContainer: () => document.body,
-          options: [
-            { value: 'ALL', label: '所有' },
-            { value: 'GET', label: 'GET' },
-            { value: 'POST', label: 'POST' },
-            { value: 'PUT', label: 'PUT' },
-            { value: 'DELETE', label: 'DELETE' },
-          ],
+          ...enumComponentProps(EnumEnum.HttpMethod),
+          // options: [
+          //   { value: 'ALL', label: '所有' },
+          //   { value: 'GET', label: 'GET' },
+          //   { value: 'POST', label: 'POST' },
+          //   { value: 'PUT', label: 'PUT' },
+          //   { value: 'DELETE', label: 'DELETE' },
+          // ],
         };
       },
     },
