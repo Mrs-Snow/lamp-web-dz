@@ -25,6 +25,7 @@ import {
 import ApiRadioGroup from './components/ApiRadioGroup.vue';
 import RadioButtonGroup from './components/RadioButtonGroup.vue';
 import ApiSelect from './components/ApiSelect.vue';
+import ApiAutoComplete from './components/ApiAutoComplete.vue';
 import ApiTree from './components/ApiTree.vue';
 import ApiTreeSelect from './components/ApiTreeSelect.vue';
 import ApiCascader from './components/ApiCascader.vue';
@@ -43,6 +44,7 @@ componentMap.set('InputSearch', Input.Search);
 componentMap.set('InputTextArea', Input.TextArea);
 componentMap.set('InputNumber', InputNumber);
 componentMap.set('AutoComplete', AutoComplete);
+componentMap.set('ApiAutoComplete', ApiAutoComplete);
 
 componentMap.set('Select', Select);
 componentMap.set('ApiSelect', ApiSelect);
