@@ -6,11 +6,17 @@
           color="error"
           preIcon="ant-design:delete-outlined"
           type="primary"
+          v-hasAnyPermission="[RoleEnum.TENANT_DEVELOPER_TOOLS_GENERATOR_DELETE]"
           @click="handleBatchDelete"
         >
           {{ t('common.title.delete') }}
         </a-button>
-        <a-button preIcon="ant-design:cloud-upload-outlined" type="primary" @click="handleImport">
+        <a-button
+          preIcon="ant-design:cloud-upload-outlined"
+          v-hasAnyPermission="[RoleEnum.TENANT_DEVELOPER_TOOLS_GENERATOR_IMPORT]"
+          type="primary"
+          @click="handleImport"
+        >
           {{ t('common.title.import') }}
         </a-button>
       </template>
@@ -20,11 +26,13 @@
             {
               tooltip: t('common.title.edit'),
               icon: 'ant-design:edit-outlined',
+              auth: RoleEnum.TENANT_DEVELOPER_TOOLS_GENERATOR_EDIT,
               onClick: handleEdit.bind(null, record),
             },
             {
               tooltip: t('common.title.delete'),
               icon: 'ant-design:delete-outlined',
+              auth: RoleEnum.TENANT_DEVELOPER_TOOLS_GENERATOR_DELETE,
               color: 'error',
               popConfirm: {
                 title: t('common.tips.confirmDelete'),
@@ -34,6 +42,7 @@
             {
               tooltip: '同步',
               icon: 'ant-design:cloud-sync-outlined',
+              auth: RoleEnum.TENANT_DEVELOPER_TOOLS_GENERATOR_SYNC,
               popConfirm: {
                 title: '确定同步该表的字段吗？',
                 confirm: handleSync.bind(null, record),
@@ -44,21 +53,25 @@
             {
               label: '预览后端',
               icon: 'ant-design:search-outlined',
+              auth: RoleEnum.TENANT_DEVELOPER_TOOLS_GENERATOR_PREVIEW,
               onClick: handlePreview.bind(null, record, TemplateEnum.BACKEND),
             },
             {
               label: '预览前端',
               icon: 'ant-design:search-outlined',
+              auth: RoleEnum.TENANT_DEVELOPER_TOOLS_GENERATOR_PREVIEW,
               onClick: handlePreview.bind(null, record, TemplateEnum.WEB_PLUS),
             },
             {
               label: '生成后端',
               icon: 'ant-design:download-outlined',
+              auth: RoleEnum.TENANT_DEVELOPER_TOOLS_GENERATOR_PREVIEW,
               onClick: handleDownload.bind(null, record, TemplateEnum.BACKEND),
             },
             {
               label: '生成前端',
               icon: 'ant-design:download-outlined',
+              auth: RoleEnum.TENANT_DEVELOPER_TOOLS_GENERATOR_PREVIEW,
               onClick: handleDownload.bind(null, record, TemplateEnum.WEB_PLUS),
             },
           ]"
@@ -78,6 +91,7 @@
   import { BasicTable, TableAction, useTable } from '/@/components/Table';
   import { PageWrapper } from '/@/components/Page';
   import { useModal } from '/@/components/Modal';
+  import { RoleEnum } from '/@/enums/roleEnum';
   import { downloadFile, handleFetchParams } from '/@/utils/lamp/common';
   import {
     downloadZip,
@@ -224,6 +238,7 @@
 
       return {
         t,
+        RoleEnum,
         registerTable,
         registerModal,
         registerPreviewModal,

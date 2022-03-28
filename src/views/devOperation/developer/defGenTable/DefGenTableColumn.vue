@@ -5,6 +5,7 @@
         color="error"
         preIcon="ant-design:delete-outlined"
         type="primary"
+        v-hasAnyPermission="[RoleEnum.TENANT_DEVELOPER_TOOLS_GENERATOR_EDIT_DELETE]"
         @click="handleBatchDelete"
       >
         {{ t('common.title.delete') }}
@@ -33,6 +34,7 @@
     syncField,
     update as updateColumn,
   } from '/@/api/devOperation/developer/defGenTableColumn';
+  import { RoleEnum } from '/@/enums/roleEnum';
   import { columnColumns, searchColumnFormSchema } from './defGenTable.data';
   import { handleFetchParams } from '/@/utils/lamp/common';
   import { DefGenTableColumnUpdateVO } from '/@/api/devOperation/developer/model/defGenTableColumnModel';
@@ -99,12 +101,14 @@
             {
               tooltip: t('common.title.edit'),
               icon: 'ant-design:edit-outlined',
+              auth: RoleEnum.TENANT_DEVELOPER_TOOLS_GENERATOR_EDIT_EDIT,
               disabled: currentEditKeyRef.value ? currentEditKeyRef.value !== record.key : false,
               onClick: handleEdit.bind(null, record),
             },
             {
               tooltip: t('common.title.delete'),
               icon: 'ant-design:delete-outlined',
+              auth: RoleEnum.TENANT_DEVELOPER_TOOLS_GENERATOR_EDIT_DELETE,
               color: 'error',
               popConfirm: {
                 title: t('common.tips.confirmDelete'),
@@ -113,6 +117,7 @@
             },
             {
               tooltip: '同步',
+              auth: RoleEnum.TENANT_DEVELOPER_TOOLS_GENERATOR_EDIT_SYNC,
               icon: 'ant-design:cloud-sync-outlined',
               popConfirm: {
                 title: '同步字段会重新读取数据库中字段信息，覆盖已修改的配置，确定同步该字段吗？',
@@ -121,56 +126,6 @@
             },
           ];
         }
-
-        async function handleSync(record: EditRecordRow, e: Event) {
-          e?.stopPropagation();
-          await syncField(record.tableId, record.id);
-          createMessage.success('同步成功');
-          reload();
-        }
-
-        async function handleDelete(record: EditRecordRow, e: Event) {
-          e?.stopPropagation();
-          await remove(record.id);
-          createMessage.success(t('common.tips.deleteSuccess'));
-          reload();
-        }
-
-        async function handleSave(record: EditRecordRow, e: Event) {
-          e?.stopPropagation();
-          // 校验
-          createMessage.loading({ content: '正在保存...', duration: 0, key: 'saving' });
-
-          const valid = await record.onValid?.();
-          if (valid) {
-            const data = cloneDeep(record.editValueRefs) as unknown as DefGenTableColumnUpdateVO;
-            console.log(data);
-            const params = { ...unref(record), ...data };
-            console.log(params);
-
-            await updateColumn(params);
-
-            // 保存之后提交编辑状态
-            const pass = await record.onEdit?.(false, true);
-            if (pass) {
-              currentEditKeyRef.value = '';
-            }
-            createMessage.success({ content: '数据已保存', key: 'saving' });
-          } else {
-            createMessage.error({ content: '请填写正确的数据', key: 'saving' });
-          }
-        }
-
-        async function handleCancel(record: EditRecordRow) {
-          currentEditKeyRef.value = '';
-          record.onEdit?.(false, false);
-        }
-
-        async function handleEdit(record: EditRecordRow) {
-          currentEditKeyRef.value = record.key;
-          record.onEdit?.(true);
-        }
-
         return [
           {
             label: '保存',
@@ -184,6 +139,55 @@
             },
           },
         ];
+      }
+
+      async function handleSync(record: EditRecordRow, e: Event) {
+        e?.stopPropagation();
+        await syncField(record.tableId, record.id);
+        createMessage.success('同步成功');
+        reload();
+      }
+
+      async function handleDelete(record: EditRecordRow, e: Event) {
+        e?.stopPropagation();
+        await remove(record.id);
+        createMessage.success(t('common.tips.deleteSuccess'));
+        reload();
+      }
+
+      async function handleSave(record: EditRecordRow, e: Event) {
+        e?.stopPropagation();
+        // 校验
+        createMessage.loading({ content: '正在保存...', duration: 0, key: 'saving' });
+
+        const valid = await record.onValid?.();
+        if (valid) {
+          const data = cloneDeep(record.editValueRefs) as unknown as DefGenTableColumnUpdateVO;
+          console.log(data);
+          const params = { ...unref(record), ...data };
+          console.log(params);
+
+          await updateColumn(params);
+
+          // 保存之后提交编辑状态
+          const pass = await record.onEdit?.(false, true);
+          if (pass) {
+            currentEditKeyRef.value = '';
+          }
+          createMessage.success({ content: '数据已保存', key: 'saving' });
+        } else {
+          createMessage.error({ content: '请填写正确的数据', key: 'saving' });
+        }
+      }
+
+      async function handleCancel(record: EditRecordRow) {
+        currentEditKeyRef.value = '';
+        record.onEdit?.(false, false);
+      }
+
+      async function handleEdit(record: EditRecordRow) {
+        currentEditKeyRef.value = record.key;
+        record.onEdit?.(true);
       }
 
       async function load(tId: string) {
@@ -216,6 +220,7 @@
 
       return {
         t,
+        RoleEnum,
         registerTable,
         createActions,
         handleBatchDelete,

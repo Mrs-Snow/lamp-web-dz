@@ -8,6 +8,7 @@ import { GenTypeEnum, PopupTypeEnum, TplEnum } from '/@/enums/biz/tenant';
 import { lowerFirst } from 'lodash-es';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { FormActionType } from '/@/components/Form';
+import { findOnlineService } from '/@/api/devOperation/tenant/tenant';
 
 const { t } = useI18n();
 const { createMessage } = useMessage();
@@ -255,7 +256,7 @@ export const baseEditFormSchema = (updateSchemaFn: Fn): FormSchema[] => {
     {
       label: '服务名',
       field: 'serviceName',
-      component: 'AutoComplete',
+      component: 'ApiAutoComplete',
       componentProps: ({ formActionType }) => {
         return {
           allowClear: true,
@@ -263,13 +264,15 @@ export const baseEditFormSchema = (updateSchemaFn: Fn): FormSchema[] => {
           filterOption: (input: string, option) => {
             return option.value.toUpperCase().indexOf(input.toUpperCase()) >= 0;
           },
-          options: [
-            { value: 'base' },
-            { value: 'system' },
-            { value: 'gateway' },
-            { value: 'generator' },
-            { value: 'oauth' },
-          ],
+          api: findOnlineService,
+          labelField: 'value',
+          // options: [
+          //   { value: 'base' },
+          //   { value: 'system' },
+          //   { value: 'gateway' },
+          //   { value: 'generator' },
+          //   { value: 'oauth' },
+          // ],
           onChange: (value: string) => {
             if (value) {
               const { setFieldsValue, getFieldsValue } = formActionType;
@@ -307,7 +310,7 @@ export const baseEditFormSchema = (updateSchemaFn: Fn): FormSchema[] => {
     {
       label: '模块名',
       field: 'moduleName',
-      component: 'AutoComplete',
+      component: 'ApiAutoComplete',
       componentProps: () => {
         return {
           allowClear: true,
@@ -315,13 +318,8 @@ export const baseEditFormSchema = (updateSchemaFn: Fn): FormSchema[] => {
           filterOption: (input: string, option) => {
             return option.value.toUpperCase().indexOf(input.toUpperCase()) >= 0;
           },
-          options: [
-            { value: 'base' },
-            { value: 'system' },
-            { value: 'gateway' },
-            { value: 'generator' },
-            { value: 'oauth' },
-          ],
+          api: findOnlineService,
+          labelField: 'value',
         };
       },
       colProps: {

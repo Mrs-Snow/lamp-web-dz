@@ -76,6 +76,16 @@ export enum RoleEnum {
   SYSTEM_LOGIN_LOG_DELETE = 'tenant:system:loginLog:delete',
   SYSTEM_LOGIN_LOG_VIEW = 'tenant:system:loginLog:view',
 
+  // 代码生成
+  TENANT_DEVELOPER_TOOLS_GENERATOR_EDIT = 'tenant:developer:tools:generator:edit',
+  TENANT_DEVELOPER_TOOLS_GENERATOR_IMPORT = 'tenant:developer:tools:generator:import',
+  TENANT_DEVELOPER_TOOLS_GENERATOR_SYNC = 'tenant:developer:tools:generator:sync',
+  TENANT_DEVELOPER_TOOLS_GENERATOR_DELETE = 'tenant:developer:tools:generator:delete',
+  TENANT_DEVELOPER_TOOLS_GENERATOR_PREVIEW = 'tenant:developer:tools:generator:preview',
+  TENANT_DEVELOPER_TOOLS_GENERATOR_EDIT_DELETE = 'tenant:developer:tools:generator:edit:delete',
+  TENANT_DEVELOPER_TOOLS_GENERATOR_EDIT_EDIT = 'tenant:developer:tools:generator:edit:edit',
+  TENANT_DEVELOPER_TOOLS_GENERATOR_EDIT_SYNC = 'tenant:developer:tools:generator:edit:sync',
+
   // 附件管理
   TENANT_SYSTEM_FILE_UPLOAD = 'tenant:system:file:upload',
   TENANT_SYSTEM_FILE_DEBUG_UPLOAD = 'tenant:system:file:debug:upload',
