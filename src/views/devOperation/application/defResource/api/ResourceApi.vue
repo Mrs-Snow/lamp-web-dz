@@ -101,7 +101,6 @@
       watch(
         () => props.value,
         (value: DefResourceApiVO[] = []) => {
-          console.log(`value= ${value}`, value);
           innerVal.value = cloneDeep(value);
           innerVal.value.forEach((v) => (v.tempId = uniqueId()));
         },

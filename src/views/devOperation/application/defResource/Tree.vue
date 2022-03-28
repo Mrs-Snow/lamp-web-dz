@@ -16,15 +16,17 @@
         preIcon="ant-design:plus-outlined"
         v-hasAnyPermission="[RoleEnum.RESOURCE_ADD, RoleEnum.APPLICATION_RESOURCE_ADD]"
         class="mr-2"
-        >{{ t('common.title.addRoot') }}</a-button
       >
+        {{ t('common.title.addRoot') }}
+      </a-button>
       <a-button
         @click="handleBatchDelete()"
         preIcon="ant-design:delete-outlined"
         v-hasAnyPermission="[RoleEnum.RESOURCE_DELETE, RoleEnum.APPLICATION_RESOURCE_DELETE]"
         class="mr-2"
-        >{{ t('common.title.delete') }}</a-button
       >
+        {{ t('common.title.delete') }}
+      </a-button>
     </div>
     <BasicTree
       :title="t('devOperation.application.defResource.table.title')"
@@ -39,12 +41,20 @@
       :treeData="treeData"
       @select="handleSelect"
       ref="treeRef"
-    />
+    >
+      <template #titleBefore="item">
+        <template v-if="item.echoMap?.resourceType">
+          <Tag :color="getResourceTagColor(item?.resourceType)">
+            {{ item.echoMap?.resourceType }}
+          </Tag>
+        </template>
+      </template>
+    </BasicTree>
   </div>
 </template>
 <script lang="ts">
   import { defineComponent, onMounted, ref, unref, h, reactive } from 'vue';
-  import { Select } from 'ant-design-vue';
+  import { Select, Tag } from 'ant-design-vue';
   import { useRouter } from 'vue-router';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
@@ -58,12 +68,13 @@
   } from '/@/components/Tree';
   import { eachTree } from '/@/utils/helper/treeHelper';
   import { findNodeByKey } from '/@/utils/lamp/common';
+  import { getResourceTagColor } from '/@/utils/color';
   import { query } from '/@/api/devOperation/application/defApplication';
   import { tree, remove } from '/@/api/devOperation/application/defResource';
 
   export default defineComponent({
     name: 'DefResourceManagement',
-    components: { BasicTree, Select },
+    components: { BasicTree, Select, Tag },
 
     emits: ['select', 'add', 'edit', 'change'],
     setup(_, { emit }) {
@@ -103,6 +114,7 @@
           await fetch(applicationRef.value);
         }
       });
+
       // 加载数据
       async function fetch(applicationId?: string) {
         applicationId = applicationId || applicationRef.value;
@@ -115,6 +127,7 @@
               item.key = item.id;
               item.title = item.name;
               item.keyLinks = [...(parent.keyLinks || []), item.id];
+              item.slots = { titleBefore: 'titleBefore' };
               return item;
             },
             {},
@@ -286,6 +299,8 @@
 
       return {
         t,
+        RoleEnum,
+        getResourceTagColor,
         treeRef,
         treeData,
         fetch,
@@ -298,7 +313,6 @@
         handleChange,
         data,
         applicationRef,
-        RoleEnum,
       };
     },
   });
