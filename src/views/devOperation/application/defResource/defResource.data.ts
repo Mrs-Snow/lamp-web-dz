@@ -80,7 +80,6 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
           {
             trigger: 'change',
             validator: async (_, value) => {
-              console.log('model=%s, value=%s', model.resourceType, value);
               if (type.value === ActionEnum.VIEW) {
                 return Promise.resolve();
               }
@@ -734,7 +733,7 @@ export const resourceApiColumns: BasicColumn[] = [
   {
     title: t('devOperation.application.defResourceApi.uri'),
     dataIndex: 'uri',
-    // ellipsis: true,
+    ellipsis: true,
     align: 'left',
     slots: { customRender: 'uri' },
   },
@@ -806,7 +805,7 @@ export const editResourceApiFormSchema = (): FormSchema[] => {
     {
       label: '是否手动录入',
       field: 'isInput',
-      component: 'Input',
+      component: 'RadioGroup',
       show: false,
     },
     {

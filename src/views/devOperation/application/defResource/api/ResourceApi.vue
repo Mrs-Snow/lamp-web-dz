@@ -53,7 +53,7 @@
   import { defineComponent, ref, watch, unref } from 'vue';
   import { BasicTable, TableAction, useTable } from '/@/components/Table';
   import { Tag, Tooltip } from 'ant-design-vue';
-  import { uniqueId } from 'lodash-es';
+  import { uniqueId, cloneDeep } from 'lodash-es';
   import { useModal } from '/@/components/Modal';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { resourceApiColumns } from '../defResource.data';
@@ -101,8 +101,9 @@
       watch(
         () => props.value,
         (value: DefResourceApiVO[] = []) => {
-          value.forEach((v) => (v.tempId = uniqueId()));
-          innerVal.value = value;
+          console.log(`value= ${value}`, value);
+          innerVal.value = cloneDeep(value);
+          innerVal.value.forEach((v) => (v.tempId = uniqueId()));
         },
         { deep: true },
       );
