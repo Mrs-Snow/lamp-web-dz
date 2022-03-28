@@ -402,6 +402,7 @@
                   {icon && <TreeIcon icon={icon} />}
                   {item?.slots?.titleBefore && getSlot(slots, item?.slots?.titleBefore, item)}
                   {titleDom}
+                  {item?.slots?.titleAfter && getSlot(slots, item?.slots?.titleAfter, item)}
                   <span class={bem('actions')}>{renderAction(item)}</span>
                 </>
               )}
