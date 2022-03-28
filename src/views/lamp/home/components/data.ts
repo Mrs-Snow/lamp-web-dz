@@ -58,7 +58,7 @@ export const dynamicInfoItems: DynamicInfoItem[] = [
     avatar: 'dynamic-avatar-1|svg',
     name: '4.5.0 已发布：',
     date: '2022-03-28',
-    desc: `<a href="https://www.oschina.net/news/185326">可视化代码生成器</a>`,
+    desc: `<a href="https://www.oschina.net/news/188560/lamp-cloud-4-5-released">可视化代码生成器</a>`,
   },
   {
     avatar: 'dynamic-avatar-1|svg',
