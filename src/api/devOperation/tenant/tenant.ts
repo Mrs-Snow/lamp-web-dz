@@ -80,6 +80,10 @@ export const Api = {
     url: `${ServicePrefixEnum.GATEWAY}/findOnlineServicePrefix`,
     method: RequestEnum.GET,
   } as AxiosRequestConfig,
+  FindOnlineService: {
+    url: `${ServicePrefixEnum.GATEWAY}/findOnlineService`,
+    method: RequestEnum.GET,
+  } as AxiosRequestConfig,
 };
 
 export const page = (params: PageParams<TenantPageQuery>) =>
@@ -110,6 +114,7 @@ export const initData = (params: DefTenantInitVO) =>
 
 export const findOnlineServicePrefix = () =>
   defHttp.request<Recordable>({ ...Api.FindOnlineServicePrefix });
+export const findOnlineService = () => defHttp.request<Recordable>({ ...Api.FindOnlineService });
 
 export const initConnect = (serviceProfix: string, tenantId: string) =>
   defHttp.request<boolean>({

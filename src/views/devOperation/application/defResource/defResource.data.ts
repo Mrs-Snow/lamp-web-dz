@@ -7,6 +7,7 @@ import { FormSchemaExt, RuleType } from '/@/api/lamp/common/formValidateService'
 import { DataScopeEnum, ResourceOpenWithEnum, ResourceTypeEnum } from '/@/enums/biz/tenant';
 import { check, checkName, checkPath } from '/@/api/devOperation/application/defResource';
 import { isUrl } from '/@/utils/is';
+import { findOnlineService } from '/@/api/devOperation/tenant/tenant';
 
 const { t } = useI18n();
 
@@ -745,19 +746,23 @@ export const selectResourceApiFormSchema = (
     {
       label: t('devOperation.application.defResourceApi.springApplicationName'),
       field: 'service',
-      component: 'Select',
+      component: 'ApiSelect',
       componentProps: () => {
         return {
           getPopupContainer: () => document.body,
           onChange: handleServiceChange,
           showSearch: true,
-          options: [
-            // 后端有几个服务，就写几个
-            { value: 'base', label: '基础服务' },
-            { value: 'oauth', label: '认证服务' },
-            { value: 'system', label: '系统服务' },
-            { value: 'gateway', label: '网关服务' },
-          ],
+          api: findOnlineService,
+          // resultField: 'list',
+          // labelField: 'name',
+          // valueField: 'id',
+          // options: [
+          //   // 后端有几个服务，就写几个
+          //   { value: 'base', label: '基础服务' },
+          //   { value: 'oauth', label: '认证服务' },
+          //   { value: 'system', label: '系统服务' },
+          //   { value: 'gateway', label: '网关服务' },
+          // ],
         };
       },
     },
@@ -792,16 +797,17 @@ export const editResourceApiFormSchema = (): FormSchema[] => {
     {
       label: t('devOperation.application.defResourceApi.springApplicationName'),
       field: 'springApplicationName',
-      component: 'Select',
+      component: 'ApiSelect',
       componentProps: () => {
         return {
           getPopupContainer: () => document.body,
-          options: [
-            { value: 'lamp-base-server', label: '基础服务' },
-            { value: 'lamp-oauth-server', label: '认证服务' },
-            { value: 'lamp-system-server', label: '系统服务' },
-            { value: 'lamp-gateway-server', label: '网关服务' },
-          ],
+          api: findOnlineService,
+          // options: [
+          //   { value: 'lamp-base-server', label: '基础服务' },
+          //   { value: 'lamp-oauth-server', label: '认证服务' },
+          //   { value: 'lamp-system-server', label: '系统服务' },
+          //   { value: 'lamp-gateway-server', label: '网关服务' },
+          // ],
         };
       },
       required: true,
