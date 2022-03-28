@@ -156,6 +156,7 @@
       function getExpandedKeys() {
         return state.expandedKeys;
       }
+
       function setSelectedKeys(keys: KeyType[]) {
         state.selectedKeys = keys;
       }
@@ -334,6 +335,7 @@
       };
 
       const { isPermission } = usePermission();
+
       function renderAction(node: TreeItem) {
         const { actionList } = props;
         if (!actionList || actionList.length === 0) return;
@@ -387,6 +389,7 @@
           ) : (
             title
           );
+
           item.title = (
             <span
               class={`${bem('title')} pl-2`}
@@ -397,6 +400,7 @@
               ) : (
                 <>
                   {icon && <TreeIcon icon={icon} />}
+                  {item?.slots?.titleBefore && getSlot(slots, item?.slots?.titleBefore, item)}
                   {titleDom}
                   <span class={bem('actions')}>{renderAction(item)}</span>
                 </>
