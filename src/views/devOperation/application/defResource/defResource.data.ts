@@ -747,6 +747,10 @@ export const selectResourceApiFormSchema = (
       label: t('devOperation.application.defResourceApi.springApplicationName'),
       field: 'service',
       component: 'ApiSelect',
+      helpMessage: [
+        'lamp-cloud: 自动查询后台已经正常启动并注册到nacos中的服务',
+        'lamp-boot: 后台写死lamp-boot-server返回即可',
+      ],
       componentProps: () => {
         return {
           getPopupContainer: () => document.body,
@@ -798,10 +802,15 @@ export const editResourceApiFormSchema = (): FormSchema[] => {
       label: t('devOperation.application.defResourceApi.springApplicationName'),
       field: 'springApplicationName',
       component: 'ApiSelect',
+      helpMessage: [
+        'lamp-cloud: 自动查询后台已经正常启动并注册到nacos中的服务',
+        'lamp-boot: 后台写死lamp-boot-server返回即可',
+      ],
       componentProps: () => {
         return {
           getPopupContainer: () => document.body,
           api: findOnlineService,
+          // valueField: 'value',
           // options: [
           //   { value: 'lamp-base-server', label: '基础服务' },
           //   { value: 'lamp-oauth-server', label: '认证服务' },
