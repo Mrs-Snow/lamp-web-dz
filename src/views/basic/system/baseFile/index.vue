@@ -47,7 +47,7 @@
       <template #path="{ record }">
         <ThumbUrl
           :fileId="record.id"
-          :fileType="record.fileType?.code"
+          :fileType="record.fileType"
           :originalFileName="record.originalFileName"
         />
       </template>

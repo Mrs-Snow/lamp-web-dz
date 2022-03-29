@@ -15,7 +15,6 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useTabs } from '/@/hooks/web/useTabs';
   import { useRouter } from 'vue-router';
-  import { Enum } from '/@/api/model/baseModel';
   import { RouteEnum } from '/@/enums/biz/tenant';
   import { ActionEnum, MsgTypeEnum } from '/@/enums/commonEnum';
   import { get } from '/@/api/basic/msg/eMsg';
@@ -68,7 +67,6 @@
         type.value = data?.type;
 
         const record = await get(data?.id);
-        record.msgType = (record?.msgType as Enum)?.code as string;
         await setFieldsValue({ ...record });
       };
 

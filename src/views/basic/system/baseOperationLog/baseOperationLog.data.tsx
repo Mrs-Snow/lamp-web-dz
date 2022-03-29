@@ -22,8 +22,8 @@ export const columns = (): BasicColumn[] => {
       dataIndex: ['echoMap', 'type'],
       width: 100,
       customRender: ({ record }) => {
-        const status = record?.type?.code === LogTypeEnum.OPT ? 'success' : 'error';
-        return <Badge status={status} text={record?.type?.desc} />;
+        const status = record?.type === LogTypeEnum.OPT ? 'success' : 'error';
+        return <Badge status={status} text={record?.echoMap?.type} />;
       },
     },
     // {
@@ -69,7 +69,7 @@ export const columns = (): BasicColumn[] => {
       width: 100,
       customRender: ({ record }) => {
         let color = '';
-        switch (record?.httpMethod?.code) {
+        switch (record?.httpMethod) {
           case 'POST':
             color = 'success';
             break;
@@ -86,7 +86,7 @@ export const columns = (): BasicColumn[] => {
             color = 'success';
             break;
         }
-        return <Tag color={color}>{record?.httpMethod?.desc}</Tag>;
+        return <Tag color={color}>{record?.echoMap?.httpMethod}</Tag>;
       },
     },
     {

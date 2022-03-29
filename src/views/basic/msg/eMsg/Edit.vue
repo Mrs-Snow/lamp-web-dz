@@ -71,7 +71,6 @@
   import { useTabs } from '/@/hooks/web/useTabs';
   import { useLoading } from '/@/components/Loading';
   import { useRouter } from 'vue-router';
-  import { Enum } from '/@/api/model/baseModel';
   import { RouteEnum } from '/@/enums/biz/tenant';
 
   export default defineComponent({
@@ -134,7 +133,6 @@
 
         if (![ActionEnum.ADD].includes(unref(type))) {
           const record = await get(data?.id);
-          record.msgType = (record?.msgType as Enum)?.code as string;
           await setFieldsValue({ ...record });
           formState.roleIdList = record.roleIdList as string[];
           formState.employeeIdList = record.employeeIdList as string[];

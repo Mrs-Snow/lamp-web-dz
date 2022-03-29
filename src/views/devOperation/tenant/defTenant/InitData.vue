@@ -58,7 +58,6 @@
 
             const record = { ...data.record };
 
-            record.connectType = record?.connectType?.code || TenantConnectTypeEnum.SYSTEM;
             await setFieldsValue({
               ...record,
             });

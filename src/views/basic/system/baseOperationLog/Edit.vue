@@ -44,8 +44,6 @@
 
         // 赋值
         const record = { ...data?.record };
-        record.type = data.record?.type?.code;
-        record.httpMethod = data.record?.httpMethod?.code;
         await setFieldsValue(record);
       });
 

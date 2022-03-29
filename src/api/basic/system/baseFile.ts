@@ -19,7 +19,7 @@ export const Api = {
   } as AxiosRequestConfig,
 
   Download: {
-    url: `${ServicePrefixEnum.FILE}/${MODULAR}/anyone/download`,
+    url: `${ServicePrefixEnum.FILE}/file/anyone/download`,
     method: RequestEnum.GET,
     responseType: 'blob',
   } as AxiosRequestConfig,
