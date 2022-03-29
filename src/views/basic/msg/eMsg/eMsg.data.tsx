@@ -13,7 +13,7 @@ export const columns = (): BasicColumn[] => {
   return [
     {
       title: t('basic.msg.eMsg.msgType'),
-      dataIndex: ['msgType', 'desc'],
+      dataIndex: ['echoMap', 'msgType'],
       width: 120,
     },
     {

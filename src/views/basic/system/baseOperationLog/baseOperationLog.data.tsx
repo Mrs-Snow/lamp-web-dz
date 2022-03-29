@@ -19,7 +19,7 @@ export const columns = (): BasicColumn[] => {
     },
     {
       title: t('basic.system.baseOperationLog.type'),
-      dataIndex: ['type', 'desc'],
+      dataIndex: ['echoMap', 'type'],
       width: 100,
       customRender: ({ record }) => {
         const status = record?.type?.code === LogTypeEnum.OPT ? 'success' : 'error';
@@ -65,7 +65,7 @@ export const columns = (): BasicColumn[] => {
     },
     {
       title: t('basic.system.baseOperationLog.httpMethod'),
-      dataIndex: ['httpMethod', 'desc'],
+      dataIndex: ['echoMap', 'httpMethod'],
       width: 100,
       customRender: ({ record }) => {
         let color = '';

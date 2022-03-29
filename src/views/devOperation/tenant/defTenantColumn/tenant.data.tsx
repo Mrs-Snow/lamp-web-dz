@@ -33,7 +33,7 @@ export const columns: BasicColumn[] = [
   },
   {
     title: t('devOperation.tenant.defTenant.registerType'),
-    dataIndex: ['registerType', 'desc'],
+    dataIndex: ['echoMap', 'registerType'],
     width: 100,
   },
   {
