@@ -163,9 +163,7 @@
         const valid = await record.onValid?.();
         if (valid) {
           const data = cloneDeep(record.editValueRefs) as unknown as DefGenTableColumnUpdateVO;
-          console.log(data);
           const params = { ...unref(record), ...data };
-          console.log(params);
 
           await updateColumn(params);
 
