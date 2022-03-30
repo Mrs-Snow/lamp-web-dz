@@ -57,7 +57,7 @@
 </template>
 <script lang="ts">
   import { defineComponent, onMounted, ref } from 'vue';
-  import { Card, Empty, Tag } from 'ant-design-vue';
+  import { Card, CardGrid, Empty, Tag } from 'ant-design-vue';
   import { usePermission } from '/@/hooks/web/usePermission';
   import { useDesign } from '/@/hooks/web/useDesign';
   import { useUserStore } from '/@/store/modules/user';
@@ -74,7 +74,7 @@
   import { checkEmployeeHaveApplication } from '/@/api/lamp/common/oauth';
 
   export default defineComponent({
-    components: { Card, CardGrid: Card.Grid, Empty, ThumbUrl, Tag },
+    components: { Card, CardGrid, Empty, ThumbUrl, Tag },
     props: {
       title: propTypes.string.def('我的应用'),
       updateDef: propTypes.bool.def(false),
