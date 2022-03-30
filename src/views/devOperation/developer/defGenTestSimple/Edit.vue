@@ -38,6 +38,7 @@
           disabled: (_) => {
             return unref(type) === ActionEnum.VIEW;
           },
+          baseColProps: { span: 24 },
           actionColOptions: {
             span: 23,
           },

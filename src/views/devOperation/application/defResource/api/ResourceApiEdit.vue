@@ -27,6 +27,7 @@
         labelWidth: 100,
         schemas: editResourceApiFormSchema(),
         showActionButtonGroup: false,
+        baseColProps: { span: 24 },
         actionColOptions: {
           span: 23,
         },

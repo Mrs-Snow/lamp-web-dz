@@ -29,6 +29,7 @@
         labelWidth: 100,
         schemas: editMetaFormSchema(),
         showActionButtonGroup: false,
+        baseColProps: { span: 24 },
         actionColOptions: {
           span: 23,
         },

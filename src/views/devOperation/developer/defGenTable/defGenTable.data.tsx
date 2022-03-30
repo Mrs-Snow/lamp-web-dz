@@ -378,7 +378,7 @@ export const baseEditFormSchema = (updateSchemaFn: Fn): FormSchema[] => {
             updateSchemaFn([
               {
                 field: 'dsValue',
-                required: true,
+                rules: [{ required: true }, { min: 0, max: 255, message: '数据源长度不能超过255' }],
               },
               {
                 field: 'isDs',
@@ -391,7 +391,10 @@ export const baseEditFormSchema = (updateSchemaFn: Fn): FormSchema[] => {
             updateSchemaFn([
               {
                 field: 'dsValue',
-                required: false,
+                rules: [
+                  { required: false },
+                  { min: 0, max: 255, message: '数据源长度不能超过255' },
+                ],
               },
               {
                 field: 'isDs',
@@ -488,7 +491,8 @@ export const baseEditFormSchema = (updateSchemaFn: Fn): FormSchema[] => {
       component: 'ApiRadioGroup',
       componentProps: {
         ...enumComponentProps(EnumEnum.GenTypeEnum),
-        onChange: (value: string) => {
+        onChange: (e: ChangeEvent) => {
+          const value = e?.target?.value;
           if (GenTypeEnum.GEN === value) {
             updateSchemaFn([
               {

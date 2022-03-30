@@ -41,6 +41,7 @@
           labelWidth: 120,
           schemas: editFormSchema(type),
           showActionButtonGroup: false,
+          baseColProps: { span: 24 },
           actionColOptions: {
             span: 23,
           },

@@ -33,6 +33,7 @@
         schemas: editFormSchema(type),
         showActionButtonGroup: false,
         readonly: true,
+        baseColProps: { span: 24 },
         actionColOptions: {
           span: 23,
         },

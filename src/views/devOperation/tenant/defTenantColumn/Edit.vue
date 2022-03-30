@@ -44,6 +44,7 @@
           actionColOptions: {
             span: 23,
           },
+          baseColProps: { span: 24 },
         });
       // const area = ref<string[]>([]);
       const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(async (data) => {

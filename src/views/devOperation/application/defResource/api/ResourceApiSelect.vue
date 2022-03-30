@@ -258,6 +258,7 @@
             handleUriChange,
             handleUriDeselect,
           ),
+          baseColProps: { span: 24 },
           showActionButtonGroup: false,
           actionColOptions: {
             span: 23,

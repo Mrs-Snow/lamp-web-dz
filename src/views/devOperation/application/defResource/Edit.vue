@@ -56,6 +56,7 @@
           labelWidth: 110,
           showActionButtonGroup: false,
           schemas: editFormSchema(type),
+          baseColProps: { span: 24 },
           disabled: () => {
             return unref(type) === ActionEnum.VIEW;
           },

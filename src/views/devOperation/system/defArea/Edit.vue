@@ -37,6 +37,7 @@
         labelWidth: 100,
         showActionButtonGroup: false,
         schemas: editFormSchema(type),
+        baseColProps: { span: 24 },
       });
 
       // 提交

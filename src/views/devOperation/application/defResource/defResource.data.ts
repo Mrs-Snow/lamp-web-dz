@@ -260,9 +260,9 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       componentProps: ({ formActionType }) => {
         return {
           ...dictComponentProps(DictEnum.RESOURCE_OPEN_WITH),
-          onChange: (value: string) => {
+          onChange: (e: ChangeEvent) => {
             const { setFieldsValue, validateFields } = formActionType;
-            switch (value) {
+            switch (e?.target?.value) {
               case ResourceOpenWithEnum.INNER_CHAIN:
                 break;
               case ResourceOpenWithEnum.OUTER_CHAIN:
