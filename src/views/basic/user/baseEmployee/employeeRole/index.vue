@@ -52,6 +52,7 @@
   import { employeeRoleColumns, employeeRoleSearchFormSchema } from '../baseEmployee.data';
   import { handleFetchParams } from '/@/utils/lamp/common';
   import { isEmpty } from '/@/utils/is';
+  import { ScopeTypeEnum } from '/@/enums/biz/base';
 
   export default defineComponent({
     name: 'EmployeeRoleIndex',
@@ -101,6 +102,7 @@
         },
         searchInfo: {
           employeeId: toRef(formData, 'employeeId'),
+          scopeType: ScopeTypeEnum.EMPLOYEE,
         },
         canResize: false,
         bordered: true,
@@ -162,6 +164,7 @@
           bindRole(true, [record.id]);
         }
       }
+
       function handleUnBindRole(record: Recordable, e: Event) {
         e?.stopPropagation();
         if (record?.id) {
