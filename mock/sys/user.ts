@@ -108,7 +108,15 @@ export default [
       if (!checkUser) {
         return resultError('Invalid token!');
       }
-      return resultSuccess(undefined, { message: 'Token has been destroyed' });
+      return resultSuccess(undefined, { msg: 'Token has been destroyed' });
+    },
+  },
+  {
+    url: '/basic-api/testRetry',
+    statusCode: 405,
+    method: 'get',
+    response: () => {
+      return resultError('Error!');
     },
   },
 ] as MockMethod[];

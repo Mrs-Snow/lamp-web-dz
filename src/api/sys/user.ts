@@ -9,6 +9,7 @@ enum Api {
   Login = '/oauth/anyTenant/login',
   Logout = '/oauth/anyUser/logout',
   LoadCaptcha = '/oauth/anyTenant/captcha',
+  TestRetry = '/testRetry',
 }
 
 /**
@@ -66,4 +67,17 @@ export function doLogout(params: LogoutParams) {
       'Content-Type': ContentTypeEnum.FORM_URLENCODED,
     },
   });
+}
+
+export function testRetry() {
+  return defHttp.get(
+    { url: Api.TestRetry },
+    {
+      retryRequest: {
+        isOpenRetry: true,
+        count: 5,
+        waitTime: 1000,
+      },
+    },
+  );
 }

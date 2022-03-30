@@ -24,8 +24,15 @@ export interface RequestOptions {
   // Whether to send token in header
   withToken?: boolean;
   withTenant?: boolean;
+  // 请求重试机制
+  retryRequest?: RetryRequest;
 }
 
+export interface RetryRequest {
+  isOpenRetry: boolean;
+  count: number;
+  waitTime: number;
+}
 export interface Result<T = any> {
   isSuccess: boolean;
   code: number;
@@ -47,4 +54,5 @@ export interface UploadFileParams {
   file: File | Blob;
   // 传给后端的，文件名
   filename?: string;
+  [key: string]: any;
 }

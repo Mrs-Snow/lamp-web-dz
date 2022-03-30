@@ -187,6 +187,15 @@
         isLeaf: (record) => {
           return !(record.levelType < 3);
         },
+        onChange: (k, v) => {
+          console.log('onChange', k, v);
+        },
+        onDefaultChange: (k, v) => {
+          console.log('onDefaultChange', k, v);
+        },
+        defaultChange: (k, v) => {
+          console.log('defaultChange', k, v);
+        },
       },
     },
     {

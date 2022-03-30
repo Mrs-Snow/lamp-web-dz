@@ -18,6 +18,7 @@ componentMap.set('Input', Input);
 componentMap.set('InputNumber', InputNumber);
 componentMap.set('Select', Select);
 componentMap.set('ApiSelect', ApiSelect);
+componentMap.set('AutoComplete', AutoComplete);
 componentMap.set('ApiTreeSelect', ApiTreeSelect);
 componentMap.set('AutoComplete', AutoComplete);
 componentMap.set('Switch', Switch);

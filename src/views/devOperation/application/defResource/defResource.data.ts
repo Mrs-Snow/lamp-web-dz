@@ -55,6 +55,9 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       field: 'divider-selects1',
       component: 'Divider',
       label: '基础信息',
+      colProps: {
+        span: 24,
+      },
     },
     {
       label: t('devOperation.application.defResource.resourceType'),
@@ -225,6 +228,9 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       field: 'divider-selects2',
       component: 'Divider',
       label: '特性信息',
+      colProps: {
+        span: 24,
+      },
       helpMessage: ['每种类型拥有不同的字段'],
       ifShow: ({ values }) => {
         return [
@@ -242,6 +248,9 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       defaultValue: ResourceOpenWithEnum.INNER_COMPONENT,
       ifShow: ({ values }) => {
         return [ResourceTypeEnum.MENU, ResourceTypeEnum.VIEW].includes(values.resourceType);
+      },
+      colProps: {
+        span: 24,
       },
       helpMessage: [
         '组件：在框架内打开组件页面',
@@ -594,6 +603,9 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       field: 'divider-selects3',
       component: 'Divider',
       label: '扩展信息',
+      colProps: {
+        span: 24,
+      },
     },
     {
       label: t('devOperation.application.defResource.metaJson'),
@@ -606,6 +618,9 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       label: t('devOperation.application.defResource.describe'),
       field: 'describe',
       component: 'InputTextArea',
+      colProps: {
+        span: 24,
+      },
       componentProps: {
         'auto-size': { minRows: 2, maxRows: 3 },
       },

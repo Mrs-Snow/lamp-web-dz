@@ -19,8 +19,10 @@ import { joinTimestamp, formatRequestDate } from './helper';
 import { useUserStoreWithOut } from '/@/store/modules/user';
 import { Base64 } from 'js-base64';
 import { router } from '/@/router';
+import { AxiosRetry } from '/@/utils/http/axios/axiosRetry';
 
 const globSetting = useGlobSetting();
+const urlPrefix = globSetting.urlPrefix;
 const { createMessage, createErrorModal } = useMessage();
 
 /**
@@ -194,7 +196,7 @@ const transform: AxiosTransform = {
   /**
    * @description: 响应错误处理
    */
-  responseInterceptorsCatch: (error: any) => {
+  responseInterceptorsCatch: (axiosInstance: AxiosResponse, error: any) => {
     const { t } = useI18n();
     const errorLogStore = useErrorLogStoreWithOut();
     errorLogStore.addAjaxErrorInfo(error);
@@ -224,6 +226,14 @@ const transform: AxiosTransform = {
     }
 
     checkStatus(error, errorMessageMode);
+
+    // 添加自动重试机制 保险起见 只针对GET请求
+    const retryRequest = new AxiosRetry();
+    const { isOpenRetry } = config.requestOptions.retryRequest;
+    config.method?.toUpperCase() === RequestEnum.GET &&
+      isOpenRetry &&
+      // @ts-ignore
+      retryRequest.retry(axiosInstance, error);
     return Promise.reject(error);
   },
 };
@@ -262,7 +272,7 @@ function createAxios(opt?: Partial<CreateAxiosOptions>) {
           // 接口地址
           apiUrl: globSetting.apiUrl,
           // 接口拼接地址
-          urlPrefix: globSetting.urlPrefix,
+          urlPrefix: urlPrefix,
           //  是否加入时间戳
           joinTime: true,
           // 忽略重复请求
@@ -271,6 +281,11 @@ function createAxios(opt?: Partial<CreateAxiosOptions>) {
           withToken: true,
           // 是否携带tenant
           withTenant: true,
+          retryRequest: {
+            isOpenRetry: false,
+            count: 5,
+            waitTime: 100,
+          },
         },
       },
       opt || {},

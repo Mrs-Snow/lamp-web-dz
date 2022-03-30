@@ -36,6 +36,7 @@
       const [register, { setFieldsValue, resetFields, updateSchema, validate }] = useForm({
         labelWidth: 100,
         showActionButtonGroup: false,
+        baseColProps: { span: 24 },
         schemas: editFormSchema(type),
       });
 
