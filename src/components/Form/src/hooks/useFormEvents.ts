@@ -195,7 +195,8 @@ export function useFormEvents({
         }
       });
     });
-    _setDefaultValue(schema);
+    // bug不能设置默认值， 否则参数值永远不对
+    // _setDefaultValue(schema);
 
     schemaRef.value = uniqBy(schema, 'field');
   }
