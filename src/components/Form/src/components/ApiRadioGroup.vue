@@ -120,8 +120,9 @@
         emit('options-change', unref(getOptions));
       }
 
-      function handleChange(_, ...args) {
-        emitData.value = args;
+      function handleChange(e) {
+        emitData.value = e.target.value;
+        emit('change', e);
       }
 
       return { state, getOptions, attrs, loading, t, handleChange, props };
