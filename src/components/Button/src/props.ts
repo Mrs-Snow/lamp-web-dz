@@ -10,6 +10,8 @@ export const buttonProps = {
    * Text after icon.
    */
   postIcon: { type: String },
+  circle: { type: Boolean },
+  circleIcon: { type: String },
   /**
    * preIcon and postIcon icon size.
    * @default: 14

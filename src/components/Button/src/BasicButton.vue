@@ -1,5 +1,16 @@
 <template>
-  <Button v-bind="getBindValue" :class="getButtonClass" @click="onClick">
+  <Button
+    shape="circle"
+    v-bind="getBindValue"
+    :class="getButtonClass"
+    @click="onClick"
+    v-if="circle"
+  >
+    <template #icon>
+      <Icon :icon="circleIcon" />
+    </template>
+  </Button>
+  <Button v-bind="getBindValue" :class="getButtonClass" @click="onClick" v-else>
     <template #default="data">
       <Icon :icon="preIcon" v-if="preIcon" :size="iconSize" />
       <slot v-bind="data || {}"></slot>
@@ -10,6 +21,7 @@
 
 <script lang="ts">
   import { defineComponent } from 'vue';
+
   export default defineComponent({
     name: 'AButton',
     inheritAttrs: false,
@@ -18,7 +30,7 @@
 <script lang="ts" setup>
   import { computed, unref } from 'vue';
   import { Button } from 'ant-design-vue';
-  import Icon from '/@/components/Icon/src/Icon.vue';
+  import Icon from '/@/components/Icon/index';
   import { buttonProps } from './props';
   import { useAttrs } from '/@/hooks/core/useAttrs';
 

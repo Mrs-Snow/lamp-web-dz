@@ -16,6 +16,8 @@
       type: Boolean,
       default: true,
     },
+    circle: { type: Boolean },
+    circleIcon: { type: String },
   };
 
   export default defineComponent({
