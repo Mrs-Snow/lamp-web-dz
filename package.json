@@ -73,9 +73,16 @@
     "vue-router": "^4.0.14",
     "vue-types": "^4.1.1",
     "vue3-blocks-tree": "^0.6.1",
+    "vxe-table": "^4.2.2-beta.1",
+    "vxe-table-plugin-antd": "^3.0.5",
+    "xe-utils": "^3.5.4",
     "xlsx": "^0.18.4"
   },
   "devDependencies": {
+    "@zougt/some-loader-utils": "^1.4.2",
+    "@zougt/vite-plugin-theme-preprocessor": "^1.4.0",
+    "color": "^4.1.0",
+    "sass": "^1.45.1",
     "@commitlint/cli": "^16.2.3",
     "@commitlint/config-conventional": "^16.2.1",
     "@iconify/json": "^2.1.17",

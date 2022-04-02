@@ -14,6 +14,11 @@ import { setupStore } from '/@/store';
 import { setupGlobDirectives } from '/@/directives';
 import { setupI18n } from '/@/locales/setupI18n';
 import { registerGlobComp } from '/@/components/registerGlobComp';
+import { registerThirdComp } from '/@/plugins/vxe-table';
+
+if (import.meta.env.DEV) {
+  // import('ant-design-vue/dist/antd.less');
+}
 
 async function bootstrap() {
   const app = createApp(App);
@@ -42,6 +47,9 @@ async function bootstrap() {
 
   // Configure global error handling
   setupErrorHandle(app);
+
+  // 注册第三方组件
+  registerThirdComp(app);
 
   // https://next.router.vuejs.org/api/#isready
   // await router.isReady();
