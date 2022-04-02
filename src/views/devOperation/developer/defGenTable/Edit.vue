@@ -44,7 +44,7 @@
   import { Api, detail, update } from '/@/api/devOperation/developer/defGenTable';
   import { baseEditFormSchema, customFormSchemaRules } from './defGenTable.data';
   import { GenTypeEnum } from '/@/enums/biz/tenant';
-  import DefGenTableColumn from './DefGenTableColumn.vue';
+  import DefGenTableColumn from './DefGenTableColumn2.vue';
 
   export default defineComponent({
     name: '修改代码配置',

@@ -5,11 +5,13 @@ import type { Rule, FormSchema } from '/@/components/Form/src/types/form';
 import { ServicePrefixEnum } from '/@/enums/commonEnum';
 import { defHttp } from '/@/utils/http/axios';
 import type { AxiosRequestConfig } from 'axios';
+import { VxeTablePropTypes, VxeTableDefines } from 'vxe-table';
 
 export enum RuleType {
   append,
   cover,
 }
+
 export interface FormSchemaExt extends FormSchema {
   // 类型 append：追加  cover：覆盖
   type?: RuleType;
@@ -294,12 +296,12 @@ function transformationRules(data: FieldValidatorDesc[]): Partial<FormSchema>[] 
 function enhanceCustomRules(
   formSchemaRules: Partial<FormSchema>[],
   customFormSchemaRules?: Partial<FormSchemaExt>[],
-): Partial<FormSchema>[] {
+): Map<string, Rule[]> {
   if (!customFormSchemaRules) {
-    return formSchemaRules;
+    return {} as Map<string, Rule[]>;
   }
   if (!formSchemaRules) {
-    return [];
+    return {} as Map<string, Rule[]>;
   }
   const map = new Map<string, Rule[]>();
   formSchemaRules.forEach(({ field = '', rules = [] }) => {
@@ -320,14 +322,16 @@ function enhanceCustomRules(
     }
   });
 
-  const newRules: FormSchema[] = [];
-  for (const [field, rules] of map) {
-    newRules.push({ field, rules } as FormSchema);
-  }
-  return newRules;
+  return map;
+  // const newRules: FormSchema[] = [];
+  // for (const [field, rules] of map) {
+  //   newRules.push({ field, rules } as FormSchema);
+  // }
+  // return newRules;
 }
 
 const ruleMap = new Map();
+const ruleObjMap = new Map();
 
 /**
  * 从后端获取某个接口基于 Hibernate Validator 注解生成的参数校验规则
@@ -359,11 +363,57 @@ export const getValidateRules = async (
       const res = await defHttp.request<FieldValidatorDesc[]>({ ...formValidateApi });
       if (res) {
         const formSchemaRules = transformationRules(res);
-        const allRules = enhanceCustomRules(formSchemaRules, customRules);
-        ruleMap.set(key, allRules);
-        return resolve(allRules);
+        const map = enhanceCustomRules(formSchemaRules, customRules);
+
+        const newRules: FormSchema[] = [];
+        for (const [field, rules] of map) {
+          newRules.push({ field, rules } as FormSchema);
+        }
+
+        ruleMap.set(key, newRules);
+        return resolve(newRules);
       }
     } catch (error) {}
     return resolve([]);
+  });
+};
+
+export const getValidateRuleObj = async (
+  Api: AxiosRequestConfig,
+  customRules?: Partial<FormSchemaExt>[],
+): Promise<VxeTablePropTypes.EditRules> => {
+  return new Promise(async (resolve, _reject) => {
+    const formValidateApi = { url: '', method: Api.method };
+    for (const sp in ServicePrefixEnum) {
+      // @ts-ignore
+      if (Api.url.startsWith(ServicePrefixEnum[sp])) {
+        // @ts-ignore
+        formValidateApi.url = Api.url.replace(
+          ServicePrefixEnum[sp],
+          `${ServicePrefixEnum[sp]}/form/validator`,
+        );
+      }
+    }
+    try {
+      const key = formValidateApi.url + formValidateApi.method;
+      if (ruleObjMap.has(key)) {
+        return resolve(ruleObjMap.get(key));
+      }
+
+      const res = await defHttp.request<FieldValidatorDesc[]>({ ...formValidateApi });
+      if (res) {
+        const formSchemaRules = transformationRules(res);
+        const map = enhanceCustomRules(formSchemaRules, customRules);
+
+        const newRules: VxeTablePropTypes.EditRules = {};
+        for (const [field, rules] of map) {
+          newRules[field] = rules as VxeTableDefines.ValidatorRule[];
+        }
+
+        ruleObjMap.set(key, newRules);
+        return resolve(newRules);
+      }
+    } catch (error) {}
+    return resolve({});
   });
 };
