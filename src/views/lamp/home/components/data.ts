@@ -56,6 +56,12 @@ export const navItems: NavItem[] = [
 export const dynamicInfoItems: DynamicInfoItem[] = [
   {
     avatar: 'dynamic-avatar-1|svg',
+    name: '4.5.2 已发布：',
+    date: '2022-04-0?',
+    desc: `<a href="https://www.oschina.net/news/188721">spring boot 2.5.12、代码生成器支持生成项目、集成vxe-table</a>`,
+  },
+  {
+    avatar: 'dynamic-avatar-1|svg',
     name: '4.5.1 已发布：',
     date: '2022-03-29',
     desc: `<a href="https://www.oschina.net/news/188721">资源维护页面显示优化、资源维护页面配置接口功能优化、通过接口获取真实的后台存活接口数据、配置代码生成器功能相关的菜单、uri、按钮等资源</a>`,

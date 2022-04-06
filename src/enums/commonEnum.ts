@@ -97,6 +97,9 @@ export enum EnumEnum {
   SqlConditionEnum = 'SqlConditionEnum',
   SuperClassEnum = 'SuperClassEnum',
   ComponentEnum = 'ComponentEnum',
+  ProjectTypeEnum = 'ProjectTypeEnum',
+
+  // test
   ProductType = 'ProductType',
   DefGenTestSimpleType2Enum = 'DefGenTestSimpleType2Enum',
 }

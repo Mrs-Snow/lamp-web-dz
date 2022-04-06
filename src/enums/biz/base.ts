@@ -28,3 +28,9 @@ export const categoryMap = new Map();
 categoryMap.set(RoleCategoryEnum.FUNCTION, 'success');
 categoryMap.set(RoleCategoryEnum.DATA_SCOPE, 'error');
 categoryMap.set(RoleCategoryEnum.DESKTOP, 'processing');
+
+// 项目类型
+export enum ProjectTypeEnum {
+  CLOUD = 'CLOUD',
+  BOOT = 'BOOT',
+}
