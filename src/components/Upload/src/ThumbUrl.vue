@@ -8,6 +8,7 @@
         :fallback="props.fallback"
         :preview="props.preview"
         :placeholder="props.placeholder"
+        :style="style"
       />
     </template>
     <template v-else>
@@ -16,22 +17,27 @@
   </span>
 </template>
 <script lang="ts">
-  import { defineComponent, ref, watch } from 'vue';
+  import { defineComponent, ref, watch, computed } from 'vue';
   import { Image } from 'ant-design-vue';
   import { Base64 } from 'js-base64';
   import { propTypes } from '/@/utils/propTypes';
   import { asyncFindDefUrlById, asyncFindUrlById } from '/@/api/lamp/file/upload';
   import { errImg } from '/@/utils/file/base64Conver';
   import { useGlobSetting } from '/@/hooks/setting';
+  import { toObject } from '/@/components/Scrollbar/src/util';
 
   export default defineComponent({
     components: { Image },
     props: {
       fileUrl: propTypes.string.def(''),
       fileId: propTypes.string.def(''),
-      width: propTypes.number.def(104),
-      height: propTypes.number.def(104),
+      width: propTypes.oneOfType([propTypes.number.def(104), propTypes.string.def('104')]),
+      height: propTypes.oneOfType([propTypes.number.def(104), propTypes.string.def('104')]),
       fileType: propTypes.string.def('IMAGE'),
+      imageStyle: {
+        type: [String, Array],
+        default: '',
+      },
       originalFileName: propTypes.string.def('未知文件'),
       preview: propTypes.bool.def(true),
       placeholder: propTypes.bool.def(false),
@@ -48,14 +54,21 @@
       const realSrc = ref<string>('');
       const { previewUrlPrefix } = useGlobSetting();
 
+      const style = computed(() => {
+        if (Array.isArray(props.imageStyle)) {
+          return toObject(props.imageStyle);
+        }
+        return props.imageStyle;
+      });
+
       watch(
         () => props.fileUrl,
         () => {
-          if (props.fileUrl && props.fileUrl.startsWith('http')) {
-            realSrc.value = props.fileUrl;
-          } else if (props.fileUrl && props.fileUrl.startsWith('data:')) {
-            realSrc.value = props.fileUrl;
-          }
+          // if (props.fileUrl && props.fileUrl.startsWith('http')) {
+          //   realSrc.value = props.fileUrl;
+          // } else if (props.fileUrl && props.fileUrl.startsWith('data:')) {
+          // }
+          realSrc.value = props.fileUrl;
         },
         { immediate: true },
       );
@@ -91,17 +104,17 @@
         }
       }
 
-      return { realSrc, errImg, props, onView };
+      return { realSrc, errImg, props, onView, style };
     },
   });
 </script>
-<style lang="less">
+<style lang="less" scoped>
   .thumb {
     img {
       position: static;
       display: block;
       object-fit: cover;
-      max-height: 104px;
+      //max-height: 104px;
       margin: 0 auto;
     }
   }

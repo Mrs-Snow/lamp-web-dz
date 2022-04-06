@@ -50,6 +50,7 @@
           :fileType="record.fileType"
           :originalFileName="record.originalFileName"
           :isDef="true"
+          :imageStyle="{ 'max-height': '104px' }"
         />
       </template>
       <template #action="{ record }">
