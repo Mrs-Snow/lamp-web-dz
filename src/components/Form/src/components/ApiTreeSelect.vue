@@ -1,5 +1,5 @@
 <template>
-  <a-tree-select v-bind="getAttrs" @change="handleChange" :replaceFields="getReplaceFields">
+  <a-tree-select v-bind="getAttrs" @change="handleChange" :fieldNames="getFieldNames">
     <template #[item]="data" v-for="item in Object.keys($slots)">
       <slot :name="item" v-bind="data || {}"></slot>
     </template>
@@ -29,8 +29,11 @@
     name: 'ApiTreeSelect',
     components: { ATreeSelect: TreeSelect, LoadingOutlined },
     props: {
+      // 请求地址
       api: { type: Function as PropType<(arg?: Recordable) => Promise<OptionsItem[]>> },
+      // 参数
       params: { type: Object },
+      // 立即加载
       immediate: { type: Boolean, default: true },
       resultField: propTypes.string.def(''),
       labelField: propTypes.string.def('label'),
@@ -40,6 +43,7 @@
     emits: ['options-change', 'change'],
     setup(props, { attrs, emit }) {
       const treeData = ref<Recordable[]>([]);
+      // 是否首次加载
       const isFirstLoaded = ref<Boolean>(false);
       const loading = ref(false);
       const getAttrs = computed(() => {
@@ -49,7 +53,7 @@
         };
       });
 
-      const getReplaceFields = computed(() => {
+      const getFieldNames = computed(() => {
         const { childrenField, labelField, valueField } = props;
 
         return { children: childrenField, label: labelField, key: valueField, value: valueField };
@@ -98,7 +102,7 @@
         isFirstLoaded.value = true;
         emit('options-change', treeData.value);
       }
-      return { getReplaceFields, getAttrs, loading, handleChange };
+      return { getFieldNames, getAttrs, loading, handleChange };
     },
   });
 </script>
