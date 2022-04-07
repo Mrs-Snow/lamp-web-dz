@@ -35,6 +35,7 @@
         actionColOptions: {
           span: 23,
         },
+        baseColProps: { span: 24 },
       });
 
       const [registerModal, { setModalProps, closeModal }] = useModalInner(async (data) => {

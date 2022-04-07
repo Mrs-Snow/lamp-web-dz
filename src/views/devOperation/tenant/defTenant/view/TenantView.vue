@@ -1,5 +1,7 @@
 <template>
-  <BasicForm @register="registerForm" />
+  <div class="p-8">
+    <BasicForm @register="registerForm" />
+  </div>
 </template>
 <script lang="ts">
   import { defineComponent, ref, onMounted } from 'vue';
@@ -27,6 +29,7 @@
           span: 23,
         },
         readonly: true,
+        baseColProps: { span: 24 },
       });
 
       onMounted(() => {

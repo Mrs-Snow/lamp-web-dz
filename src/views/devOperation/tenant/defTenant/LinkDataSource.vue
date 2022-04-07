@@ -65,6 +65,7 @@
         actionColOptions: {
           span: 23,
         },
+        baseColProps: { span: 24 },
       });
 
       const [registerDrawer, { setDrawerProps, closeDrawer, changeLoading }] = useDrawerInner(
