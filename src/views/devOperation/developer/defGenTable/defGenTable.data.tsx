@@ -4,11 +4,13 @@ import { enumComponentProps, yesNoComponentProps } from '/@/utils/lamp/common';
 import { EnumEnum } from '/@/enums/commonEnum';
 import { FormSchemaExt } from '/@/api/lamp/common/formValidateService';
 import { query } from '/@/api/devOperation/tenant/datasourceConfig';
-import { GenTypeEnum, PopupTypeEnum, TplEnum } from '/@/enums/biz/tenant';
+import { EntitySuperClassEnum, GenTypeEnum, PopupTypeEnum, TplEnum } from '/@/enums/biz/tenant';
 import { lowerFirst } from 'lodash-es';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { FormActionType } from '/@/components/Form';
 import { findOnlineService } from '/@/api/devOperation/tenant/tenant';
+import { query as queryApplication } from '/@/api/devOperation/application/defApplication';
+import { tree as queryMenu } from '/@/api/devOperation/application/defResource';
 
 const { t } = useI18n();
 const { createMessage } = useMessage();
@@ -347,8 +349,20 @@ export const baseEditFormSchema = (updateSchemaFn: Fn): FormSchema[] => {
       label: '实体父类',
       field: 'entitySuperClass',
       component: 'ApiSelect',
-      componentProps: {
-        ...enumComponentProps(EnumEnum.EntitySuperClassEnum),
+      componentProps: ({ formActionType }) => {
+        return {
+          ...enumComponentProps(EnumEnum.EntitySuperClassEnum),
+          onChange: (value: string) => {
+            const { setFieldsValue, getFieldsValue } = formActionType;
+
+            if (value === EntitySuperClassEnum.TREE_ENTITY) {
+              setFieldsValue({ tplType: TplEnum.TREE });
+            } else {
+              getFieldsValue().tplType === TplEnum.TREE &&
+                setFieldsValue({ tplType: TplEnum.SIMPLE });
+            }
+          },
+        };
       },
       colProps: {
         span: 12,
@@ -527,22 +541,6 @@ export const baseEditFormSchema = (updateSchemaFn: Fn): FormSchema[] => {
         '直接生成时，一定要确保lamp-generator服务在本地启动，否则无法生成到开发者的开发电脑',
       ],
     },
-    // {
-    //   label: '打开输出目录',
-    //   field: 'open',
-    //   component: 'RadioGroup',
-    //   componentProps: {
-    //     ...yesNoComponentProps(),
-    //   },
-    //   defaultValue: false,
-    //   colProps: {
-    //     span: 12,
-    //   },
-    //   ifShow: ({ values }) => {
-    //     return values.genType === GenTypeEnum.GEN;
-    //   },
-    //   helpMessage: ['生成完毕后，是否自动打开目录'],
-    // },
     {
       label: '后端生成路径',
       field: 'outputDir',
@@ -771,9 +769,44 @@ export const baseEditFormSchema = (updateSchemaFn: Fn): FormSchema[] => {
       },
     },
     {
+      field: 'divider-selects4',
+      component: 'Divider',
+      label: 'SQL信息',
+    },
+    {
+      label: '菜单所属应用',
+      field: 'menuApplicationId',
+      component: 'ApiSelect',
+      componentProps: ({ formActionType }) => {
+        return {
+          api: queryApplication,
+          labelField: 'name',
+          valueField: 'id',
+          onChange: async (applicationId: string) => {
+            const treeData = await queryMenu({ applicationId });
+
+            const { updateSchema } = formActionType;
+            await updateSchema({
+              field: 'menuParentId',
+              componentProps: {
+                treeData,
+              },
+            });
+          },
+        };
+      },
+      helpMessage: ['当前功能生成后，菜单属于哪个应用？'],
+      colProps: {
+        span: 12,
+      },
+    },
+    {
       label: '上级菜单',
-      field: 'parentId',
-      component: 'Input',
+      field: 'menuParentId',
+      component: 'TreeSelect',
+      componentProps: {
+        fieldNames: { children: 'children', label: 'name', key: 'id', value: 'id' },
+      },
       helpMessage: ['当前功能生成后，显示在左侧菜单的位置'],
       colProps: {
         span: 12,
@@ -786,6 +819,35 @@ export const baseEditFormSchema = (updateSchemaFn: Fn): FormSchema[] => {
       helpMessage: ['当前功能生成后，显示在左侧的菜单名'],
       colProps: {
         span: 12,
+      },
+    },
+    {
+      label: '菜单图标',
+      field: 'menuIcon',
+      component: 'IconPicker',
+      helpMessage: ['当前功能生成后，显示在左侧的菜单图标'],
+      colProps: {
+        span: 12,
+      },
+    },
+    {
+      field: 'divider-selects5',
+      component: 'Divider',
+      label: '其他信息',
+      ifShow: ({ values }) => {
+        return values.tplType === TplEnum.TREE;
+      },
+    },
+    {
+      label: '树名称字段',
+      field: 'treeName',
+      component: 'Input',
+      helpMessage: ['树型页面，显示在树节点上的字段'],
+      colProps: {
+        span: 12,
+      },
+      ifShow: ({ values }) => {
+        return values.tplType === TplEnum.TREE;
       },
     },
   ];

@@ -1,5 +1,5 @@
 <template>
-  <PageWrapper :content="content" :title="title" contentBackground>
+  <PageWrapper :content="content" :title="title">
     <template #extra>
       <a-button v-if="activeKey === 'basic'" type="primary" @click="handleSubmit">保存</a-button>
     </template>
@@ -19,11 +19,11 @@
       :tip="tip"
     />
 
-    <div class="m-4 p-4 overflow-hidden bg-white">
-      <CollapseContainer ref="formCcRef" title="生成信息">
+    <div class="overflow-hidden">
+      <CollapseContainer ref="formCcRef" class="w-full bg-white rounded-md" title="生成信息">
         <BasicForm @register="registerBasicForm" />
       </CollapseContainer>
-      <CollapseContainer ref="columnCcRef" class="" title="字段信息">
+      <CollapseContainer ref="columnCcRef" class="w-full mt-5 bg-white rounded-md" title="字段信息">
         <DefGenTableColumn ref="columnRef" />
       </CollapseContainer>
     </div>
