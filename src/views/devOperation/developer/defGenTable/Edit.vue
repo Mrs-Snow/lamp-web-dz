@@ -1,7 +1,7 @@
 <template>
   <PageWrapper :content="content" :title="title">
     <template #extra>
-      <a-button v-if="activeKey === 'basic'" type="primary" @click="handleSubmit">保存</a-button>
+      <a-button type="primary" @click="handleSubmit">保存</a-button>
     </template>
 
     <template #footer>
@@ -22,6 +22,9 @@
     <div class="overflow-hidden">
       <CollapseContainer ref="formCcRef" class="w-full bg-white rounded-md" title="生成信息">
         <BasicForm @register="registerBasicForm" />
+        <div class="flex justify-center mb-4">
+          <a-button type="primary" @click="handleSubmit">保存</a-button>
+        </div>
       </CollapseContainer>
       <CollapseContainer ref="columnCcRef" class="w-full mt-5 bg-white rounded-md" title="字段信息">
         <DefGenTableColumn ref="columnRef" />
@@ -43,8 +46,8 @@
   import { getValidateRules, RuleType } from '/@/api/lamp/common/formValidateService';
   import { Api, detail, update } from '/@/api/devOperation/developer/defGenTable';
   import { baseEditFormSchema, customFormSchemaRules } from './defGenTable.data';
-  import { GenTypeEnum } from '/@/enums/biz/tenant';
-  import DefGenTableColumn from './DefGenTableColumn2.vue';
+  import { GenTypeEnum, TplEnum } from '/@/enums/biz/tenant';
+  import DefGenTableColumn from './DefGenTableColumnVxe.vue';
 
   export default defineComponent({
     name: '修改代码配置',
@@ -100,9 +103,7 @@
         useForm({
           name: 'basic',
           labelWidth: 140,
-          schemas: baseEditFormSchema((data) => {
-            updateSchema(data);
-          }),
+          schemas: baseEditFormSchema(),
           showActionButtonGroup: false,
           baseColProps: { span: 24 },
           actionColOptions: {
@@ -131,11 +132,13 @@
 
       async function handleSubmit() {
         try {
+          setLoading(true);
           const params = await validate();
 
           await update(params);
           createMessage.success('成功');
         } finally {
+          setLoading(false);
         }
       }
 
@@ -178,6 +181,19 @@
             colProps: {
               span: 24,
             },
+          });
+        }
+        if (TplEnum.TREE === record.tplType) {
+          customRules.push({
+            field: 'treeName',
+            type: RuleType.append,
+            rules: [{ required: true }],
+          });
+        } else {
+          customRules.push({
+            field: 'treeName',
+            type: RuleType.append,
+            rules: [{ required: false }],
           });
         }
         if (GenTypeEnum.GEN === record.genType) {

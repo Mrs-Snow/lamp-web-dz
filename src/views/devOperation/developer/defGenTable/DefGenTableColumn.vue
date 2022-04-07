@@ -35,7 +35,7 @@
     update as updateColumn,
   } from '/@/api/devOperation/developer/defGenTableColumn';
   import { RoleEnum } from '/@/enums/roleEnum';
-  import { columnColumns, searchColumnFormSchema } from './defGenTable.data';
+  import { columnColumns, searchColumnFormSchema } from './defGenTableColumn.data';
   import { handleFetchParams } from '/@/utils/lamp/common';
   import { DefGenTableColumnUpdateVO } from '/@/api/devOperation/developer/model/defGenTableColumnModel';
 

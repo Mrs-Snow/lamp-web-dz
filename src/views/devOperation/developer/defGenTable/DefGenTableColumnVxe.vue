@@ -54,7 +54,7 @@
     update as updateColumn,
   } from '/@/api/devOperation/developer/defGenTableColumn';
   import { RoleEnum } from '/@/enums/roleEnum';
-  import { columns, formItems, customFormSchemaRules } from './defGenTableColumn.data';
+  import { columns, formItems, customFormSchemaRules } from './defGenTableColumnVxe.data';
   import { ActionEnum, VALIDATE_API } from '/@/enums/commonEnum';
   import { getValidateRuleObj } from '/@/api/lamp/common/formValidateService';
 

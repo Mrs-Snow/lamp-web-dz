@@ -164,7 +164,7 @@ const getAuthCode = (formActionType: FormActionType, value: string, type: string
 };
 
 // 编辑页字段
-export const baseEditFormSchema = (updateSchemaFn: Fn): FormSchema[] => {
+export const baseEditFormSchema = (): FormSchema[] => {
   return [
     {
       field: 'divider-selects1',
@@ -353,13 +353,21 @@ export const baseEditFormSchema = (updateSchemaFn: Fn): FormSchema[] => {
         return {
           ...enumComponentProps(EnumEnum.EntitySuperClassEnum),
           onChange: (value: string) => {
-            const { setFieldsValue, getFieldsValue } = formActionType;
+            const { setFieldsValue, getFieldsValue, updateSchema } = formActionType;
 
             if (value === EntitySuperClassEnum.TREE_ENTITY) {
               setFieldsValue({ tplType: TplEnum.TREE });
+              updateSchema({
+                field: 'treeName',
+                rules: [{ required: true }, { min: 0, max: 255, message: '长度不能超过255' }],
+              });
             } else {
               getFieldsValue().tplType === TplEnum.TREE &&
                 setFieldsValue({ tplType: TplEnum.SIMPLE });
+              updateSchema({
+                field: 'treeName',
+                rules: [{ required: false }, { min: 0, max: 255, message: '长度不能超过255' }],
+              });
             }
           },
         };
@@ -385,40 +393,40 @@ export const baseEditFormSchema = (updateSchemaFn: Fn): FormSchema[] => {
       label: '@DS',
       field: 'isDs',
       component: 'RadioGroup',
-      componentProps: {
-        ...yesNoComponentProps(),
-        onChange: (e) => {
-          if (e.target.value) {
-            updateSchemaFn([
-              {
-                field: 'dsValue',
-                rules: [{ required: true }, { min: 0, max: 255, message: '数据源长度不能超过255' }],
-              },
-              {
-                field: 'isDs',
-                colProps: {
-                  span: 12,
+      componentProps: ({ formActionType }) => {
+        return {
+          ...yesNoComponentProps(),
+          onChange: (e) => {
+            const { updateSchema } = formActionType;
+            if (e.target.value) {
+              updateSchema([
+                {
+                  field: 'dsValue',
+                  rules: [{ required: true }, { min: 0, max: 255, message: '长度不能超过255' }],
                 },
-              },
-            ]);
-          } else {
-            updateSchemaFn([
-              {
-                field: 'dsValue',
-                rules: [
-                  { required: false },
-                  { min: 0, max: 255, message: '数据源长度不能超过255' },
-                ],
-              },
-              {
-                field: 'isDs',
-                colProps: {
-                  span: 24,
+                {
+                  field: 'isDs',
+                  colProps: {
+                    span: 12,
+                  },
                 },
-              },
-            ]);
-          }
-        },
+              ]);
+            } else {
+              updateSchema([
+                {
+                  field: 'dsValue',
+                  rules: [{ required: false }, { min: 0, max: 255, message: '长度不能超过255' }],
+                },
+                {
+                  field: 'isDs',
+                  colProps: {
+                    span: 24,
+                  },
+                },
+              ]);
+            }
+          },
+        };
       },
       defaultValue: false,
       colProps: {
@@ -503,34 +511,37 @@ export const baseEditFormSchema = (updateSchemaFn: Fn): FormSchema[] => {
       label: '生成方式',
       field: 'genType',
       component: 'ApiRadioGroup',
-      componentProps: {
-        ...enumComponentProps(EnumEnum.GenTypeEnum),
-        onChange: (e: ChangeEvent) => {
-          const value = e?.target?.value;
-          if (GenTypeEnum.GEN === value) {
-            updateSchemaFn([
-              {
-                field: 'outputDir',
-                required: true,
-              },
-              {
-                field: 'frontOutputDir',
-                required: true,
-              },
-            ]);
-          } else {
-            updateSchemaFn([
-              {
-                field: 'outputDir',
-                required: false,
-              },
-              {
-                field: 'frontOutputDir',
-                required: false,
-              },
-            ]);
-          }
-        },
+      componentProps: ({ formActionType }) => {
+        return {
+          ...enumComponentProps(EnumEnum.GenTypeEnum),
+          onChange: (e: ChangeEvent) => {
+            const value = e?.target?.value;
+            const { updateSchema } = formActionType;
+            if (GenTypeEnum.GEN === value) {
+              updateSchema([
+                {
+                  field: 'outputDir',
+                  rules: [{ required: true }, { min: 0, max: 255, message: '长度不能超过255' }],
+                },
+                {
+                  field: 'frontOutputDir',
+                  rules: [{ required: true }, { min: 0, max: 255, message: '长度不能超过255' }],
+                },
+              ]);
+            } else {
+              updateSchema([
+                {
+                  field: 'outputDir',
+                  rules: [{ required: false }, { min: 0, max: 255, message: '长度不能超过255' }],
+                },
+                {
+                  field: 'frontOutputDir',
+                  rules: [{ required: false }, { min: 0, max: 255, message: '长度不能超过255' }],
+                },
+              ]);
+            }
+          },
+        };
       },
       colProps: {
         span: 12,
@@ -619,8 +630,26 @@ export const baseEditFormSchema = (updateSchemaFn: Fn): FormSchema[] => {
       label: '生成模板',
       field: 'tplType',
       component: 'ApiRadioGroup',
-      componentProps: {
-        ...enumComponentProps(EnumEnum.TplEnum),
+      componentProps: ({ formActionType }) => {
+        return {
+          ...enumComponentProps(EnumEnum.TplEnum),
+          onChange: async (e: ChangeEvent) => {
+            console.log(e.target.value);
+            const { updateSchema } = formActionType;
+
+            if (e.target.value === TplEnum.TREE) {
+              await updateSchema({
+                field: 'treeName',
+                rules: [{ required: true }, { min: 0, max: 255, message: '长度不能超过255' }],
+              });
+            } else {
+              await updateSchema({
+                field: 'treeName',
+                rules: [{ required: false }, { min: 0, max: 255, message: '长度不能超过255' }],
+              });
+            }
+          },
+        };
       },
       defaultValue: TplEnum.SIMPLE,
       colProps: {
@@ -783,9 +812,9 @@ export const baseEditFormSchema = (updateSchemaFn: Fn): FormSchema[] => {
           labelField: 'name',
           valueField: 'id',
           onChange: async (applicationId: string) => {
+            const { updateSchema, setFieldsValue } = formActionType;
+            setFieldsValue({ menuParentId: undefined });
             const treeData = await queryMenu({ applicationId });
-
-            const { updateSchema } = formActionType;
             await updateSchema({
               field: 'menuParentId',
               componentProps: {
@@ -858,317 +887,4 @@ export const customFormSchemaRules = (
   _getFieldsValue: () => Recordable,
 ): Partial<FormSchemaExt>[] => {
   return [];
-};
-
-export const columnColumns = (): BasicColumn[] => {
-  return [
-    {
-      title: t('devOperation.developer.defGenTableColumn.name'),
-      dataIndex: 'name',
-      fixed: 'left',
-      // width: 180,
-    },
-    {
-      title: t('devOperation.developer.defGenTableColumn.type'),
-      dataIndex: 'type',
-      fixed: 'left',
-    },
-    {
-      title: t('devOperation.developer.defGenTableColumn.comment'),
-      dataIndex: 'comment',
-      // width: 180,
-      editRow: true,
-      editRule: true,
-    },
-    {
-      title: t('devOperation.developer.defGenTableColumn.swaggerComment'),
-      dataIndex: 'swaggerComment',
-      // width: 180,
-      editRow: true,
-      editRule: true,
-    },
-    {
-      title: t('devOperation.developer.defGenTableColumn.javaType'),
-      dataIndex: 'javaType',
-      // width: 180,
-      editRow: true,
-      editRule: true,
-      editComponent: 'AutoComplete',
-      editComponentProps: {
-        allowClear: true,
-        getPopupContainer: () => document.body,
-        filterOption: (input: string, option) => {
-          return option.value.toUpperCase().indexOf(input.toUpperCase()) >= 0;
-        },
-        options: [
-          { value: 'String' },
-          { value: 'Long' },
-          { value: 'Integer' },
-          { value: 'Boolean' },
-          { value: 'Double' },
-          { value: 'BigDecimal' },
-          { value: 'LocalDateTime' },
-          { value: 'LocalDate' },
-          { value: 'LocalTime' },
-        ],
-      },
-    },
-    {
-      title: t('devOperation.developer.defGenTableColumn.javaField'),
-      dataIndex: 'javaField',
-      editRule: true,
-      // width: 180,
-      editRow: true,
-    },
-    {
-      title: t('devOperation.developer.defGenTableColumn.tsType'),
-      dataIndex: 'tsType',
-      // width: 180,
-      editRow: true,
-      editRule: true,
-      editComponent: 'AutoComplete',
-      editComponentProps: {
-        allowClear: true,
-        getPopupContainer: () => document.body,
-        filterOption: (input: string, option) => {
-          return option.value.toUpperCase().indexOf(input.toUpperCase()) >= 0;
-        },
-        options: [
-          { value: 'string' },
-          { value: 'number' },
-          { value: 'boolean' },
-          { value: 'string[]' },
-          { value: 'number[]' },
-          { value: 'any' },
-          { value: 'tuple' },
-          { value: 'enum' },
-        ],
-      },
-    },
-    {
-      title: t('devOperation.developer.defGenTableColumn.size'),
-      dataIndex: 'size',
-      width: 100,
-      editRow: true,
-      editComponent: 'InputNumber',
-    },
-    {
-      title: t('devOperation.developer.defGenTableColumn.isPk'),
-      dataIndex: 'isPk',
-      width: 60,
-      editRow: true,
-      editComponent: 'Checkbox',
-      key: 'isPk',
-      editValueMap: (value) => {
-        return value ? t('lamp.common.yes') : t('lamp.common.no');
-      },
-    },
-    {
-      title: t('devOperation.developer.defGenTableColumn.isRequired'),
-      dataIndex: 'isRequired',
-      width: 60,
-      editRow: true,
-      editComponent: 'Checkbox',
-      key: 'isRequired',
-      editValueMap: (value) => {
-        return value ? t('lamp.common.yes') : t('lamp.common.no');
-      },
-      editComponentProps: {
-        onChange: (a, b) => {
-          console.log(a);
-          console.log(b);
-        },
-      },
-    },
-
-    {
-      title: t('devOperation.developer.defGenTableColumn.isLogicDeleteField'),
-      dataIndex: 'isLogicDeleteField',
-      width: 80,
-      editRow: true,
-      editValueMap: (value) => {
-        return value ? t('lamp.common.yes') : t('lamp.common.no');
-      },
-      editComponent: 'Checkbox',
-    },
-    {
-      title: t('devOperation.developer.defGenTableColumn.isVersionField'),
-      dataIndex: 'isVersionField',
-      width: 60,
-      editRow: true,
-      editValueMap: (value) => {
-        return value ? t('lamp.common.yes') : t('lamp.common.no');
-      },
-      editComponent: 'Checkbox',
-    },
-    {
-      title: t('devOperation.developer.defGenTableColumn.isIncrement'),
-      dataIndex: 'isIncrement',
-      width: 60,
-      editRow: true,
-      editComponent: 'Checkbox',
-      editValueMap: (value) => {
-        return value ? t('lamp.common.yes') : t('lamp.common.no');
-      },
-    },
-    {
-      title: t('devOperation.developer.defGenTableColumn.fill'),
-      dataIndex: 'fill',
-      // width: 180,
-      editRow: true,
-      editComponent: 'AutoComplete',
-      editComponentProps: {
-        allowClear: true,
-        getPopupContainer: () => document.body,
-        filterOption: (input: string, option) => {
-          return option.value.toUpperCase().indexOf(input.toUpperCase()) >= 0;
-        },
-        options: [
-          { value: 'DEFAULT' },
-          { value: 'INSERT' },
-          { value: 'UPDATE' },
-          { value: 'INSERT_UPDATE' },
-        ],
-      },
-    },
-    {
-      title: t('devOperation.developer.defGenTableColumn.isEdit'),
-      dataIndex: 'isEdit',
-      width: 60,
-      editRow: true,
-      editComponent: 'Checkbox',
-      editValueMap: (value) => {
-        return value ? t('lamp.common.yes') : t('lamp.common.no');
-      },
-    },
-    {
-      title: t('devOperation.developer.defGenTableColumn.isList'),
-      dataIndex: 'isList',
-      width: 60,
-      editRow: true,
-      editComponent: 'Checkbox',
-      editValueMap: (value) => {
-        return value ? t('lamp.common.yes') : t('lamp.common.no');
-      },
-    },
-    {
-      title: t('devOperation.developer.defGenTableColumn.isQuery'),
-      dataIndex: 'isQuery',
-      width: 60,
-      editRow: true,
-      editComponent: 'Checkbox',
-      editValueMap: (value) => {
-        return value ? t('lamp.common.yes') : t('lamp.common.no');
-      },
-    },
-    {
-      title: t('devOperation.developer.defGenTableColumn.width'),
-      dataIndex: 'width',
-      width: 100,
-      editRow: true,
-      editComponent: 'InputNumber',
-    },
-    {
-      title: t('devOperation.developer.defGenTableColumn.queryType'),
-      dataIndex: 'queryType',
-      // width: 180,
-      editRow: true,
-      editComponent: 'AutoComplete',
-      editComponentProps: {
-        allowClear: true,
-        getPopupContainer: () => document.body,
-        filterOption: (input: string, option) => {
-          return option.value.toUpperCase().indexOf(input.toUpperCase()) >= 0;
-        },
-        options: [
-          { value: 'EQUAL' },
-          { value: 'NOT_EQUAL' },
-          { value: 'LIKE' },
-          { value: 'ORACLE_LIKE' },
-          { value: 'LIKE_LEFT' },
-          { value: 'LIKE_RIGHT' },
-        ],
-      },
-    },
-    {
-      title: t('devOperation.developer.defGenTableColumn.component'),
-      dataIndex: 'component',
-      // width: 180,
-      editRow: true,
-      editComponent: 'ApiSelect',
-      editComponentProps: {
-        ...enumComponentProps(EnumEnum.ComponentEnum),
-      },
-    },
-    {
-      title: t('devOperation.developer.defGenTableColumn.dictType'),
-      dataIndex: 'dictType',
-      // width: 180,
-      editRow: true,
-    },
-    {
-      title: t('devOperation.developer.defGenTableColumn.echoStr'),
-      dataIndex: 'echoStr',
-      // width: 180,
-      editRow: true,
-    },
-    {
-      title: t('devOperation.developer.defGenTableColumn.enumStr'),
-      dataIndex: 'enumStr',
-      // width: 180,
-      editRow: true,
-    },
-    {
-      title: t('devOperation.developer.defGenTableColumn.editDefValue'),
-      dataIndex: 'editDefValue',
-      // width: 180,
-      editRow: true,
-    },
-    {
-      title: t('devOperation.developer.defGenTableColumn.editHelpMessage'),
-      dataIndex: 'editHelpMessage',
-      // width: 180,
-      editRow: true,
-    },
-    {
-      title: t('devOperation.developer.defGenTableColumn.indexHelpMessage'),
-      dataIndex: 'indexHelpMessage',
-      // width: 180,
-      editRow: true,
-    },
-    {
-      title: t('devOperation.developer.defGenTableColumn.sortValue'),
-      dataIndex: 'sortValue',
-      // width: 180,
-    },
-    {
-      title: t('lamp.common.createdTime'),
-      dataIndex: 'createdTime',
-      sorter: true,
-      width: 180,
-    },
-  ];
-};
-
-export const searchColumnFormSchema = (): FormSchema[] => {
-  return [
-    {
-      field: 'name',
-      label: t('devOperation.developer.defGenTableColumn.name'),
-      component: 'Input',
-      colProps: { span: 6 },
-    },
-    {
-      field: 'comment',
-      label: t('devOperation.developer.defGenTableColumn.comment'),
-      component: 'Input',
-      colProps: { span: 6 },
-    },
-    {
-      field: 'createTimeRange',
-      label: t('lamp.common.createdTime'),
-      component: 'RangePicker',
-      colProps: { span: 6 },
-    },
-  ];
 };

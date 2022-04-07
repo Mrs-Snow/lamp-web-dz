@@ -1,327 +1,319 @@
 import { useI18n } from '/@/hooks/web/useI18n';
-import { VxeGridPropTypes } from 'vxe-table';
-import { FormSchemaExt } from '/@/api/lamp/common/formValidateService';
+import { BasicColumn, FormSchema } from '/@/components/Table';
+import { enumComponentProps } from '/@/utils/lamp/common';
+import { EnumEnum } from '/@/enums/commonEnum';
 
 const { t } = useI18n();
 
-const autoCompleteProps = () => {
-  return {
-    allowClear: true,
-    getPopupContainer: () => document.body,
-    filterOption: (input: string, option) => {
-      return option.value.toUpperCase().indexOf(input.toUpperCase()) >= 0;
-    },
-  };
-};
-const selectProps = () => {
-  return {
-    allowClear: true,
-    showSearch: true,
-    getPopupContainer: () => document.body,
-    filterOption: (input: string, option) => {
-      return option.value.toUpperCase().indexOf(input.toUpperCase()) >= 0;
-    },
-  };
-};
-
-const formatterYesNo = ({ cellValue }) => {
-  return cellValue ? t('lamp.common.yes') : t('lamp.common.no');
-};
-
-export const formItems = () => {
+export const columnColumns = (): BasicColumn[] => {
   return [
     {
-      field: 'name',
       title: t('devOperation.developer.defGenTableColumn.name'),
-      span: 6,
-      itemRender: { name: '$input', props: { placeholder: '请输入' } },
+      dataIndex: 'name',
+      fixed: 'left',
+      // width: 180,
     },
     {
-      field: 'comment',
+      title: t('devOperation.developer.defGenTableColumn.type'),
+      dataIndex: 'type',
+      fixed: 'left',
+    },
+    {
       title: t('devOperation.developer.defGenTableColumn.comment'),
-      span: 6,
-      itemRender: { name: '$input', props: { placeholder: '请输入' } },
+      dataIndex: 'comment',
+      // width: 180,
+      editRow: true,
+      editRule: true,
     },
-
     {
-      span: 24,
-      align: 'center',
-      collapseNode: true,
-      itemRender: {
-        name: '$buttons',
-        children: [
-          {
-            props: {
-              type: 'submit',
-              content: t('common.queryText'),
-              status: 'primary',
-            },
-          },
-          { props: { type: 'reset', content: t('common.resetText') } },
+      title: t('devOperation.developer.defGenTableColumn.swaggerComment'),
+      dataIndex: 'swaggerComment',
+      // width: 180,
+      editRow: true,
+      editRule: true,
+    },
+    {
+      title: t('devOperation.developer.defGenTableColumn.javaType'),
+      dataIndex: 'javaType',
+      // width: 180,
+      editRow: true,
+      editRule: true,
+      editComponent: 'AutoComplete',
+      editComponentProps: {
+        allowClear: true,
+        getPopupContainer: () => document.body,
+        filterOption: (input: string, option) => {
+          return option.value.toUpperCase().indexOf(input.toUpperCase()) >= 0;
+        },
+        options: [
+          { value: 'String' },
+          { value: 'Long' },
+          { value: 'Integer' },
+          { value: 'Boolean' },
+          { value: 'Double' },
+          { value: 'BigDecimal' },
+          { value: 'LocalDateTime' },
+          { value: 'LocalDate' },
+          { value: 'LocalTime' },
         ],
       },
     },
+    {
+      title: t('devOperation.developer.defGenTableColumn.javaField'),
+      dataIndex: 'javaField',
+      editRule: true,
+      // width: 180,
+      editRow: true,
+    },
+    {
+      title: t('devOperation.developer.defGenTableColumn.tsType'),
+      dataIndex: 'tsType',
+      // width: 180,
+      editRow: true,
+      editRule: true,
+      editComponent: 'AutoComplete',
+      editComponentProps: {
+        allowClear: true,
+        getPopupContainer: () => document.body,
+        filterOption: (input: string, option) => {
+          return option.value.toUpperCase().indexOf(input.toUpperCase()) >= 0;
+        },
+        options: [
+          { value: 'string' },
+          { value: 'number' },
+          { value: 'boolean' },
+          { value: 'string[]' },
+          { value: 'number[]' },
+          { value: 'any' },
+          { value: 'tuple' },
+          { value: 'enum' },
+        ],
+      },
+    },
+    {
+      title: t('devOperation.developer.defGenTableColumn.size'),
+      dataIndex: 'size',
+      width: 100,
+      editRow: true,
+      editComponent: 'InputNumber',
+    },
+    {
+      title: t('devOperation.developer.defGenTableColumn.isPk'),
+      dataIndex: 'isPk',
+      width: 60,
+      editRow: true,
+      editComponent: 'Checkbox',
+      key: 'isPk',
+      editValueMap: (value) => {
+        return value ? t('lamp.common.yes') : t('lamp.common.no');
+      },
+    },
+    {
+      title: t('devOperation.developer.defGenTableColumn.isRequired'),
+      dataIndex: 'isRequired',
+      width: 60,
+      editRow: true,
+      editComponent: 'Checkbox',
+      key: 'isRequired',
+      editValueMap: (value) => {
+        return value ? t('lamp.common.yes') : t('lamp.common.no');
+      },
+      editComponentProps: {
+        onChange: (a, b) => {
+          console.log(a);
+          console.log(b);
+        },
+      },
+    },
+
+    {
+      title: t('devOperation.developer.defGenTableColumn.isLogicDeleteField'),
+      dataIndex: 'isLogicDeleteField',
+      width: 80,
+      editRow: true,
+      editValueMap: (value) => {
+        return value ? t('lamp.common.yes') : t('lamp.common.no');
+      },
+      editComponent: 'Checkbox',
+    },
+    {
+      title: t('devOperation.developer.defGenTableColumn.isVersionField'),
+      dataIndex: 'isVersionField',
+      width: 60,
+      editRow: true,
+      editValueMap: (value) => {
+        return value ? t('lamp.common.yes') : t('lamp.common.no');
+      },
+      editComponent: 'Checkbox',
+    },
+    {
+      title: t('devOperation.developer.defGenTableColumn.isIncrement'),
+      dataIndex: 'isIncrement',
+      width: 60,
+      editRow: true,
+      editComponent: 'Checkbox',
+      editValueMap: (value) => {
+        return value ? t('lamp.common.yes') : t('lamp.common.no');
+      },
+    },
+    {
+      title: t('devOperation.developer.defGenTableColumn.fill'),
+      dataIndex: 'fill',
+      // width: 180,
+      editRow: true,
+      editComponent: 'AutoComplete',
+      editComponentProps: {
+        allowClear: true,
+        getPopupContainer: () => document.body,
+        filterOption: (input: string, option) => {
+          return option.value.toUpperCase().indexOf(input.toUpperCase()) >= 0;
+        },
+        options: [
+          { value: 'DEFAULT' },
+          { value: 'INSERT' },
+          { value: 'UPDATE' },
+          { value: 'INSERT_UPDATE' },
+        ],
+      },
+    },
+    {
+      title: t('devOperation.developer.defGenTableColumn.isEdit'),
+      dataIndex: 'isEdit',
+      width: 60,
+      editRow: true,
+      editComponent: 'Checkbox',
+      editValueMap: (value) => {
+        return value ? t('lamp.common.yes') : t('lamp.common.no');
+      },
+    },
+    {
+      title: t('devOperation.developer.defGenTableColumn.isList'),
+      dataIndex: 'isList',
+      width: 60,
+      editRow: true,
+      editComponent: 'Checkbox',
+      editValueMap: (value) => {
+        return value ? t('lamp.common.yes') : t('lamp.common.no');
+      },
+    },
+    {
+      title: t('devOperation.developer.defGenTableColumn.isQuery'),
+      dataIndex: 'isQuery',
+      width: 60,
+      editRow: true,
+      editComponent: 'Checkbox',
+      editValueMap: (value) => {
+        return value ? t('lamp.common.yes') : t('lamp.common.no');
+      },
+    },
+    {
+      title: t('devOperation.developer.defGenTableColumn.width'),
+      dataIndex: 'width',
+      width: 100,
+      editRow: true,
+      editComponent: 'InputNumber',
+    },
+    {
+      title: t('devOperation.developer.defGenTableColumn.queryType'),
+      dataIndex: 'queryType',
+      // width: 180,
+      editRow: true,
+      editComponent: 'AutoComplete',
+      editComponentProps: {
+        allowClear: true,
+        getPopupContainer: () => document.body,
+        filterOption: (input: string, option) => {
+          return option.value.toUpperCase().indexOf(input.toUpperCase()) >= 0;
+        },
+        options: [
+          { value: 'EQUAL' },
+          { value: 'NOT_EQUAL' },
+          { value: 'LIKE' },
+          { value: 'ORACLE_LIKE' },
+          { value: 'LIKE_LEFT' },
+          { value: 'LIKE_RIGHT' },
+        ],
+      },
+    },
+    {
+      title: t('devOperation.developer.defGenTableColumn.component'),
+      dataIndex: 'component',
+      // width: 180,
+      editRow: true,
+      editComponent: 'ApiSelect',
+      editComponentProps: {
+        ...enumComponentProps(EnumEnum.ComponentEnum),
+      },
+    },
+    {
+      title: t('devOperation.developer.defGenTableColumn.dictType'),
+      dataIndex: 'dictType',
+      // width: 180,
+      editRow: true,
+    },
+    {
+      title: t('devOperation.developer.defGenTableColumn.echoStr'),
+      dataIndex: 'echoStr',
+      // width: 180,
+      editRow: true,
+    },
+    {
+      title: t('devOperation.developer.defGenTableColumn.enumStr'),
+      dataIndex: 'enumStr',
+      // width: 180,
+      editRow: true,
+    },
+    {
+      title: t('devOperation.developer.defGenTableColumn.editDefValue'),
+      dataIndex: 'editDefValue',
+      // width: 180,
+      editRow: true,
+    },
+    {
+      title: t('devOperation.developer.defGenTableColumn.editHelpMessage'),
+      dataIndex: 'editHelpMessage',
+      // width: 180,
+      editRow: true,
+    },
+    {
+      title: t('devOperation.developer.defGenTableColumn.indexHelpMessage'),
+      dataIndex: 'indexHelpMessage',
+      // width: 180,
+      editRow: true,
+    },
+    {
+      title: t('devOperation.developer.defGenTableColumn.sortValue'),
+      dataIndex: 'sortValue',
+      // width: 180,
+    },
+    {
+      title: t('lamp.common.createdTime'),
+      dataIndex: 'createdTime',
+      sorter: true,
+      width: 180,
+    },
   ];
 };
 
-export const columns = (): VxeGridPropTypes.Columns => {
+export const searchColumnFormSchema = (): FormSchema[] => {
   return [
-    { type: 'checkbox', width: 50, fixed: 'left' },
-    { type: 'seq', width: 40, fixed: 'left' },
     {
       field: 'name',
-      title: t('devOperation.developer.defGenTableColumn.name'),
-      fixed: 'left',
-    },
-    {
-      field: 'type',
-      title: t('devOperation.developer.defGenTableColumn.type'),
-      fixed: 'left',
+      label: t('devOperation.developer.defGenTableColumn.name'),
+      component: 'Input',
+      colProps: { span: 6 },
     },
     {
       field: 'comment',
-      title: t('devOperation.developer.defGenTableColumn.comment'),
-      titleHelp: { message: 'comment必须填写！' },
-      editRender: { name: 'input', attrs: { placeholder: '请输入comment' } },
+      label: t('devOperation.developer.defGenTableColumn.comment'),
+      component: 'Input',
+      colProps: { span: 6 },
     },
     {
-      field: 'swaggerComment',
-      title: t('devOperation.developer.defGenTableColumn.swaggerComment'),
-      // titleHelp: { message: 'comment必须填写！' },
-      editRender: { name: 'input', attrs: { placeholder: '请输入' } },
-    },
-    {
-      field: 'javaType',
-      title: t('devOperation.developer.defGenTableColumn.javaType'),
-      editRender: {
-        name: 'AAutoComplete',
-        props: {
-          ...autoCompleteProps(),
-          options: [
-            { value: 'String' },
-            { value: 'Long' },
-            { value: 'Integer' },
-            { value: 'Boolean' },
-            { value: 'Double' },
-            { value: 'BigDecimal' },
-            { value: 'LocalDateTime' },
-            { value: 'LocalDate' },
-            { value: 'LocalTime' },
-          ],
-        },
-      },
-    },
-    {
-      field: 'javaField',
-      title: t('devOperation.developer.defGenTableColumn.javaField'),
-      editRender: {
-        name: '$input',
-      },
-    },
-    {
-      field: 'tsType',
-      title: t('devOperation.developer.defGenTableColumn.tsType'),
-      editRender: {
-        name: 'AAutoComplete',
-        props: {
-          ...autoCompleteProps(),
-          options: [
-            { value: 'string' },
-            { value: 'number' },
-            { value: 'boolean' },
-            { value: 'string[]' },
-            { value: 'number[]' },
-            { value: 'any' },
-            { value: 'tuple' },
-            { value: 'enum' },
-          ],
-        },
-      },
-    },
-    {
-      field: 'size',
-      title: t('devOperation.developer.defGenTableColumn.size'),
-      width: 100,
-      editRender: { name: 'AInputNumber' },
-    },
-    {
-      field: 'isPk',
-      width: 80,
-      align: 'center',
-      title: t('devOperation.developer.defGenTableColumn.isPk'),
-      editRender: { name: '$switch' },
-      formatter: formatterYesNo,
-    },
-    {
-      field: 'isRequired',
-      width: 80,
-      align: 'center',
-      title: t('devOperation.developer.defGenTableColumn.isRequired'),
-      editRender: { name: '$switch' },
-      formatter: formatterYesNo,
-    },
-    {
-      field: 'isLogicDeleteField',
-      width: 80,
-      align: 'center',
-      title: t('devOperation.developer.defGenTableColumn.isLogicDeleteField'),
-      editRender: { name: '$switch' },
-      formatter: formatterYesNo,
-    },
-    {
-      field: 'isVersionField',
-      width: 80,
-      align: 'center',
-      title: t('devOperation.developer.defGenTableColumn.isVersionField'),
-      editRender: { name: '$switch' },
-      formatter: formatterYesNo,
-    },
-    {
-      field: 'isIncrement',
-      width: 80,
-      align: 'center',
-      title: t('devOperation.developer.defGenTableColumn.isIncrement'),
-      editRender: { name: '$switch' },
-      formatter: formatterYesNo,
-    },
-    {
-      field: 'fill',
-      title: t('devOperation.developer.defGenTableColumn.fill'),
-      width: 100,
-      editRender: {
-        name: 'AAutoComplete',
-        props: {
-          ...autoCompleteProps(),
-          options: [
-            { value: 'DEFAULT' },
-            { value: 'INSERT' },
-            { value: 'UPDATE' },
-            { value: 'INSERT_UPDATE' },
-          ],
-        },
-      },
-    },
-    {
-      field: 'isEdit',
-      width: 80,
-      align: 'center',
-      title: t('devOperation.developer.defGenTableColumn.isEdit'),
-      editRender: { name: '$switch' },
-      formatter: formatterYesNo,
-    },
-    {
-      field: 'isList',
-      width: 80,
-      align: 'center',
-      title: t('devOperation.developer.defGenTableColumn.isList'),
-      editRender: { name: '$switch' },
-      formatter: formatterYesNo,
-    },
-    {
-      field: 'isQuery',
-      width: 80,
-      align: 'center',
-      title: t('devOperation.developer.defGenTableColumn.isQuery'),
-      editRender: { name: '$switch' },
-      formatter: formatterYesNo,
-    },
-    {
-      field: 'width',
-      title: t('devOperation.developer.defGenTableColumn.width'),
-      width: 100,
-      editRender: { name: 'AInputNumber' },
-    },
-    {
-      field: 'queryType',
-      title: t('devOperation.developer.defGenTableColumn.queryType'),
-      editRender: {
-        name: 'AAutoComplete',
-        props: {
-          ...autoCompleteProps(),
-          options: [
-            { value: 'EQUAL' },
-            { value: 'NOT_EQUAL' },
-            { value: 'LIKE' },
-            { value: 'ORACLE_LIKE' },
-            { value: 'LIKE_LEFT' },
-            { value: 'LIKE_RIGHT' },
-          ],
-        },
-      },
-    },
-    {
-      field: 'component',
-      title: t('devOperation.developer.defGenTableColumn.component'),
-      editRender: {
-        name: 'ASelect',
-        props: {
-          ...selectProps(),
-          options: [{ value: 'Input' }, { value: 'Select' }],
-        },
-      },
-    },
-    {
-      field: 'dictType',
-      title: t('devOperation.developer.defGenTableColumn.dictType'),
-      editRender: {
-        name: '$input',
-      },
-    },
-    {
-      field: 'echoStr',
-      title: t('devOperation.developer.defGenTableColumn.echoStr'),
-      editRender: {
-        name: '$input',
-      },
-    },
-    {
-      field: 'enumStr',
-      title: t('devOperation.developer.defGenTableColumn.enumStr'),
-      editRender: {
-        name: '$input',
-      },
-    },
-    {
-      field: 'editDefValue',
-      title: t('devOperation.developer.defGenTableColumn.editDefValue'),
-      editRender: {
-        name: '$input',
-      },
-    },
-    {
-      field: 'editHelpMessage',
-      title: t('devOperation.developer.defGenTableColumn.editHelpMessage'),
-      editRender: {
-        name: '$input',
-      },
-    },
-    {
-      field: 'indexHelpMessage',
-      title: t('devOperation.developer.defGenTableColumn.indexHelpMessage'),
-      editRender: {
-        name: '$input',
-      },
-    },
-    {
-      field: 'sortValue',
-      title: t('devOperation.developer.defGenTableColumn.sortValue'),
-      sortable: true,
-    },
-    {
-      field: 'createdTime',
-      title: t('lamp.common.createdTime'),
-      sortable: true,
-      width: 180,
-    },
-    {
-      title: t('common.column.action'),
-      width: 160,
-      fixed: 'right',
-      slots: { default: 'operate' },
+      field: 'createTimeRange',
+      label: t('lamp.common.createdTime'),
+      component: 'RangePicker',
+      colProps: { span: 6 },
     },
   ];
-};
-
-export const customFormSchemaRules = (): Partial<FormSchemaExt>[] => {
-  return [];
 };
