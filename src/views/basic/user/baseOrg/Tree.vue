@@ -53,9 +53,8 @@
     TreeActionType,
     TreeItem,
   } from '/@/components/Tree';
-  import { eachTree } from '/@/utils/helper/treeHelper';
+  import { eachTree, findNodeByKey } from '/@/utils/helper/treeHelper';
   import { RoleEnum } from '/@/enums/roleEnum';
-  import { findNodeByKey } from '/@/utils/lamp/common';
 
   import { remove, tree } from '/@/api/basic/user/baseOrg';
   import { useModal } from '/@/components/Modal';

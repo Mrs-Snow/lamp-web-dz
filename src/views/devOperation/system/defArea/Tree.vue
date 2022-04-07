@@ -43,7 +43,7 @@
     TreeActionType,
     ContextMenuItem,
   } from '/@/components/Tree';
-  import { findNodeByKey } from '/@/utils/lamp/common';
+  import { findNodeByKey } from '/@/utils/helper/treeHelper';
   import { eachTree } from '/@/utils/helper/treeHelper';
   import { tree, remove } from '/@/api/devOperation/system/defArea';
 

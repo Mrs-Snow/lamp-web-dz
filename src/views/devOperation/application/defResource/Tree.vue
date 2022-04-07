@@ -67,7 +67,7 @@
     ContextMenuItem,
   } from '/@/components/Tree';
   import { eachTree } from '/@/utils/helper/treeHelper';
-  import { findNodeByKey } from '/@/utils/lamp/common';
+  import { findNodeByKey } from '/@/utils/helper/treeHelper';
   import { getResourceTagColor } from '/@/utils/color';
   import { query } from '/@/api/devOperation/application/defApplication';
   import { tree, remove } from '/@/api/devOperation/application/defResource';

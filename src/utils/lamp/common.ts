@@ -112,40 +112,6 @@ export const downloadFile = (response) => {
 };
 
 /**
- * 根据 key 查询节点
- * @param key 唯一键
- * @param list 树列表
- */
-export function findNodeByKey(key: any, list: any[]) {
-  if (key === '0') {
-    return {
-      id: '0',
-      name: '根节点',
-    };
-  }
-  if (!key) {
-    return {
-      id: key,
-      name: '根节点',
-    };
-  }
-
-  for (let i = 0; i < list.length; i++) {
-    const item = list[i];
-    if (item.id === key) {
-      return item;
-    }
-    if (item.children) {
-      const res = findNodeByKey(key, item.children);
-      if (res) {
-        return res;
-      }
-    }
-  }
-  return null;
-}
-
-/**
  * 根据 条件回调 查找节点
  * @param list 树列表
  * @param func 条件回调
