@@ -28,11 +28,11 @@
       <div :class="`${prefixCls}-entry`" v-show="!showDate">
         <div :class="`${prefixCls}-entry-content`">
           <div :class="`${prefixCls}-entry__header enter-x`">
-            <Avatar :src="user.avatar" :size="70">
-              <Avatar :size="70">{{ user.name?.charAt(0) }}</Avatar></Avatar
+            <Avatar :src="user.avatarId" :size="70">
+              <Avatar :size="70">{{ user.nickName?.charAt(0) }}</Avatar></Avatar
             >
             <p :class="`${prefixCls}-entry__header-name`">
-              {{ user.name }}
+              {{ user.nickName }}
             </p>
           </div>
           <InputPassword
