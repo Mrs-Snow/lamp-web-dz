@@ -102,6 +102,7 @@ export enum EnumEnum {
   // test
   ProductType = 'ProductType',
   DefGenTestSimpleType2Enum = 'DefGenTestSimpleType2Enum',
+  DefGenTestTreeType2Enum = 'DefGenTestTreeType2Enum',
 }
 export enum DictEnum {
   // 全局

@@ -268,13 +268,6 @@ export const baseEditFormSchema = (): FormSchema[] => {
           },
           api: findOnlineService,
           labelField: 'value',
-          // options: [
-          //   { value: 'base' },
-          //   { value: 'system' },
-          //   { value: 'gateway' },
-          //   { value: 'generator' },
-          //   { value: 'oauth' },
-          // ],
           onChange: (value: string) => {
             if (value) {
               const { setFieldsValue, getFieldsValue } = formActionType;
@@ -658,86 +651,6 @@ export const baseEditFormSchema = (): FormSchema[] => {
       helpMessage: ['前端代码生成何种操作风格的页面'],
     },
     {
-      label: '新增按钮权限',
-      field: 'addAuth',
-      component: 'InputSearch',
-      colProps: {
-        span: 12,
-      },
-      helpMessage: [
-        '文本框为空时，方可点击"生成"按钮，按系统建议的规则生成权限编码',
-        '系统规则：{前端应用名}:{前端模块名}:{实体名称}:add',
-      ],
-      componentProps: ({ formActionType }) => {
-        return {
-          enterButton: '生成',
-          onSearch: (value: string) => {
-            return getAuthCode(formActionType, value, 'add');
-          },
-        };
-      },
-    },
-    {
-      label: '编辑按钮权限',
-      field: 'editAuth',
-      component: 'InputSearch',
-      colProps: {
-        span: 12,
-      },
-      helpMessage: [
-        '文本框为空时，方可点击"生成"按钮，按系统建议的规则生成权限编码',
-        '系统规则：{前端应用名}:{前端模块名}:{实体名称}:edit',
-      ],
-      componentProps: ({ formActionType }) => {
-        return {
-          enterButton: '生成',
-          onSearch: (value: string) => {
-            return getAuthCode(formActionType, value, 'edit');
-          },
-        };
-      },
-    },
-    {
-      label: '删除按钮权限',
-      field: 'deleteAuth',
-      component: 'InputSearch',
-      colProps: {
-        span: 12,
-      },
-      helpMessage: [
-        '文本框为空时，方可点击"生成"按钮，按系统建议的规则生成权限编码',
-        '系统规则：{前端应用名}:{前端模块名}:{实体名称}:delete',
-      ],
-      componentProps: ({ formActionType }) => {
-        return {
-          enterButton: '生成',
-          onSearch: (value: string) => {
-            return getAuthCode(formActionType, value, 'delete');
-          },
-        };
-      },
-    },
-    {
-      label: '复制按钮权限',
-      field: 'copyAuth',
-      component: 'InputSearch',
-      colProps: {
-        span: 12,
-      },
-      helpMessage: [
-        '文本框为空时，方可点击"生成"按钮，按系统建议的规则生成权限编码',
-        '系统规则：{前端应用名}:{前端模块名}:{实体名称}:copy',
-      ],
-      componentProps: ({ formActionType }) => {
-        return {
-          enterButton: '生成',
-          onSearch: (value: string) => {
-            return getAuthCode(formActionType, value, 'copy');
-          },
-        };
-      },
-    },
-    {
       label: '显示新增按钮',
       field: 'addShow',
       component: 'RadioGroup',
@@ -795,6 +708,136 @@ export const baseEditFormSchema = (): FormSchema[] => {
       defaultValue: true,
       colProps: {
         span: 12,
+      },
+    },
+    {
+      label: '新增按钮权限',
+      field: 'addAuth',
+      component: 'InputSearch',
+      colProps: {
+        span: 12,
+      },
+      ifShow: ({ values }) => {
+        return values.addShow;
+      },
+      required: ({ values }) => {
+        return values.addShow;
+      },
+      helpMessage: [
+        '文本框为空时，方可点击"生成"按钮，按系统建议的规则生成权限编码',
+        '系统规则：{前端应用名}:{前端模块名}:{实体名称}:add',
+      ],
+      componentProps: ({ formActionType }) => {
+        return {
+          enterButton: '生成',
+          onSearch: (value: string) => {
+            return getAuthCode(formActionType, value, 'add');
+          },
+        };
+      },
+    },
+    {
+      label: '编辑按钮权限',
+      field: 'editAuth',
+      component: 'InputSearch',
+      colProps: {
+        span: 12,
+      },
+      ifShow: ({ values }) => {
+        return values.editShow;
+      },
+      required: ({ values }) => {
+        return values.editShow;
+      },
+      helpMessage: [
+        '文本框为空时，方可点击"生成"按钮，按系统建议的规则生成权限编码',
+        '系统规则：{前端应用名}:{前端模块名}:{实体名称}:edit',
+      ],
+      componentProps: ({ formActionType }) => {
+        return {
+          enterButton: '生成',
+          onSearch: (value: string) => {
+            return getAuthCode(formActionType, value, 'edit');
+          },
+        };
+      },
+    },
+    {
+      label: '删除按钮权限',
+      field: 'deleteAuth',
+      component: 'InputSearch',
+      colProps: {
+        span: 12,
+      },
+      ifShow: ({ values }) => {
+        return values.deleteShow;
+      },
+      required: ({ values }) => {
+        return values.deleteShow;
+      },
+      helpMessage: [
+        '文本框为空时，方可点击"生成"按钮，按系统建议的规则生成权限编码',
+        '系统规则：{前端应用名}:{前端模块名}:{实体名称}:delete',
+      ],
+      componentProps: ({ formActionType }) => {
+        return {
+          enterButton: '生成',
+          onSearch: (value: string) => {
+            return getAuthCode(formActionType, value, 'delete');
+          },
+        };
+      },
+    },
+    {
+      label: '复制按钮权限',
+      field: 'copyAuth',
+      component: 'InputSearch',
+      colProps: {
+        span: 12,
+      },
+      ifShow: ({ values }) => {
+        return values.copyShow;
+      },
+      required: ({ values }) => {
+        return values.copyShow;
+      },
+      helpMessage: [
+        '文本框为空时，方可点击"生成"按钮，按系统建议的规则生成权限编码',
+        '系统规则：{前端应用名}:{前端模块名}:{实体名称}:copy',
+      ],
+      componentProps: ({ formActionType }) => {
+        return {
+          enterButton: '生成',
+          onSearch: (value: string) => {
+            return getAuthCode(formActionType, value, 'copy');
+          },
+        };
+      },
+    },
+    {
+      label: '详情按钮权限',
+      field: 'viewAuth',
+      component: 'InputSearch',
+      colProps: {
+        span: 12,
+      },
+      ifShow: ({ values }) => {
+        return values.viewShow;
+      },
+      required: ({ values }) => {
+        return values.viewShow;
+      },
+      helpMessage: [
+        '文本框为空时，方可点击"生成"按钮，按系统建议的规则生成权限编码',
+        '系统规则：{前端应用名}:{前端模块名}:{实体名称}:view',
+      ],
+      componentProps: ({ formActionType }) => {
+        return {
+          enterButton: '生成',
+          onSearch: (value: string) => {
+            return getAuthCode(formActionType, value, 'view');
+          },
+        };
       },
     },
     {

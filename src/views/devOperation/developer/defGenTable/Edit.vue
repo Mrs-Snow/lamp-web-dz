@@ -47,6 +47,7 @@
   import { Api, detail, update } from '/@/api/devOperation/developer/defGenTable';
   import { baseEditFormSchema, customFormSchemaRules } from './defGenTable.data';
   import { GenTypeEnum, TplEnum } from '/@/enums/biz/tenant';
+  import { tree as queryMenu } from '/@/api/devOperation/application/defResource';
   import DefGenTableColumn from './DefGenTableColumnVxe.vue';
 
   export default defineComponent({
@@ -155,6 +156,15 @@
       async function loadDetail() {
         const record = await detail(unref(tableId));
         setFieldsValue(record);
+        if (record.menuApplicationId) {
+          const treeData = await queryMenu({ applicationId: record.menuApplicationId });
+          await updateSchema({
+            field: 'menuParentId',
+            componentProps: {
+              treeData,
+            },
+          });
+        }
 
         let validateApi = Api[VALIDATE_API[ActionEnum.EDIT]];
         const customRules = customFormSchemaRules(getFieldsValue);

@@ -50,7 +50,7 @@ export enum ApplicationGrantTypeEnum {
 export enum RouteEnum {
   DICT_ITEM = '字典项维护',
   APPLICATION_RESOURCE = '应用资源维护',
-  APPLICATION_GRANT_MANAGE = '应用授权管理',
+  APPLICATION_GRANT_MANAGE = '应用资源授权',
   APPLICATION_GRANT = '应用授权',
 
   BASIC_DICT_ITEM = '个性字典项',
