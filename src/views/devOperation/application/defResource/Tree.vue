@@ -2,45 +2,46 @@
   <div class="bg-white m-4 mr-2 overflow-hidden">
     <div class="m-4">
       <Select
-        :options="data.applicationList"
-        showSearch
-        labelInValue
-        :disabled="data.appDisabled"
         v-model:value="applicationRef"
+        :disabled="data.appDisabled"
+        :options="data.applicationList"
+        labelInValue
         placeholder="选择应用"
+        showSearch
         style="width: 100%; margin-bottom: 1rem"
         @change="handleChange"
       />
       <a-button
-        @click="handleAdd()"
-        preIcon="ant-design:plus-outlined"
         v-hasAnyPermission="[RoleEnum.RESOURCE_ADD, RoleEnum.APPLICATION_RESOURCE_ADD]"
         class="mr-2"
+        preIcon="ant-design:plus-outlined"
+        @click="handleAdd()"
       >
         {{ t('common.title.addRoot') }}
       </a-button>
       <a-button
-        @click="handleBatchDelete()"
-        preIcon="ant-design:delete-outlined"
         v-hasAnyPermission="[RoleEnum.RESOURCE_DELETE, RoleEnum.APPLICATION_RESOURCE_DELETE]"
         class="mr-2"
+        preIcon="ant-design:delete-outlined"
+        @click="handleBatchDelete()"
       >
         {{ t('common.title.delete') }}
       </a-button>
     </div>
     <BasicTree
-      :title="t('devOperation.application.defResource.table.title')"
-      toolbar
-      checkable
-      search
-      checkStrictly
-      highlight
+      ref="treeRef"
       :actionList="actionList"
       :beforeRightClick="getRightMenuList"
       :clickRowToExpand="false"
+      :loading="treeLoading"
+      :title="t('devOperation.application.defResource.table.title')"
       :treeData="treeData"
+      checkStrictly
+      checkable
+      highlight
+      search
+      toolbar
       @select="handleSelect"
-      ref="treeRef"
     >
       <template #titleBefore="item">
         <template v-if="item.echoMap?.resourceType">
@@ -53,7 +54,7 @@
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent, onMounted, ref, unref, h, reactive } from 'vue';
+  import { defineComponent, h, onMounted, reactive, ref, unref } from 'vue';
   import { Select, Tag } from 'ant-design-vue';
   import { useRouter } from 'vue-router';
   import { useI18n } from '/@/hooks/web/useI18n';
@@ -61,16 +62,15 @@
   import { PermModeEnum, RoleEnum } from '/@/enums/roleEnum';
   import {
     BasicTree,
-    TreeItem,
+    ContextMenuItem,
     TreeActionItem,
     TreeActionType,
-    ContextMenuItem,
+    TreeItem,
   } from '/@/components/Tree';
-  import { eachTree } from '/@/utils/helper/treeHelper';
-  import { findNodeByKey } from '/@/utils/helper/treeHelper';
+  import { eachTree, findNodeByKey } from '/@/utils/helper/treeHelper';
   import { getResourceTagColor } from '/@/utils/color';
   import { query } from '/@/api/devOperation/application/defApplication';
-  import { tree, remove } from '/@/api/devOperation/application/defResource';
+  import { remove, tree } from '/@/api/devOperation/application/defResource';
 
   export default defineComponent({
     name: 'DefResourceManagement',
@@ -83,6 +83,7 @@
       const { currentRoute } = useRouter();
       const treeRef = ref<Nullable<TreeActionType>>(null);
       const treeData = ref<TreeItem[]>([]);
+      const treeLoading = ref<boolean>(false);
       const data = reactive<Recordable>({
         applicationList: [],
         appDisabled: false,
@@ -117,27 +118,33 @@
 
       // 加载数据
       async function fetch(applicationId?: string) {
-        applicationId = applicationId || applicationRef.value;
-        if (!!applicationId) {
-          treeData.value = (await tree({ applicationId })) as unknown as TreeItem[];
+        try {
+          treeLoading.value = true;
 
-          eachTree(
-            treeData.value,
-            (item, parent) => {
-              item.key = item.id;
-              item.title = item.name;
-              item.keyLinks = [...(parent.keyLinks || []), item.id];
-              item.slots = { titleBefore: 'titleBefore' };
-              return item;
-            },
-            {},
-          );
-          setTimeout(() => {
-            // getTree().filterByLevel(2);
-            getTree().setCheckedKeys({ checked: [], halfChecked: [] });
-          }, 0);
-        } else {
-          createMessage.warn('请先选择应用');
+          applicationId = applicationId || applicationRef.value;
+          if (!!applicationId) {
+            treeData.value = (await tree({ applicationId })) as unknown as TreeItem[];
+
+            eachTree(
+              treeData.value,
+              (item, parent) => {
+                item.key = item.id;
+                item.title = item.name;
+                item.keyLinks = [...(parent.keyLinks || []), item.id];
+                item.slots = { titleBefore: 'titleBefore' };
+                return item;
+              },
+              {},
+            );
+            setTimeout(() => {
+              // getTree().filterByLevel(2);
+              getTree().setCheckedKeys({ checked: [], halfChecked: [] });
+            }, 0);
+          } else {
+            createMessage.warn('请先选择应用');
+          }
+        } finally {
+          treeLoading.value = false;
         }
       }
 
@@ -290,10 +297,10 @@
         batchDelete(checked);
       }
 
-      function handleChange({ value, label }) {
+      async function handleChange({ value, label }) {
         applicationRef.label = label;
         applicationRef.value = value;
-        fetch(value);
+        await fetch(value);
         emit('change', value, label);
       }
 
@@ -313,6 +320,7 @@
         handleChange,
         data,
         applicationRef,
+        treeLoading,
       };
     },
   });

@@ -157,6 +157,5 @@
   .meta-input {
     border: 1px solid #d9d9d9;
     padding: 10px;
-    display: flex;
   }
 </style>
