@@ -25,14 +25,17 @@ export const columns = (): BasicColumn[] => {
     {
       title: t('devOperation.developer.defGenTestSimple.type'),
       dataIndex: ['echoMap', 'type'],
+      key: 'type',
     },
     {
       title: t('devOperation.developer.defGenTestSimple.type2'),
       dataIndex: ['echoMap', 'type2'],
+      key: 'type2',
     },
     {
       title: t('devOperation.developer.defGenTestSimple.type3'),
       dataIndex: ['echoMap', 'type3'],
+      key: 'type3',
     },
     {
       title: t('devOperation.developer.defGenTestSimple.state'),
@@ -65,18 +68,22 @@ export const columns = (): BasicColumn[] => {
     {
       title: t('devOperation.developer.defGenTestSimple.test7'),
       dataIndex: ['echoMap', 'test7'],
+      key: 'test7',
     },
     {
       title: t('devOperation.developer.defGenTestSimple.test12'),
       dataIndex: ['echoMap', 'test12'],
+      key: 'test12',
     },
     {
       title: t('devOperation.developer.defGenTestSimple.userId'),
       dataIndex: ['echoMap', 'userId'],
+      key: 'userId',
     },
     {
       title: t('devOperation.developer.defGenTestSimple.orgId'),
       dataIndex: ['echoMap', 'orgId'],
+      key: 'orgId',
     },
     {
       title: t('devOperation.developer.defGenTestSimple.test8'),

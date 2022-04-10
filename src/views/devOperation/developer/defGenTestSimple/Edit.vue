@@ -1,18 +1,19 @@
 <template>
-  <BasicModal
+  <BasicDrawer
     v-bind="$attrs"
     @register="registerModel"
-    :title="t(`common.title.${type}`)"
+    showFooter
+    width="50%"
     :maskClosable="false"
+    :title="t(`common.title.${type}`)"
     @ok="handleSubmit"
-    :keyboard="true"
   >
     <BasicForm @register="registerForm" />
-  </BasicModal>
+  </BasicDrawer>
 </template>
 <script lang="ts">
   import { defineComponent, ref, unref } from 'vue';
-  import { BasicModal, useModalInner } from '/@/components/Modal';
+  import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
@@ -22,8 +23,8 @@
   import { customFormSchemaRules, editFormSchema } from './defGenTestSimple.data';
 
   export default defineComponent({
-    name: '编辑单表生成维护',
-    components: { BasicModal, BasicForm },
+    name: '编辑测试单表维护',
+    components: { BasicDrawer, BasicForm },
     emits: ['success', 'register'],
     setup(_, { emit }) {
       const { t } = useI18n();
@@ -44,7 +45,7 @@
           },
         });
 
-      const [registerModel, { setModalProps: setProps, closeModal: close }] = useModalInner(
+      const [registerModel, { setDrawerProps: setProps, closeDrawer: close }] = useDrawerInner(
         async (data) => {
           setProps({ confirmLoading: false });
           await resetSchema(editFormSchema(type));

@@ -17,6 +17,10 @@ export const Api = {
     url: `${ServicePrefixEnum.BASE}/${MODULAR}/page`,
     method: RequestEnum.POST,
   } as AxiosRequestConfig,
+  Detail: {
+    url: `${ServicePrefixEnum.BASE}/${MODULAR}/detail`,
+    method: RequestEnum.GET,
+  } as AxiosRequestConfig,
   Save: {
     url: `${ServicePrefixEnum.BASE}/${MODULAR}`,
     method: RequestEnum.POST,
@@ -37,6 +41,9 @@ export const Api = {
 
 export const page = (params: PageParams<DefGenTestSimplePageQuery>) =>
   defHttp.request<PageResult<DefGenTestSimpleResultVO>>({ ...Api.Page, params });
+
+export const detail = (id: string) =>
+  defHttp.request<DefGenTestSimpleResultVO>({ ...Api.Detail, params: { id } });
 
 export const query = (params: DefGenTestSimplePageQuery) =>
   defHttp.request<DefGenTestSimpleResultVO[]>({ ...Api.Query, params });

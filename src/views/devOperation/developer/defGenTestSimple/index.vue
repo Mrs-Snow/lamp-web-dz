@@ -7,46 +7,57 @@
           color="error"
           preIcon="ant-design:delete-outlined"
           @click="handleBatchDelete"
+          v-hasAnyPermission="['devOperation:developer:defGenTestSimple:delete']"
         >
           {{ t('common.title.delete') }}
         </a-button>
-        <a-button type="primary" preIcon="ant-design:plus-outlined" @click="handleAdd">
+        <a-button
+          type="primary"
+          preIcon="ant-design:plus-outlined"
+          @click="handleAdd"
+          v-hasAnyPermission="['devOperation:developer:defGenTestSimple:add']"
+        >
           {{ t('common.title.add') }}
         </a-button>
       </template>
-      <template #action="{ record }">
-        <TableAction
-          :actions="[
-            {
-              tooltip: t('common.title.view'),
-              icon: 'ant-design:search-outlined',
-              onClick: handleView.bind(null, record),
-            },
-            {
-              tooltip: t('common.title.edit'),
-              icon: 'ant-design:edit-outlined',
-              onClick: handleEdit.bind(null, record),
-            },
-            {
-              tooltip: t('common.title.copy'),
-              icon: 'ant-design:copy-outlined',
-              onClick: handleCopy.bind(null, record),
-            },
-            {
-              tooltip: t('common.title.delete'),
-              icon: 'ant-design:delete-outlined',
-              color: 'error',
-              popConfirm: {
-                title: t('common.tips.confirmDelete'),
-                confirm: handleDelete.bind(null, record),
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.dataIndex === 'action'">
+          <TableAction
+            :actions="[
+              {
+                tooltip: t('common.title.view'),
+                icon: 'ant-design:search-outlined',
+                onClick: handleView.bind(null, record),
               },
-            },
-          ]"
-          :stopButtonPropagation="true"
-        />
+              {
+                tooltip: t('common.title.edit'),
+                icon: 'ant-design:edit-outlined',
+                onClick: handleEdit.bind(null, record),
+                auth: 'devOperation:developer:defGenTestSimple:edit',
+              },
+              {
+                tooltip: t('common.title.copy'),
+                icon: 'ant-design:copy-outlined',
+                onClick: handleCopy.bind(null, record),
+                auth: 'devOperation:developer:defGenTestSimple:copy',
+              },
+              {
+                tooltip: t('common.title.delete'),
+                icon: 'ant-design:delete-outlined',
+                color: 'error',
+                auth: 'devOperation:developer:defGenTestSimple:delete',
+                popConfirm: {
+                  title: t('common.tips.confirmDelete'),
+                  confirm: handleDelete.bind(null, record),
+                },
+              },
+            ]"
+            :stopButtonPropagation="true"
+          />
+        </template>
       </template>
     </BasicTable>
-    <EditModal @register="registerModal" @success="handleSuccess" />
+    <EditModal @register="registerDrawer" @success="handleSuccess" />
   </PageWrapper>
 </template>
 <script lang="ts">
@@ -55,7 +66,7 @@
   import { useMessage } from '/@/hooks/web/useMessage';
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
   import { PageWrapper } from '/@/components/Page';
-  import { useModal } from '/@/components/Modal';
+  import { useDrawer } from '/@/components/Drawer';
   import { handleFetchParams } from '/@/utils/lamp/common';
   import { ActionEnum } from '/@/enums/commonEnum';
   import { page, remove } from '/@/api/devOperation/developer/defGenTestSimple';
@@ -64,7 +75,7 @@
 
   export default defineComponent({
     // 若需要开启页面缓存，请将此参数跟菜单名保持一致
-    name: '单表生成维护',
+    name: '测试单表维护',
     components: {
       BasicTable,
       PageWrapper,
@@ -74,8 +85,7 @@
     setup() {
       const { t } = useI18n();
       const { createMessage, createConfirm } = useMessage();
-      // 编辑页弹窗
-      const [registerModal, { openModal }] = useModal();
+      const [registerDrawer, { openDrawer }] = useDrawer();
 
       // 表格
       const [registerTable, { reload, getSelectRowKeys }] = useTable({
@@ -106,21 +116,20 @@
           width: 200,
           title: t('common.column.action'),
           dataIndex: 'action',
-          slots: { customRender: 'action' },
         },
       });
 
       // 弹出复制页面
       function handleCopy(record: Recordable, e: Event) {
         e?.stopPropagation();
-        openModal(true, {
+        openDrawer(true, {
           record,
           type: ActionEnum.COPY,
         });
       }
       // 弹出新增页面
       function handleAdd() {
-        openModal(true, {
+        openDrawer(true, {
           type: ActionEnum.ADD,
         });
       }
@@ -128,7 +137,7 @@
       // 弹出查看页面
       function handleView(record: Recordable, e: Event) {
         e?.stopPropagation();
-        openModal(true, {
+        openDrawer(true, {
           record,
           type: ActionEnum.VIEW,
         });
@@ -137,7 +146,7 @@
       // 弹出编辑页面
       function handleEdit(record: Recordable, e: Event) {
         e?.stopPropagation();
-        openModal(true, {
+        openDrawer(true, {
           record,
           type: ActionEnum.EDIT,
         });
@@ -183,7 +192,7 @@
       return {
         t,
         registerTable,
-        registerModal,
+        registerDrawer,
         handleView,
         handleAdd,
         handleCopy,
