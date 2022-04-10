@@ -58,7 +58,7 @@ export const dynamicInfoItems: DynamicInfoItem[] = [
     avatar: 'dynamic-avatar-1|svg',
     name: '4.5.2 已发布：',
     date: '2022-04-0?',
-    desc: `<a href="https://www.oschina.net/news/188721">spring boot 2.5.12、代码生成器支持生成项目、集成vxe-table</a>`,
+    desc: `<a href="https://www.oschina.net/news/188721">spring boot 2.6.6、代码生成器支持生成项目、集成vxe-table、升级ant-design-vue3.1.1</a>`,
   },
   {
     avatar: 'dynamic-avatar-1|svg',
