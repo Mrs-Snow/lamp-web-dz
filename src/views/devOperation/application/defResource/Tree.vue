@@ -71,6 +71,7 @@
   import { getResourceTagColor } from '/@/utils/color';
   import { query } from '/@/api/devOperation/application/defApplication';
   import { remove, tree } from '/@/api/devOperation/application/defResource';
+  import { ResourceTypeEnum } from '/@/enums/biz/tenant';
 
   export default defineComponent({
     name: 'DefResourceManagement',
@@ -164,6 +165,13 @@
         {
           auth: [RoleEnum.RESOURCE_ADD, RoleEnum.APPLICATION_RESOURCE_ADD],
           authMode: PermModeEnum.HasAny,
+          show: (node) => {
+            return [
+              ResourceTypeEnum.VIEW,
+              ResourceTypeEnum.MENU,
+              ResourceTypeEnum.FUNCTION,
+            ].includes(node.resourceType);
+          },
           render: (node) => {
             return h(
               'a',
