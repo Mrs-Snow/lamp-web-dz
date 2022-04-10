@@ -23,7 +23,6 @@ export const columns = (): BasicColumn[] => {
       dataIndex: 'state',
       width: 100,
       filters: [...stateFilters()],
-      slots: { customRender: 'state' },
     },
     {
       title: t('devOperation.system.defDictItem.sortValue'),

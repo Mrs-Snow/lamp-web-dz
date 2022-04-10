@@ -16,45 +16,47 @@
           >{{ t('common.title.add') }}</a-button
         >
       </template>
-      <template #action="{ record }">
-        <TableAction
-          :actions="[
-            {
-              label: t('common.title.view'),
-              onClick: handleView.bind(null, record),
-              auth: RoleEnum.TENANT_USER_VIEW,
-            },
-          ]"
-          :dropDownActions="[
-            {
-              label: '重置密码',
-              icon: 'ant-design:rest-filled',
-              onClick: handleResetPwd.bind(null, record),
-              auth: RoleEnum.TENANT_USER_RESET_PWD,
-            },
-            {
-              label: t('common.title.edit'),
-              icon: 'ant-design:edit-outlined',
-              onClick: handleEdit.bind(null, record),
-              auth: RoleEnum.TENANT_USER_EDIT,
-            },
-            {
-              label: t('common.title.copy'),
-              icon: 'ant-design:copy-outlined',
-              onClick: handleCopy.bind(null, record),
-              auth: RoleEnum.TENANT_USER_ADD,
-            },
-            {
-              label: t('common.title.delete'),
-              icon: 'ant-design:delete-outlined',
-              auth: RoleEnum.TENANT_USER_DELETE,
-              popConfirm: {
-                title: t('common.tips.confirmDelete'),
-                confirm: handleDelete.bind(null, record),
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.dataIndex === 'action'">
+          <TableAction
+            :actions="[
+              {
+                label: t('common.title.view'),
+                onClick: handleView.bind(null, record),
+                auth: RoleEnum.TENANT_USER_VIEW,
               },
-            },
-          ]"
-        />
+            ]"
+            :dropDownActions="[
+              {
+                label: '重置密码',
+                icon: 'ant-design:rest-filled',
+                onClick: handleResetPwd.bind(null, record),
+                auth: RoleEnum.TENANT_USER_RESET_PWD,
+              },
+              {
+                label: t('common.title.edit'),
+                icon: 'ant-design:edit-outlined',
+                onClick: handleEdit.bind(null, record),
+                auth: RoleEnum.TENANT_USER_EDIT,
+              },
+              {
+                label: t('common.title.copy'),
+                icon: 'ant-design:copy-outlined',
+                onClick: handleCopy.bind(null, record),
+                auth: RoleEnum.TENANT_USER_ADD,
+              },
+              {
+                label: t('common.title.delete'),
+                icon: 'ant-design:delete-outlined',
+                auth: RoleEnum.TENANT_USER_DELETE,
+                popConfirm: {
+                  title: t('common.tips.confirmDelete'),
+                  confirm: handleDelete.bind(null, record),
+                },
+              },
+            ]"
+          />
+        </template>
       </template>
     </BasicTable>
     <EditModal @register="registerDrawer" @success="handleSuccess" />
@@ -105,7 +107,6 @@
           width: 120,
           title: t('common.column.action'),
           dataIndex: 'action',
-          slots: { customRender: 'action' },
         },
         titleHelpMessage: [
           '1. 新增用户只存def_user表',

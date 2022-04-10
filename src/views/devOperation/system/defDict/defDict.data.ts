@@ -23,10 +23,6 @@ export const columns = (): BasicColumn[] => {
       dataIndex: 'state',
       width: 100,
       filters: [...stateFilters()],
-      slots: { customRender: 'state' },
-      // format: (text) => {
-      //   return text ? t('lamp.common.enable') : t('lamp.common.disable');
-      // },
     },
     {
       title: t('lamp.common.createdTime'),

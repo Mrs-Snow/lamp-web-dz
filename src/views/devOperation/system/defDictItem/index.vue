@@ -1,7 +1,7 @@
 <template>
-  <PageWrapper dense contentFullHeight>
+  <PageWrapper contentFullHeight dense>
     <template #headerContent>
-      <a-descriptions size="small" :column="3" :title="'字典【' + dict.name + '】的基本信息'">
+      <a-descriptions :column="3" :title="'字典【' + dict.name + '】的基本信息'" size="small">
         <a-descriptions-item :label="t('devOperation.system.defDict.key')">
           {{ dict.key }}
         </a-descriptions-item>
@@ -15,49 +15,51 @@
     </template>
     <BasicTable @register="registerTable">
       <template #toolbar>
-        <a-button type="primary" color="error" @click="handleBatchDelete">{{
-          t('common.title.delete')
-        }}</a-button>
+        <a-button color="error" type="primary" @click="handleBatchDelete">
+          {{ t('common.title.delete') }}
+        </a-button>
         <a-button type="primary" @click="handleAdd">{{ t('common.title.add') }}</a-button>
       </template>
-      <template #state="{ record }">
-        <Tag :color="record.state ? 'success' : 'error'">
-          {{ record.state ? t('lamp.common.enable') : t('lamp.common.disable') }}
-        </Tag>
-      </template>
-      <template #action="{ record }">
-        <TableAction
-          :actions="[
-            {
-              label: t('common.title.edit'),
-              onClick: handleEdit.bind(null, record),
-            },
-            {
-              label: t('common.title.copy'),
-              onClick: handleCopy.bind(null, record),
-            },
-            {
-              label: t('common.title.delete'),
-              color: 'error',
-              popConfirm: {
-                title: t('common.tips.confirmDelete'),
-                confirm: handleDelete.bind(null, record),
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.dataIndex === 'state'">
+          <Tag :color="record.state ? 'success' : 'error'">
+            {{ record.state ? t('lamp.common.enable') : t('lamp.common.disable') }}
+          </Tag>
+        </template>
+        <template v-if="column.dataIndex === 'action'">
+          <TableAction
+            :actions="[
+              {
+                label: t('common.title.edit'),
+                onClick: handleEdit.bind(null, record),
               },
-            },
-          ]"
-        />
+              {
+                label: t('common.title.copy'),
+                onClick: handleCopy.bind(null, record),
+              },
+              {
+                label: t('common.title.delete'),
+                color: 'error',
+                popConfirm: {
+                  title: t('common.tips.confirmDelete'),
+                  confirm: handleDelete.bind(null, record),
+                },
+              },
+            ]"
+          />
+        </template>
       </template>
     </BasicTable>
     <EditModal @register="registerDrawer" @success="handleSuccess" />
   </PageWrapper>
 </template>
 <script lang="ts">
-  import { defineComponent, onMounted, ref, reactive } from 'vue';
+  import { defineComponent, onMounted, reactive, ref } from 'vue';
   import { Descriptions, Tag } from 'ant-design-vue';
   import { useRouter } from 'vue-router';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { BasicTable, useTable, TableAction } from '/@/components/Table';
+  import { BasicTable, TableAction, useTable } from '/@/components/Table';
   import { PageWrapper } from '/@/components/Page';
   import { useDrawer } from '/@/components/Drawer';
   import { handleFetchParams } from '/@/utils/lamp/common';
@@ -123,7 +125,6 @@
           width: 160,
           title: t('common.column.action'),
           dataIndex: 'action',
-          slots: { customRender: 'action' },
         },
       });
 

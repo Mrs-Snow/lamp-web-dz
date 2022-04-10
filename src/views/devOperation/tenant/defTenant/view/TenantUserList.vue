@@ -1,22 +1,24 @@
 <template>
-  <PageWrapper dense contentFullHeight>
+  <PageWrapper contentFullHeight dense>
     <BasicTable @register="registerTable">
-      <template #action="{ record }">
-        <TableAction
-          :actions="[
-            {
-              tooltip: '解绑',
-              icon: 'ant-design:unlock-outlined',
-              color: 'error',
-              auth: RoleEnum.TENANT_TENANT_VIEW_UNBIND,
-              popConfirm: {
-                title: '是否确认要解绑改用户？',
-                confirm: handleUnBind.bind(null, record),
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.dataIndex === 'action'">
+          <TableAction
+            :actions="[
+              {
+                tooltip: '解绑',
+                icon: 'ant-design:unlock-outlined',
+                color: 'error',
+                auth: RoleEnum.TENANT_TENANT_VIEW_UNBIND,
+                popConfirm: {
+                  title: '是否确认要解绑改用户？',
+                  confirm: handleUnBind.bind(null, record),
+                },
               },
-            },
-          ]"
-          :stopButtonPropagation="true"
-        />
+            ]"
+            :stopButtonPropagation="true"
+          />
+        </template>
       </template>
     </BasicTable>
   </PageWrapper>
@@ -24,7 +26,7 @@
 <script lang="ts">
   import { defineComponent, onMounted, ref } from 'vue';
   import { useRouter } from 'vue-router';
-  import { BasicTable, useTable, TableAction } from '/@/components/Table';
+  import { BasicTable, TableAction, useTable } from '/@/components/Table';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { PageWrapper } from '/@/components/Page';
@@ -85,7 +87,6 @@
           width: 100,
           title: t('common.column.action'),
           dataIndex: 'action',
-          slots: { customRender: 'action' },
         },
       });
 

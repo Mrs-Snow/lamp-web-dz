@@ -1,39 +1,43 @@
 <template>
-  <PageWrapper dense contentFullHeight>
+  <PageWrapper contentFullHeight dense>
     <BasicTable @register="registerTable">
       <template #toolbar>
         <a-button
+          v-hasAnyPermission="[RoleEnum.APPLICATION_AUTHORIZE_CANCEL]"
           color="error"
           @click="handleBatchCancelAuthorize"
-          v-hasAnyPermission="[RoleEnum.APPLICATION_AUTHORIZE_CANCEL]"
-          >取消授权</a-button
         >
+          取消授权
+        </a-button>
         <a-button
+          v-hasAnyPermission="[RoleEnum.APPLICATION_AUTHORIZE_GRANT]"
           type="primary"
           @click="handleAuthorize"
-          v-hasAnyPermission="[RoleEnum.APPLICATION_AUTHORIZE_GRANT]"
-          >授权</a-button
         >
+          授权
+        </a-button>
       </template>
-      <template #action="{ record }">
-        <TableAction
-          :actions="[
-            {
-              label: '续期',
-              onClick: handleRenewal.bind(null, record),
-              auth: RoleEnum.APPLICATION_AUTHORIZE_RENEWAL,
-            },
-            {
-              label: '取消授权',
-              color: 'error',
-              auth: RoleEnum.APPLICATION_AUTHORIZE_CANCEL,
-              popConfirm: {
-                title: '是否确认取消授权？',
-                confirm: handleCancelAuthorize.bind(null, record),
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.dataIndex === 'action'">
+          <TableAction
+            :actions="[
+              {
+                label: '续期',
+                onClick: handleRenewal.bind(null, record),
+                auth: RoleEnum.APPLICATION_AUTHORIZE_RENEWAL,
               },
-            },
-          ]"
-        />
+              {
+                label: '取消授权',
+                color: 'error',
+                auth: RoleEnum.APPLICATION_AUTHORIZE_CANCEL,
+                popConfirm: {
+                  title: '是否确认取消授权？',
+                  confirm: handleCancelAuthorize.bind(null, record),
+                },
+              },
+            ]"
+          />
+        </template>
       </template>
     </BasicTable>
     <EditModal @register="registerDrawer" @success="handleSuccess" />
@@ -44,13 +48,13 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useRouter } from 'vue-router';
-  import { BasicTable, useTable, TableAction } from '/@/components/Table';
+  import { BasicTable, TableAction, useTable } from '/@/components/Table';
   import { PageWrapper } from '/@/components/Page';
   import { useDrawer } from '/@/components/Drawer';
   import { handleFetchParams } from '/@/utils/lamp/common';
   import { RoleEnum } from '/@/enums/roleEnum';
   import { ActionEnum } from '/@/enums/commonEnum';
-  import { page, cancel } from '/@/api/devOperation/application/defTenantApplicationRel';
+  import { cancel, page } from '/@/api/devOperation/application/defTenantApplicationRel';
   import { columns, searchFormSchema } from './defTenantApplicationRel.data';
   import EditModal from './Edit.vue';
   import { RouteEnum } from '/@/enums/biz/tenant';
@@ -87,7 +91,6 @@
           width: 160,
           title: t('common.column.action'),
           dataIndex: 'action',
-          slots: { customRender: 'action' },
         },
       });
 

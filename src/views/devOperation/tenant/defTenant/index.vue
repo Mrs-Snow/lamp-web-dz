@@ -1,84 +1,86 @@
 <template>
-  <PageWrapper dense contentFullHeight>
+  <PageWrapper contentFullHeight dense>
     <BasicTable @register="registerTable">
       <template #toolbar>
         <a-button
-          type="primary"
-          preIcon="ant-design:plus-outlined"
           v-hasAnyPermission="[RoleEnum.TENANT_TENANT_ADD]"
+          preIcon="ant-design:plus-outlined"
+          type="primary"
           @click="handleAdd"
-          >{{ t('common.title.add') }}</a-button
-        >
+          >{{ t('common.title.add') }}
+        </a-button>
       </template>
-      <template #action="{ record }">
-        <TableAction
-          :actions="[
-            {
-              icon: 'ant-design:search-outlined',
-              tooltip: '查看',
-              onClick: handleView.bind(null, record),
-              auth: RoleEnum.TENANT_TENANT_VIEW,
-            },
-            {
-              icon: 'ant-design:audit-outlined',
-              tooltip: '审核',
-              onClick: handleToExamine.bind(null, record),
-              ifShow: () => {
-                return [TenantStatusEnum.WAITING].includes(record?.status);
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.dataIndex === 'action'">
+          <TableAction
+            :actions="[
+              {
+                icon: 'ant-design:search-outlined',
+                tooltip: '查看',
+                onClick: handleView.bind(null, record),
+                auth: RoleEnum.TENANT_TENANT_VIEW,
               },
-              auth: RoleEnum.TENANT_TENANT_TO_EXAMINE,
-            },
-            {
-              icon: 'ant-design:database-outlined',
-              tooltip: '初始化租户数据库表结构和初始数据',
-              onClick: handleInitData.bind(null, record),
-              ifShow: () => {
-                return [TenantStatusEnum.WAIT_INIT_SCHEMA].includes(record?.status);
+              {
+                icon: 'ant-design:audit-outlined',
+                tooltip: '审核',
+                onClick: handleToExamine.bind(null, record),
+                ifShow: () => {
+                  return [TenantStatusEnum.WAITING].includes(record?.status);
+                },
+                auth: RoleEnum.TENANT_TENANT_TO_EXAMINE,
               },
-              auth: RoleEnum.TENANT_TENANT_INIT_DATA,
-            },
-            {
-              icon: 'ant-design:cloud-upload-outlined',
-              tooltip: '初始化其他服务的数据源',
-              onClick: handleLinkDataSource.bind(null, record),
-              ifShow: () => {
-                return [
-                  TenantStatusEnum.NORMAL,
-                  TenantStatusEnum.WAIT_INIT_DATASOURCE,
-                  TenantStatusEnum.AGREED,
-                ].includes(record?.status);
+              {
+                icon: 'ant-design:database-outlined',
+                tooltip: '初始化租户数据库表结构和初始数据',
+                onClick: handleInitData.bind(null, record),
+                ifShow: () => {
+                  return [TenantStatusEnum.WAIT_INIT_SCHEMA].includes(record?.status);
+                },
+                auth: RoleEnum.TENANT_TENANT_INIT_DATA,
               },
-              auth: RoleEnum.TENANT_TENANT_INIT_DATA_SOURCE,
-            },
-            {
-              tooltip: t('common.title.edit'),
-              icon: 'clarity:note-edit-line',
-              onClick: handleEdit.bind(null, record),
-              auth: RoleEnum.TENANT_TENANT_EDIT,
-            },
-            {
-              tooltip: t('common.title.delete'),
-              icon: 'ant-design:delete-outlined',
-              color: 'error',
-              popConfirm: {
-                title: t('common.tips.confirmDelete'),
-                confirm: handleDelete.bind(null, record),
+              {
+                icon: 'ant-design:cloud-upload-outlined',
+                tooltip: '初始化其他服务的数据源',
+                onClick: handleLinkDataSource.bind(null, record),
+                ifShow: () => {
+                  return [
+                    TenantStatusEnum.NORMAL,
+                    TenantStatusEnum.WAIT_INIT_DATASOURCE,
+                    TenantStatusEnum.AGREED,
+                  ].includes(record?.status);
+                },
+                auth: RoleEnum.TENANT_TENANT_INIT_DATA_SOURCE,
               },
-              auth: RoleEnum.TENANT_TENANT_DELETE,
-            },
-            {
-              tooltip: '绑定用户为租户管理员',
-              icon: 'ant-design:usergroup-add-outlined',
-              color: 'warning',
-              onClick: handleBindUser.bind(null, record),
-              ifShow: () => {
-                return [TenantStatusEnum.NORMAL].includes(record?.status);
+              {
+                tooltip: t('common.title.edit'),
+                icon: 'clarity:note-edit-line',
+                onClick: handleEdit.bind(null, record),
+                auth: RoleEnum.TENANT_TENANT_EDIT,
               },
-              auth: RoleEnum.TENANT_TENANT_BIND_USER,
-            },
-          ]"
-          :stopButtonPropagation="true"
-        />
+              {
+                tooltip: t('common.title.delete'),
+                icon: 'ant-design:delete-outlined',
+                color: 'error',
+                popConfirm: {
+                  title: t('common.tips.confirmDelete'),
+                  confirm: handleDelete.bind(null, record),
+                },
+                auth: RoleEnum.TENANT_TENANT_DELETE,
+              },
+              {
+                tooltip: '绑定用户为租户管理员',
+                icon: 'ant-design:usergroup-add-outlined',
+                color: 'warning',
+                onClick: handleBindUser.bind(null, record),
+                ifShow: () => {
+                  return [TenantStatusEnum.NORMAL].includes(record?.status);
+                },
+                auth: RoleEnum.TENANT_TENANT_BIND_USER,
+              },
+            ]"
+            :stopButtonPropagation="true"
+          />
+        </template>
       </template>
     </BasicTable>
     <EditModal @register="registerDrawer" @success="handleSuccess" />
@@ -93,7 +95,7 @@
   import { useRouter } from 'vue-router';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { BasicTable, useTable, TableAction } from '/@/components/Table';
+  import { BasicTable, TableAction, useTable } from '/@/components/Table';
   import { PageWrapper } from '/@/components/Page';
   import { useDrawer } from '/@/components/Drawer';
   import { useModal } from '/@/components/Modal';
@@ -169,13 +171,13 @@
           width: 220,
           title: t('common.column.action'),
           dataIndex: 'action',
-          slots: { customRender: 'action' },
         },
       });
 
       function handleInitData(record: Recordable) {
         openInitModal(true, { record });
       }
+
       function handleLinkDataSource(record: Recordable) {
         openLinkDrawer(true, { record });
       }
@@ -185,6 +187,7 @@
           type: ActionEnum.ADD,
         });
       }
+
       function handleView(record: Recordable) {
         replace({
           name: RouteEnum.TENANT_VIEW,
@@ -213,6 +216,7 @@
       function handleSuccess() {
         reload();
       }
+
       function handleInitSuccess() {
         reload();
       }

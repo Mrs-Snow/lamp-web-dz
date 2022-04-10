@@ -12,7 +12,7 @@
           {{ t('common.title.delete') }}
         </a-button>
         <Dropdown
-          placement="bottomCenter"
+          placement="bottom"
           :trigger="['click']"
           :dropMenuList="clearList"
           @menu-event="handleClearEvent"

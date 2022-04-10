@@ -1,56 +1,58 @@
 <template>
-  <PageWrapper dense contentFullHeight>
+  <PageWrapper contentFullHeight dense>
     <BasicTable @register="registerTable">
       <template #toolbar>
         <a-button
-          type="primary"
-          preIcon="ant-design:plus-outlined"
           v-hasAnyPermission="[RoleEnum.TENANT_DATASOURCE_CONFIG_ADD]"
+          preIcon="ant-design:plus-outlined"
+          type="primary"
           @click="handleAdd"
-          >{{ t('common.title.add') }}</a-button
-        >
+          >{{ t('common.title.add') }}
+        </a-button>
         <a-button
+          v-hasAnyPermission="[RoleEnum.TENANT_DATASOURCE_CONFIG_DELETE]"
+          color="error"
           preIcon="ant-design:delete-outlined"
           type="primary"
-          color="error"
-          v-hasAnyPermission="[RoleEnum.TENANT_DATASOURCE_CONFIG_DELETE]"
           @click="handleBatchDelete"
-          >{{ t('common.title.delete') }}</a-button
-        >
+          >{{ t('common.title.delete') }}
+        </a-button>
       </template>
-      <template #action="{ record }">
-        <TableAction
-          :actions="[
-            {
-              tooltip: t('common.title.delete'),
-              icon: 'ant-design:delete-outlined',
-              color: 'error',
-              auth: RoleEnum.TENANT_DATASOURCE_CONFIG_DELETE,
-              popConfirm: {
-                title: t('common.tips.confirmDelete'),
-                confirm: handleDelete.bind(null, record),
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.dataIndex === 'action'">
+          <TableAction
+            :actions="[
+              {
+                tooltip: t('common.title.delete'),
+                icon: 'ant-design:delete-outlined',
+                color: 'error',
+                auth: RoleEnum.TENANT_DATASOURCE_CONFIG_DELETE,
+                popConfirm: {
+                  title: t('common.tips.confirmDelete'),
+                  confirm: handleDelete.bind(null, record),
+                },
               },
-            },
-            {
-              tooltip: t('common.title.edit'),
-              icon: 'clarity:note-edit-line',
-              onClick: handleEdit.bind(null, record),
-              auth: RoleEnum.TENANT_DATASOURCE_CONFIG_EDIT,
-            },
-            {
-              icon: 'ant-design:bug-outlined',
-              tooltip: t('devOperation.tenant.defDatasourceConfig.testConnection'),
-              onClick: handleConnection.bind(null, record),
-              auth: RoleEnum.TENANT_DATASOURCE_CONFIG_DEBUG,
-            },
-            {
-              tooltip: t('common.title.copy'),
-              icon: 'ant-design:copy-outlined',
-              onClick: handleCopy.bind(null, record),
-              auth: RoleEnum.TENANT_DATASOURCE_CONFIG_ADD,
-            },
-          ]"
-        />
+              {
+                tooltip: t('common.title.edit'),
+                icon: 'clarity:note-edit-line',
+                onClick: handleEdit.bind(null, record),
+                auth: RoleEnum.TENANT_DATASOURCE_CONFIG_EDIT,
+              },
+              {
+                icon: 'ant-design:bug-outlined',
+                tooltip: t('devOperation.tenant.defDatasourceConfig.testConnection'),
+                onClick: handleConnection.bind(null, record),
+                auth: RoleEnum.TENANT_DATASOURCE_CONFIG_DEBUG,
+              },
+              {
+                tooltip: t('common.title.copy'),
+                icon: 'ant-design:copy-outlined',
+                onClick: handleCopy.bind(null, record),
+                auth: RoleEnum.TENANT_DATASOURCE_CONFIG_ADD,
+              },
+            ]"
+          />
+        </template>
       </template>
     </BasicTable>
     <EditModal @register="registerModal" @success="handleSuccess" />
@@ -60,7 +62,7 @@
   import { defineComponent, ref, unref } from 'vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { BasicTable, useTable, TableAction } from '/@/components/Table';
+  import { BasicTable, TableAction, useTable } from '/@/components/Table';
   import { PageWrapper } from '/@/components/Page';
   import { useModal } from '/@/components/Modal';
   import { useLoading } from '/@/components/Loading';
@@ -107,7 +109,6 @@
           width: 180,
           title: t('common.column.action'),
           dataIndex: 'action',
-          slots: { customRender: 'action' },
         },
       });
 
@@ -139,6 +140,7 @@
         tip: t('common.loadingText'),
       });
       const isTestConnect = ref(false);
+
       function handleConnection(record: Recordable) {
         if (unref(isTestConnect)) {
           createMessage.warn('正在测试连接，请稍后!');

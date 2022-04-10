@@ -11,7 +11,6 @@ export const columns = (): BasicColumn[] => {
       title: '文件预览',
       dataIndex: 'path',
       // width: 120,
-      slots: { customRender: 'path' },
     },
     {
       title: t('basic.system.baseFile.originalFileName'),

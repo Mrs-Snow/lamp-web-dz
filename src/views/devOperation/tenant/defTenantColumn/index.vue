@@ -10,65 +10,67 @@
           >{{ t('common.title.add') }}
         </a-button>
       </template>
-      <template #action="{ record }">
-        <TableAction
-          :actions="[
-            {
-              icon: 'ant-design:search-outlined',
-              tooltip: '查看',
-              onClick: handleView.bind(null, record),
-              auth: RoleEnum.TENANT_TENANT_VIEW,
-            },
-            {
-              icon: 'ant-design:audit-outlined',
-              tooltip: '审核',
-              onClick: handleToExamine.bind(null, record),
-              ifShow: () => {
-                return [TenantStatusEnum.WAITING].includes(record?.status);
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.dataIndex === 'action'">
+          <TableAction
+            :actions="[
+              {
+                icon: 'ant-design:search-outlined',
+                tooltip: '查看',
+                onClick: handleView.bind(null, record),
+                auth: RoleEnum.TENANT_TENANT_VIEW,
               },
-              auth: RoleEnum.TENANT_TENANT_TO_EXAMINE,
-            },
-            {
-              icon: 'ant-design:database-outlined',
-              tooltip: '初始化租户数据库表结构和初始数据',
-              ifShow: () => {
-                return [TenantStatusEnum.WAIT_INIT_SCHEMA].includes(record?.status);
+              {
+                icon: 'ant-design:audit-outlined',
+                tooltip: '审核',
+                onClick: handleToExamine.bind(null, record),
+                ifShow: () => {
+                  return [TenantStatusEnum.WAITING].includes(record?.status);
+                },
+                auth: RoleEnum.TENANT_TENANT_TO_EXAMINE,
               },
-              popConfirm: {
-                title: '确认要初始化租户数据库表结构和初始数据吗？',
-                confirm: handleInitData.bind(null, record),
+              {
+                icon: 'ant-design:database-outlined',
+                tooltip: '初始化租户数据库表结构和初始数据',
+                ifShow: () => {
+                  return [TenantStatusEnum.WAIT_INIT_SCHEMA].includes(record?.status);
+                },
+                popConfirm: {
+                  title: '确认要初始化租户数据库表结构和初始数据吗？',
+                  confirm: handleInitData.bind(null, record),
+                },
+                auth: RoleEnum.TENANT_TENANT_INIT_DATA,
               },
-              auth: RoleEnum.TENANT_TENANT_INIT_DATA,
-            },
-            {
-              tooltip: t('common.title.edit'),
-              icon: 'clarity:note-edit-line',
-              onClick: handleEdit.bind(null, record),
-              auth: RoleEnum.TENANT_TENANT_EDIT,
-            },
-            {
-              tooltip: t('common.title.delete'),
-              icon: 'ant-design:delete-outlined',
-              color: 'error',
-              popConfirm: {
-                title: t('common.tips.confirmDelete'),
-                confirm: handleDelete.bind(null, record),
+              {
+                tooltip: t('common.title.edit'),
+                icon: 'clarity:note-edit-line',
+                onClick: handleEdit.bind(null, record),
+                auth: RoleEnum.TENANT_TENANT_EDIT,
               },
-              auth: RoleEnum.TENANT_TENANT_DELETE,
-            },
-            {
-              tooltip: '绑定用户为租户管理员',
-              icon: 'ant-design:usergroup-add-outlined',
-              color: 'warning',
-              onClick: handleBindUser.bind(null, record),
-              ifShow: () => {
-                return [TenantStatusEnum.NORMAL].includes(record?.status);
+              {
+                tooltip: t('common.title.delete'),
+                icon: 'ant-design:delete-outlined',
+                color: 'error',
+                popConfirm: {
+                  title: t('common.tips.confirmDelete'),
+                  confirm: handleDelete.bind(null, record),
+                },
+                auth: RoleEnum.TENANT_TENANT_DELETE,
               },
-              auth: RoleEnum.TENANT_TENANT_BIND_USER,
-            },
-          ]"
-          :stopButtonPropagation="true"
-        />
+              {
+                tooltip: '绑定用户为租户管理员',
+                icon: 'ant-design:usergroup-add-outlined',
+                color: 'warning',
+                onClick: handleBindUser.bind(null, record),
+                ifShow: () => {
+                  return [TenantStatusEnum.NORMAL].includes(record?.status);
+                },
+                auth: RoleEnum.TENANT_TENANT_BIND_USER,
+              },
+            ]"
+            :stopButtonPropagation="true"
+          />
+        </template>
       </template>
     </BasicTable>
     <EditModal @register="registerDrawer" @success="handleSuccess" />
@@ -151,7 +153,6 @@
           width: 220,
           title: t('common.column.action'),
           dataIndex: 'action',
-          slots: { customRender: 'action' },
         },
       });
 

@@ -1,50 +1,52 @@
 <template>
-  <PageWrapper dense contentFullHeight>
+  <PageWrapper contentFullHeight dense>
     <BasicTable @register="registerTable">
       <template #toolbar>
         <a-button
-          type="primary"
+          v-hasAnyPermission="[RoleEnum.SYSTEM_LOGIN_LOG_DELETE]"
           color="error"
           preIcon="ant-design:delete-outlined"
+          type="primary"
           @click="handleBatchDelete"
-          v-hasAnyPermission="[RoleEnum.SYSTEM_LOGIN_LOG_DELETE]"
         >
           {{ t('common.title.delete') }}
         </a-button>
         <Dropdown
-          placement="bottomCenter"
-          :trigger="['click']"
           :dropMenuList="clearList"
-          @menu-event="handleClearEvent"
+          :trigger="['click']"
           overlayClassName="app-locale-picker-overlay"
+          placement="bottom"
+          @menu-event="handleClearEvent"
         >
-          <a-button type="primary" v-hasAnyPermission="[RoleEnum.SYSTEM_LOGIN_LOG_DELETE]">
+          <a-button v-hasAnyPermission="[RoleEnum.SYSTEM_LOGIN_LOG_DELETE]" type="primary">
             清理日志
           </a-button>
         </Dropdown>
       </template>
-      <template #action="{ record }">
-        <TableAction
-          :actions="[
-            {
-              tooltip: t('common.title.view'),
-              icon: 'ant-design:search-outlined',
-              onClick: handleView.bind(null, record),
-              auth: RoleEnum.SYSTEM_LOGIN_LOG_VIEW,
-            },
-            {
-              tooltip: t('common.title.delete'),
-              icon: 'ant-design:delete-outlined',
-              color: 'error',
-              auth: RoleEnum.SYSTEM_LOGIN_LOG_DELETE,
-              popConfirm: {
-                title: t('common.tips.confirmDelete'),
-                confirm: handleDelete.bind(null, record),
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.dataIndex === 'action'">
+          <TableAction
+            :actions="[
+              {
+                tooltip: t('common.title.view'),
+                icon: 'ant-design:search-outlined',
+                onClick: handleView.bind(null, record),
+                auth: RoleEnum.SYSTEM_LOGIN_LOG_VIEW,
               },
-            },
-          ]"
-          :stopButtonPropagation="true"
-        />
+              {
+                tooltip: t('common.title.delete'),
+                icon: 'ant-design:delete-outlined',
+                color: 'error',
+                auth: RoleEnum.SYSTEM_LOGIN_LOG_DELETE,
+                popConfirm: {
+                  title: t('common.tips.confirmDelete'),
+                  confirm: handleDelete.bind(null, record),
+                },
+              },
+            ]"
+            :stopButtonPropagation="true"
+          />
+        </template>
       </template>
     </BasicTable>
     <EditModal @register="registerDrawer" @success="handleSuccess" />
@@ -54,15 +56,15 @@
   import { defineComponent } from 'vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { BasicTable, useTable, TableAction } from '/@/components/Table';
+  import { BasicTable, TableAction, useTable } from '/@/components/Table';
   import { PageWrapper } from '/@/components/Page';
   import { Dropdown, DropMenu } from '/@/components/Dropdown';
   import { useDrawer } from '/@/components/Drawer';
   import { handleFetchParams } from '/@/utils/lamp/common';
   import { ActionEnum } from '/@/enums/commonEnum';
   import { RoleEnum } from '/@/enums/roleEnum';
-  import { page, remove, clear } from '/@/api/devOperation/system/defLoginLog';
-  import { columns, searchFormSchema, clearList } from './defLoginLog.data';
+  import { clear, page, remove } from '/@/api/devOperation/system/defLoginLog';
+  import { clearList, columns, searchFormSchema } from './defLoginLog.data';
   import EditModal from './Edit.vue';
 
   export default defineComponent({
@@ -104,7 +106,6 @@
           width: 100,
           title: t('common.column.action'),
           dataIndex: 'action',
-          slots: { customRender: 'action' },
         },
       });
 
@@ -127,6 +128,7 @@
           type: ActionEnum.VIEW,
         });
       }
+
       // 新增或编辑成功回调
       function handleSuccess() {
         reload();

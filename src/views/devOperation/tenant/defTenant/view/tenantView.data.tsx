@@ -116,7 +116,6 @@ export const applicationColumns = (): BasicColumn[] => {
       title: t('devOperation.application.defTenantApplicationRel.expired'),
       dataIndex: 'expired',
       width: 80,
-      slots: { customRender: 'expired' },
     },
     {
       title: t('devOperation.application.defTenantApplicationRel.authorizationTime'),

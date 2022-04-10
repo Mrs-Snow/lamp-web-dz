@@ -29,7 +29,6 @@ export const columns = (): BasicColumn[] => {
       dataIndex: 'state',
       width: 100,
       filters: [...stateFilters()],
-      slots: { customRender: 'state' },
     },
     {
       title: t('lamp.common.createdTime'),

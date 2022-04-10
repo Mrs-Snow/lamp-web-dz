@@ -3,80 +3,82 @@
     <BasicTable @register="registerTable">
       <template #toolbar>
         <a-button
+          v-hasAnyPermission="[RoleEnum.TENANT_DEVELOPER_TOOLS_GENERATOR_DELETE]"
           color="error"
           preIcon="ant-design:delete-outlined"
           type="primary"
-          v-hasAnyPermission="[RoleEnum.TENANT_DEVELOPER_TOOLS_GENERATOR_DELETE]"
           @click="handleBatchDelete"
         >
           {{ t('common.title.delete') }}
         </a-button>
         <a-button
-          preIcon="ant-design:cloud-upload-outlined"
           v-hasAnyPermission="[RoleEnum.TENANT_DEVELOPER_TOOLS_GENERATOR_IMPORT]"
+          preIcon="ant-design:cloud-upload-outlined"
           type="primary"
           @click="handleImport"
         >
           {{ t('common.title.import') }}
         </a-button>
       </template>
-      <template #action="{ record }">
-        <TableAction
-          :actions="[
-            {
-              tooltip: t('common.title.edit'),
-              icon: 'ant-design:edit-outlined',
-              auth: RoleEnum.TENANT_DEVELOPER_TOOLS_GENERATOR_EDIT,
-              onClick: handleEdit.bind(null, record),
-            },
-            {
-              tooltip: t('common.title.delete'),
-              icon: 'ant-design:delete-outlined',
-              auth: RoleEnum.TENANT_DEVELOPER_TOOLS_GENERATOR_DELETE,
-              color: 'error',
-              popConfirm: {
-                title: t('common.tips.confirmDelete'),
-                confirm: handleDelete.bind(null, record),
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.dataIndex === 'action'">
+          <TableAction
+            :actions="[
+              {
+                tooltip: t('common.title.edit'),
+                icon: 'ant-design:edit-outlined',
+                auth: RoleEnum.TENANT_DEVELOPER_TOOLS_GENERATOR_EDIT,
+                onClick: handleEdit.bind(null, record),
               },
-            },
-            {
-              tooltip: '同步',
-              icon: 'ant-design:cloud-sync-outlined',
-              auth: RoleEnum.TENANT_DEVELOPER_TOOLS_GENERATOR_SYNC,
-              popConfirm: {
-                title: '确定同步该表的字段吗？',
-                confirm: handleSync.bind(null, record),
+              {
+                tooltip: t('common.title.delete'),
+                icon: 'ant-design:delete-outlined',
+                auth: RoleEnum.TENANT_DEVELOPER_TOOLS_GENERATOR_DELETE,
+                color: 'error',
+                popConfirm: {
+                  title: t('common.tips.confirmDelete'),
+                  confirm: handleDelete.bind(null, record),
+                },
               },
-            },
-          ]"
-          :dropDownActions="[
-            {
-              label: '预览后端',
-              icon: 'ant-design:search-outlined',
-              auth: RoleEnum.TENANT_DEVELOPER_TOOLS_GENERATOR_PREVIEW,
-              onClick: handlePreview.bind(null, record, TemplateEnum.BACKEND),
-            },
-            {
-              label: '预览前端',
-              icon: 'ant-design:search-outlined',
-              auth: RoleEnum.TENANT_DEVELOPER_TOOLS_GENERATOR_PREVIEW,
-              onClick: handlePreview.bind(null, record, TemplateEnum.WEB_PLUS),
-            },
-            {
-              label: '生成后端',
-              icon: 'ant-design:download-outlined',
-              auth: RoleEnum.TENANT_DEVELOPER_TOOLS_GENERATOR_PREVIEW,
-              onClick: handleDownload.bind(null, record, TemplateEnum.BACKEND),
-            },
-            {
-              label: '生成前端',
-              icon: 'ant-design:download-outlined',
-              auth: RoleEnum.TENANT_DEVELOPER_TOOLS_GENERATOR_PREVIEW,
-              onClick: handleDownload.bind(null, record, TemplateEnum.WEB_PLUS),
-            },
-          ]"
-          :stopButtonPropagation="true"
-        />
+              {
+                tooltip: '同步',
+                icon: 'ant-design:cloud-sync-outlined',
+                auth: RoleEnum.TENANT_DEVELOPER_TOOLS_GENERATOR_SYNC,
+                popConfirm: {
+                  title: '确定同步该表的字段吗？',
+                  confirm: handleSync.bind(null, record),
+                },
+              },
+            ]"
+            :dropDownActions="[
+              {
+                label: '预览后端',
+                icon: 'ant-design:search-outlined',
+                auth: RoleEnum.TENANT_DEVELOPER_TOOLS_GENERATOR_PREVIEW,
+                onClick: handlePreview.bind(null, record, TemplateEnum.BACKEND),
+              },
+              {
+                label: '预览前端',
+                icon: 'ant-design:search-outlined',
+                auth: RoleEnum.TENANT_DEVELOPER_TOOLS_GENERATOR_PREVIEW,
+                onClick: handlePreview.bind(null, record, TemplateEnum.WEB_PLUS),
+              },
+              {
+                label: '生成后端',
+                icon: 'ant-design:download-outlined',
+                auth: RoleEnum.TENANT_DEVELOPER_TOOLS_GENERATOR_PREVIEW,
+                onClick: handleDownload.bind(null, record, TemplateEnum.BACKEND),
+              },
+              {
+                label: '生成前端',
+                icon: 'ant-design:download-outlined',
+                auth: RoleEnum.TENANT_DEVELOPER_TOOLS_GENERATOR_PREVIEW,
+                onClick: handleDownload.bind(null, record, TemplateEnum.WEB_PLUS),
+              },
+            ]"
+            :stopButtonPropagation="true"
+          />
+        </template>
       </template>
     </BasicTable>
     <ImportModal @register="registerModal" @success="handleSuccess" />
@@ -145,7 +147,6 @@
           width: 200,
           title: t('common.column.action'),
           dataIndex: 'action',
-          slots: { customRender: 'action' },
         },
       });
 

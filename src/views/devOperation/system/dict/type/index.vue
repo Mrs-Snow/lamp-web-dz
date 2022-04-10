@@ -9,36 +9,38 @@
     >
       <template #toolbar>
         <a-button
+          v-hasAnyPermission="[RoleEnum.SYSTEM_DICT_DELETE]"
+          color="error"
           preIcon="ant-design:delete-outlined"
           type="primary"
-          color="error"
-          v-hasAnyPermission="[RoleEnum.SYSTEM_DICT_DELETE]"
           @click="handleBatchDelete"
         >
           {{ t('common.title.delete') }}
         </a-button>
         <a-button
-          preIcon="ant-design:plus-outlined"
           v-hasAnyPermission="[RoleEnum.SYSTEM_DICT_ADD]"
+          preIcon="ant-design:plus-outlined"
           type="primary"
           @click="handleAdd"
         >
           {{ t('common.title.add') }}
         </a-button>
         <a-button
-          type="primary"
           v-hasAnyPermission="[RoleEnum.SYSTEM_DICT_EDIT]"
           preIcon="clarity:note-edit-line"
+          type="primary"
           @click="handleEdit"
         >
           {{ t('common.title.edit') }}
         </a-button>
       </template>
-      <template #state="{ record }">
-        <Badge
-          :status="record.state ? 'success' : 'error'"
-          :text="record.state ? t('lamp.common.enable') : t('lamp.common.disable')"
-        />
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.dataIndex === 'state'">
+          <Badge
+            :status="record.state ? 'success' : 'error'"
+            :text="record.state ? t('lamp.common.enable') : t('lamp.common.disable')"
+          />
+        </template>
       </template>
     </BasicTable>
     <EditModal @register="registerDrawer" @success="handleSuccess" />
@@ -76,6 +78,7 @@
           api: page,
           columns: columns(),
           formConfig: {
+            name: 'dictSearch',
             labelWidth: 70,
             schemas: searchFormSchema(),
             autoSubmitOnEnter: true,
@@ -169,6 +172,7 @@
         setSelectedRowKeys([record.id]);
         emitChange();
       }
+
       // 双击行回调
       function handleRowDbClick(record: Recordable) {
         setSelectedRowKeys([record.id]);
@@ -178,6 +182,7 @@
           type: ActionEnum.EDIT,
         });
       }
+
       async function onFetchSuccess(result: Recordable) {
         // 请求之后对返回值进行处理
         if (result && result.items && result.items.length > 0) {

@@ -750,7 +750,6 @@ export const resourceApiColumns: BasicColumn[] = [
     dataIndex: 'uri',
     ellipsis: true,
     align: 'left',
-    slots: { customRender: 'uri' },
   },
 ];
 

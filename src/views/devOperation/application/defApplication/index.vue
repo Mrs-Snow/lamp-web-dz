@@ -1,51 +1,54 @@
 <template>
-  <PageWrapper dense contentFullHeight>
+  <PageWrapper contentFullHeight dense>
     <BasicTable @register="registerTable">
       <template #toolbar>
         <a-button
+          v-hasPermission="RoleEnum.APPLICATION_DELETE"
           type="primary"
           @click="handleBatchDelete"
-          v-hasPermission="RoleEnum.APPLICATION_DELETE"
-          >{{ t('common.title.delete') }}</a-button
         >
-        <a-button type="primary" @click="handleAdd" v-hasPermission="[RoleEnum.APPLICATION_ADD]">{{
-          t('common.title.add')
-        }}</a-button>
+          {{ t('common.title.delete') }}
+        </a-button>
+        <a-button v-hasPermission="[RoleEnum.APPLICATION_ADD]" type="primary" @click="handleAdd">
+          {{ t('common.title.add') }}
+        </a-button>
       </template>
-      <template #action="{ record }">
-        <TableAction
-          :actions="[
-            {
-              icon: 'ant-design:edit-outlined',
-              tooltip: t('common.title.edit'),
-              onClick: handleEdit.bind(null, record),
-              auth: RoleEnum.APPLICATION_EDIT,
-            },
-            {
-              icon: 'ant-design:menu-unfold-outlined',
-              tooltip: t('devOperation.application.defApplication.table.resource'),
-              onClick: handleResource.bind(null, record),
-              auth: RoleEnum.APPLICATION_RESOURCE,
-            },
-          ]"
-          :dropDownActions="[
-            {
-              label: t('common.title.copy'),
-              icon: 'ant-design:copy-outlined',
-              onClick: handleCopy.bind(null, record),
-              auth: RoleEnum.APPLICATION_COPY,
-            },
-            {
-              label: t('common.title.delete'),
-              icon: 'ant-design:delete-outlined',
-              auth: RoleEnum.APPLICATION_DELETE,
-              popConfirm: {
-                title: t('common.tips.confirmDelete'),
-                confirm: handleDelete.bind(null, record),
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.dataIndex === 'action'">
+          <TableAction
+            :actions="[
+              {
+                icon: 'ant-design:edit-outlined',
+                tooltip: t('common.title.edit'),
+                onClick: handleEdit.bind(null, record),
+                auth: RoleEnum.APPLICATION_EDIT,
               },
-            },
-          ]"
-        />
+              {
+                icon: 'ant-design:menu-unfold-outlined',
+                tooltip: t('devOperation.application.defApplication.table.resource'),
+                onClick: handleResource.bind(null, record),
+                auth: RoleEnum.APPLICATION_RESOURCE,
+              },
+            ]"
+            :dropDownActions="[
+              {
+                label: t('common.title.copy'),
+                icon: 'ant-design:copy-outlined',
+                onClick: handleCopy.bind(null, record),
+                auth: RoleEnum.APPLICATION_COPY,
+              },
+              {
+                label: t('common.title.delete'),
+                icon: 'ant-design:delete-outlined',
+                auth: RoleEnum.APPLICATION_DELETE,
+                popConfirm: {
+                  title: t('common.tips.confirmDelete'),
+                  confirm: handleDelete.bind(null, record),
+                },
+              },
+            ]"
+          />
+        </template>
       </template>
     </BasicTable>
     <EditModal @register="registerDrawer" @success="handleSuccess" />
@@ -57,7 +60,7 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { RoleEnum } from '/@/enums/roleEnum';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { BasicTable, useTable, TableAction } from '/@/components/Table';
+  import { BasicTable, TableAction, useTable } from '/@/components/Table';
   import { PageWrapper } from '/@/components/Page';
   import { useDrawer } from '/@/components/Drawer';
   import { handleFetchParams } from '/@/utils/lamp/common';
@@ -102,7 +105,6 @@
           width: 160,
           title: t('common.column.action'),
           dataIndex: 'action',
-          slots: { customRender: 'action' },
         },
       });
 

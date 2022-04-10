@@ -2,46 +2,48 @@
   <div class="resource-api">
     <BasicTable @register="registerTable">
       <template #toolbar>
-        <a-button type="primary" @click="handleAdd" v-if="type !== ActionEnum.VIEW">录入</a-button>
-        <a-button type="primary" @click="handleSelect" v-if="type !== ActionEnum.VIEW">
+        <a-button v-if="type !== ActionEnum.VIEW" type="primary" @click="handleAdd">录入</a-button>
+        <a-button v-if="type !== ActionEnum.VIEW" type="primary" @click="handleSelect">
           选择
         </a-button>
       </template>
-      <template #uri="{ record: { uri, requestMethod, controller, springApplicationName, name } }">
-        <Tooltip>
-          <template #title>
-            服务： {{ springApplicationName }} <br />
-            名称：{{ controller }} <br />
-            接口名：{{ name }} <br />
-            地址： {{ uri }} <br />
-            请求方式： {{ requestMethod }}
-          </template>
-          <Tag :color="HTTP_TAG_MAP.get(requestMethod)">
-            {{ requestMethod }}
-          </Tag>
-          {{ uri }}
-        </Tooltip>
-      </template>
-      <template #action="{ record }">
-        <TableAction
-          :actions="[
-            {
-              label: t('common.title.delete'),
-              color: 'error',
-              ifShow: () => type !== ActionEnum.VIEW,
-              popConfirm: {
-                title: t('common.tips.confirmDelete'),
-                confirm: handleDelete.bind(null, record),
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.dataIndex === 'uri'">
+          <Tooltip>
+            <template #title>
+              服务： {{ record.springApplicationName }} <br />
+              名称：{{ record.controller }} <br />
+              接口名：{{ record.name }} <br />
+              地址： {{ record.uri }} <br />
+              请求方式： {{ record.requestMethod }}
+            </template>
+            <Tag :color="HTTP_TAG_MAP.get(record.requestMethod)">
+              {{ record.requestMethod }}
+            </Tag>
+            {{ record.uri }}
+          </Tooltip>
+        </template>
+        <template v-if="column.dataIndex === 'action'">
+          <TableAction
+            :actions="[
+              {
+                label: t('common.title.delete'),
+                color: 'error',
+                ifShow: () => type !== ActionEnum.VIEW,
+                popConfirm: {
+                  title: t('common.tips.confirmDelete'),
+                  confirm: handleDelete.bind(null, record),
+                },
               },
-            },
-            {
-              label: t('common.title.edit'),
-              color: 'error',
-              ifShow: () => type !== ActionEnum.VIEW && !!record.isInput,
-              onClick: handleEdit.bind(null, record),
-            },
-          ]"
-        />
+              {
+                label: t('common.title.edit'),
+                color: 'error',
+                ifShow: () => type !== ActionEnum.VIEW && !!record.isInput,
+                onClick: handleEdit.bind(null, record),
+              },
+            ]"
+          />
+        </template>
       </template>
     </BasicTable>
 
@@ -50,10 +52,10 @@
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent, ref, watch, unref } from 'vue';
+  import { defineComponent, ref, unref, watch } from 'vue';
   import { BasicTable, TableAction, useTable } from '/@/components/Table';
   import { Tag, Tooltip } from 'ant-design-vue';
-  import { uniqueId, cloneDeep } from 'lodash-es';
+  import { cloneDeep, uniqueId } from 'lodash-es';
   import { useModal } from '/@/components/Modal';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { resourceApiColumns } from '../defResource.data';
@@ -94,7 +96,6 @@
           width: 100,
           title: t('common.column.action'),
           dataIndex: 'action',
-          slots: { customRender: 'action' },
         },
       });
 

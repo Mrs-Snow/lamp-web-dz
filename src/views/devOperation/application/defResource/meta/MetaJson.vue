@@ -2,29 +2,31 @@
   <div class="meta-input">
     <BasicTable @register="registerTable">
       <template #toolbar>
-        <a-button type="primary" @click="handleAdd" v-if="type !== ActionEnum.VIEW">
+        <a-button v-if="type !== ActionEnum.VIEW" type="primary" @click="handleAdd">
           {{ t('common.title.add') }}
         </a-button>
       </template>
-      <template #action="{ record }">
-        <TableAction
-          :actions="[
-            {
-              label: t('common.title.delete'),
-              color: 'error',
-              ifShow: () => type !== ActionEnum.VIEW,
-              popConfirm: {
-                title: t('common.tips.confirmDelete'),
-                confirm: handleDelete.bind(null, record),
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.dataIndex === 'action'">
+          <TableAction
+            :actions="[
+              {
+                label: t('common.title.delete'),
+                color: 'error',
+                ifShow: () => type !== ActionEnum.VIEW,
+                popConfirm: {
+                  title: t('common.tips.confirmDelete'),
+                  confirm: handleDelete.bind(null, record),
+                },
               },
-            },
-            {
-              label: t('common.title.edit'),
-              ifShow: () => type !== ActionEnum.VIEW,
-              onClick: handleEdit.bind(null, record),
-            },
-          ]"
-        />
+              {
+                label: t('common.title.edit'),
+                ifShow: () => type !== ActionEnum.VIEW,
+                onClick: handleEdit.bind(null, record),
+              },
+            ]"
+          />
+        </template>
       </template>
     </BasicTable>
 
@@ -40,6 +42,7 @@
   import { ActionEnum } from '/@/enums/commonEnum';
   import { metaJsonColumns } from '../defResource.data';
   import EditModal from './MetaEdit.vue';
+
   export default defineComponent({
     name: 'DefResourceMetaJson',
     components: { BasicTable, TableAction, EditModal },
@@ -69,7 +72,6 @@
           width: 120,
           title: t('common.column.action'),
           dataIndex: 'action',
-          slots: { customRender: 'action' },
         },
       });
 
@@ -102,6 +104,7 @@
           type: ActionEnum.ADD,
         });
       }
+
       function handleEdit(record: Recordable, e: Event) {
         e?.stopPropagation();
         openModal(true, {
@@ -109,6 +112,7 @@
           type: ActionEnum.EDIT,
         });
       }
+
       function handleDelete(record: Recordable, e: Event) {
         e?.stopPropagation();
         if (record && record?.key) {
@@ -118,6 +122,7 @@
           emit('update:value', JSON.stringify(innerVal.value));
         }
       }
+
       function handleSuccess(metaItem: any) {
         const data = { ...innerVal.value };
         data[metaItem.key] = metaItem.value;

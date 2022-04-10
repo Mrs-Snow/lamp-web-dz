@@ -1,55 +1,54 @@
 <template>
-  <PageWrapper dense contentFullHeight>
+  <PageWrapper contentFullHeight dense>
     <BasicTable @register="registerTable">
       <template #toolbar>
         <a-button
-          type="primary"
           v-hasAnyPermission="[RoleEnum.SYSTEM_PARAM_DELETE]"
           color="error"
-          @click="handleBatchDelete"
-          >{{ t('common.title.delete') }}</a-button
-        >
-        <a-button
           type="primary"
-          v-hasAnyPermission="[RoleEnum.SYSTEM_PARAM_ADD]"
-          @click="handleAdd"
-          >{{ t('common.title.add') }}</a-button
-        >
+          @click="handleBatchDelete"
+          >{{ t('common.title.delete') }}
+        </a-button>
+        <a-button v-hasAnyPermission="[RoleEnum.SYSTEM_PARAM_ADD]" type="primary" @click="handleAdd"
+          >{{ t('common.title.add') }}
+        </a-button>
       </template>
-      <template #state="{ record }">
-        <Tag :color="record.state ? 'success' : 'error'">
-          {{ record.state ? t('lamp.common.enable') : t('lamp.common.disable') }}
-        </Tag>
-      </template>
-      <template #action="{ record }">
-        <TableAction
-          :actions="[
-            {
-              label: t('common.title.view'),
-              onClick: handleView.bind(null, record),
-              auth: RoleEnum.SYSTEM_PARAM_VIEW,
-            },
-            {
-              label: t('common.title.edit'),
-              onClick: handleEdit.bind(null, record),
-              auth: RoleEnum.SYSTEM_PARAM_EDIT,
-            },
-            {
-              label: t('common.title.copy'),
-              onClick: handleCopy.bind(null, record),
-              auth: RoleEnum.SYSTEM_PARAM_ADD,
-            },
-            {
-              label: t('common.title.delete'),
-              color: 'error',
-              popConfirm: {
-                title: t('common.tips.confirmDelete'),
-                confirm: handleDelete.bind(null, record),
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.dataIndex === 'state'">
+          <Tag :color="record.state ? 'success' : 'error'">
+            {{ record.state ? t('lamp.common.enable') : t('lamp.common.disable') }}
+          </Tag>
+        </template>
+        <template v-if="column.dataIndex === 'action'">
+          <TableAction
+            :actions="[
+              {
+                label: t('common.title.view'),
+                onClick: handleView.bind(null, record),
+                auth: RoleEnum.SYSTEM_PARAM_VIEW,
               },
-              auth: RoleEnum.SYSTEM_PARAM_DELETE,
-            },
-          ]"
-        />
+              {
+                label: t('common.title.edit'),
+                onClick: handleEdit.bind(null, record),
+                auth: RoleEnum.SYSTEM_PARAM_EDIT,
+              },
+              {
+                label: t('common.title.copy'),
+                onClick: handleCopy.bind(null, record),
+                auth: RoleEnum.SYSTEM_PARAM_ADD,
+              },
+              {
+                label: t('common.title.delete'),
+                color: 'error',
+                popConfirm: {
+                  title: t('common.tips.confirmDelete'),
+                  confirm: handleDelete.bind(null, record),
+                },
+                auth: RoleEnum.SYSTEM_PARAM_DELETE,
+              },
+            ]"
+          />
+        </template>
       </template>
     </BasicTable>
     <EditModal @register="registerDrawer" @success="handleSuccess" />
@@ -60,7 +59,7 @@
   import { Tag } from 'ant-design-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { BasicTable, useTable, TableAction } from '/@/components/Table';
+  import { BasicTable, TableAction, useTable } from '/@/components/Table';
   import { PageWrapper } from '/@/components/Page';
   import { useDrawer } from '/@/components/Drawer';
   import { handleFetchParams } from '/@/utils/lamp/common';
@@ -101,7 +100,6 @@
           width: 200,
           title: t('common.column.action'),
           dataIndex: 'action',
-          slots: { customRender: 'action' },
         },
       });
 

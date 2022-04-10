@@ -1,15 +1,17 @@
 <template>
-  <PageWrapper dense contentFullHeight>
+  <PageWrapper contentFullHeight dense>
     <BasicTable @register="registerTable">
-      <template #action="{ record }">
-        <TableAction
-          :actions="[
-            {
-              label: t('common.title.view'),
-              onClick: handleView.bind(null, record),
-            },
-          ]"
-        />
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.dataIndex === 'action'">
+          <TableAction
+            :actions="[
+              {
+                label: t('common.title.view'),
+                onClick: handleView.bind(null, record),
+              },
+            ]"
+          />
+        </template>
       </template>
     </BasicTable>
     <EditModal @register="registerDrawer" @success="handleSuccess" />
@@ -18,7 +20,7 @@
 <script lang="ts">
   import { defineComponent } from 'vue';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { BasicTable, useTable, TableAction } from '/@/components/Table';
+  import { BasicTable, TableAction, useTable } from '/@/components/Table';
   import { PageWrapper } from '/@/components/Page';
   import { useDrawer } from '/@/components/Drawer';
   import { handleFetchParams } from '/@/utils/lamp/common';
@@ -57,7 +59,6 @@
           width: 100,
           title: t('common.column.action'),
           dataIndex: 'action',
-          slots: { customRender: 'action' },
         },
       });
 

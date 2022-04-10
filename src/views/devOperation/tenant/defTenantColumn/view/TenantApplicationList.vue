@@ -1,54 +1,56 @@
 <template>
-  <PageWrapper dense contentFullHeight>
+  <PageWrapper contentFullHeight dense>
     <BasicTable @register="registerTable">
       <template #toolbar>
         <a-button
+          v-hasAnyPermission="[RoleEnum.APPLICATION_AUTHORIZE_GRANT]"
           type="primary"
           @click="handleAuthorize"
-          v-hasAnyPermission="[RoleEnum.APPLICATION_AUTHORIZE_GRANT]"
-          >授权</a-button
-        >
+          >授权
+        </a-button>
         <a-button
+          v-hasAnyPermission="[RoleEnum.APPLICATION_AUTHORIZE_CANCEL]"
           color="error"
           @click="handleBatchCancelAuthorize"
-          v-hasAnyPermission="[RoleEnum.APPLICATION_AUTHORIZE_CANCEL]"
-          >取消授权</a-button
-        >
+          >取消授权
+        </a-button>
       </template>
       <template #expired="{ record }">
         <Tag :color="record.expired ? 'warning' : 'success'">
           {{ record.expired ? '已过期' : '未过期' }}
         </Tag>
       </template>
-      <template #action="{ record }">
-        <TableAction
-          :actions="[
-            {
-              label: '取消授权',
-              color: 'error',
-              auth: RoleEnum.APPLICATION_AUTHORIZE_CANCEL,
-              popConfirm: {
-                title: '是否确认取消授权？',
-                confirm: handleCancelAuthorize.bind(null, record),
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.dataIndex === 'action'">
+          <TableAction
+            :actions="[
+              {
+                label: '取消授权',
+                color: 'error',
+                auth: RoleEnum.APPLICATION_AUTHORIZE_CANCEL,
+                popConfirm: {
+                  title: '是否确认取消授权？',
+                  confirm: handleCancelAuthorize.bind(null, record),
+                },
               },
-            },
-          ]"
-        />
+            ]"
+          />
+        </template>
       </template>
     </BasicTable>
   </PageWrapper>
 </template>
 <script lang="ts">
-  import { defineComponent, ref, unref, onMounted } from 'vue';
+  import { defineComponent, onMounted, ref, unref } from 'vue';
   import { Tag } from 'ant-design-vue';
   import { useRouter } from 'vue-router';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { BasicTable, useTable, TableAction } from '/@/components/Table';
+  import { BasicTable, TableAction, useTable } from '/@/components/Table';
   import { PageWrapper } from '/@/components/Page';
   import { handleFetchParams } from '/@/utils/lamp/common';
   import { RoleEnum } from '/@/enums/roleEnum';
-  import { page, cancel } from '/@/api/devOperation/application/defTenantApplicationRel';
+  import { cancel, page } from '/@/api/devOperation/application/defTenantApplicationRel';
   import { applicationColumns, applicationSearchFormSchema } from './tenantView.data';
 
   import { RouteEnum } from '/@/enums/biz/tenant';
@@ -98,7 +100,6 @@
           width: 160,
           title: t('common.column.action'),
           dataIndex: 'action',
-          slots: { customRender: 'action' },
         },
       });
 
