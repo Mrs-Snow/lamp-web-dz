@@ -1,59 +1,61 @@
 <template>
-  <PageWrapper dense contentFullHeight>
+  <PageWrapper contentFullHeight dense>
     <BasicTable @register="registerTable">
       <template #toolbar>
         <a-button
-          type="primary"
+          v-hasAnyPermission="[RoleEnum.PARAMETER_DELETE]"
           color="error"
           preIcon="ant-design:delete-outlined"
-          v-hasAnyPermission="[RoleEnum.PARAMETER_DELETE]"
+          type="primary"
           @click="handleBatchDelete"
         >
           {{ t('common.title.delete') }}
         </a-button>
         <a-button
-          type="primary"
-          preIcon="ant-design:plus-outlined"
           v-hasAnyPermission="[RoleEnum.PARAMETER_ADD]"
+          preIcon="ant-design:plus-outlined"
+          type="primary"
           @click="handleAdd"
         >
           {{ t('common.title.add') }}
         </a-button>
       </template>
-      <template #action="{ record }">
-        <TableAction
-          :actions="[
-            {
-              tooltip: t('common.title.view'),
-              icon: 'ant-design:search-outlined',
-              auth: RoleEnum.PARAMETER_VIEW,
-              onClick: handleView.bind(null, record),
-            },
-            {
-              tooltip: t('common.title.edit'),
-              icon: 'ant-design:edit-outlined',
-              auth: RoleEnum.PARAMETER_EDIT,
-              onClick: handleEdit.bind(null, record),
-            },
-            {
-              tooltip: t('common.title.copy'),
-              icon: 'ant-design:copy-outlined',
-              auth: RoleEnum.PARAMETER_ADD,
-              onClick: handleCopy.bind(null, record),
-            },
-            {
-              tooltip: t('common.title.delete'),
-              icon: 'ant-design:delete-outlined',
-              color: 'error',
-              auth: RoleEnum.PARAMETER_DELETE,
-              popConfirm: {
-                title: t('common.tips.confirmDelete'),
-                confirm: handleDelete.bind(null, record),
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.dataIndex === 'action'">
+          <TableAction
+            :actions="[
+              {
+                tooltip: t('common.title.view'),
+                icon: 'ant-design:search-outlined',
+                auth: RoleEnum.PARAMETER_VIEW,
+                onClick: handleView.bind(null, record),
               },
-            },
-          ]"
-          :stopButtonPropagation="true"
-        />
+              {
+                tooltip: t('common.title.edit'),
+                icon: 'ant-design:edit-outlined',
+                auth: RoleEnum.PARAMETER_EDIT,
+                onClick: handleEdit.bind(null, record),
+              },
+              {
+                tooltip: t('common.title.copy'),
+                icon: 'ant-design:copy-outlined',
+                auth: RoleEnum.PARAMETER_ADD,
+                onClick: handleCopy.bind(null, record),
+              },
+              {
+                tooltip: t('common.title.delete'),
+                icon: 'ant-design:delete-outlined',
+                color: 'error',
+                auth: RoleEnum.PARAMETER_DELETE,
+                popConfirm: {
+                  title: t('common.tips.confirmDelete'),
+                  confirm: handleDelete.bind(null, record),
+                },
+              },
+            ]"
+            :stopButtonPropagation="true"
+          />
+        </template>
       </template>
     </BasicTable>
     <EditModal @register="registerDrawer" @success="handleSuccess" />
@@ -63,7 +65,7 @@
   import { defineComponent } from 'vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { BasicTable, useTable, TableAction } from '/@/components/Table';
+  import { BasicTable, TableAction, useTable } from '/@/components/Table';
   import { PageWrapper } from '/@/components/Page';
   import { useDrawer } from '/@/components/Drawer';
   import { handleFetchParams } from '/@/utils/lamp/common';
@@ -111,7 +113,6 @@
           width: 200,
           title: t('common.column.action'),
           dataIndex: 'action',
-          slots: { customRender: 'action' },
         },
         titleHelpMessage: [
           '1. 个性参数不能新增，只能导入系统参数，并对系统参数进行个性化调整',

@@ -15,12 +15,12 @@
           >取消授权
         </a-button>
       </template>
-      <template #expired="{ record }">
-        <Tag :color="record.expired ? 'warning' : 'success'">
-          {{ record.expired ? '已过期' : '未过期' }}
-        </Tag>
-      </template>
       <template #bodyCell="{ column, record }">
+        <template v-if="column.dataIndex === 'expired'">
+          <Tag :color="record.expired ? 'warning' : 'success'">
+            {{ record.expired ? '已过期' : '未过期' }}
+          </Tag>
+        </template>
         <template v-if="column.dataIndex === 'action'">
           <TableAction
             :actions="[

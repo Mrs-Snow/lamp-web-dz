@@ -27,12 +27,10 @@ export const columns = (): BasicColumn[] => {
     {
       title: '所属主部门',
       dataIndex: 'mainOrg',
-      slots: { customRender: 'mainOrg' },
     },
     {
       title: '所属部门',
       dataIndex: 'orgNameList',
-      slots: { customRender: 'orgIdList' },
     },
     {
       title: t('basic.user.baseEmployee.positionStatus'),

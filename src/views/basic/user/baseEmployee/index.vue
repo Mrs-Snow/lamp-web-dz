@@ -1,93 +1,95 @@
 <template>
-  <PageWrapper dense contentFullHeight>
+  <PageWrapper contentFullHeight dense>
     <BasicTable @register="registerTable">
       <template #toolbar>
         <a-button
-          type="primary"
-          preIcon="ant-design:delete-outlined"
-          color="error"
           v-hasAnyPermission="[RoleEnum.EMPLOYEE_DELETE]"
+          color="error"
+          preIcon="ant-design:delete-outlined"
+          type="primary"
           @click="handleBatchDelete"
         >
           {{ t('common.title.delete') }}
         </a-button>
         <a-button
-          type="primary"
-          preIcon="ant-design:plus-outlined"
           v-hasAnyPermission="[RoleEnum.EMPLOYEE_ADD]"
+          preIcon="ant-design:plus-outlined"
+          type="primary"
           @click="handleAdd"
         >
           {{ t('common.title.add') }}
         </a-button>
         <a-button
-          type="primary"
-          preIcon="ant-design:plus-outlined"
-          @click="handleInvitation"
           v-hasAnyPermission="[RoleEnum.INVITATION_USER]"
+          preIcon="ant-design:plus-outlined"
+          type="primary"
+          @click="handleInvitation"
         >
           邀请
         </a-button>
       </template>
-      <template #orgIdList="{ record }">
-        <span>
-          <Tag
-            color="success"
-            class="mr-2"
-            v-for="(orgName, index) in record?.echoMap?.orgIdList"
-            :key="index"
-          >
-            {{ orgName }}
-          </Tag>
-        </span>
-      </template>
-      <template #mainOrg="{ record }">
-        <span>
-          <Tag color="success" class="mr-2" v-if="record?.echoMap?.mainOrgId">
-            {{ record?.echoMap?.mainOrgId }}
-          </Tag>
-        </span>
-      </template>
-      <template #action="{ record }">
-        <TableAction
-          :actions="[
-            {
-              label: t('common.title.view'),
-              icon: 'ant-design:search-outlined',
-              onClick: handleView.bind(null, record),
-              auth: RoleEnum.EMPLOYEE_VIEW,
-            },
-            {
-              label: '绑定角色',
-              icon: 'ant-design:search-outlined',
-              onClick: handleBindRole.bind(null, record),
-              auth: RoleEnum.EMPLOYEE_BIND_ROLE,
-            },
-          ]"
-          :dropDownActions="[
-            {
-              label: t('common.title.edit'),
-              icon: 'ant-design:edit-outlined',
-              onClick: handleEdit.bind(null, record),
-              auth: RoleEnum.EMPLOYEE_EDIT,
-            },
-            {
-              label: t('common.title.copy'),
-              icon: 'ant-design:copy-outlined',
-              onClick: handleCopy.bind(null, record),
-              auth: RoleEnum.EMPLOYEE_ADD,
-            },
-            {
-              label: t('common.title.delete'),
-              icon: 'ant-design:delete-outlined',
-              auth: RoleEnum.EMPLOYEE_DELETE,
-              popConfirm: {
-                title: t('common.tips.confirmDelete'),
-                confirm: handleDelete.bind(null, record),
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.dataIndex === 'orgNameList'">
+          <span>
+            <Tag
+              v-for="(orgName, index) in record?.echoMap?.orgIdList"
+              :key="index"
+              class="mr-2"
+              color="success"
+            >
+              {{ orgName }}
+            </Tag>
+          </span>
+        </template>
+        <template v-if="column.dataIndex === 'mainOrg'">
+          <span>
+            <Tag v-if="record?.echoMap?.mainOrgId" class="mr-2" color="success">
+              {{ record?.echoMap?.mainOrgId }}
+            </Tag>
+          </span>
+        </template>
+        <template v-if="column.dataIndex === 'action'">
+          <TableAction
+            :actions="[
+              {
+                label: t('common.title.view'),
+                icon: 'ant-design:search-outlined',
+                onClick: handleView.bind(null, record),
+                auth: RoleEnum.EMPLOYEE_VIEW,
               },
-            },
-          ]"
-          :stopButtonPropagation="true"
-        />
+              {
+                label: '绑定角色',
+                icon: 'ant-design:search-outlined',
+                onClick: handleBindRole.bind(null, record),
+                auth: RoleEnum.EMPLOYEE_BIND_ROLE,
+              },
+            ]"
+            :dropDownActions="[
+              {
+                label: t('common.title.edit'),
+                icon: 'ant-design:edit-outlined',
+                onClick: handleEdit.bind(null, record),
+                auth: RoleEnum.EMPLOYEE_EDIT,
+              },
+              {
+                label: t('common.title.copy'),
+                icon: 'ant-design:copy-outlined',
+                onClick: handleCopy.bind(null, record),
+                auth: RoleEnum.EMPLOYEE_ADD,
+              },
+              {
+                label: t('common.title.delete'),
+                icon: 'ant-design:delete-outlined',
+                auth: RoleEnum.EMPLOYEE_DELETE,
+                popConfirm: {
+                  title: t('common.tips.confirmDelete'),
+                  confirm: handleDelete.bind(null, record),
+                },
+              },
+            ]"
+            :stopButtonPropagation="true"
+          />
+        </template>
       </template>
     </BasicTable>
     <EditModal @register="registerDrawer" @success="handleSuccess" />
@@ -101,7 +103,7 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { RoleEnum } from '/@/enums/roleEnum';
-  import { BasicTable, useTable, TableAction } from '/@/components/Table';
+  import { BasicTable, TableAction, useTable } from '/@/components/Table';
   import { PageWrapper } from '/@/components/Page';
   import { useDrawer } from '/@/components/Drawer';
   import { useModal } from '/@/components/Modal';
@@ -169,7 +171,6 @@
           width: 220,
           title: t('common.column.action'),
           dataIndex: 'action',
-          slots: { customRender: 'action' },
         },
       });
 

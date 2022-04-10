@@ -1,49 +1,55 @@
 <template>
   <BasicModal
-    v-bind="$attrs"
-    @register="registerModal"
-    showFooter
-    width="70%"
+    :defaultFullscreen="true"
     :keyboard="true"
     :maskClosable="true"
-    :defaultFullscreen="true"
+    showFooter
     title="绑定角色"
+    v-bind="$attrs"
+    width="70%"
     @ok="handleSubmit"
+    @register="registerModal"
   >
     <div ref="wrapEl">
       <BasicTable @register="registerTable">
         <template #toolbar>
-          <a-button type="primary" color="error" @click="handleBatchChoice">批量绑定</a-button>
+          <a-button color="error" type="primary" @click="handleBatchChoice">批量绑定</a-button>
           <a-button type="primary" @click="handleBatchCancel">批量取消</a-button>
         </template>
-        <template #action="{ record }">
-          <TableAction
-            :actions="[
-              {
-                label: '绑定',
-                onClick: handleBindRole.bind(null, record),
-                ifShow: () => {
-                  return !isEmpty(formData.employeeId) && !formData.bindRoleIds.includes(record.id);
+        <template #bodyCell="{ column, record }">
+          <template v-if="column.dataIndex === 'action'">
+            <TableAction
+              :actions="[
+                {
+                  label: '绑定',
+                  onClick: handleBindRole.bind(null, record),
+                  ifShow: () => {
+                    return (
+                      !isEmpty(formData.employeeId) && !formData.bindRoleIds.includes(record.id)
+                    );
+                  },
                 },
-              },
-              {
-                label: '取消绑定',
-                onClick: handleUnBindRole.bind(null, record),
-                ifShow: () => {
-                  return !isEmpty(formData.employeeId) && formData.bindRoleIds.includes(record.id);
+                {
+                  label: '取消绑定',
+                  onClick: handleUnBindRole.bind(null, record),
+                  ifShow: () => {
+                    return (
+                      !isEmpty(formData.employeeId) && formData.bindRoleIds.includes(record.id)
+                    );
+                  },
                 },
-              },
-            ]"
-          />
+              ]"
+            />
+          </template>
         </template>
       </BasicTable>
     </div>
   </BasicModal>
 </template>
 <script lang="ts">
-  import { defineComponent, ref, reactive, toRef } from 'vue';
+  import { defineComponent, reactive, ref, toRef } from 'vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
-  import { BasicTable, useTable, TableAction } from '/@/components/Table';
+  import { BasicTable, TableAction, useTable } from '/@/components/Table';
   import { useLoading } from '/@/components/Loading';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
@@ -115,7 +121,6 @@
           width: 120,
           title: t('common.column.action'),
           dataIndex: 'action',
-          slots: { customRender: 'action' },
         },
       });
 

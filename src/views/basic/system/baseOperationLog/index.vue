@@ -1,50 +1,52 @@
 <template>
-  <PageWrapper dense contentFullHeight>
+  <PageWrapper contentFullHeight dense>
     <BasicTable @register="registerTable">
       <template #toolbar>
         <a-button
-          type="primary"
+          v-hasAnyPermission="[RoleEnum.SYSTEM_WEB_LOG_DELETE]"
           color="error"
           preIcon="ant-design:delete-outlined"
+          type="primary"
           @click="handleBatchDelete"
-          v-hasAnyPermission="[RoleEnum.SYSTEM_WEB_LOG_DELETE]"
         >
           {{ t('common.title.delete') }}
         </a-button>
         <Dropdown
-          placement="bottom"
-          :trigger="['click']"
           :dropMenuList="clearList"
-          @menu-event="handleClearEvent"
+          :trigger="['click']"
           overlayClassName="app-locale-picker-overlay"
+          placement="bottom"
+          @menu-event="handleClearEvent"
         >
-          <a-button type="primary" v-hasAnyPermission="[RoleEnum.SYSTEM_WEB_LOG_DELETE]">
+          <a-button v-hasAnyPermission="[RoleEnum.SYSTEM_WEB_LOG_DELETE]" type="primary">
             清理日志
           </a-button>
         </Dropdown>
       </template>
-      <template #action="{ record }">
-        <TableAction
-          :actions="[
-            {
-              tooltip: t('common.title.view'),
-              icon: 'ant-design:search-outlined',
-              auth: RoleEnum.SYSTEM_WEB_LOG_VIEW,
-              onClick: handleView.bind(null, record),
-            },
-            {
-              tooltip: t('common.title.delete'),
-              icon: 'ant-design:delete-outlined',
-              color: 'error',
-              auth: RoleEnum.SYSTEM_WEB_LOG_DELETE,
-              popConfirm: {
-                title: t('common.tips.confirmDelete'),
-                confirm: handleDelete.bind(null, record),
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.dataIndex === 'action'">
+          <TableAction
+            :actions="[
+              {
+                tooltip: t('common.title.view'),
+                icon: 'ant-design:search-outlined',
+                auth: RoleEnum.SYSTEM_WEB_LOG_VIEW,
+                onClick: handleView.bind(null, record),
               },
-            },
-          ]"
-          :stopButtonPropagation="true"
-        />
+              {
+                tooltip: t('common.title.delete'),
+                icon: 'ant-design:delete-outlined',
+                color: 'error',
+                auth: RoleEnum.SYSTEM_WEB_LOG_DELETE,
+                popConfirm: {
+                  title: t('common.tips.confirmDelete'),
+                  confirm: handleDelete.bind(null, record),
+                },
+              },
+            ]"
+            :stopButtonPropagation="true"
+          />
+        </template>
       </template>
     </BasicTable>
     <EditModal @register="registerDrawer" @success="handleSuccess" />
@@ -56,13 +58,13 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { Dropdown } from '/@/components/Dropdown';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { BasicTable, useTable, TableAction } from '/@/components/Table';
+  import { BasicTable, TableAction, useTable } from '/@/components/Table';
   import { PageWrapper } from '/@/components/Page';
   import { useDrawer } from '/@/components/Drawer';
   import { handleFetchParams } from '/@/utils/lamp/common';
   import { ActionEnum } from '/@/enums/commonEnum';
-  import { page, remove, clear } from '/@/api/basic/system/baseOperationLog';
-  import { columns, searchFormSchema, clearList } from './baseOperationLog.data';
+  import { clear, page, remove } from '/@/api/basic/system/baseOperationLog';
+  import { clearList, columns, searchFormSchema } from './baseOperationLog.data';
   import EditModal from './Edit.vue';
   import { RoleEnum } from '/@/enums/roleEnum';
 
@@ -105,7 +107,6 @@
           width: 100,
           title: t('common.column.action'),
           dataIndex: 'action',
-          slots: { customRender: 'action' },
         },
       });
 

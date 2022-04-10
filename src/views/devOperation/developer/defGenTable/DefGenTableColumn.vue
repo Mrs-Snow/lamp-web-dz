@@ -2,17 +2,19 @@
   <BasicTable @register="registerTable">
     <template #toolbar>
       <a-button
+        v-hasAnyPermission="[RoleEnum.TENANT_DEVELOPER_TOOLS_GENERATOR_EDIT_DELETE]"
         color="error"
         preIcon="ant-design:delete-outlined"
         type="primary"
-        v-hasAnyPermission="[RoleEnum.TENANT_DEVELOPER_TOOLS_GENERATOR_EDIT_DELETE]"
         @click="handleBatchDelete"
       >
         {{ t('common.title.delete') }}
       </a-button>
     </template>
-    <template #action="{ record, column }">
-      <TableAction :actions="createActions(record, column)" :stopButtonPropagation="true" />
+    <template #bodyCell="{ column, record }">
+      <template v-if="column.dataIndex === 'action'">
+        <TableAction :actions="createActions(record, column)" :stopButtonPropagation="true" />
+      </template>
     </template>
   </BasicTable>
 </template>
@@ -91,7 +93,6 @@
           width: 200,
           title: t('common.column.action'),
           dataIndex: 'action',
-          slots: { customRender: 'action' },
         },
       });
 

@@ -1,79 +1,81 @@
 <template>
-  <PageWrapper dense contentFullHeight>
+  <PageWrapper contentFullHeight dense>
     <BasicTable
-      @register="registerTable"
       :titleHelpMessage="[
         '1. “调试上传”按钮：用于开发人员测试上传接口是否支持所有的参数',
         '2. “上传”按钮：用于演示如何直接上传附件',
         '3. 这里查询的是base库 com_file 表的数据',
       ]"
+      @register="registerTable"
     >
       <template #toolbar>
         <a-button
-          type="primary"
           v-hasAnyPermission="[RoleEnum.SYSTEM_APPENDIX_DELETE]"
           preIcon="ant-design:delete-outlined"
+          type="primary"
           @click="handleBatchDelete"
         >
           {{ t('common.title.delete') }}
         </a-button>
         <a-button
-          type="primary"
-          preIcon="ant-design:download-outlined"
           v-hasAnyPermission="[RoleEnum.SYSTEM_APPENDIX_DOWNLOAD]"
+          preIcon="ant-design:download-outlined"
+          type="primary"
           @click="handleBatchDownload"
         >
           {{ t('common.title.download') }}
         </a-button>
         <a-button
-          type="primary"
           v-hasAnyPermission="[RoleEnum.SYSTEM_APPENDIX_DEBUG_UPLOAD]"
           preIcon="ant-design:upload-outlined"
+          type="primary"
           @click="handleUpload"
         >
           调试上传
         </a-button>
 
         <BasicUpload
-          :maxSize="20"
-          :maxNumber="10"
           v-hasAnyPermission="[RoleEnum.SYSTEM_APPENDIX_UPLOAD]"
-          :uploadParams="{ bizType: FileBizTypeEnum.BASE_FILE }"
           :api="uploadToTenant"
+          :maxNumber="10"
+          :maxSize="20"
           :showPreviewButton="false"
+          :uploadParams="{ bizType: FileBizTypeEnum.BASE_FILE }"
           @change="handleChange"
         />
       </template>
-      <template #path="{ record }">
-        <ThumbUrl
-          :fileId="record.id"
-          :fileType="record.fileType"
-          :originalFileName="record.originalFileName"
-          :imageStyle="{ 'max-height': '104px' }"
-        />
-      </template>
-      <template #action="{ record }">
-        <TableAction
-          :actions="[
-            {
-              tooltip: t('common.title.download'),
-              icon: 'ant-design:download-outlined',
-              auth: RoleEnum.SYSTEM_APPENDIX_DOWNLOAD,
-              onClick: handleDownload.bind(null, record),
-            },
-            {
-              tooltip: t('common.title.delete'),
-              icon: 'ant-design:delete-outlined',
-              color: 'error',
-              auth: RoleEnum.SYSTEM_APPENDIX_DELETE,
-              popConfirm: {
-                title: t('common.tips.confirmDelete'),
-                confirm: handleDelete.bind(null, record),
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.dataIndex === 'path'">
+          <ThumbUrl
+            :fileId="record.id"
+            :fileType="record.fileType"
+            :imageStyle="{ 'max-height': '104px' }"
+            :originalFileName="record.originalFileName"
+          />
+        </template>
+        <template v-if="column.dataIndex === 'action'">
+          <TableAction
+            :actions="[
+              {
+                tooltip: t('common.title.download'),
+                icon: 'ant-design:download-outlined',
+                auth: RoleEnum.SYSTEM_APPENDIX_DOWNLOAD,
+                onClick: handleDownload.bind(null, record),
               },
-            },
-          ]"
-          :stopButtonPropagation="true"
-        />
+              {
+                tooltip: t('common.title.delete'),
+                icon: 'ant-design:delete-outlined',
+                color: 'error',
+                auth: RoleEnum.SYSTEM_APPENDIX_DELETE,
+                popConfirm: {
+                  title: t('common.tips.confirmDelete'),
+                  confirm: handleDelete.bind(null, record),
+                },
+              },
+            ]"
+            :stopButtonPropagation="true"
+          />
+        </template>
       </template>
     </BasicTable>
     <EditModal @register="registerModal" @success="handleSuccess" />
@@ -84,14 +86,14 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { BasicUpload } from '/@/components/Upload';
-  import { BasicTable, useTable, TableAction } from '/@/components/Table';
+  import { BasicTable, TableAction, useTable } from '/@/components/Table';
   import { PageWrapper } from '/@/components/Page';
-  import { handleFetchParams, downloadFile } from '/@/utils/lamp/common';
+  import { downloadFile, handleFetchParams } from '/@/utils/lamp/common';
   import { FileBizTypeEnum } from '/@/enums/commonEnum';
   import { RoleEnum } from '/@/enums/roleEnum';
   import { useModal } from '/@/components/Modal';
   import ThumbUrl from '/@/components/Upload/src/ThumbUrl.vue';
-  import { page, remove, download } from '/@/api/basic/system/baseFile';
+  import { download, page, remove } from '/@/api/basic/system/baseFile';
   import { uploadToTenant } from '/@/api/lamp/file/upload';
   import { columns, searchFormSchema } from './baseFile.data';
   import EditModal from './Edit.vue';
@@ -101,7 +103,6 @@
     name: '附件管理',
     components: {
       BasicTable,
-
       BasicUpload,
       PageWrapper,
       TableAction,
@@ -142,9 +143,9 @@
           width: 100,
           title: t('common.column.action'),
           dataIndex: 'action',
-          slots: { customRender: 'action' },
         },
       });
+
       // 弹出编辑页面
       function handleDownload(record: Recordable, e) {
         e.stopPropagation();
@@ -152,6 +153,7 @@
           batchDownload([record.id]);
         }
       }
+
       function handleBatchDownload() {
         const ids = getSelectRowKeys();
         if (!ids || ids.length <= 0) {

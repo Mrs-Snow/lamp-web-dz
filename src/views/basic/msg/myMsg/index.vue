@@ -1,39 +1,41 @@
 <template>
-  <PageWrapper dense contentFullHeight>
+  <PageWrapper contentFullHeight dense>
     <BasicTable @register="registerTable">
       <template #toolbar>
         <a-button
-          type="primary"
+          v-hasAnyPermission="[RoleEnum.MSG_MY_MSG_DELETE]"
           color="error"
           preIcon="ant-design:delete-outlined"
+          type="primary"
           @click="handleBatchDelete"
-          v-hasAnyPermission="[RoleEnum.MSG_MY_MSG_DELETE]"
         >
           {{ t('common.title.delete') }}
         </a-button>
       </template>
-      <template #action="{ record }">
-        <TableAction
-          :actions="[
-            {
-              tooltip: t('common.title.view'),
-              icon: 'ant-design:search-outlined',
-              onClick: handleView.bind(null, record),
-              auth: RoleEnum.MSG_MY_MSG_VIEW,
-            },
-            {
-              tooltip: t('common.title.delete'),
-              icon: 'ant-design:delete-outlined',
-              color: 'error',
-              auth: RoleEnum.MSG_MY_MSG_DELETE,
-              popConfirm: {
-                title: t('common.tips.confirmDelete'),
-                confirm: handleDelete.bind(null, record),
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.dataIndex === 'action'">
+          <TableAction
+            :actions="[
+              {
+                tooltip: t('common.title.view'),
+                icon: 'ant-design:search-outlined',
+                onClick: handleView.bind(null, record),
+                auth: RoleEnum.MSG_MY_MSG_VIEW,
               },
-            },
-          ]"
-          :stopButtonPropagation="true"
-        />
+              {
+                tooltip: t('common.title.delete'),
+                icon: 'ant-design:delete-outlined',
+                color: 'error',
+                auth: RoleEnum.MSG_MY_MSG_DELETE,
+                popConfirm: {
+                  title: t('common.tips.confirmDelete'),
+                  confirm: handleDelete.bind(null, record),
+                },
+              },
+            ]"
+            :stopButtonPropagation="true"
+          />
+        </template>
       </template>
     </BasicTable>
   </PageWrapper>
@@ -43,14 +45,15 @@
   import { useRouter } from 'vue-router';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { BasicTable, useTable, TableAction } from '/@/components/Table';
+  import { BasicTable, TableAction, useTable } from '/@/components/Table';
   import { PageWrapper } from '/@/components/Page';
   import { handleFetchParams } from '/@/utils/lamp/common';
   import { ActionEnum } from '/@/enums/commonEnum';
-  import { pageMyMsg, deleteMyMsg } from '/@/api/basic/msg/eMsg';
+  import { deleteMyMsg, pageMyMsg } from '/@/api/basic/msg/eMsg';
   import { columns, searchFormSchema } from './myMsg.data';
   import { RouteEnum } from '/@/enums/biz/tenant';
   import { RoleEnum } from '/@/enums/roleEnum';
+
   export default defineComponent({
     // 若需要开启页面缓存，请将此参数跟菜单名保持一致
     name: '我的消息',
@@ -89,7 +92,6 @@
           width: 100,
           title: t('common.column.action'),
           dataIndex: 'action',
-          slots: { customRender: 'action' },
         },
       });
 

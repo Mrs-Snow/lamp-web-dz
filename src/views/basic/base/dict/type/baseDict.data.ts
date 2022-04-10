@@ -19,7 +19,6 @@ export const columns = (): BasicColumn[] => {
       dataIndex: 'state',
       width: 80,
       filters: [...stateFilters()],
-      slots: { customRender: 'state' },
     },
   ];
 };
@@ -132,7 +131,6 @@ export const defColumns = (): BasicColumn[] => {
       dataIndex: 'state',
       width: 100,
       filters: [...stateFilters()],
-      slots: { customRender: 'state' },
     },
   ];
 };

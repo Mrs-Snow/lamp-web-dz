@@ -3,71 +3,73 @@
     <BasicTable @register="registerTable">
       <template #toolbar>
         <a-button
-          type="primary"
-          preIcon="ant-design:delete-outlined"
           v-if="dictId"
-          color="error"
           v-hasPermission="[RoleEnum.BASIC_DICT_ITEM_DELETE]"
-          @click="handleBatchDelete"
-          >{{ t('common.title.delete') }}</a-button
-        >
-        <a-button
+          color="error"
+          preIcon="ant-design:delete-outlined"
           type="primary"
-          preIcon="ant-design:plus-outlined"
+          @click="handleBatchDelete"
+          >{{ t('common.title.delete') }}
+        </a-button>
+        <a-button
           v-if="dictId"
-          @click="handleAdd"
           v-hasPermission="[RoleEnum.BASIC_DICT_ITEM_ADD]"
-          >{{ t('common.title.add') }}</a-button
-        >
+          preIcon="ant-design:plus-outlined"
+          type="primary"
+          @click="handleAdd"
+          >{{ t('common.title.add') }}
+        </a-button>
       </template>
-      <template #state="{ record }">
-        <Badge
-          :status="record.state ? 'success' : 'error'"
-          :text="record.state ? t('lamp.common.enable') : t('lamp.common.disable')"
-        />
-      </template>
-      <template #action="{ record }">
-        <TableAction
-          :actions="[
-            {
-              tooltip: t('common.title.edit'),
-              icon: 'clarity:note-edit-line',
-              auth: RoleEnum.BASIC_DICT_ITEM_EDIT,
-              onClick: handleEdit.bind(null, record),
-            },
-            {
-              tooltip: t('common.title.copy'),
-              icon: 'ant-design:copy-outlined',
-              auth: RoleEnum.BASIC_DICT_ITEM_ADD,
-              onClick: handleCopy.bind(null, record),
-            },
-            {
-              tooltip: t('common.title.delete'),
-              icon: 'ant-design:delete-outlined',
-              color: 'error',
-              auth: RoleEnum.BASIC_DICT_ITEM_DELETE,
-              popConfirm: {
-                title: t('common.tips.confirmDelete'),
-                confirm: handleDelete.bind(null, record),
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.dataIndex === 'state'">
+          <Badge
+            :status="record.state ? 'success' : 'error'"
+            :text="record.state ? t('lamp.common.enable') : t('lamp.common.disable')"
+          />
+        </template>
+        <template v-if="column.dataIndex === 'action'">
+          <TableAction
+            :actions="[
+              {
+                tooltip: t('common.title.edit'),
+                icon: 'clarity:note-edit-line',
+                auth: RoleEnum.BASIC_DICT_ITEM_EDIT,
+                onClick: handleEdit.bind(null, record),
               },
-              ifShow: () => {
-                return record?.classify === DictClassifyEnum.BUSINESS;
+              {
+                tooltip: t('common.title.copy'),
+                icon: 'ant-design:copy-outlined',
+                auth: RoleEnum.BASIC_DICT_ITEM_ADD,
+                onClick: handleCopy.bind(null, record),
               },
-            },
-          ]"
-          :stopButtonPropagation="true"
-        />
+              {
+                tooltip: t('common.title.delete'),
+                icon: 'ant-design:delete-outlined',
+                color: 'error',
+                auth: RoleEnum.BASIC_DICT_ITEM_DELETE,
+                popConfirm: {
+                  title: t('common.tips.confirmDelete'),
+                  confirm: handleDelete.bind(null, record),
+                },
+                ifShow: () => {
+                  return record?.classify === DictClassifyEnum.BUSINESS;
+                },
+              },
+            ]"
+            :stopButtonPropagation="true"
+          />
+        </template>
       </template>
     </BasicTable>
     <EditModal @register="registerDrawer" @success="handleSuccess" />
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent, ref, reactive, toRaw } from 'vue';
-  import { Descriptions, Badge } from 'ant-design-vue';
+  import { defineComponent, reactive, ref, toRaw } from 'vue';
+  import { Badge, Descriptions } from 'ant-design-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { BasicTable, useTable, TableAction } from '/@/components/Table';
+  import { BasicTable, TableAction, useTable } from '/@/components/Table';
   import { useDrawer } from '/@/components/Drawer';
   import { handleFetchParams } from '/@/utils/lamp/common';
   import { DictClassifyEnum } from '/@/enums/biz/base';
@@ -108,6 +110,7 @@
         api: page,
         columns: columns(),
         formConfig: {
+          name: 'dictItemSearch',
           labelWidth: 80,
           schemas: searchFormSchema(),
           baseColProps: { xs: 24, sm: 12, md: 12, lg: 12, xl: 8 },
@@ -140,7 +143,6 @@
           width: 160,
           title: t('common.column.action'),
           dataIndex: 'action',
-          slots: { customRender: 'action' },
         },
       });
 

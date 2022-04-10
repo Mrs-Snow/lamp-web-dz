@@ -1,61 +1,65 @@
 <template>
-  <PageWrapper dense contentFullHeight>
+  <PageWrapper contentFullHeight dense>
     <BasicTable @register="registerTable">
       <template #toolbar>
-        <a-button type="primary" preIcon="ant-design:plus-outlined" @click="handleAdd">
+        <a-button preIcon="ant-design:plus-outlined" type="primary" @click="handleAdd">
           申请创建自己的企业
         </a-button>
       </template>
-      <template #action="{ record }">
-        <TableAction
-          :actions="[
-            {
-              tooltip: t('common.title.delete'),
-              icon: 'ant-design:delete-outlined',
-              color: 'error',
-              popConfirm: {
-                title: t('common.tips.confirmDelete'),
-                confirm: handleDelete.bind(null, record),
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.dataIndex === 'action'">
+          <TableAction
+            :actions="[
+              {
+                tooltip: t('common.title.delete'),
+                icon: 'ant-design:delete-outlined',
+                color: 'error',
+                popConfirm: {
+                  title: t('common.tips.confirmDelete'),
+                  confirm: handleDelete.bind(null, record),
+                },
+                ifShow: () => {
+                  return [
+                    TenantStatusEnum.WITHDRAW,
+                    TenantStatusEnum.WAITING,
+                    TenantStatusEnum.REFUSE,
+                  ].includes(record.status);
+                },
               },
-              ifShow: () => {
-                return [
-                  TenantStatusEnum.WITHDRAW,
-                  TenantStatusEnum.WAITING,
-                  TenantStatusEnum.REFUSE,
-                ].includes(record.status);
+              {
+                tooltip: '撤回',
+                icon: 'ant-design:rollback-outlined',
+                color: 'error',
+                popConfirm: {
+                  title: '是否确认要撤回审批',
+                  confirm: handleWithdraw.bind(null, record),
+                },
+                ifShow: () => {
+                  return record.status === TenantStatusEnum.WAITING;
+                },
               },
-            },
-            {
-              tooltip: '撤回',
-              icon: 'ant-design:rollback-outlined',
-              color: 'error',
-              popConfirm: {
-                title: '是否确认要撤回审批',
-                confirm: handleWithdraw.bind(null, record),
+              {
+                tooltip: '发起审批',
+                icon: 'ant-design:audit-outlined',
+                popConfirm: {
+                  title: '是否确认要重新发起审批',
+                  confirm: handleRelaunch.bind(null, record),
+                },
+                ifShow: () => {
+                  return [TenantStatusEnum.WITHDRAW, TenantStatusEnum.REFUSE].includes(
+                    record.status,
+                  );
+                },
               },
-              ifShow: () => {
-                return record.status === TenantStatusEnum.WAITING;
+              {
+                tooltip: t('common.title.edit'),
+                icon: 'clarity:note-edit-line',
+                onClick: handleEdit.bind(null, record),
               },
-            },
-            {
-              tooltip: '发起审批',
-              icon: 'ant-design:audit-outlined',
-              popConfirm: {
-                title: '是否确认要重新发起审批',
-                confirm: handleRelaunch.bind(null, record),
-              },
-              ifShow: () => {
-                return [TenantStatusEnum.WITHDRAW, TenantStatusEnum.REFUSE].includes(record.status);
-              },
-            },
-            {
-              tooltip: t('common.title.edit'),
-              icon: 'clarity:note-edit-line',
-              onClick: handleEdit.bind(null, record),
-            },
-          ]"
-          :stopButtonPropagation="true"
-        />
+            ]"
+            :stopButtonPropagation="true"
+          />
+        </template>
       </template>
     </BasicTable>
     <EditModal @register="registerDrawer" @success="handleSuccess" />
@@ -65,7 +69,7 @@
   import { defineComponent } from 'vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { BasicTable, useTable, TableAction } from '/@/components/Table';
+  import { BasicTable, TableAction, useTable } from '/@/components/Table';
   import { PageWrapper } from '/@/components/Page';
   import { useDrawer } from '/@/components/Drawer';
   import { handleFetchParams } from '/@/utils/lamp/common';
@@ -127,7 +131,6 @@
           width: 120,
           title: t('common.column.action'),
           dataIndex: 'action',
-          slots: { customRender: 'action' },
         },
       });
 
@@ -155,6 +158,7 @@
         createMessage.success('撤回成功');
         handleSuccess();
       }
+
       async function handleRelaunch(record: Recordable) {
         await updateStatus({ id: record.id, status: TenantStatusEnum.WAITING });
         createMessage.success('发起审批成功');

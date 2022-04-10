@@ -9,32 +9,34 @@
     >
       <template #toolbar>
         <a-button
-          type="primary"
           v-hasPermission="[RoleEnum.BASIC_DICT_IMPORT]"
+          type="primary"
           @click="handleImport"
         >
           {{ t('common.title.import') }}
         </a-button>
         <a-button
-          type="primary"
-          color="error"
           v-hasPermission="[RoleEnum.BASIC_DICT_DELETE]"
+          color="error"
+          type="primary"
           @click="handleBatchDelete"
         >
           {{ t('common.title.delete') }}
         </a-button>
-        <a-button type="primary" v-hasPermission="[RoleEnum.BASIC_DICT_EDIT]" @click="handleEdit">
+        <a-button v-hasPermission="[RoleEnum.BASIC_DICT_EDIT]" type="primary" @click="handleEdit">
           {{ t('common.title.edit') }}
         </a-button>
-        <a-button type="primary" v-hasPermission="[RoleEnum.BASIC_DICT_VIEW]" @click="handleView">
+        <a-button v-hasPermission="[RoleEnum.BASIC_DICT_VIEW]" type="primary" @click="handleView">
           {{ t('common.title.view') }}
         </a-button>
       </template>
-      <template #state="{ record }">
-        <Badge
-          :status="record.state ? 'success' : 'error'"
-          :text="record.state ? t('lamp.common.enable') : t('lamp.common.disable')"
-        />
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.dataIndex === 'state'">
+          <Badge
+            :status="record.state ? 'success' : 'error'"
+            :text="record.state ? t('lamp.common.enable') : t('lamp.common.disable')"
+          />
+        </template>
       </template>
     </BasicTable>
     <EditModal @register="registerDrawer" @success="handleSuccess" />
@@ -79,6 +81,7 @@
         api: page,
         columns: columns(),
         formConfig: {
+          name: 'dictSearch',
           labelWidth: 60,
           schemas: searchFormSchema(),
           autoSubmitOnEnter: true,

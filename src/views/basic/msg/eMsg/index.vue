@@ -1,53 +1,55 @@
 <template>
-  <PageWrapper dense contentFullHeight>
+  <PageWrapper contentFullHeight dense>
     <BasicTable @register="registerTable">
       <template #toolbar>
         <a-button
-          type="primary"
+          v-hasAnyPermission="[RoleEnum.MSG_MSG_DELETE]"
           color="error"
           preIcon="ant-design:delete-outlined"
+          type="primary"
           @click="handleBatchDelete"
-          v-hasAnyPermission="[RoleEnum.MSG_MSG_DELETE]"
         >
           {{ t('common.title.delete') }}
         </a-button>
         <a-button
-          type="primary"
           v-hasAnyPermission="[RoleEnum.MSG_MSG_ADD]"
           preIcon="ant-design:plus-outlined"
+          type="primary"
           @click="handleAdd"
         >
           {{ t('common.title.add') }}
         </a-button>
       </template>
-      <template #action="{ record }">
-        <TableAction
-          :actions="[
-            {
-              tooltip: t('common.title.view'),
-              icon: 'ant-design:search-outlined',
-              onClick: handleView.bind(null, record),
-              auth: RoleEnum.MSG_MSG_VIEW,
-            },
-            {
-              tooltip: t('common.title.copy'),
-              icon: 'ant-design:copy-outlined',
-              onClick: handleCopy.bind(null, record),
-              auth: RoleEnum.MSG_MSG_ADD,
-            },
-            {
-              tooltip: t('common.title.delete'),
-              icon: 'ant-design:delete-outlined',
-              color: 'error',
-              auth: RoleEnum.MSG_MSG_DELETE,
-              popConfirm: {
-                title: t('common.tips.confirmDelete'),
-                confirm: handleDelete.bind(null, record),
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.dataIndex === 'action'">
+          <TableAction
+            :actions="[
+              {
+                tooltip: t('common.title.view'),
+                icon: 'ant-design:search-outlined',
+                onClick: handleView.bind(null, record),
+                auth: RoleEnum.MSG_MSG_VIEW,
               },
-            },
-          ]"
-          :stopButtonPropagation="true"
-        />
+              {
+                tooltip: t('common.title.copy'),
+                icon: 'ant-design:copy-outlined',
+                onClick: handleCopy.bind(null, record),
+                auth: RoleEnum.MSG_MSG_ADD,
+              },
+              {
+                tooltip: t('common.title.delete'),
+                icon: 'ant-design:delete-outlined',
+                color: 'error',
+                auth: RoleEnum.MSG_MSG_DELETE,
+                popConfirm: {
+                  title: t('common.tips.confirmDelete'),
+                  confirm: handleDelete.bind(null, record),
+                },
+              },
+            ]"
+            :stopButtonPropagation="true"
+          />
+        </template>
       </template>
     </BasicTable>
   </PageWrapper>
@@ -57,7 +59,7 @@
   import { useRouter } from 'vue-router';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { BasicTable, useTable, TableAction } from '/@/components/Table';
+  import { BasicTable, TableAction, useTable } from '/@/components/Table';
   import { PageWrapper } from '/@/components/Page';
   import { handleFetchParams } from '/@/utils/lamp/common';
   import { ActionEnum } from '/@/enums/commonEnum';
@@ -65,6 +67,7 @@
   import { columns, searchFormSchema } from './eMsg.data';
   import { RouteEnum } from '/@/enums/biz/tenant';
   import { RoleEnum } from '/@/enums/roleEnum';
+
   export default defineComponent({
     // 若需要开启页面缓存，请将此参数跟菜单名保持一致,但开启缓存后，发布消息后重新进入此页面无法重新加载消息
     name: '消息管理2',
@@ -103,7 +106,6 @@
           width: 140,
           title: t('common.column.action'),
           dataIndex: 'action',
-          slots: { customRender: 'action' },
         },
       });
 

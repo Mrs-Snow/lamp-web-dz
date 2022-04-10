@@ -29,22 +29,24 @@
           >{{ t('common.title.add') }}
         </a-button>
       </template>
-      <template #action="{ record }">
-        <TableAction
-          :actions="[
-            {
-              tooltip: t('common.title.edit'),
-              icon: 'ant-design:edit-outlined',
-              auth: RoleEnum.ROLE_EDIT,
-              onClick: handleEdit.bind(null, record),
-            },
-            {
-              label: '绑定员工',
-              auth: RoleEnum.ROLE_BING_USER,
-              onClick: handleBindUser.bind(null, record),
-            },
-          ]"
-        />
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.dataIndex === 'action'">
+          <TableAction
+            :actions="[
+              {
+                tooltip: t('common.title.edit'),
+                icon: 'ant-design:edit-outlined',
+                auth: RoleEnum.ROLE_EDIT,
+                onClick: handleEdit.bind(null, record),
+              },
+              {
+                label: '绑定员工',
+                auth: RoleEnum.ROLE_BING_USER,
+                onClick: handleBindUser.bind(null, record),
+              },
+            ]"
+          />
+        </template>
       </template>
     </BasicTable>
     <EditModal @register="registerModal" @success="handleSuccess" />
@@ -110,7 +112,6 @@
             width: 120,
             title: t('common.column.action'),
             dataIndex: 'action',
-            slots: { customRender: 'action' },
           },
         });
 

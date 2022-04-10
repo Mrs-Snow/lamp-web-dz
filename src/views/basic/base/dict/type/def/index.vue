@@ -1,21 +1,23 @@
 <template>
   <BasicModal
-    v-bind="$attrs"
-    @register="registerModal"
-    title="导入系统字典"
-    :maskClosable="false"
-    @ok="handleSubmit"
     :keyboard="true"
+    :maskClosable="false"
+    title="导入系统字典"
+    v-bind="$attrs"
     width="80%"
+    @ok="handleSubmit"
+    @register="registerModal"
   >
-    <PageWrapper dense contentFullHeight>
+    <PageWrapper contentFullHeight dense>
       <BasicTable @register="registerTable">
-        <template #state="{ record }">
-          <Tag :color="record.state ? 'success' : 'error'">
-            {{ record.state ? t('lamp.common.enable') : t('lamp.common.disable') }}
-          </Tag>
-        </template></BasicTable
-      >
+        <template #bodyCell="{ column, record }">
+          <template v-if="column.dataIndex === 'state'">
+            <Tag :color="record.state ? 'success' : 'error'">
+              {{ record.state ? t('lamp.common.enable') : t('lamp.common.disable') }}
+            </Tag>
+          </template>
+        </template>
+      </BasicTable>
     </PageWrapper>
   </BasicModal>
 </template>

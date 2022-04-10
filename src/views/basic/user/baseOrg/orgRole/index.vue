@@ -22,25 +22,27 @@
           <a-button color="error" type="primary" @click="handleBatchChoice">批量绑定</a-button>
           <a-button type="primary" @click="handleBatchCancel">批量取消</a-button>
         </template>
-        <template #action="{ record }">
-          <TableAction
-            :actions="[
-              {
-                label: '绑定',
-                onClick: handleBindRole.bind(null, record),
-                ifShow: () => {
-                  return !isEmpty(formData.orgId) && !formData.bindRoleIds.includes(record.id);
+        <template #bodyCell="{ column, record }">
+          <template v-if="column.dataIndex === 'action'">
+            <TableAction
+              :actions="[
+                {
+                  label: '绑定',
+                  onClick: handleBindRole.bind(null, record),
+                  ifShow: () => {
+                    return !isEmpty(formData.orgId) && !formData.bindRoleIds.includes(record.id);
+                  },
                 },
-              },
-              {
-                label: '取消绑定',
-                onClick: handleUnBindRole.bind(null, record),
-                ifShow: () => {
-                  return !isEmpty(formData.orgId) && formData.bindRoleIds.includes(record.id);
+                {
+                  label: '取消绑定',
+                  onClick: handleUnBindRole.bind(null, record),
+                  ifShow: () => {
+                    return !isEmpty(formData.orgId) && formData.bindRoleIds.includes(record.id);
+                  },
                 },
-              },
-            ]"
-          />
+              ]"
+            />
+          </template>
         </template>
       </BasicTable>
     </div>
@@ -121,7 +123,6 @@
           width: 120,
           title: t('common.column.action'),
           dataIndex: 'action',
-          slots: { customRender: 'action' },
         },
       });
 

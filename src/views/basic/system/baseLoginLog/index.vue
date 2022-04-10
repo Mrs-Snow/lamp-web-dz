@@ -1,51 +1,53 @@
 <template>
-  <PageWrapper dense contentFullHeight>
+  <PageWrapper contentFullHeight dense>
     <BasicTable @register="registerTable">
       <template #toolbar>
         <a-button
-          type="primary"
+          v-hasAnyPermission="[RoleEnum.BASIC_SYSTEM_LOGIN_LOG_DELETE]"
           color="error"
           preIcon="ant-design:delete-outlined"
-          v-hasAnyPermission="[RoleEnum.BASIC_SYSTEM_LOGIN_LOG_DELETE]"
+          type="primary"
           @click="handleBatchDelete"
         >
           {{ t('common.title.delete') }}
         </a-button>
         <Dropdown
-          placement="bottom"
-          :trigger="['click']"
           :dropMenuList="clearList"
-          @menu-event="handleClearEvent"
+          :trigger="['click']"
           overlayClassName="app-locale-picker-overlay"
+          placement="bottom"
+          @menu-event="handleClearEvent"
         >
-          <a-button type="primary" v-hasAnyPermission="[RoleEnum.BASIC_SYSTEM_LOGIN_LOG_DELETE]">
+          <a-button v-hasAnyPermission="[RoleEnum.BASIC_SYSTEM_LOGIN_LOG_DELETE]" type="primary">
             清理日志
           </a-button>
         </Dropdown>
       </template>
-      <template #action="{ record }">
-        <TableAction
-          :actions="[
-            {
-              tooltip: t('common.title.view'),
-              icon: 'ant-design:search-outlined',
-              auth: RoleEnum.BASIC_SYSTEM_LOGIN_LOG_VIEW,
-              onClick: handleView.bind(null, record),
-            },
-
-            {
-              tooltip: t('common.title.delete'),
-              icon: 'ant-design:delete-outlined',
-              color: 'error',
-              auth: RoleEnum.BASIC_SYSTEM_LOGIN_LOG_DELETE,
-              popConfirm: {
-                title: t('common.tips.confirmDelete'),
-                confirm: handleDelete.bind(null, record),
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.dataIndex === 'action'">
+          <TableAction
+            :actions="[
+              {
+                tooltip: t('common.title.view'),
+                icon: 'ant-design:search-outlined',
+                auth: RoleEnum.BASIC_SYSTEM_LOGIN_LOG_VIEW,
+                onClick: handleView.bind(null, record),
               },
-            },
-          ]"
-          :stopButtonPropagation="true"
-        />
+
+              {
+                tooltip: t('common.title.delete'),
+                icon: 'ant-design:delete-outlined',
+                color: 'error',
+                auth: RoleEnum.BASIC_SYSTEM_LOGIN_LOG_DELETE,
+                popConfirm: {
+                  title: t('common.tips.confirmDelete'),
+                  confirm: handleDelete.bind(null, record),
+                },
+              },
+            ]"
+            :stopButtonPropagation="true"
+          />
+        </template>
       </template>
     </BasicTable>
     <EditModal @register="registerDrawer" @success="handleSuccess" />
@@ -57,14 +59,14 @@
   import { Dropdown } from '/@/components/Dropdown';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { BasicTable, useTable, TableAction } from '/@/components/Table';
+  import { BasicTable, TableAction, useTable } from '/@/components/Table';
   import { PageWrapper } from '/@/components/Page';
   import { useDrawer } from '/@/components/Drawer';
   import { handleFetchParams } from '/@/utils/lamp/common';
   import { ActionEnum } from '/@/enums/commonEnum';
   import { RoleEnum } from '/@/enums/roleEnum';
-  import { page, remove, clear } from '/@/api/basic/system/baseLoginLog';
-  import { columns, searchFormSchema, clearList } from './baseLoginLog.data';
+  import { clear, page, remove } from '/@/api/basic/system/baseLoginLog';
+  import { clearList, columns, searchFormSchema } from './baseLoginLog.data';
   import EditModal from './Edit.vue';
 
   export default defineComponent({
@@ -106,7 +108,6 @@
           width: 100,
           title: t('common.column.action'),
           dataIndex: 'action',
-          slots: { customRender: 'action' },
         },
       });
 
