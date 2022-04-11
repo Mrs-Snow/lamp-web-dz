@@ -1,31 +1,31 @@
 <template>
-  <Card :title="props.title" v-bind="$attrs" :loading="loading" hoverable>
+  <Card :loading="loading" :title="props.title" hoverable v-bind="$attrs">
     <template v-for="item in applicationList" :key="item.id">
-      <CardGrid @click="customClick(item)" class="!md:w-1/3 !w-full" :class="getAppCardClass(item)">
+      <CardGrid :class="getAppCardClass(item)" class="!md:w-1/3 !w-full" @click="customClick(item)">
         <span class="flex" style="right: 0; position: relative">
           <ThumbUrl
-            :width="50"
-            :height="50"
-            :preview="false"
             :fileId="item.echoMap?.[FileBizTypeEnum.DEF_APPLICATION_LOGO]?.[0]?.id"
             :fileType="item.echoMap?.[FileBizTypeEnum.DEF_APPLICATION_LOGO]?.[0]?.fileType"
+            :height="50"
+            :isDef="true"
             :originalFileName="
               item.echoMap?.[FileBizTypeEnum.DEF_APPLICATION_LOGO]?.[0]?.originalFileName
             "
-            :isDef="true"
+            :preview="false"
+            :width="50"
           />
           <span class="text-lg ml-4">{{ item.name }}</span>
           <a
             v-if="props.updateDef && defApplicationId !== item.id"
             class="text-lg"
             href="javascript:void(0);"
-            @click="handleUpdateDefApp(item, $event)"
             style="right: 0; position: absolute"
+            @click="handleUpdateDefApp(item, $event)"
           >
             设为默认
           </a>
         </span>
-        <div class="flex mt-2 mb-2 h-10 text-secondary" :title="item.remark">
+        <div :title="item.remark" class="flex mt-2 mb-2 h-10 text-secondary">
           {{ item.introduce }}
         </div>
         <div class="flex justify-between text-secondary">
@@ -52,13 +52,16 @@
         </div>
       </CardGrid>
     </template>
-    <Empty :description="props.description" v-if="applicationList.length === 0" />
+    <Empty v-if="applicationList.length === 0" :description="props.description" />
   </Card>
 </template>
 <script lang="ts">
   import { defineComponent, onMounted, ref } from 'vue';
   import { Card, CardGrid, Empty, Tag } from 'ant-design-vue';
+  import { useLoading } from '/@/components/Loading';
   import { usePermission } from '/@/hooks/web/usePermission';
+  import { useRouter } from 'vue-router';
+  import { useI18n } from '/@/hooks/web/useI18n';
   import { useDesign } from '/@/hooks/web/useDesign';
   import { useUserStore } from '/@/store/modules/user';
   import ThumbUrl from '/@/components/Upload/src/ThumbUrl.vue';
@@ -69,8 +72,9 @@
   import { router } from '/@/router';
   import { useTabs } from '/@/hooks/web/useTabs';
   import { FileBizTypeEnum } from '/@/enums/commonEnum';
+  import { PageEnum } from '/@/enums/pageEnum';
   import { propTypes } from '/@/utils/propTypes';
-  import { updateDefApp, getDefApp } from '/@/api/lamp/profile/userInfo';
+  import { getDefApp, updateDefApp } from '/@/api/lamp/profile/userInfo';
   import { checkEmployeeHaveApplication } from '/@/api/lamp/common/oauth';
 
   export default defineComponent({
@@ -90,12 +94,17 @@
       },
     },
     setup(props) {
-      const applicationList = ref<DefApplicationResultVO[]>([]);
-      const defApplicationId = ref<string>('');
       const { createMessage, createConfirm } = useMessage();
       const { refreshMenu } = usePermission();
-      const loading = ref<boolean>(true);
+      const { replace } = useRouter();
+      const { t } = useI18n();
+      const [openFullLoading, closeFullLoading] = useLoading({
+        tip: t('common.loadingText'),
+      });
 
+      const applicationList = ref<DefApplicationResultVO[]>([]);
+      const defApplicationId = ref<string>('');
+      const loading = ref<boolean>(true);
       const userStore = useUserStore();
 
       async function handlerTurnToApplication(item: DefApplicationResultVO) {
@@ -107,35 +116,42 @@
           createMessage.error('请选择正确的应用进行切换');
           return;
         }
-        const canJump = await checkEmployeeHaveApplication(item.id);
-        if (!canJump) {
-          createMessage.warn(`对不起，您无该应用访问权限，请联系贵公司管理员开通权限`);
-          return '';
+        try {
+          openFullLoading();
+
+          const canJump = await checkEmployeeHaveApplication(item.id);
+          if (!canJump) {
+            createMessage.warn(`对不起，您无该应用访问权限，请联系贵公司管理员开通权限`);
+            return '';
+          }
+
+          const isOpen = item.url && isUrl(item.url);
+          createConfirm({
+            iconType: 'warning',
+            content: `确定要${isOpen ? '跳转' : '切换'}到应用：【${
+              item.name
+            }】， 并重新加载其资源吗？`,
+            onOk: async () => {
+              if (isOpen) {
+                window.open(item.url);
+              } else {
+                userStore.setApplicationId(item.id as string);
+                await userStore.getUserInfoAction();
+                await refreshMenu();
+                const { closeAll } = useTabs(router);
+                await closeAll();
+                createMessage.success(`成功切换到应用：[${item.name}]`);
+
+                setTimeout(() => {
+                  // location.reload();
+                  replace({ path: PageEnum.BASE_HOME });
+                }, 200);
+              }
+            },
+          });
+        } finally {
+          closeFullLoading();
         }
-
-        const isOpen = item.url && isUrl(item.url);
-        createConfirm({
-          iconType: 'warning',
-          content: `确定要${isOpen ? '跳转' : '切换'}到应用：【${
-            item.name
-          }】， 并重新加载其资源吗？`,
-          onOk: async () => {
-            if (isOpen) {
-              window.open(item.url);
-            } else {
-              userStore.setApplicationId(item.id as string);
-              await userStore.getUserInfoAction();
-              await refreshMenu();
-              const { closeAll } = useTabs(router);
-              await closeAll();
-              createMessage.success(`成功切换到应用：[${item.name}]`);
-
-              setTimeout(() => {
-                location.reload();
-              }, 200);
-            }
-          },
-        });
       }
 
       const customClick = props.handleClick ? props.handleClick : handlerTurnToApplication;
@@ -148,10 +164,13 @@
       };
 
       onMounted(async () => {
-        applicationList.value = await props.api();
-        loading.value = false;
-        if (props.updateDef) {
-          defApplicationId.value = await getDefApp();
+        try {
+          applicationList.value = await props.api();
+          if (props.updateDef) {
+            defApplicationId.value = await getDefApp();
+          }
+        } finally {
+          loading.value = false;
         }
       });
 
