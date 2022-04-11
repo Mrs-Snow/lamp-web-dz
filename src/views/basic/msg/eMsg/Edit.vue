@@ -1,5 +1,5 @@
 <template>
-  <PageWrapper class="high-form" title="发送消息" contentBackground contentClass="p-4">
+  <PageWrapper class="high-form" contentBackground contentClass="p-4" title="发送消息">
     <BasicForm @register="registerForm">
       <template #receiveType="{ model }">
         <RadioGroup
@@ -14,42 +14,44 @@
           <RadioButton value="user">用户</RadioButton>
           <RadioButton value="role">角色</RadioButton>
         </RadioGroup>
-        <a-select
-          v-if="formState.receiveType === 'user'"
-          v-model:value="formState.employeeIdList"
-          class="pay-select"
-          placeholder="请选择用户"
-          style="width: 70%"
-          mode="multiple"
-          :disabled="
-            type === ActionEnum.VIEW ||
-            [MsgTypeEnum.NOTIFY, MsgTypeEnum.NOTICE].includes(model['msgType'])
-          "
-        >
-          <a-select-option v-for="item in formState.employeeList" :key="item.id" :value="item.id">
-            {{ item.realName }}
-          </a-select-option>
-        </a-select>
-        <a-select
-          placeholder="请选择角色"
-          v-if="formState.receiveType === 'role'"
-          v-model:value="formState.roleIdList"
-          class="pay-select"
-          style="width: 70%"
-          mode="multiple"
-          :disabled="
-            type === ActionEnum.VIEW ||
-            [MsgTypeEnum.NOTIFY, MsgTypeEnum.NOTICE].includes(model['msgType'])
-          "
-        >
-          <a-select-option v-for="item in formState.roleList" :key="item.id" :value="item.id">
-            {{ item.name }} [{{ item.code }}]
-          </a-select-option>
-        </a-select>
+        <FormItemRest v-if="formState.receiveType === 'user'" key="employeeIdList">
+          <a-select
+            v-model:value="formState.employeeIdList"
+            :disabled="
+              type === ActionEnum.VIEW ||
+              [MsgTypeEnum.NOTIFY, MsgTypeEnum.NOTICE].includes(model['msgType'])
+            "
+            class="pay-select"
+            mode="multiple"
+            placeholder="请选择用户"
+            style="width: 70%"
+          >
+            <a-select-option v-for="item in formState.employeeList" :key="item.id" :value="item.id">
+              {{ item.realName }}
+            </a-select-option>
+          </a-select>
+        </FormItemRest>
+        <FormItemRest v-if="formState.receiveType === 'role'" key="roleIdList">
+          <a-select
+            v-model:value="formState.roleIdList"
+            :disabled="
+              type === ActionEnum.VIEW ||
+              [MsgTypeEnum.NOTIFY, MsgTypeEnum.NOTICE].includes(model['msgType'])
+            "
+            class="pay-select"
+            mode="multiple"
+            placeholder="请选择角色"
+            style="width: 70%"
+          >
+            <a-select-option v-for="item in formState.roleList" :key="item.id" :value="item.id">
+              {{ item.name }} [{{ item.code }}]
+            </a-select-option>
+          </a-select>
+        </FormItemRest>
       </template>
     </BasicForm>
     <template #rightFooter>
-      <a-button v-if="type !== ActionEnum.VIEW" type="primary" @click="handleSubmit" class="ml-4">
+      <a-button v-if="type !== ActionEnum.VIEW" class="ml-4" type="primary" @click="handleSubmit">
         立即发送
       </a-button>
     </template>
@@ -57,27 +59,28 @@
 </template>
 <script lang="ts">
   import { defineComponent, onMounted, reactive, ref, unref } from 'vue';
-  import { Radio, Select } from 'ant-design-vue';
+  import { Form, Radio, Select } from 'ant-design-vue';
   import { BasicForm, useForm } from '/@/components/Form/index';
+  import { PageWrapper } from '/@/components/Page';
+  import { useRouter } from 'vue-router';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { PageWrapper } from '/@/components/Page';
+  import { useTabs } from '/@/hooks/web/useTabs';
+  import { useLoading } from '/@/components/Loading';
+  import { RouteEnum } from '/@/enums/biz/tenant';
   import { ActionEnum, MsgTypeEnum, VALIDATE_API } from '/@/enums/commonEnum';
   import { Api, get, save } from '/@/api/basic/msg/eMsg';
   import { query as queryRole } from '/@/api/basic/system/baseRole';
   import { query as queryUser } from '/@/api/basic/user/baseEmployee';
   import { getValidateRules } from '/@/api/lamp/common/formValidateService';
   import { customFormSchemaRules, editFormSchema } from './eMsg.data';
-  import { useTabs } from '/@/hooks/web/useTabs';
-  import { useLoading } from '/@/components/Loading';
-  import { useRouter } from 'vue-router';
-  import { RouteEnum } from '/@/enums/biz/tenant';
 
   export default defineComponent({
     name: 'EMsgEdit',
     components: {
       BasicForm,
       [Select.name]: Select,
+      FormItemRest: Form.ItemRest,
       PageWrapper,
       ASelectOption: Select.Option,
       RadioGroup: Radio.Group,
@@ -108,6 +111,7 @@
           span: 23,
         },
       });
+
       function msgTypeChange(value) {
         if ([MsgTypeEnum.NOTIFY, MsgTypeEnum.NOTICE].includes(value)) {
           formState.employeeIdList = [];
@@ -149,6 +153,7 @@
       const [openFullLoading, closeFullLoading] = useLoading({
         tip: t('common.requestingText'),
       });
+
       async function handleSubmit() {
         try {
           const msgVO = await validate();
