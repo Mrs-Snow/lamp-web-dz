@@ -67,7 +67,7 @@
     name: 'BasicForm',
     components: { FormItem, Form, Row, FormAction },
     props: basicProps,
-    emits: ['advanced-change', 'reset', 'submit', 'register'],
+    emits: ['advanced-change', 'reset', 'submit', 'register', 'field-value-change'],
     setup(props, { emit, attrs }) {
       const formModel = reactive<Recordable>({});
       const modalFn = useModalContext();
@@ -240,10 +240,12 @@
 
       function setFormModel(key: string, value: any) {
         formModel[key] = value;
+        // 加上这段代码会导致表单校验执行2次
         // const { validateTrigger } = unref(getBindValue);
         // if (!validateTrigger || validateTrigger === 'change') {
         //   validateFields([key]).catch((_) => {});
         // }
+        emit('field-value-change', key, value);
       }
 
       function handleEnterPress(e: KeyboardEvent) {
