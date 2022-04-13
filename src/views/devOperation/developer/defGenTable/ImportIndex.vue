@@ -6,7 +6,7 @@
     width="70%"
     :keyboard="true"
     :maskClosable="true"
-    title="绑定员工"
+    title="导入表结构"
     :defaultFullscreen="true"
     @ok="handleSubmit"
     @cancel="handleCancel"
