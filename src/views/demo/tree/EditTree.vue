@@ -35,7 +35,7 @@
           :fieldNames="{ key: 'id', title: 'name' }"
           :treeData="treeData2"
         >
-          <template #title="item"> 插槽：{{ item.title }} </template>
+          <template #title="item"> 插槽：{{ item.name }} </template>
         </BasicTree>
       </Col>
       <Col :span="8">
