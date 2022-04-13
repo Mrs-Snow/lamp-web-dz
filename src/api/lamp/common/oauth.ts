@@ -84,14 +84,11 @@ export function register(params: RegisterVO, mode: ErrorMessageMode = 'modal') {
 /**
  * @description: getUserInfoById
  */
-export function getUserInfoById(mode: ErrorMessageMode = 'none', userId?: string) {
-  return defHttp.get<DefUserInfoResultVO>(
-    {
-      ...Api.getUserInfoById,
-      params: { userId: userId },
-    },
-    { errorMessageMode: mode },
-  );
+export function getUserInfoById(_mode: ErrorMessageMode = 'none', userId?: string) {
+  return defHttp.get<DefUserInfoResultVO>({
+    ...Api.getUserInfoById,
+    params: { userId: userId },
+  });
 }
 
 /**
