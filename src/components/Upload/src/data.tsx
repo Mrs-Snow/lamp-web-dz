@@ -109,7 +109,7 @@ export function createPreviewColumns(isDef: boolean): BasicColumn[] {
       width: 100,
       customRender: ({ record }) => {
         const { id, fileType } = (record as FileResultVO) || {};
-        return fileType?.code === 'IMAGE' && <ThumbUrl fileId={id} isDef={isDef} />;
+        return fileType === 'IMAGE' && <ThumbUrl fileId={id} isDef={isDef} />;
       },
     },
     {
