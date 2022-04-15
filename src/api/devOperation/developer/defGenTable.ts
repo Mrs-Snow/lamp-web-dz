@@ -114,7 +114,7 @@ export const importTable = (params: DefGenTableImportVO) =>
   });
 
 export const downloadZip = (ids: string[], template: string) =>
-  defHttp.request<void>(
+  defHttp.request<any>(
     {
       ...Api.DownloadZip,
       responseType: 'blob',
