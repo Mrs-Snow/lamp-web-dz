@@ -46,7 +46,10 @@
         showActionButtonGroup: true,
         baseColProps: { span: 8 },
         actionColOptions: {
-          span: 13,
+          span: 24,
+          style: {
+            textAlign: 'center',
+          },
         },
         resetButtonOptions: {
           text: '下载后端',

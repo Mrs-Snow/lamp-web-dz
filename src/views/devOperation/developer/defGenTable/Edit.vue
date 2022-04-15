@@ -25,7 +25,7 @@
       :tip="tip"
     />
 
-    <div class="overflow-hidden">
+    <div class="overflow-hidden bg-white p-4">
       <div v-show="current === 0">
         <EditIndex ref="formRef" @loading="setLoading" />
       </div>

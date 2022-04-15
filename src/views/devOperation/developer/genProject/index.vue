@@ -26,8 +26,7 @@
       </Tabs>
     </div>
 
-    <template #extra
-      >、
+    <template #extra>
       <a-button @click="resetFields"> 清空</a-button>
       <a-button @click="resetForm"> 重置</a-button>
       <a-button type="primary" @click="handleSubmit"> 保存</a-button>

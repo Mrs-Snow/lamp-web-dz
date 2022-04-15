@@ -94,7 +94,7 @@
           items: formItems(),
         },
         toolbarConfig: {
-          buttons: [{ code: 'delete', name: '删除', icon: 'fa fa-trash-o' }],
+          buttons: [{ code: 'delete', name: '删除', icon: 'delete-outlined', status: 'danger' }],
         },
         // 分页配置项
         pagerConfig: {

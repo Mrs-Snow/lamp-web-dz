@@ -256,12 +256,13 @@ export const baseEditFormSchema = (): FormSchema[] => {
       colProps: {
         span: 12,
       },
-      helpMessage: ['非实体类需要继承谁？'],
+      helpMessage: ['Controller、Service、Manager、Mapper类需要继承谁？'],
     },
     {
       label: '@DS',
       field: 'isDs',
       component: 'RadioGroup',
+      helpMessage: ['ServiceImpl类是否标记@DS注解'],
       componentProps: ({ formActionType }) => {
         return {
           ...yesNoComponentProps(),
@@ -309,6 +310,7 @@ export const baseEditFormSchema = (): FormSchema[] => {
         span: 12,
       },
       component: 'AutoComplete',
+      helpMessage: ['ServiceImpl类标记的@DS注解具体值'],
       componentProps: () => {
         return {
           allowClear: true,
@@ -332,6 +334,7 @@ export const baseEditFormSchema = (): FormSchema[] => {
       label: '@TenantLine',
       field: 'isTenantLine',
       component: 'RadioGroup',
+      helpMessage: ['Mapper类是否标记@TenantLine注解'],
       componentProps: {
         ...yesNoComponentProps(),
       },
@@ -344,6 +347,7 @@ export const baseEditFormSchema = (): FormSchema[] => {
       label: 'lombok',
       field: 'isLombok',
       component: 'RadioGroup',
+      helpMessage: ['实体类是否使用Lombok注解'],
       componentProps: {
         ...yesNoComponentProps(),
       },
@@ -356,6 +360,7 @@ export const baseEditFormSchema = (): FormSchema[] => {
       label: '链式模型',
       field: 'isChain',
       component: 'RadioGroup',
+      helpMessage: ['实体类是否使用@Accessors(chain = true)注解'],
       componentProps: {
         ...yesNoComponentProps(),
       },
@@ -368,6 +373,7 @@ export const baseEditFormSchema = (): FormSchema[] => {
       label: '生成字段常量',
       field: 'isColumnConstant',
       component: 'RadioGroup',
+      helpMessage: ['实体类中是否生成字段常量'],
       componentProps: {
         ...yesNoComponentProps(),
       },
@@ -425,6 +431,7 @@ export const baseEditFormSchema = (): FormSchema[] => {
       label: '后端生成路径',
       field: 'outputDir',
       component: 'Input',
+      helpMessage: ['非dev环境启动，此参数无效'],
       ifShow: ({ values }) => {
         return values.genType === GenTypeEnum.GEN;
       },
@@ -433,6 +440,7 @@ export const baseEditFormSchema = (): FormSchema[] => {
       label: '前端生成路径',
       field: 'frontOutputDir',
       component: 'Input',
+      helpMessage: ['非dev环境启动，此参数无效'],
       ifShow: ({ values }) => {
         return values.genType === GenTypeEnum.GEN;
       },
