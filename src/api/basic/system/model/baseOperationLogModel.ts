@@ -1,14 +1,12 @@
-import { Enum } from '/@/api/model/baseModel';
-
 export interface BaseOperationLogPageQuery {
   requestIp?: string;
-  type?: Enum;
+  type?: string;
   userName?: string;
   description?: string;
   classPath?: string;
   actionMethod?: string;
   requestUri?: string;
-  httpMethod?: Enum;
+  httpMethod?: string;
   startTime?: string;
   finishTime?: string;
   consumingTime?: string;
@@ -18,13 +16,13 @@ export interface BaseOperationLogPageQuery {
 
 export interface BaseOperationLogSaveVO {
   requestIp: string;
-  type: Enum;
+  type: string;
   userName: string;
   description: string;
   classPath: string;
   actionMethod: string;
   requestUri: string;
-  httpMethod: Enum;
+  httpMethod: string;
   startTime: string;
   finishTime: string;
   consumingTime: string;
@@ -35,13 +33,13 @@ export interface BaseOperationLogSaveVO {
 export interface BaseOperationLogUpdateVO {
   id: string;
   requestIp: string;
-  type: Enum;
+  type: string;
   userName: string;
   description: string;
   classPath: string;
   actionMethod: string;
   requestUri: string;
-  httpMethod: Enum;
+  httpMethod: string;
   startTime: string;
   finishTime: string;
   consumingTime: string;
@@ -51,13 +49,13 @@ export interface BaseOperationLogUpdateVO {
 
 export interface BaseOperationLogResultVO {
   requestIp?: string;
-  type?: Enum;
+  type?: string;
   userName?: string;
   description?: string;
   classPath?: string;
   actionMethod?: string;
   requestUri?: string;
-  httpMethod?: Enum;
+  httpMethod?: string;
   startTime?: string;
   finishTime?: string;
   consumingTime?: string;

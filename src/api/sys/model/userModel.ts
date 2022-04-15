@@ -1,5 +1,3 @@
-import { Enum } from '../../model/baseModel';
-
 export type GrantType = 'CAPTCHA' | 'PASSWORD' | 'MOBILE' | 'REFRESH_TOKEN';
 
 /**
@@ -81,7 +79,7 @@ export interface GetUserInfoModel {
   idCard?: string;
   wxOpenId?: string;
   ddOpenId?: string;
-  sex?: Enum;
+  sex?: string;
   state?: boolean;
   employeeId?: string;
 }

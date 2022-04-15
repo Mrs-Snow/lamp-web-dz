@@ -1,5 +1,4 @@
 import { AppendixSaveVO } from '/@/api/lamp/file/model/uploadModel';
-import { Enum } from '/@/api/model/baseModel';
 
 export interface TenantPageQuery {
   name: string;
@@ -16,8 +15,8 @@ export interface TenantPageQuery {
   districtId: string;
   districtName: string;
   address: string;
-  registerType: Enum;
-  connectType: Enum;
+  registerType: string;
+  connectType: string;
   status: string;
   state: boolean;
   reviewComments: string;
@@ -91,8 +90,8 @@ export interface Tenant {
   districtId: string;
   districtName: string;
   address: string;
-  registerType: Enum;
-  connectType: Enum;
+  registerType: string;
+  connectType: string;
   status: string;
   state: boolean;
   readonly: boolean;
@@ -113,7 +112,7 @@ export interface Tenant {
 
 export interface DefTenantInitVO {
   id: string;
-  connectType?: Enum;
+  connectType?: string;
   baseDatasourceId?: string;
   extendDatasourceId?: string;
 }

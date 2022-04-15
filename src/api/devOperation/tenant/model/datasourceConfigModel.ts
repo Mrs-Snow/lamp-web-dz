@@ -1,5 +1,3 @@
-import { Enum } from '/@/api/model/baseModel';
-
 export interface DatasourceConfigPageQuery {
   name: string;
   username: string;
@@ -12,7 +10,7 @@ export interface DatasourceConfigResult {
   url: string;
   driverClassName: string;
   poolName: string;
-  type: Enum;
+  type: string;
 }
 
 export interface DataSourceProperty {

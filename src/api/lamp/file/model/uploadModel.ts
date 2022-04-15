@@ -1,11 +1,10 @@
-import { Enum } from '/@/api/model/baseModel';
 import { ServicePrefixEnum } from '/@/enums/commonEnum';
 
 export interface AppendixSaveVO {
   id: string;
   bizId: string;
   bizType: string;
-  fileType: Enum;
+  fileType: string;
   bucket: string;
   path: string;
   originalFileName: string;
@@ -17,7 +16,7 @@ export interface AppendixSaveVO {
 export interface FileResultVO extends AppendixSaveVO {
   id: string;
   bizType: string;
-  fileType: Enum;
+  fileType: string;
   bucket: string;
   path: string;
   url: string;
@@ -27,14 +26,14 @@ export interface FileResultVO extends AppendixSaveVO {
   contentType: string;
   suffix: string;
   size: string;
-  storageType?: Enum;
+  storageType?: string;
 }
 
 export interface AppendixResultVO {
   id: string;
   bizId: string;
   bizType: string;
-  fileType: Enum;
+  fileType: string;
   bucket: string;
   path: string;
   originalFileName: string;

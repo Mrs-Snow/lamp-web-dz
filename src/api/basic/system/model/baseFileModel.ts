@@ -1,9 +1,7 @@
-import { Enum } from '/@/api/model/baseModel';
-
 export interface BaseFilePageQuery {
   bizType?: string;
-  fileType?: Enum;
-  storageType?: Enum;
+  fileType?: string;
+  storageType?: string;
   bucket?: string;
   path?: string;
   url?: string;
@@ -18,8 +16,8 @@ export interface BaseFilePageQuery {
 
 export interface BaseFileResultVO {
   bizType?: string;
-  fileType?: Enum;
-  storageType?: Enum;
+  fileType?: string;
+  storageType?: string;
   bucket?: string;
   path?: string;
   url?: string;

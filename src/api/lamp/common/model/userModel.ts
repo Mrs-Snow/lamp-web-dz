@@ -1,5 +1,3 @@
-import { Enum } from '../../../model/baseModel';
-
 export type GrantType = 'CAPTCHA' | 'PASSWORD' | 'MOBILE' | 'REFRESH_TOKEN';
 
 /**
@@ -43,7 +41,7 @@ export interface LoginResultVO {
   // homePath: string;
   expire: string;
   expiration: string;
-  userStatus: Enum;
+  userStatus: string;
 }
 
 /**

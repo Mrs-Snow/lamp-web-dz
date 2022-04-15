@@ -1,9 +1,9 @@
-import { Enum, PageResult } from '/@/api/model/baseModel';
+import { PageResult } from '/@/api/model/baseModel';
 
 export interface EMsgPageQuery {
   bizId?: string;
   bizType?: string;
-  msgType?: Enum | string;
+  msgType?: string;
   title?: string;
   content?: string;
   author?: string;
@@ -23,7 +23,7 @@ export interface EMsgSaveVO {
 export interface MsgVO {
   bizId: string;
   bizType: string;
-  msgType: Enum;
+  msgType: string;
   title: string;
   content: string;
   author: string;
@@ -38,7 +38,7 @@ export interface EMsgUpdateVO {
   id: string;
   bizId: string;
   bizType: string;
-  msgType: Enum | string;
+  msgType: string;
   title: string;
   content: string;
   author: string;
@@ -59,7 +59,7 @@ export interface MyMsgResult {
 export interface EMsgResultVO {
   bizId?: string;
   bizType?: string;
-  msgType?: Enum | string;
+  msgType?: string;
   title?: string;
   content?: string;
   author?: string;
