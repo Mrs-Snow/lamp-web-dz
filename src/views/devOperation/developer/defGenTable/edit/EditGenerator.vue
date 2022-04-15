@@ -78,8 +78,12 @@
         setLoading(true);
         try {
           const response = await downloadZip([unref(tableId)], template);
-          downloadFile(response);
-          createMessage.success(t('common.tips.downloadSuccess'));
+          if (response) {
+            downloadFile(response);
+            createMessage.success(t('common.tips.downloadSuccess'));
+          } else {
+            createMessage.error('下载失败，请认真检查【生成信息】是否填写完整并保存成功！');
+          }
         } finally {
           setLoading(false);
         }
