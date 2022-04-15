@@ -1,14 +1,20 @@
 <template>
   <PageWrapper :content="content" :title="title">
     <template #extra>
-      <a-button type="primary" @click="handleSubmit">保存</a-button>
+      <a-button type="primary" :loading="loading" v-if="current === 0" @click="handleSubmit"
+        >保存</a-button
+      >
     </template>
 
     <template #footer>
-      <Tabs v-model:activeKey="activeKey" @change="changeTabs">
-        <TabPane key="basic" tab="生成信息" />
-        <TabPane key="field" tab="字段信息" />
-      </Tabs>
+      <div class="step-form-form">
+        <Steps :current="current" size="small" type="navigation" @change="changeSteps">
+          <Step title="生成信息" :status="status" />
+          <Step title="字段信息" />
+          <Step title="代码预览" />
+          <Step title="立即生成" />
+        </Steps>
+      </div>
     </template>
 
     <Loading
@@ -20,60 +26,61 @@
     />
 
     <div class="overflow-hidden">
-      <CollapseContainer ref="formCcRef" class="w-full bg-white rounded-md" title="生成信息">
-        <BasicForm @register="registerBasicForm" />
-        <div class="flex justify-center mb-4">
-          <a-button type="primary" @click="handleSubmit">保存</a-button>
-        </div>
-      </CollapseContainer>
-      <CollapseContainer ref="columnCcRef" class="w-full mt-5 bg-white rounded-md" title="字段信息">
+      <div v-show="current === 0">
+        <EditIndex ref="formRef" @loading="setLoading" />
+      </div>
+      <div v-show="current === 1">
         <DefGenTableColumn ref="columnRef" />
-      </CollapseContainer>
+      </div>
+      <div v-show="current === 2">
+        <EditPreview ref="previewRef" />
+      </div>
+      <div v-show="current === 3">
+        <EditGenerator ref="generatorRef" />
+      </div>
     </div>
   </PageWrapper>
 </template>
 <script lang="ts">
   import { defineComponent, onMounted, reactive, ref, toRefs, unref } from 'vue';
-  import { Tabs } from 'ant-design-vue';
+  import { Steps } from 'ant-design-vue';
   import { useRouter } from 'vue-router';
   import { PageWrapper } from '/@/components/Page';
-  import { CollapseContainer } from '/@/components/Container/index';
-  import { BasicForm, useForm } from '/@/components/Form/index';
   import { Loading } from '/@/components/Loading';
-  import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { ActionEnum, VALIDATE_API } from '/@/enums/commonEnum';
-  import { getValidateRules, RuleType } from '/@/api/lamp/common/formValidateService';
-  import { Api, detail, update } from '/@/api/devOperation/developer/defGenTable';
-  import { baseEditFormSchema, customFormSchemaRules } from './defGenTable.data';
-  import { GenTypeEnum, TplEnum } from '/@/enums/biz/tenant';
-  import { tree as queryMenu } from '/@/api/devOperation/application/defResource';
-  import DefGenTableColumn from './DefGenTableColumnVxe.vue';
+  import { useI18n } from '/@/hooks/web/useI18n';
+  import DefGenTableColumn from './edit/DefGenTableColumnVxe.vue';
+  import EditIndex from './edit/index.vue';
+  import EditPreview from './edit/EditPreview.vue';
+  import EditGenerator from './edit/EditGenerator.vue';
 
   export default defineComponent({
     name: '修改代码配置',
     components: {
-      BasicForm,
       PageWrapper,
       Loading,
-      Tabs,
-      TabPane: Tabs.TabPane,
+      Steps,
+      Step: Steps.Step,
       DefGenTableColumn,
-      CollapseContainer,
+      EditIndex,
+      EditPreview,
+      EditGenerator,
     },
     setup(_) {
       const { t } = useI18n();
-      const { createMessage } = useMessage();
+      const { notification } = useMessage();
       const { currentRoute } = useRouter();
-      const formCcRef = ref<any>(null);
-      const columnCcRef = ref<any>(null);
+      const formRef = ref<any>(null);
       const columnRef = ref<any>(null);
-      const tableId = ref<string>('');
+      const previewRef = ref<any>(null);
+      const generatorRef = ref<any>(null);
 
       const pageState = reactive({
         title: '修改字段配置',
         content: '',
-        activeKey: 'basic',
+        tableId: '',
+        status: '',
+        current: 0,
       });
       const compState = reactive({
         absolute: false,
@@ -88,164 +95,84 @@
         return unref(columnRef);
       }
 
-      function getFormCcRef() {
-        return unref(formCcRef);
+      function getFormRef() {
+        return unref(formRef);
       }
 
-      function getColumnCcRef() {
-        return unref(columnCcRef);
+      function getPreviewRef() {
+        return unref(previewRef);
+      }
+
+      function getGeneratorRef() {
+        return unref(generatorRef);
       }
 
       function setLoading(loading: boolean) {
         compState.loading = loading;
       }
 
-      const [registerBasicForm, { validate, getFieldsValue, setFieldsValue, updateSchema }] =
-        useForm({
-          name: 'basic',
-          labelWidth: 140,
-          schemas: baseEditFormSchema(),
-          showActionButtonGroup: false,
-          baseColProps: { span: 24 },
-          actionColOptions: {
-            span: 23,
-          },
-        });
-
       onMounted(async () => {
         const routeParams = currentRoute.value?.params;
         const routeQuery = currentRoute.value?.query;
-        tableId.value = routeParams.id as string;
+        pageState.tableId = routeParams.id as string;
         pageState.title = routeQuery.title as string;
         pageState.content = routeQuery.content as string;
         setLoading(true);
         try {
-          await loadDetail();
-        } catch (e) {
-          console.error(e);
-        }
-        try {
+          await getFormRef().loadDetail(routeParams.id as string);
           await getColumnRef().load(routeParams.id as string);
+          await getGeneratorRef().loadDetail();
         } finally {
           setLoading(false);
         }
       });
 
       async function handleSubmit() {
-        try {
-          setLoading(true);
-          const params = await validate();
+        await getFormRef().handleSubmit();
+      }
 
-          await update(params);
-          createMessage.success('成功');
+      async function changeSteps(curr) {
+        setLoading(true);
+        pageState.status = '';
+        try {
+          if (curr !== 0) {
+            try {
+              await getFormRef().validate();
+            } catch (e) {
+              notification.warn({ message: '提示', description: '请完善表单信息', duration: 5 });
+              pageState.current = 0;
+              pageState.status = 'error';
+              return;
+            }
+          }
+          if (curr === 2) {
+            await getPreviewRef().load(pageState.tableId);
+          }
+          pageState.current = curr;
         } finally {
           setLoading(false);
         }
       }
 
-      async function changeTabs(key: 'basic' | 'field') {
-        if (key === 'field') {
-          getFormCcRef().handleExpand(false);
-          getColumnCcRef().handleExpand(true);
-        } else {
-          getFormCcRef().handleExpand(true);
-          getColumnCcRef().handleExpand(false);
-        }
-      }
-
-      async function loadDetail() {
-        const record = await detail(unref(tableId));
-        setFieldsValue(record);
-        if (record.menuApplicationId) {
-          const treeData = await queryMenu({ applicationId: record.menuApplicationId });
-          await updateSchema({
-            field: 'menuParentId',
-            componentProps: {
-              treeData,
-            },
-          });
-        }
-
-        let validateApi = Api[VALIDATE_API[ActionEnum.EDIT]];
-        const customRules = customFormSchemaRules(getFieldsValue);
-        if (record.isDs) {
-          customRules.push({
-            field: 'dsValue',
-            type: RuleType.append,
-            rules: [{ required: true }],
-          });
-          updateSchema({
-            field: 'isDs',
-            colProps: {
-              span: 12,
-            },
-          });
-        } else {
-          customRules.push({
-            field: 'dsValue',
-            type: RuleType.append,
-            rules: [{ required: false }],
-          });
-          updateSchema({
-            field: 'isDs',
-            colProps: {
-              span: 24,
-            },
-          });
-        }
-        if (TplEnum.TREE === record.tplType) {
-          customRules.push({
-            field: 'treeName',
-            type: RuleType.append,
-            rules: [{ required: true }],
-          });
-        } else {
-          customRules.push({
-            field: 'treeName',
-            type: RuleType.append,
-            rules: [{ required: false }],
-          });
-        }
-        if (GenTypeEnum.GEN === record.genType) {
-          customRules.push({
-            field: 'outputDir',
-            type: RuleType.append,
-            rules: [{ required: true }],
-          });
-          customRules.push({
-            field: 'frontOutputDir',
-            type: RuleType.append,
-            rules: [{ required: true }],
-          });
-        } else {
-          customRules.push({
-            field: 'outputDir',
-            type: RuleType.append,
-            rules: [{ required: false }],
-          });
-          customRules.push({
-            field: 'frontOutputDir',
-            type: RuleType.append,
-            rules: [{ required: false }],
-          });
-        }
-        getValidateRules(validateApi, customRules).then(async (rules) => {
-          rules && rules.length > 0 && (await updateSchema(rules));
-        });
-      }
-
       return {
         t,
-        registerBasicForm,
-        changeTabs,
-        handleSubmit,
         columnRef,
-        tableId,
-        formCcRef,
-        columnCcRef,
+        formRef,
+        previewRef,
+        generatorRef,
         ...toRefs(pageState),
         ...toRefs(compState),
+        setLoading,
+        changeSteps,
+        handleSubmit,
       };
     },
   });
 </script>
+<style lang="less" scoped>
+  .step-form-form {
+    width: 750px;
+    margin: 0 auto;
+    padding-bottom: 20px;
+  }
+</style>

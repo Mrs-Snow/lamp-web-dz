@@ -167,7 +167,8 @@
           downloadFile(response);
           createMessage.success(t('common.tips.downloadSuccess'));
         } else {
-          await generatorCode(ids, template);
+          const defGenVo = { ids, template };
+          await generatorCode(defGenVo);
           if (template === TemplateEnum.BACKEND) {
             createMessage.success('后端代码生成成功，请在' + record.outputDir + '查看');
           } else {

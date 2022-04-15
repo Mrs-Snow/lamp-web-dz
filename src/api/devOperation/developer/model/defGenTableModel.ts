@@ -92,6 +92,12 @@ export interface DefGenTableSaveVO {
   treeName?: string; // 名称字段名
 }
 
+export interface DefGenVO {
+  ids: string[];
+  template: string;
+  fileOverrideConfig?: Recordable;
+}
+
 export interface DefGenTableUpdateVO {
   id: string;
   name?: string; // 表名称

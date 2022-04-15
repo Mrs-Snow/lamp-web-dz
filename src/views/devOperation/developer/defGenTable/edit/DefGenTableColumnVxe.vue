@@ -46,6 +46,9 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { PopConfirmButton } from '/@/components/Button';
+  import { RoleEnum } from '/@/enums/roleEnum';
+  import { ActionEnum, VALIDATE_API } from '/@/enums/commonEnum';
+  import { getValidateRuleObj } from '/@/api/lamp/common/formValidateService';
   import {
     Api,
     page as pageRequest,
@@ -53,10 +56,7 @@
     syncField,
     update as updateColumn,
   } from '/@/api/devOperation/developer/defGenTableColumn';
-  import { RoleEnum } from '/@/enums/roleEnum';
   import { columns, formItems, customFormSchemaRules } from './defGenTableColumnVxe.data';
-  import { ActionEnum, VALIDATE_API } from '/@/enums/commonEnum';
-  import { getValidateRuleObj } from '/@/api/lamp/common/formValidateService';
 
   export default defineComponent({
     name: '修改代码配置',

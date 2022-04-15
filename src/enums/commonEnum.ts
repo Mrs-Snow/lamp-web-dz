@@ -98,6 +98,8 @@ export enum EnumEnum {
   SuperClassEnum = 'SuperClassEnum',
   ComponentEnum = 'ComponentEnum',
   ProjectTypeEnum = 'ProjectTypeEnum',
+  TemplateEnum = 'TemplateEnum',
+  FileOverrideStrategyEnum = 'FileOverrideStrategyEnum',
 
   // test
   ProductType = 'ProductType',

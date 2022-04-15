@@ -3,6 +3,7 @@ import {
   DefGenTablePageQuery,
   DefGenTableResultVO,
   DefGenTableUpdateVO,
+  DefGenVO,
 } from './model/defGenTableModel';
 import { PageParams, PageResult } from '/@/api/model/baseModel';
 import { defHttp } from '/@/utils/http/axios';
@@ -49,7 +50,7 @@ export const Api = {
   } as AxiosRequestConfig,
   GeneratorCode: {
     url: `${ServicePrefixEnum.GENERATOR}/${MODULAR}/generatorCode`,
-    method: RequestEnum.GET,
+    method: RequestEnum.POST,
   } as AxiosRequestConfig,
   DownloadZip: {
     url: `${ServicePrefixEnum.GENERATOR}/${MODULAR}/downloadZip`,
@@ -62,6 +63,14 @@ export const Api = {
   } as AxiosRequestConfig,
   Detail: {
     url: `${ServicePrefixEnum.GENERATOR}/${MODULAR}/detail`,
+    method: RequestEnum.GET,
+  } as AxiosRequestConfig,
+  GetFieldTemplate: {
+    url: `${ServicePrefixEnum.GENERATOR}/${MODULAR}/getFieldTemplate`,
+    method: RequestEnum.GET,
+  } as AxiosRequestConfig,
+  GetDefFileOverrideStrategy: {
+    url: `${ServicePrefixEnum.GENERATOR}/${MODULAR}/getDefFileOverrideStrategy`,
     method: RequestEnum.GET,
   } as AxiosRequestConfig,
 };
@@ -114,10 +123,10 @@ export const downloadZip = (ids: string[], template: string) =>
     { isReturnNativeResponse: true },
   );
 
-export const generatorCode = (ids: string[], template: string) =>
+export const generatorCode = (defGenVo: DefGenVO) =>
   defHttp.request<boolean>({
     ...Api.GeneratorCode,
-    params: qs.stringify({ ids, template }, { arrayFormat: 'repeat' }),
+    params: defGenVo,
   });
 
 export const syncField = (id: string) =>
@@ -131,3 +140,8 @@ export const detail = (id: string) =>
     ...Api.Detail,
     params: { id },
   });
+
+export const getDefFileOverrideStrategy = () =>
+  defHttp.request<Recordable>({ ...Api.GetDefFileOverrideStrategy });
+
+export const getFieldTemplate = () => defHttp.request<Recordable>({ ...Api.GetFieldTemplate });
