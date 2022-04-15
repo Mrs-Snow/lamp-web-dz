@@ -251,6 +251,9 @@ export const generatorCodeFormSchema = (): FormSchema[] => {
         ...enumComponentProps(EnumEnum.FileOverrideStrategyEnum),
         isBtn: true,
       },
+      colProps: {
+        span: 24,
+      },
     },
   ];
 };

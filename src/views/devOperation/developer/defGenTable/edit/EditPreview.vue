@@ -1,13 +1,8 @@
 <template>
-  <RadioGroup
-    v-model:value="template"
-    style="margin-right: 2rem"
-    @change="changeTabs"
-  >
+  <RadioGroup v-model:value="template" style="margin-right: 2rem" @change="changeTabs">
     <RadioButton :value="TemplateEnum.BACKEND">后端</RadioButton>
     <RadioButton :value="TemplateEnum.WEB_PLUS">前端</RadioButton>
   </RadioGroup>
-
 
   <Tabs>
     <TabPane
@@ -15,16 +10,16 @@
       :key="key"
       :tab="key.substring(key.lastIndexOf('/') + 1, key.indexOf('.ftl'))"
     >
-      <a-button style="float: right" type="link" @click="handleCopy(value)">复制</a-button>
       <pre>
-          <code class="hljs" v-html="highlightedCode(value, key)"></code>
-        </pre>
+        <a-button preIcon="ant-design:copy-outlined" style="float: left" type="link" @click="handleCopy(value)">复制</a-button>
+        <code class="hljs" v-html="highlightedCode(value, key)"></code>
+      </pre>
     </TabPane>
   </Tabs>
 </template>
 <script lang="ts">
   import { defineComponent, ref, unref } from 'vue';
-  import { Tabs, Radio } from 'ant-design-vue';
+  import { Radio, Tabs } from 'ant-design-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { TemplateEnum } from '/@/enums/biz/tenant';
@@ -123,3 +118,17 @@
     },
   });
 </script>
+<style lang="less" scoped>
+  pre {
+    display: block;
+    padding: 9.5px;
+    margin: 0 0 10px;
+    font-size: 13px;
+    line-height: 1.42857143;
+    color: #333;
+    word-break: break-all;
+    word-wrap: break-word;
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+  }
+</style>
