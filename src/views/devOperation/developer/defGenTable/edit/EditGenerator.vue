@@ -13,7 +13,7 @@
   </BasicForm>
 </template>
 <script lang="ts">
-  import { defineComponent, ref } from 'vue';
+  import { defineComponent, ref, unref } from 'vue';
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
@@ -67,14 +67,14 @@
       }
 
       function setLoading(load: boolean) {
-        setProps({ submitButtonOptions: { loading: load } });
+        setProps({ submitButtonOptions: { loading: load }, resetButtonOptions: { loading: load } });
         loading.value = load;
       }
 
       async function download(template: TemplateEnum) {
         setLoading(true);
         try {
-          const response = await downloadZip([tableId.value], template);
+          const response = await downloadZip([unref(tableId)], template);
           downloadFile(response);
           createMessage.success(t('common.tips.downloadSuccess'));
         } finally {

@@ -119,9 +119,9 @@
         pageState.content = routeQuery.content as string;
         setLoading(true);
         try {
-          await getFormRef().loadDetail(routeParams.id as string);
-          await getColumnRef().load(routeParams.id as string);
-          await getGeneratorRef().loadDetail();
+          await getFormRef().loadDetail(pageState.tableId);
+          await getColumnRef().load(pageState.tableId);
+          await getGeneratorRef().loadDetail(pageState.tableId);
         } finally {
           setLoading(false);
         }
