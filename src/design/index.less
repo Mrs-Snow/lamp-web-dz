@@ -42,3 +42,23 @@ svg,
 span {
   outline: none !important;
 }
+
+/** 表单 小标题 **/
+.form-header {
+  height: 20px;
+  line-height: 20px;
+  font-size: 18px;
+  color: #6379bb;
+  border-bottom: 1px solid #ddd;
+  margin: 8px 10px 25px;
+  padding-bottom: 25px;
+
+  &::before {
+    float: left;
+    content: '';
+    width: 3px;
+    height: 18px;
+    margin: 1px 10px 0 0;
+    background: #1890ff;
+  }
+}
