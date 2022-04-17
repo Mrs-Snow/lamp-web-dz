@@ -426,6 +426,7 @@ export default defineComponent({
         title={t('layout.setting.drawerTitle')}
         width={330}
         class="setting-drawer"
+        mask={false}
       >
         {unref(getShowDarkModeToggle) && <Divider>{() => t('layout.setting.darkMode')}</Divider>}
         {unref(getShowDarkModeToggle) && <AppDarkModeToggle class="mx-auto" />}
