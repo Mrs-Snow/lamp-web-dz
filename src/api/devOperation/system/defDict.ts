@@ -1,12 +1,12 @@
 import {
+  DefDictPageQuery,
+  DefDictResultVO,
   DefDictSaveVO,
   DefDictUpdateVO,
-  DefDictResultVO,
-  DefDictPageQuery,
 } from './model/defDictModel';
 import { PageParams, PageResult } from '/@/api/model/baseModel';
 import { defHttp } from '/@/utils/http/axios';
-import { RequestEnum } from '/@/enums/httpEnum';
+import { ContentTypeEnum, RequestEnum } from '/@/enums/httpEnum';
 import { ServicePrefixEnum } from '/@/enums/commonEnum';
 import type { AxiosRequestConfig } from 'axios';
 
@@ -20,6 +20,11 @@ export const Api = {
   Save: {
     url: `${ServicePrefixEnum.TENANT}/${MODULAR}`,
     method: RequestEnum.POST,
+  } as AxiosRequestConfig,
+  Copy: {
+    url: `${ServicePrefixEnum.TENANT}/${MODULAR}/copy`,
+    method: RequestEnum.POST,
+    headers: { 'Content-Type': ContentTypeEnum.FORM_URLENCODED },
   } as AxiosRequestConfig,
   Update: {
     url: `${ServicePrefixEnum.TENANT}/${MODULAR}`,
@@ -55,6 +60,12 @@ export const get = (id: string) => defHttp.request<DefDictResultVO>({ ...Api.Get
 
 export const save = (params: DefDictSaveVO) =>
   defHttp.request<DefDictResultVO>({ ...Api.Save, params });
+
+export const copy = (id: string) =>
+  defHttp.request<DefDictResultVO>({
+    ...Api.Copy,
+    params: { id },
+  });
 
 export const update = (params: DefDictUpdateVO) =>
   defHttp.request<DefDictResultVO>({ ...Api.Update, params });
