@@ -14,27 +14,27 @@ const MODULAR = 'defGenTestTree';
 
 export const Api = {
   Page: {
-    url: `${ServicePrefixEnum.BASE}/${MODULAR}/page`,
+    url: `${ServicePrefixEnum.GENERATOR}/${MODULAR}/page`,
     method: RequestEnum.POST,
   } as AxiosRequestConfig,
   Tree: {
-    url: `${ServicePrefixEnum.BASE}/${MODULAR}/tree`,
+    url: `${ServicePrefixEnum.GENERATOR}/${MODULAR}/tree`,
     method: RequestEnum.POST,
   } as AxiosRequestConfig,
   Save: {
-    url: `${ServicePrefixEnum.BASE}/${MODULAR}`,
+    url: `${ServicePrefixEnum.GENERATOR}/${MODULAR}`,
     method: RequestEnum.POST,
   } as AxiosRequestConfig,
   Update: {
-    url: `${ServicePrefixEnum.BASE}/${MODULAR}`,
+    url: `${ServicePrefixEnum.GENERATOR}/${MODULAR}`,
     method: RequestEnum.PUT,
   },
   Delete: {
-    url: `${ServicePrefixEnum.BASE}/${MODULAR}`,
+    url: `${ServicePrefixEnum.GENERATOR}/${MODULAR}`,
     method: RequestEnum.DELETE,
   } as AxiosRequestConfig,
   Query: {
-    url: `${ServicePrefixEnum.BASE}/${MODULAR}/query`,
+    url: `${ServicePrefixEnum.GENERATOR}/${MODULAR}/query`,
     method: RequestEnum.POST,
   } as AxiosRequestConfig,
 };

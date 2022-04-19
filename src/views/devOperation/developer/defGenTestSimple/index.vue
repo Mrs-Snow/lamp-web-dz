@@ -7,16 +7,10 @@
           color="error"
           preIcon="ant-design:delete-outlined"
           @click="handleBatchDelete"
-          v-hasAnyPermission="['devOperation:developer:defGenTestSimple:delete']"
         >
           {{ t('common.title.delete') }}
         </a-button>
-        <a-button
-          type="primary"
-          preIcon="ant-design:plus-outlined"
-          @click="handleAdd"
-          v-hasAnyPermission="['devOperation:developer:defGenTestSimple:add']"
-        >
+        <a-button type="primary" preIcon="ant-design:plus-outlined" @click="handleAdd">
           {{ t('common.title.add') }}
         </a-button>
       </template>
@@ -33,19 +27,16 @@
                 tooltip: t('common.title.edit'),
                 icon: 'ant-design:edit-outlined',
                 onClick: handleEdit.bind(null, record),
-                auth: 'devOperation:developer:defGenTestSimple:edit',
               },
               {
                 tooltip: t('common.title.copy'),
                 icon: 'ant-design:copy-outlined',
                 onClick: handleCopy.bind(null, record),
-                auth: 'devOperation:developer:defGenTestSimple:copy',
               },
               {
                 tooltip: t('common.title.delete'),
                 icon: 'ant-design:delete-outlined',
                 color: 'error',
-                auth: 'devOperation:developer:defGenTestSimple:delete',
                 popConfirm: {
                   title: t('common.tips.confirmDelete'),
                   confirm: handleDelete.bind(null, record),

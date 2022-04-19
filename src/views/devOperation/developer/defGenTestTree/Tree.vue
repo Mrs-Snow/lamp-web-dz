@@ -1,20 +1,10 @@
 <template>
   <div class="bg-white m-4 mr-2 overflow-hidden">
     <div class="m-4">
-      <a-button
-        @click="handleAdd()"
-        preIcon="ant-design:plus-outlined"
-        class="mr-2"
-        v-hasAnyPermission="['devOperation:developer:defGenTestTree:add']"
-      >
+      <a-button @click="handleAdd()" preIcon="ant-design:plus-outlined" class="mr-2">
         {{ t('common.title.addRoot') }}
       </a-button>
-      <a-button
-        @click="handleBatchDelete()"
-        preIcon="ant-design:delete-outlined"
-        class="mr-2"
-        v-hasAnyPermission="['devOperation:developer:defGenTestTree:delete']"
-      >
+      <a-button @click="handleBatchDelete()" preIcon="ant-design:delete-outlined" class="mr-2">
         {{ t('common.title.delete') }}
       </a-button>
     </div>
@@ -95,7 +85,6 @@
       // 悬停图标
       const actionList: ActionItem[] = [
         {
-          auth: 'devOperation:developer:defGenTestTree:add',
           render: (node) => {
             return h(
               'a',
@@ -112,7 +101,6 @@
           },
         },
         {
-          auth: 'devOperation:developer:defGenTestTree:edit',
           render: (node) => {
             return h(
               'a',
@@ -131,7 +119,6 @@
           },
         },
         {
-          auth: 'devOperation:developer:defGenTestTree:delete',
           render: (node) => {
             return h(
               'a',
@@ -154,7 +141,6 @@
         return [
           {
             label: t('common.title.addChildren'),
-            auth: 'devOperation:developer:defGenTestTree:add',
             handler: () => {
               emit('add', findNodeByKey(unref(node).id, treeData.value));
             },
@@ -162,7 +148,6 @@
           },
           {
             label: t('common.title.edit'),
-            auth: 'devOperation:developer:defGenTestTree:edit',
             handler: () => {
               const current = findNodeByKey(unref(node.$attrs)?.id, treeData.value);
               const parent = findNodeByKey(unref(node.$attrs)?.parentId, treeData.value);
@@ -171,7 +156,6 @@
             icon: 'ant-design:edit-outlined',
           },
           {
-            auth: 'devOperation:developer:defGenTestTree:delete',
             label: t('common.title.delete'),
             handler: () => {
               batchDelete([unref(node).id]);
