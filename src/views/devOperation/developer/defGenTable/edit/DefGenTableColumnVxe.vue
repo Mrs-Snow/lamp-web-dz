@@ -71,7 +71,7 @@
 
       const gridOptions = reactive<VxeGridProps>({
         id: 'full_edit_1',
-        height: 600,
+        // height: 600,
         rowConfig: {
           // 自定义行数据唯一主键的字段名（默认自动生成）
           keyField: 'id',
