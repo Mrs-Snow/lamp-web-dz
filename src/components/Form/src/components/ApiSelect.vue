@@ -1,27 +1,27 @@
 <template>
   <Select
-    @dropdown-visible-change="handleFetch"
+    v-model:value="state"
+    :options="getOptions"
     v-bind="$attrs"
     @change="handleChange"
-    :options="getOptions"
-    v-model:value="state"
+    @dropdown-visible-change="handleFetch"
   >
-    <template #[item]="data" v-for="item in Object.keys($slots)">
+    <template v-for="item in Object.keys($slots)" #[item]="data">
       <slot :name="item" v-bind="data || {}"></slot>
     </template>
-    <template #suffixIcon v-if="loading">
+    <template v-if="loading" #suffixIcon>
       <LoadingOutlined spin />
     </template>
-    <template #notFoundContent v-if="loading">
+    <template v-if="loading" #notFoundContent>
       <span>
-        <LoadingOutlined spin class="mr-1" />
+        <LoadingOutlined class="mr-1" spin />
         {{ t('component.form.apiSelectNotFound') }}
       </span>
     </template>
   </Select>
 </template>
 <script lang="ts">
-  import { defineComponent, PropType, ref, watchEffect, computed, unref, watch } from 'vue';
+  import { computed, defineComponent, PropType, ref, unref, watch, watchEffect } from 'vue';
   import { Select } from 'ant-design-vue';
   import { isFunction } from '/@/utils/is';
   import { useRuleFormItem } from '/@/hooks/component/useFormItem';
@@ -62,6 +62,7 @@
       valueField: propTypes.string.def('value'),
       immediate: propTypes.bool.def(true),
       alwaysLoad: propTypes.bool.def(false),
+      allData: propTypes.bool.def(true),
     },
     emits: ['options-change', 'change'],
     setup(props, { emit }) {
@@ -76,13 +77,13 @@
       const [state] = useRuleFormItem(props, 'value', 'change', emitData);
 
       const getOptions = computed(() => {
-        const { labelField, valueField, numberToString } = props;
+        const { labelField, valueField, numberToString, allData } = props;
 
         return unref(options).reduce((prev, next: Recordable) => {
           if (next) {
             const value = next[valueField];
             prev.push({
-              ...omit(next, [labelField, valueField]),
+              ...(allData && omit(next, [labelField, valueField])),
               label: next[labelField],
               value: numberToString ? `${value}` : value,
             });
