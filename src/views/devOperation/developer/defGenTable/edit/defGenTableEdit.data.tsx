@@ -605,9 +605,6 @@ export const baseEditFormSchema = (): FormSchema[] => {
       ifShow: ({ values }) => {
         return values.addShow;
       },
-      required: ({ values }) => {
-        return values.addShow;
-      },
       helpMessage: [
         '文本框为空时，方可点击"生成"按钮，按系统建议的规则生成权限编码',
         '系统规则：{前端应用名}:{前端模块名}:{实体名称}:add',
@@ -629,9 +626,6 @@ export const baseEditFormSchema = (): FormSchema[] => {
         span: 12,
       },
       ifShow: ({ values }) => {
-        return values.editShow;
-      },
-      required: ({ values }) => {
         return values.editShow;
       },
       helpMessage: [
@@ -657,9 +651,6 @@ export const baseEditFormSchema = (): FormSchema[] => {
       ifShow: ({ values }) => {
         return values.deleteShow;
       },
-      required: ({ values }) => {
-        return values.deleteShow;
-      },
       helpMessage: [
         '文本框为空时，方可点击"生成"按钮，按系统建议的规则生成权限编码',
         '系统规则：{前端应用名}:{前端模块名}:{实体名称}:delete',
@@ -683,9 +674,6 @@ export const baseEditFormSchema = (): FormSchema[] => {
       ifShow: ({ values }) => {
         return values.copyShow;
       },
-      required: ({ values }) => {
-        return values.copyShow;
-      },
       helpMessage: [
         '文本框为空时，方可点击"生成"按钮，按系统建议的规则生成权限编码',
         '系统规则：{前端应用名}:{前端模块名}:{实体名称}:copy',
@@ -707,9 +695,6 @@ export const baseEditFormSchema = (): FormSchema[] => {
         span: 12,
       },
       ifShow: ({ values }) => {
-        return values.viewShow;
-      },
-      required: ({ values }) => {
         return values.viewShow;
       },
       helpMessage: [
@@ -804,6 +789,9 @@ export const baseEditFormSchema = (): FormSchema[] => {
         span: 12,
       },
       ifShow: ({ values }) => {
+        return values.tplType === TplEnum.TREE;
+      },
+      required: ({ values }) => {
         return values.tplType === TplEnum.TREE;
       },
     },

@@ -1,5 +1,5 @@
 <template>
-  <PageWrapper dense fixedHeight contentClass="flex">
+  <PageWrapper dense fixedHeight contentClass="flex" title="代码生成器生成示例，请二次开发后使用">
     <DefGenTestTreeTree
       class="md:w-1/2"
       @select="handleTreeSelect"

@@ -162,7 +162,7 @@ export const generatorCodeFormSchema = (): FormSchema[] => {
       },
     },
     {
-      field: 'allBack',
+      field: 'allFront',
       component: 'ApiRadioGroup',
       label: '批量设置',
       componentProps: ({ formActionType }) => {

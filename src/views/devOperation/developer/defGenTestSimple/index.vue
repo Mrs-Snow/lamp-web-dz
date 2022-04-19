@@ -1,5 +1,5 @@
 <template>
-  <PageWrapper dense contentFullHeight>
+  <PageWrapper dense contentFullHeight title="代码生成器生成示例，请二次开发后使用">
     <BasicTable @register="registerTable">
       <template #toolbar>
         <a-button
