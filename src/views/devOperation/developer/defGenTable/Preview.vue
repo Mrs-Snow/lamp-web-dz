@@ -1,22 +1,18 @@
 <template>
   <BasicModal
-    v-bind="$attrs"
-    @register="registerModal"
-    showFooter
+    :defaultFullscreen="true"
     :keyboard="true"
     :maskClosable="true"
-    title="预览代码"
-    :defaultFullscreen="true"
-    @ok="handleSubmit"
     :showCancelBtn="false"
+    showFooter
+    title="预览代码"
+    v-bind="$attrs"
+    @ok="handleSubmit"
+    @register="registerModal"
   >
     <Tabs>
-      <TabPane
-        :tab="key.substring(key.lastIndexOf('/') + 1, key.indexOf('.ftl'))"
-        :key="key"
-        v-for="(value, key) in codeMap"
-      >
-        <a-button type="link" @click="handleCopy(value)" style="float: right">复制</a-button>
+      <TabPane v-for="(value, key) in codeMap" :key="key" :tab="getKey(key)">
+        <a-button style="float: right" type="link" @click="handleCopy(value)">复制</a-button>
         <pre>
           <code class="hljs" v-html="highlightedCode(value, key)"></code>
         </pre>
@@ -105,8 +101,17 @@
         }
       }
 
+      function getKey(key) {
+        const k = key.substring(key.lastIndexOf('/') + 1, key.indexOf('.ftl'));
+        if (key.startsWith('sub-')) {
+          return k + '(从表)';
+        }
+        return k;
+      }
+
       return {
         t,
+        getKey,
         registerModal,
         handleSubmit,
         codeMap,

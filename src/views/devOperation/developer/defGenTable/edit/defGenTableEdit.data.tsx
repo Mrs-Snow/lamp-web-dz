@@ -1,15 +1,16 @@
 import { FormSchema } from '/@/components/Table';
-import { enumComponentProps, yesNoComponentProps } from '/@/utils/lamp/common';
+import { FormActionType } from '/@/components/Form';
 import { EnumEnum } from '/@/enums/commonEnum';
+import { useMessage } from '/@/hooks/web/useMessage';
+import { lowerFirst } from 'lodash-es';
+import { enumComponentProps, yesNoComponentProps } from '/@/utils/lamp/common';
+import { EntitySuperClassEnum, GenTypeEnum, PopupTypeEnum, TplEnum } from '/@/enums/biz/tenant';
 import { FormSchemaExt } from '/@/api/lamp/common/formValidateService';
 import { query } from '/@/api/devOperation/tenant/datasourceConfig';
-import { EntitySuperClassEnum, GenTypeEnum, PopupTypeEnum, TplEnum } from '/@/enums/biz/tenant';
-import { lowerFirst } from 'lodash-es';
-import { useMessage } from '/@/hooks/web/useMessage';
-import { FormActionType } from '/@/components/Form';
 import { findOnlineService } from '/@/api/devOperation/tenant/tenant';
 import { query as queryApplication } from '/@/api/devOperation/application/defApplication';
 import { tree as queryMenu } from '/@/api/devOperation/application/defResource';
+import { query as queryTable } from '/@/api/devOperation/developer/defGenTable';
 
 const { createMessage } = useMessage();
 
@@ -791,7 +792,7 @@ export const baseEditFormSchema = (): FormSchema[] => {
       component: 'Divider',
       label: '其他信息',
       ifShow: ({ values }) => {
-        return values.tplType === TplEnum.TREE;
+        return [TplEnum.MAIN_SUB, TplEnum.TREE].includes(values.tplType);
       },
     },
     {
@@ -804,6 +805,44 @@ export const baseEditFormSchema = (): FormSchema[] => {
       },
       ifShow: ({ values }) => {
         return values.tplType === TplEnum.TREE;
+      },
+    },
+    {
+      label: '从表',
+      field: 'subId',
+      component: 'ApiSelect',
+      helpMessage: ['主从页面，从表需要先导入并配置相关信息'],
+      componentProps: {
+        api: queryTable,
+        labelField: 'name',
+        valueField: 'id',
+        showSearch: true,
+        allowClear: false,
+        allData: false,
+      },
+      colProps: {
+        span: 12,
+      },
+      ifShow: ({ values }) => {
+        return values.tplType === TplEnum.MAIN_SUB;
+      },
+      required: ({ values }) => {
+        return values.tplType === TplEnum.MAIN_SUB;
+      },
+    },
+    {
+      label: '从表实体字段名',
+      field: 'subJavaFieldName',
+      component: 'Input',
+      helpMessage: ['主从页面，从表的外键Java实体类的字段名'],
+      colProps: {
+        span: 12,
+      },
+      ifShow: ({ values }) => {
+        return values.tplType === TplEnum.MAIN_SUB;
+      },
+      required: ({ values }) => {
+        return values.tplType === TplEnum.MAIN_SUB;
       },
     },
   ];

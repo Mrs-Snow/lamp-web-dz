@@ -3,23 +3,24 @@
     <RadioButton :value="TemplateEnum.BACKEND">后端</RadioButton>
     <RadioButton :value="TemplateEnum.WEB_PLUS">前端</RadioButton>
   </RadioGroup>
+  <a-button preIcon="ant-design:reload-outlined" type="link" @click="reload()">刷新</a-button>
 
-  <Tabs>
-    <TabPane
-      v-for="(value, key) in codeMap"
-      :key="key"
-      :tab="key.substring(key.lastIndexOf('/') + 1, key.indexOf('.ftl'))"
-    >
-      <pre>
-        <a-button preIcon="ant-design:copy-outlined" style="float: left" type="link" @click="handleCopy(value)">复制</a-button>
+  <Spin :spinning="spinning" size="large">
+    <Tabs style="min-height: 400px">
+      <TabPane v-for="(value, key) in codeMap" :key="key" :tab="getKey(key)">
+        <pre>
+        <a-button
+preIcon="ant-design:copy-outlined" style="float: left" type="link"
+                  @click="handleCopy(value)">复制</a-button>
         <code class="hljs" v-html="highlightedCode(value, key)"></code>
       </pre>
-    </TabPane>
-  </Tabs>
+      </TabPane>
+    </Tabs>
+  </Spin>
 </template>
 <script lang="ts">
   import { defineComponent, ref, unref } from 'vue';
-  import { Radio, Tabs } from 'ant-design-vue';
+  import { Radio, Spin, Tabs } from 'ant-design-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { TemplateEnum } from '/@/enums/biz/tenant';
@@ -57,22 +58,35 @@
       TabPane: Tabs.TabPane,
       RadioButton: Radio.Button,
       RadioGroup: Radio.Group,
+      Spin,
     },
     setup() {
       const { t } = useI18n();
       const cacheMap = ref<any>({});
       const codeMap = ref<any>({});
       const tId = ref<string>('');
+      const spinning = ref<boolean>(false);
       const template = ref<TemplateEnum>(TemplateEnum.BACKEND);
       const { createMessage } = useMessage();
       const { clipboardRef, copiedRef } = useCopyToClipboard();
 
       const load = async (tableId) => {
-        codeMap.value = {};
         tId.value = tableId;
-        const map = await previewCode(tableId, template.value);
-        codeMap.value = map;
-        cacheMap.value[template.value] = map;
+        await reload();
+      };
+
+      const reload = async (temp?: TemplateEnum) => {
+        try {
+          spinning.value = true;
+
+          temp = temp || template.value;
+          codeMap.value = {};
+          const map = await previewCode(tId.value, temp);
+          codeMap.value = map;
+          cacheMap.value[temp] = map;
+        } finally {
+          spinning.value = false;
+        }
       };
 
       function highlightedCode(code, key) {
@@ -98,11 +112,16 @@
         if (cacheMap.value[template]) {
           codeMap.value = cacheMap.value[template];
         } else {
-          codeMap.value = {};
-          const map = await previewCode(tId.value, template);
-          codeMap.value = map;
-          cacheMap.value[template] = map;
+          await reload(template);
         }
+      }
+
+      function getKey(key) {
+        const k = key.substring(key.lastIndexOf('/') + 1, key.indexOf('.ftl'));
+        if (key.startsWith('sub-')) {
+          return k + '(从表)';
+        }
+        return k;
       }
 
       return {
@@ -111,9 +130,12 @@
         highlightedCode,
         handleCopy,
         load,
+        reload,
         changeTabs,
         TemplateEnum,
         template,
+        spinning,
+        getKey,
       };
     },
   });
