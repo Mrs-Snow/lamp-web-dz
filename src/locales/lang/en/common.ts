@@ -55,6 +55,7 @@ export default {
     deleteFail: 'Delete Fail',
     uploadSuccess: 'Upload Success',
     confirmDelete: 'Confirm Delete？',
+    confirmCopy: 'Confirm Copy？',
     pleaseSelectTheData: 'Please select the data to operate',
   },
   rules: {

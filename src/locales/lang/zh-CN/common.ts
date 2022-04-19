@@ -56,6 +56,7 @@ export default {
     downloadSuccess: '下载成功',
     uploadSuccess: '上传成功',
     confirmDelete: '是否确定删除？',
+    confirmCopy: '是否确定复制？',
     pleaseSelectTheData: '请选择要操作的数据',
   },
   rules: {

@@ -22,6 +22,7 @@ export default {
   width: '宽度',
   queryType: '查询方式',
   component: '组件',
+  vxeComponent: 'Vxe组件',
   dictType: '字典类型',
   echoStr: 'Echo',
   enumStr: '枚举',

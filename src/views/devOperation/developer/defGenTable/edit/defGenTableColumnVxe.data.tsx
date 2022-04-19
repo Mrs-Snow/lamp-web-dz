@@ -13,6 +13,8 @@ const autoCompleteProps = () => {
     },
   };
 };
+
+// @ts-ignore
 const selectProps = () => {
   return {
     allowClear: true,
@@ -253,10 +255,23 @@ export const columns = (): VxeGridPropTypes.Columns => {
       field: 'component',
       title: t('devOperation.developer.defGenTableColumn.component'),
       editRender: {
-        name: 'ASelect',
+        name: '$input',
+        // name: 'ASelect',
+        // props: {
+        //   ...selectProps(),
+        //   options: [{ value: 'Input' }, { value: 'Select' }],
+        // },
+      },
+    },
+    {
+      field: 'vxeComponent',
+      title: t('devOperation.developer.defGenTableColumn.vxeComponent'),
+      editRender: {
+        name: '$input',
+        // name: 'ASelect',
         props: {
           ...selectProps(),
-          options: [{ value: 'Input' }, { value: 'Select' }],
+          options: [{ value: '$input' }, { value: '$select' }],
         },
       },
     },

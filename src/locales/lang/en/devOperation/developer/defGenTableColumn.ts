@@ -22,6 +22,7 @@ export default {
   width: 'Width',
   queryType: 'QueryType',
   component: 'Component',
+  vxeComponent: 'VxeComponent',
   dictType: 'DictType',
   echoStr: 'EchoStr',
   enumStr: 'EnumStr',
