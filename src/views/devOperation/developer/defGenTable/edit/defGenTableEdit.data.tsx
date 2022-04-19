@@ -225,6 +225,7 @@ export const baseEditFormSchema = (): FormSchema[] => {
           onChange: (value: string) => {
             const { setFieldsValue, getFieldsValue, updateSchema } = formActionType;
 
+            createMessage.info('生成模板已级联更改');
             if (value === EntitySuperClassEnum.TREE_ENTITY) {
               setFieldsValue({ tplType: TplEnum.TREE });
               updateSchema({
@@ -513,14 +514,17 @@ export const baseEditFormSchema = (): FormSchema[] => {
           ...enumComponentProps(EnumEnum.TplEnum),
           onChange: async (e: ChangeEvent) => {
             console.log(e.target.value);
-            const { updateSchema } = formActionType;
+            const { updateSchema, setFieldsValue } = formActionType;
 
+            createMessage.info('实体父类已级联更改');
             if (e.target.value === TplEnum.TREE) {
               await updateSchema({
                 field: 'treeName',
                 rules: [{ required: true }, { min: 0, max: 255, message: '长度不能超过255' }],
               });
+              await setFieldsValue({ entitySuperClass: EntitySuperClassEnum.TREE_ENTITY });
             } else {
+              await setFieldsValue({ entitySuperClass: EntitySuperClassEnum.ENTITY });
               await updateSchema({
                 field: 'treeName',
                 rules: [{ required: false }, { min: 0, max: 255, message: '长度不能超过255' }],
