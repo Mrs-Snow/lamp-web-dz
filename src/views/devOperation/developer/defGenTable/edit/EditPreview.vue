@@ -10,8 +10,8 @@
       <TabPane v-for="(value, key) in codeMap" :key="key" :tab="getKey(key)">
         <pre>
         <a-button
-preIcon="ant-design:copy-outlined" style="float: left" type="link"
-                  @click="handleCopy(value)">复制</a-button>
+          preIcon="ant-design:copy-outlined" style="float: left" type="link"
+          @click="handleCopy(value)">复制</a-button>
         <code class="hljs" v-html="highlightedCode(value, key)"></code>
       </pre>
       </TabPane>

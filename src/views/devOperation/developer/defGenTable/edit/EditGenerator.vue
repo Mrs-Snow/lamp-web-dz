@@ -1,13 +1,16 @@
 <template>
   <BasicForm @register="registerBasicForm">
     <template #resetBefore>
-      <a-button :loading="loading" class="mr-2" type="default" @click="downloadFront"
-        >下载前端
+      <a-button :loading="loading" class="mr-2" type="default" @click="downloadFront">
+        下载前端
+      </a-button>
+      <a-button :loading="loading" class="mr-2" type="default" @click="downloadBackend">
+        下载后端
       </a-button>
     </template>
     <template #submitBefore>
-      <a-button :loading="loading" class="mr-2" type="primary" @click="generatorFront"
-        >生成前端
+      <a-button :loading="loading" class="mr-2" type="primary" @click="generatorFront">
+        生成前端
       </a-button>
     </template>
   </BasicForm>
@@ -51,14 +54,11 @@
             textAlign: 'center',
           },
         },
-        resetButtonOptions: {
-          text: '下载后端',
-        },
+        showResetButton: false,
         submitButtonOptions: {
           text: '生成后端',
         },
         submitFunc: generatorBackend,
-        resetFunc: downloadBackend,
       });
 
       async function loadDetail(tId: string) {
@@ -130,6 +130,7 @@
         validate,
         downloadFront,
         generatorFront,
+        downloadBackend,
         loading,
       };
     },
