@@ -31,7 +31,7 @@
       const dictId = ref<string>('');
 
       const typeRef = ref<ActionEnum>(ActionEnum.ADD);
-      const xGrid = ref({} as VxeGridInstance);
+      const xGrid = ref<VxeGridInstance>({});
       const validRules = ref<VxeTablePropTypes.EditRules>({});
 
       const gridOptions = reactive<VxeGridProps>({
@@ -75,10 +75,8 @@
               const queryParams: any = { model: { ...form } };
 
               if (!dictId.value) {
-                createMessage.warn('请选择保存字典数据');
-                return Promise.reject(
-                  '请选择保存字典数据请选择保存字典数据请选择保存字典数据请选择保存字典数据',
-                );
+                createMessage.warn('请先保存数据');
+                return Promise.reject('请先保存数据');
               }
               // 处理排序条件
               const firstSort = sorts[0];

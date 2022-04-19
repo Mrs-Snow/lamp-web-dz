@@ -111,7 +111,6 @@
               params.id = null;
               await save(params);
             }
-            console.log(params);
             createMessage.success(t(`common.tips.${type.value}Success`));
           }
           closeDrawer();

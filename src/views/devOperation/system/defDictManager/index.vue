@@ -1,9 +1,9 @@
 <template>
-  <PageWrapper contentFullHeight dense>
+  <PageWrapper contentFullHeight dense title="第三种方式实现字典管理">
     <BasicTable @register="registerTable">
       <template #toolbar>
-        <a-button color="error" type="primary" @click="handleBatchDelete"
-          >{{ t('common.title.delete') }}
+        <a-button color="error" type="primary" @click="handleBatchDelete">
+          {{ t('common.title.delete') }}
         </a-button>
         <a-button type="primary" @click="handleAdd">{{ t('common.title.add') }}</a-button>
       </template>
