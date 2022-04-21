@@ -154,6 +154,16 @@ export const generatorCodeFormSchema = (): FormSchema[] => {
       },
     },
     {
+      field: 'echoList',
+      component: 'ApiRadioGroup',
+      label: 'Echo的常量',
+      componentProps: {
+        ...enumComponentProps(EnumEnum.FileOverrideStrategyEnum),
+        isBtn: true,
+      },
+      helpMessage: ['仅支持覆盖和忽略'],
+    },
+    {
       field: 'divider-selects1',
       component: 'Divider',
       label: '前端',
