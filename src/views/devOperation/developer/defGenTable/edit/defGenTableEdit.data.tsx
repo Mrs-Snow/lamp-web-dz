@@ -45,7 +45,11 @@ export const baseEditFormSchema = (): FormSchema[] => {
   return [
     {
       field: 'divider-selects1',
-      component: 'Divider',
+      component: 'BasicTitle',
+      componentProps: {
+        line: true,
+        span: true,
+      },
       label: '基础信息',
     },
     {
@@ -122,7 +126,11 @@ export const baseEditFormSchema = (): FormSchema[] => {
     },
     {
       field: 'divider-selects2',
-      component: 'Divider',
+      component: 'BasicTitle',
+      componentProps: {
+        line: true,
+        span: true,
+      },
       label: '生成信息',
       helpMessage: [
         '生成的后端文件位于： [{输出路径}/]{全局配置.项目前缀}-{服务名}-{全局配置.服务后缀}/src/main/java/{父包名}/{模块名}[/{全局配置.PackageInfoConfig}]/{子包名}/',
@@ -449,7 +457,11 @@ export const baseEditFormSchema = (): FormSchema[] => {
     },
     {
       field: 'divider-selects3',
-      component: 'Divider',
+      component: 'BasicTitle',
+      componentProps: {
+        line: true,
+        span: true,
+      },
       label: '前端信息',
     },
     {
@@ -716,7 +728,11 @@ export const baseEditFormSchema = (): FormSchema[] => {
     },
     {
       field: 'divider-selects4',
-      component: 'Divider',
+      component: 'BasicTitle',
+      componentProps: {
+        line: true,
+        span: true,
+      },
       label: 'SQL信息',
     },
     {
@@ -778,7 +794,11 @@ export const baseEditFormSchema = (): FormSchema[] => {
     },
     {
       field: 'divider-selects5',
-      component: 'Divider',
+      component: 'BasicTitle',
+      componentProps: {
+        line: true,
+        span: true,
+      },
       label: '其他信息',
       ifShow: ({ values }) => {
         return [TplEnum.MAIN_SUB, TplEnum.TREE].includes(values.tplType);
