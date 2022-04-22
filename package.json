@@ -7,7 +7,7 @@
     "url": "https://github.com/zuihou"
   },
   "scripts": {
-    "bootstrap": "pnpm install",
+    "bootstrap": "pnpm install --registry=https://registry.npmmirror.com",
     "serve": "npm run dev",
     "dev": "vite",
     "build": "cross-env NODE_ENV=production vite build && esno ./build/script/postBuild.ts",
