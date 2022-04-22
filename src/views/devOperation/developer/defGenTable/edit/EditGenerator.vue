@@ -44,7 +44,7 @@
 
       const [registerBasicForm, { validate, setFieldsValue, setProps }] = useForm({
         name: 'generator',
-        labelWidth: 140,
+        labelWidth: 100,
         schemas: generatorCodeFormSchema(),
         showActionButtonGroup: true,
         baseColProps: { span: 8 },
