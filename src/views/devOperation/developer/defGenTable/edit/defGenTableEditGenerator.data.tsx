@@ -157,7 +157,7 @@ export const generatorCodeFormSchema = (): FormSchema[] => {
     {
       field: 'echoList',
       component: 'ApiRadioGroup',
-      label: 'Echo的常量',
+      label: 'Echo常量',
       componentProps: {
         ...enumComponentProps(EnumEnum.FileOverrideStrategyEnum),
         isBtn: true,
