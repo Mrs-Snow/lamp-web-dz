@@ -116,4 +116,5 @@ export type ComponentType =
   | 'Rate'
   | 'Divider'
   | 'Transfer'
-  | 'CropperAvatar';
+  | 'CropperAvatar'
+  | 'BasicTitle';

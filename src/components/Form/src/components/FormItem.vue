@@ -4,12 +4,13 @@
   import type { FormActionType, FormProps, FormSchema } from '../types/form';
   import type { ValidationRule } from 'ant-design-vue/lib/form/Form';
   import type { TableActionType } from '/@/components/Table';
+  import { BasicTitle } from '/@/components/Basic';
   import { Col, Divider, Form } from 'ant-design-vue';
   import { componentMap } from '../componentMap';
   import { BasicHelp } from '/@/components/Basic';
   import { isBoolean, isFunction, isNull } from '/@/utils/is';
   import { getSlot } from '/@/utils/helper/tsxHelper';
-  import { createPlaceholderMessage, setComponentRuleType } from '../helper';
+  import { createPlaceholderMessage, setComponentRuleType, simpleComponents } from '../helper';
   import { cloneDeep, upperFirst } from 'lodash-es';
   import { useItemLabelWidth } from '../hooks/useLabelWidth';
   import { useI18n } from '/@/hooks/web/useI18n';
@@ -76,7 +77,7 @@
         if (isFunction(componentProps)) {
           componentProps = componentProps({ schema, tableAction, formModel, formActionType }) ?? {};
         }
-        if (schema.component === 'Divider') {
+        if (simpleComponents.includes(schema.component)) {
           componentProps = Object.assign({ type: 'horizontal' }, componentProps, {
             orientation: 'left',
             plain: true,
@@ -356,6 +357,17 @@
             <Col span={24}>
               <Divider {...unref(getComponentsProps)}>{renderLabelHelpMessage()}</Divider>
             </Col>
+          );
+        } else if (component === 'BasicTitle') {
+          return (
+            <Form.Item
+              labelCol={labelCol}
+              wrapperCol={wrapperCol}
+              name={field}
+              class={{ 'suffix-item': !!suffix }}
+            >
+              <BasicTitle {...unref(getComponentsProps)}>{renderLabelHelpMessage()}</BasicTitle>
+            </Form.Item>
           );
         } else {
           const getContent = () => {

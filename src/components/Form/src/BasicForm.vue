@@ -46,7 +46,7 @@
   import FormItem from './components/FormItem.vue';
   import FormAction from './components/FormAction.vue';
 
-  import { dateItemType } from './helper';
+  import { dateItemType, simpleComponents } from './helper';
   import { dateUtil } from '/@/utils/dateUtil';
 
   // import { cloneDeep } from 'lodash-es';
@@ -132,7 +132,9 @@
           }
         }
         if (unref(getProps).showAdvancedButton) {
-          return schemas.filter((schema) => schema.component !== 'Divider') as FormSchema[];
+          return schemas.filter(
+            (schema) => !simpleComponents.includes(schema.component),
+          ) as FormSchema[];
         } else {
           return schemas as FormSchema[];
         }
