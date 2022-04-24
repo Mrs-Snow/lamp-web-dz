@@ -42,7 +42,7 @@ specifiers:
   '@zougt/some-loader-utils': ^1.4.2
   '@zougt/vite-plugin-theme-preprocessor': ^1.4.0
   '@zxcvbn-ts/core': ^2.0.1
-  ant-design-vue: 3.1.1
+  ant-design-vue: 3.2.0
   autoprefixer: ^10.4.4
   axios: ^0.26.1
   codemirror: ^5.65.2
@@ -136,7 +136,7 @@ dependencies:
   '@vueuse/core': 8.2.6_vue@3.2.33
   '@vueuse/shared': 8.2.6_vue@3.2.33
   '@zxcvbn-ts/core': 2.0.1
-  ant-design-vue: 3.1.1_vue@3.2.33
+  ant-design-vue: 3.2.0_vue@3.2.33
   axios: 0.26.1
   codemirror: 5.65.2
   cropperjs: 1.5.12
@@ -2865,8 +2865,8 @@ packages:
     engines: {node: '>=12'}
     dev: true
 
-  /ant-design-vue/3.1.1_vue@3.2.33:
-    resolution: {integrity: sha512-QcnESmPllfyPy4SavOlf1jml/bdmzCIcCgYWRwl0WKG5jbuuOQ0vhgfUCC2rI6R+84gb/qf4/0qoZnWcEyQziA==}
+  /ant-design-vue/3.2.0_vue@3.2.33:
+    resolution: {integrity: sha512-qY9f/kF9YqfzV/vJ9/GKj7s1wmpCuNwWVRyQ3qsG8P4Was/u5WTKG5hz9huUY/cNle2nBTDacvMBIOkfxPeUiQ==}
     peerDependencies:
       vue: '>=3.2.0'
     dependencies:

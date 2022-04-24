@@ -94,7 +94,8 @@
       steps = [
         {
           title: '欢迎访问',
-          intro: '欢迎体验《灯灯》SaaS快速开发平台 👋',
+          intro:
+            '欢迎体验《灯灯》SaaS快速开发平台 👋 <br/><span style="color: red;">首次使用，请认真阅读引导！</span>',
         },
         {
           title: '当前企业',
@@ -135,7 +136,8 @@
       steps = [
         {
           title: '欢迎访问',
-          intro: '欢迎体验《灯灯》SaaS快速开发平台 👋',
+          intro:
+            '欢迎体验《灯灯》SaaS快速开发平台 👋<br/><span style="color: red;">首次使用，请认真阅读引导！</span>',
         },
         {
           title: '注册企业',
