@@ -1,13 +1,13 @@
 import {
+  DatasourceConfig,
   DatasourceConfigPageQuery,
   DatasourceConfigResult,
   DatasourceConfigSaveDTO,
   DatasourceConfigUpdateDTO,
-  DatasourceConfig,
 } from './model/datasourceConfigModel';
 import { PageParams, PageResult } from '/@/api/model/baseModel';
 import { defHttp } from '/@/utils/http/axios';
-import { RequestEnum } from '/@/enums/httpEnum';
+import { ContentTypeEnum, RequestEnum } from '/@/enums/httpEnum';
 import { ServicePrefixEnum } from '/@/enums/commonEnum';
 
 const MODULAR = 'defDatasourceConfig';
@@ -45,8 +45,12 @@ export const remove = (ids: string[]) =>
     params: ids,
   });
 
-export const testConnect = (params: any) =>
-  defHttp.request<boolean>({ ...Api.TestConnect, params });
+export const testConnect = (id: string) =>
+  defHttp.request<boolean>({
+    ...Api.TestConnect,
+    params: { id },
+    headers: { 'Content-Type': ContentTypeEnum.FORM_URLENCODED },
+  });
 
 export const query = (params?: DatasourceConfig) =>
   defHttp.request<DatasourceConfig[]>({ ...Api.Query, params });
