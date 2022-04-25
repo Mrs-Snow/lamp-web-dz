@@ -51,7 +51,7 @@
 </template>
 <script lang="ts">
   import { defineComponent, ref, unref } from 'vue';
-  import { Row, Col, Tag, Card } from 'ant-design-vue';
+  import { Row, Col, Tag, Card, CardMeta } from 'ant-design-vue';
   import { split, uniqueId } from 'lodash-es';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, useForm } from '/@/components/Form';
@@ -62,7 +62,7 @@
 
   export default defineComponent({
     name: 'DefResourceResourceApiSelect',
-    components: { BasicModal, BasicForm, Row, Col, Tag, Card, CardMeta: Card.Meta },
+    components: { BasicModal, BasicForm, Row, Col, Tag, Card, CardMeta },
     emits: ['success', 'register'],
     setup(_, { emit }) {
       const { t } = useI18n();
