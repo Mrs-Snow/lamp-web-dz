@@ -163,7 +163,7 @@ export const formatFileSize = (value) => {
   return '文件太大';
 };
 
-export const enumComponentProps = (type: EnumEnum, excludes?: string | string[]) => {
+export const enumComponentProps = (type: EnumEnum | string, excludes?: string | string[]) => {
   if (excludes && isString(excludes)) {
     excludes = [excludes];
   }

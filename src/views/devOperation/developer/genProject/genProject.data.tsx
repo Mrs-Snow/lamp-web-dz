@@ -9,8 +9,12 @@ export const editFormSchema = (changeTab: Fn): FormSchema[] => {
   return [
     {
       field: 'divider-selects1',
-      component: 'Divider',
       label: 'lamp-cloud/lamp-boot 配置',
+      component: 'BasicTitle',
+      componentProps: {
+        line: true,
+        span: true,
+      },
       colProps: {
         span: 24,
       },
@@ -164,8 +168,12 @@ export const editFormSchema = (changeTab: Fn): FormSchema[] => {
     },
     {
       field: 'divider-selects2',
-      component: 'Divider',
       label: 'lamp-util 配置',
+      component: 'BasicTitle',
+      componentProps: {
+        line: true,
+        span: true,
+      },
       colProps: {
         span: 24,
       },

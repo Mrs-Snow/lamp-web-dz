@@ -17,7 +17,7 @@ import { registerGlobComp } from '/@/components/registerGlobComp';
 import { registerThirdComp } from '/@/plugins/vxe-table';
 
 if (import.meta.env.DEV) {
-  // import('ant-design-vue/dist/antd.less');
+  import('ant-design-vue/dist/antd.less');
 }
 
 async function bootstrap() {

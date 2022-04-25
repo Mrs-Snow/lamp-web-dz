@@ -151,7 +151,7 @@
 
         isTestConnect.value = true;
         openFullLoading();
-        testConnect(record)
+        testConnect(record.id)
           .then((res) => {
             if (res) {
               createMessage.success('测试连接成功');

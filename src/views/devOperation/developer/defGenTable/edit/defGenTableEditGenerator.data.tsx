@@ -9,6 +9,7 @@ export const generatorCodeFormSchema = (): FormSchema[] => {
       field: 'divider-selects1',
       component: 'Divider',
       label: '后端',
+      helpMessage: ['“覆盖策略”只会影响“生成前端”和“生成后端”功能，下载功能不收“覆盖策略”影响'],
       colProps: {
         span: 24,
       },
@@ -154,8 +155,19 @@ export const generatorCodeFormSchema = (): FormSchema[] => {
       },
     },
     {
+      field: 'echoList',
+      component: 'ApiRadioGroup',
+      label: 'Echo常量',
+      componentProps: {
+        ...enumComponentProps(EnumEnum.FileOverrideStrategyEnum),
+        isBtn: true,
+      },
+      helpMessage: ['仅支持覆盖和忽略'],
+    },
+    {
       field: 'divider-selects1',
       component: 'Divider',
+      helpMessage: ['“覆盖策略”只会影响“生成前端”和“生成后端”功能，下载功能不收“覆盖策略”影响'],
       label: '前端',
       colProps: {
         span: 24,

@@ -34,6 +34,7 @@ import { CropperAvatar } from '/@/components/Cropper';
 import { StrengthMeter } from '/@/components/StrengthMeter';
 import { IconPicker } from '/@/components/Icon';
 import { CountdownInput } from '/@/components/CountDown';
+import { BasicTitle } from '/@/components/Basic';
 
 const componentMap = new Map<ComponentType, Component>();
 
@@ -75,6 +76,8 @@ componentMap.set('InputCountDown', CountdownInput);
 componentMap.set('Upload', BasicUpload);
 componentMap.set('CropperAvatar', CropperAvatar);
 componentMap.set('Divider', Divider);
+
+componentMap.set('BasicTitle', BasicTitle);
 
 export function add(compName: ComponentType, component: Component) {
   componentMap.set(compName, component);
