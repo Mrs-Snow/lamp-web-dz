@@ -11,7 +11,7 @@
       <div class="flex justify-center">
         <a-button @click="resetFields"> 清空</a-button>
         <a-button class="!ml-4" @click="resetForm"> 重置</a-button>
-        <a-button class="!ml-4" type="primary" @click="handleSubmit"> 保存</a-button>
+        <a-button class="!ml-4" type="primary" @click="handleSubmit">立即生成</a-button>
       </div>
     </div>
 
@@ -29,7 +29,7 @@
     <template #extra>
       <a-button @click="resetFields"> 清空</a-button>
       <a-button @click="resetForm"> 重置</a-button>
-      <a-button type="primary" @click="handleSubmit"> 保存</a-button>
+      <a-button type="primary" @click="handleSubmit">立即生成</a-button>
     </template>
   </PageWrapper>
 </template>
