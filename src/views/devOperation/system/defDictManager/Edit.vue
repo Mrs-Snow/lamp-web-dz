@@ -8,8 +8,9 @@
     @ok="handleSubmit"
     @register="registerDrawer"
   >
+    <BasicTitle span line style="margin-bottom: 1rem">字典</BasicTitle>
     <BasicForm @register="registerForm" />
-    <h4 class="form-header">字典项</h4>
+    <BasicTitle span line>字典条目</BasicTitle>
     <DictItemModal ref="dictItemRef" />
   </BasicDrawer>
 </template>
@@ -19,6 +20,7 @@
   import { BasicForm, useForm } from '/@/components/Form';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
+  import { BasicTitle } from '/@/components/Basic';
   import { ActionEnum, VALIDATE_API } from '/@/enums/commonEnum';
   import { Api, save, update } from '/@/api/devOperation/system/defDict';
   import { getValidateRules } from '/@/api/lamp/common/formValidateService';
@@ -27,7 +29,7 @@
 
   export default defineComponent({
     name: '编辑字典',
-    components: { BasicDrawer, BasicForm, DictItemModal },
+    components: { BasicDrawer, BasicForm, BasicTitle, DictItemModal },
     emits: ['success', 'register'],
     setup(_, { emit }) {
       const { t } = useI18n();

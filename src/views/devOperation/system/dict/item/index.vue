@@ -111,7 +111,7 @@
           name: 'dictItemSearch',
           labelWidth: 80,
           schemas: searchFormSchema(),
-          baseColProps: { xs: 24, sm: 12, md: 12, lg: 12, xl: 8 },
+          // baseColProps: { xs: 24, sm: 12, md: 12, lg: 12, xl: 8 },
           autoSubmitOnEnter: true,
           resetButtonOptions: {
             preIcon: 'ant-design:rest-outlined',
