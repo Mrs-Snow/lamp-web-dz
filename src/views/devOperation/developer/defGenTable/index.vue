@@ -64,13 +64,13 @@
                 onClick: handlePreview.bind(null, record, TemplateEnum.WEB_PLUS),
               },
               {
-                label: '生成后端',
+                label: '覆盖生成后端',
                 icon: 'ant-design:download-outlined',
                 auth: RoleEnum.TENANT_DEVELOPER_TOOLS_GENERATOR_PREVIEW,
                 onClick: handleDownload.bind(null, record, TemplateEnum.BACKEND),
               },
               {
-                label: '生成前端',
+                label: '覆盖生成前端',
                 icon: 'ant-design:download-outlined',
                 auth: RoleEnum.TENANT_DEVELOPER_TOOLS_GENERATOR_PREVIEW,
                 onClick: handleDownload.bind(null, record, TemplateEnum.WEB_PLUS),
