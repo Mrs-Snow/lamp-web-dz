@@ -46,7 +46,7 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       dynamicDisabled: () => {
         return [ActionEnum.VIEW].includes(type.value);
       },
-      defaultValue: '02',
+      defaultValue: '20',
       componentProps: {
         ...dictComponentProps(DictEnum.ORG_TYPE),
         isBtn: true,

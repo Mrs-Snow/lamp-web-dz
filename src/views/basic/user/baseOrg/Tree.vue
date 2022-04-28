@@ -250,7 +250,7 @@
 
       // 切换显示方式
       function changeDisplay() {
-        emit('change', '1');
+        emit('change', '2');
       }
 
       // 新增或编辑成功回调

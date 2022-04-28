@@ -1,19 +1,19 @@
 <template>
   <PageWrapper dense contentClass="flex">
-    <BaseBlocksTree
+    <BaseOrgTree
       v-if="isBlocksTree"
       class="md:w-1/2"
       @select="handleTreeSelect"
       @add="handleTreeAdd"
+      @edit="handleTreeEdit"
       ref="treeRef"
       @change="changeDisplay"
     />
-    <BaseOrgTree
+    <BaseBlocksTree
       v-else
       class="md:w-1/2"
       @select="handleTreeSelect"
       @add="handleTreeAdd"
-      @edit="handleTreeEdit"
       ref="treeRef"
       @change="changeDisplay"
     />
