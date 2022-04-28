@@ -1,6 +1,13 @@
 <template>
-  <PageWrapper contentFullHeight dense>
-    <BasicTable @register="registerTable">
+  <PageWrapper dense contentFullHeight fixedHeight contentClass="flex">
+    <BaseOrgTree
+      ref="treeRef"
+      class="md:w-1/5"
+      query
+      @reset="handleReset"
+      @select="handleOrgSelect"
+    />
+    <BasicTable class="md:w-4/5" @register="registerTable">
       <template #toolbar>
         <a-button
           v-hasAnyPermission="[RoleEnum.EMPLOYEE_DELETE]"
@@ -98,7 +105,7 @@
   </PageWrapper>
 </template>
 <script lang="ts">
-  import { defineComponent } from 'vue';
+  import { defineComponent, reactive } from 'vue';
   import { Tag } from 'ant-design-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
@@ -114,6 +121,7 @@
   import { columns, searchFormSchema } from './baseEmployee.data';
   import EditModal from './Edit.vue';
   import InvitationUserModal from './InvitationUser.vue';
+  import BaseOrgTree from '../baseOrg/Tree.vue';
 
   export default defineComponent({
     // 若需要开启页面缓存，请将此参数跟菜单名保持一致
@@ -126,9 +134,11 @@
       TableAction,
       Tag,
       EmployeeRole,
+      BaseOrgTree,
     },
     setup() {
       const { t } = useI18n();
+      const searchInfo = reactive<Recordable>({});
       const { createMessage, createConfirm } = useMessage();
       // 编辑页弹窗
       const [registerDrawer, { openDrawer }] = useDrawer();
@@ -158,10 +168,12 @@
         useSearchForm: true,
         showTableSetting: true,
         bordered: true,
+        clickToRowSelect: false,
         rowKey: 'id',
         rowSelection: {
           type: 'checkbox',
         },
+        searchInfo,
         titleHelpMessage: [
           '1. 新增员工，会同时新增一条def_user表数据',
           '2. 初始密码统一为：123456',
@@ -257,6 +269,16 @@
         });
       }
 
+      function handleOrgSelect(_parent = {}, record = { id: '' }) {
+        searchInfo.mainOrgId = record?.id;
+        reload();
+      }
+
+      function handleReset() {
+        searchInfo.mainOrgId = '';
+        reload();
+      }
+
       return {
         t,
         registerTable,
@@ -273,6 +295,8 @@
         handleBindRole,
         handleInvitation,
         RoleEnum,
+        handleOrgSelect,
+        handleReset,
       };
     },
   });

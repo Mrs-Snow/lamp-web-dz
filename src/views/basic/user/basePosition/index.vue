@@ -1,6 +1,13 @@
 <template>
-  <PageWrapper contentFullHeight dense>
-    <BasicTable @register="registerTable">
+  <PageWrapper contentClass="flex" contentFullHeight dense fixedHeight>
+    <BaseOrgTree
+      ref="treeRef"
+      class="md:w-1/5"
+      query
+      @reset="handleReset"
+      @select="handleOrgSelect"
+    />
+    <BasicTable class="md:w-4/5" @register="registerTable">
       <template #toolbar>
         <a-button
           v-hasAnyPermission="[RoleEnum.POSITION_DELETE]"
@@ -59,7 +66,7 @@
   </PageWrapper>
 </template>
 <script lang="ts">
-  import { defineComponent } from 'vue';
+  import { defineComponent, reactive } from 'vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { BasicTable, TableAction, useTable } from '/@/components/Table';
@@ -71,13 +78,15 @@
   import { page, remove } from '/@/api/basic/user/basePosition';
   import { columns, searchFormSchema } from './basePosition.data';
   import EditModal from './Edit.vue';
+  import BaseOrgTree from '../baseOrg/Tree.vue';
 
   export default defineComponent({
     // 若需要开启页面缓存，请将此参数跟菜单名保持一致
     name: '岗位维护',
-    components: { BasicTable, PageWrapper, EditModal, TableAction },
+    components: { BasicTable, PageWrapper, EditModal, TableAction, BaseOrgTree },
     setup() {
       const { t } = useI18n();
+      const searchInfo = reactive<Recordable>({});
       const { createMessage, createConfirm } = useMessage();
       // 编辑页弹窗
       const [registerDrawer, { openDrawer }] = useDrawer();
@@ -100,10 +109,12 @@
           },
           alwaysShowLines: 1,
         },
+        searchInfo,
         beforeFetch: handleFetchParams,
         useSearchForm: true,
         showTableSetting: true,
         bordered: true,
+        clickToRowSelect: false,
         rowKey: 'id',
         rowSelection: {
           type: 'checkbox',
@@ -186,6 +197,16 @@
         });
       }
 
+      function handleOrgSelect(_parent = {}, record = { id: '' }) {
+        searchInfo.orgId = record?.id;
+        reload();
+      }
+
+      function handleReset() {
+        searchInfo.orgId = '';
+        reload();
+      }
+
       return {
         t,
         registerTable,
@@ -198,6 +219,8 @@
         handleSuccess,
         handleBatchDelete,
         RoleEnum,
+        handleOrgSelect,
+        handleReset,
       };
     },
   });

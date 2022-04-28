@@ -1,6 +1,9 @@
 <template>
   <div class="bg-white m-4 mr-2 overflow-hidden">
-    <div class="m-4">
+    <div v-if="query" class="m-4">
+      <a-button class="mr-2" type="primary" @click="handleReset()"> 重置</a-button>
+    </div>
+    <div v-else class="m-4">
       <a-button
         v-hasAnyPermission="[RoleEnum.ORG_SWITCH]"
         class="mr-2"
@@ -63,9 +66,14 @@
   export default defineComponent({
     name: 'BaseOrgManagement',
     components: { BasicTree, OrgRole },
-
-    emits: ['select', 'add', 'edit', 'change'],
-    setup(_, { emit }) {
+    props: {
+      query: {
+        type: Boolean,
+        default: false,
+      },
+    },
+    emits: ['select', 'add', 'edit', 'change', 'reset'],
+    setup(props, { emit }) {
       const { t } = useI18n();
       const { createMessage, createConfirm } = useMessage();
       const treeRef = ref<Nullable<TreeActionType>>(null);
@@ -107,112 +115,117 @@
         }
       }
 
-      // 悬停图标
-      const actionList: TreeActionItem[] = [
-        {
-          auth: RoleEnum.ORG_ADD,
-          render: (node) => {
-            return h(
-              'a',
-              {
-                class: 'ml-2',
-                onClick: (e: Event) => {
-                  e?.stopPropagation();
-                  e?.preventDefault();
-                  emit('add', findNodeByKey(node.id, treeData.value));
-                },
-              },
-              t('common.title.add'),
-            );
-          },
-        },
-        {
-          auth: RoleEnum.ORG_EDIT,
-          render: (node) => {
-            return h(
-              'a',
-              {
-                class: 'ml-2',
-                onClick: (e: Event) => {
-                  e?.stopPropagation();
-                  e?.preventDefault();
-                  const current = findNodeByKey(node?.id, treeData.value);
-                  const parent = findNodeByKey(node?.parentId, treeData.value);
-                  emit('edit', parent, current);
-                },
-              },
-              t('common.title.edit'),
-            );
-          },
-        },
-        {
-          // auth: RoleEnum.ORG_EDIT,
-          render: (node) => {
-            return h(
-              'a',
-              {
-                class: 'ml-2',
-                onClick: (e: Event) => {
-                  e?.stopPropagation();
-                  e?.preventDefault();
-                  const current = findNodeByKey(node?.id, treeData.value);
-                  // const parent = findNodeByKey(node?.parentId, treeData.value);
-                  openModal(true, current);
-                },
-              },
-              '绑定',
-            );
-          },
-        },
-        {
-          auth: RoleEnum.ORG_DELETE,
-          render: (node) => {
-            return h(
-              'a',
-              {
-                class: 'ml-2',
-                onClick: (e: Event) => {
-                  e?.stopPropagation();
-                  e?.preventDefault();
-                  batchDelete([node.id]);
-                },
-              },
-              t('common.title.delete'),
-            );
-          },
-        },
-      ];
-
-      // 右键菜单
-      function getRightMenuList(node: any): ContextMenuItem[] {
-        return [
+      let actionList: TreeActionItem[] = [];
+      let getRightMenuList = (_: any): ContextMenuItem[] => {
+        return [];
+      };
+      if (!props.query) {
+        // 悬停图标
+        actionList = [
           {
-            label: t('common.title.addChildren'),
-            auth: [RoleEnum.ORG_ADD],
-            handler: () => {
-              emit('add', findNodeByKey(unref(node).id, treeData.value));
+            auth: RoleEnum.ORG_ADD,
+            render: (node) => {
+              return h(
+                'a',
+                {
+                  class: 'ml-2',
+                  onClick: (e: Event) => {
+                    e?.stopPropagation();
+                    e?.preventDefault();
+                    emit('add', findNodeByKey(node.id, treeData.value));
+                  },
+                },
+                t('common.title.add'),
+              );
             },
-            icon: 'ant-design:plus-outlined',
           },
           {
-            label: t('common.title.edit'),
-            auth: [RoleEnum.ORG_EDIT],
-            handler: () => {
-              const current = findNodeByKey(unref(node)?.id, treeData.value);
-              const parent = findNodeByKey(unref(node)?.parentId, treeData.value);
-              emit('edit', parent, current);
+            auth: RoleEnum.ORG_EDIT,
+            render: (node) => {
+              return h(
+                'a',
+                {
+                  class: 'ml-2',
+                  onClick: (e: Event) => {
+                    e?.stopPropagation();
+                    e?.preventDefault();
+                    const current = findNodeByKey(node?.id, treeData.value);
+                    const parent = findNodeByKey(node?.parentId, treeData.value);
+                    emit('edit', parent, current);
+                  },
+                },
+                t('common.title.edit'),
+              );
             },
-            icon: 'ant-design:edit-outlined',
           },
           {
-            label: t('common.title.delete'),
-            auth: [RoleEnum.ORG_DELETE],
-            handler: () => {
-              batchDelete([unref(node).id]);
+            // auth: RoleEnum.ORG_EDIT,
+            render: (node) => {
+              return h(
+                'a',
+                {
+                  class: 'ml-2',
+                  onClick: (e: Event) => {
+                    e?.stopPropagation();
+                    e?.preventDefault();
+                    const current = findNodeByKey(node?.id, treeData.value);
+                    openModal(true, current);
+                  },
+                },
+                '绑定',
+              );
             },
-            icon: 'ant-design:delete-outlined',
+          },
+          {
+            auth: RoleEnum.ORG_DELETE,
+            render: (node) => {
+              return h(
+                'a',
+                {
+                  class: 'ml-2',
+                  onClick: (e: Event) => {
+                    e?.stopPropagation();
+                    e?.preventDefault();
+                    batchDelete([node.id]);
+                  },
+                },
+                t('common.title.delete'),
+              );
+            },
           },
         ];
+
+        // 右键菜单
+        getRightMenuList = (node: any): ContextMenuItem[] => {
+          return [
+            {
+              label: t('common.title.addChildren'),
+              auth: [RoleEnum.ORG_ADD],
+              handler: () => {
+                emit('add', findNodeByKey(unref(node).id, treeData.value));
+              },
+              icon: 'ant-design:plus-outlined',
+            },
+            {
+              label: t('common.title.edit'),
+              auth: [RoleEnum.ORG_EDIT],
+              handler: () => {
+                const current = findNodeByKey(unref(node)?.id, treeData.value);
+                const parent = findNodeByKey(unref(node)?.parentId, treeData.value);
+                emit('edit', parent, current);
+              },
+              icon: 'ant-design:edit-outlined',
+            },
+            {
+              label: t('common.title.delete'),
+              auth: [RoleEnum.ORG_DELETE],
+              handler: () => {
+                batchDelete([unref(node).id]);
+              },
+              icon: 'ant-design:delete-outlined',
+            },
+          ];
+        };
       }
 
       // 执行批量删除
@@ -253,6 +266,11 @@
         emit('change', '2');
       }
 
+      // 重置
+      function handleReset() {
+        emit('reset');
+      }
+
       // 新增或编辑成功回调
       function handleSuccess() {
         fetch();
@@ -269,6 +287,7 @@
         actionList,
         handleSelect,
         changeDisplay,
+        handleReset,
         RoleEnum,
         registerModal,
         handleSuccess,
