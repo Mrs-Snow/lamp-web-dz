@@ -61,7 +61,7 @@
   });
 
   export default defineComponent({
-    name: '生成项目',
+    name: '项目生成',
     components: { ThumbUrl, BasicForm, PageWrapper, Tabs, TabPane: Tabs.TabPane },
     setup() {
       const { t } = useI18n();
