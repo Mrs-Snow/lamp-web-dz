@@ -10,6 +10,17 @@
         >
           切换
         </a-button>
+        <a-button v-hasAnyPermission="[RoleEnum.ORG_SWITCH]" class="mr-2" @click="handleAdd()">
+          新增
+        </a-button>
+        <a-button v-hasAnyPermission="[RoleEnum.ORG_SWITCH]" class="mr-2" @click="handleEdit()">
+          编辑
+        </a-button>
+        <a-button v-hasAnyPermission="[RoleEnum.ORG_SWITCH]" class="mr-2" @click="handleDelete()">
+          删除
+        </a-button>
+      </Space>
+      <Space>
         <!-- 垂直展示 -->
         <Checkbox v-model:checked="isHorizontal">垂直展示</Checkbox>
         <!-- 折叠节点 -->
@@ -21,8 +32,12 @@
           style="width: 120px"
           @change="changeClassName"
         >
-          <SelectOption v-for="(item, index) in labelClassNameItem" :key="index" :value="item.value"
-            >{{ item.label }}
+          <SelectOption
+            v-for="(item, index) in labelClassNameItem"
+            :key="index"
+            :value="item.value"
+          >
+            {{ item.label }}
           </SelectOption>
         </Select>
       </Space>
@@ -33,7 +48,7 @@
         <VueBlocksTree
           v-if="!spinning"
           :collapsable="collapsable"
-          :data="treeData"
+          :data="state.treeData"
           :horizontal="isHorizontal"
           :label-class-name="labelClassName"
           :props="treeProps"
@@ -52,8 +67,10 @@
   import 'vue3-blocks-tree/dist/vue3-blocks-tree.css';
   import { RoleEnum } from '/@/enums/roleEnum';
   import { TreeItem } from '/@/components/Tree';
-  import { tree } from '/@/api/basic/user/baseOrg';
+  import { remove, tree } from '/@/api/basic/user/baseOrg';
   import { findNodeByKey } from '/@/utils/helper/treeHelper';
+  import { useMessage } from '/@/hooks/web/useMessage';
+  import { useI18n } from '/@/hooks/web/useI18n';
 
   const SelectOption = Select.Option;
 
@@ -68,9 +85,10 @@
   // 注册VueBlocksTree组件
   let defaultOptions = { treeName: 'blocks-tree' };
   createApp(App).use(VueBlocksTree, defaultOptions);
+  const emit = defineEmits(['change', 'select', 'add', 'edit', 'delete']);
 
-  const emit = defineEmits(['change', 'select']);
-
+  const { t } = useI18n();
+  const { createMessage, createConfirm } = useMessage();
   const isHorizontal = ref<boolean>(false); // 是否垂直展示
   const collapsable = ref<boolean>(false); // 折叠节点
   const spinning = ref<boolean>(false); // 加载 ...
@@ -86,13 +104,17 @@
     { value: 'bg-tomato', label: '红彤彤' },
   ]);
   const treeProps = { label: 'name', children: 'children', key: 'id' }; // 组件配置
-  const treeData = reactive<TreeResult>({ name: '机构(单位/部门)树', expand: false, key: 0 });
+  // const treeData = reactive<TreeResult>();
+  const state = reactive({
+    treeData: { name: '机构(单位/部门)树', expand: false, key: 0, children: [] } as TreeResult,
+    current: {} as TreeItem,
+  });
 
   // 不同类型接口切换
-  async function loadOrgTree() {
+  async function fetch() {
     spinning.value = true;
     try {
-      treeData.children = (await tree()) as unknown as TreeItem[];
+      state.treeData.children = (await tree()) as unknown as TreeItem[];
     } finally {
       spinning.value = false;
     }
@@ -111,15 +133,59 @@
   function nodeClick(e: Event, data) {
     e?.stopPropagation();
     if (data && data.id) {
-      const node = findNodeByKey(data.id, treeData.children || []);
-      const parent = findNodeByKey(node?.parentId, treeData.children || []);
+      state.current = data;
+      const node = findNodeByKey(data.id, state.treeData.children || []);
+      const parent = findNodeByKey(node?.parentId, state.treeData.children || []);
       emit('select', parent, node);
     }
   }
 
   // 首次挂载
   onMounted(async () => {
-    await loadOrgTree();
+    await fetch();
+  });
+
+  function handleAdd() {
+    if (state.current.id) {
+      emit('add', findNodeByKey(state.current.id, state.treeData.children || []));
+    } else {
+      emit('add', findNodeByKey('0', state.treeData.children || []));
+    }
+  }
+
+  function handleEdit() {
+    console.log(state.current.id);
+    if (state.current.id) {
+      const current = findNodeByKey(state.current.id, state.treeData.children || []);
+      const parent = findNodeByKey(state.current.parentId, state.treeData.children || []);
+      console.log(parent, current);
+      emit('edit', parent, current);
+    }
+  }
+
+  function handleDelete() {
+    if (state.current.id) {
+      batchDelete([state.current.id]);
+    }
+  }
+
+  // 执行批量删除
+  async function batchDelete(ids: string[]) {
+    createConfirm({
+      iconType: 'warning',
+      content: `选中节点【${state.current.name}】及其子结点将被永久删除, 是否确定删除？`,
+      onOk: async () => {
+        try {
+          await remove(ids);
+          await fetch();
+          createMessage.success(t('common.tips.deleteSuccess'));
+        } catch (e) {}
+      },
+    });
+  }
+
+  defineExpose({
+    fetch,
   });
 </script>
 

@@ -1,7 +1,7 @@
 <template>
   <PageWrapper dense contentClass="flex">
     <BaseOrgTree
-      v-if="isBlocksTree"
+      v-if="treeType === '2'"
       class="md:w-1/2"
       @select="handleTreeSelect"
       @add="handleTreeAdd"
@@ -14,6 +14,7 @@
       class="md:w-1/2"
       @select="handleTreeSelect"
       @add="handleTreeAdd"
+      @edit="handleTreeEdit"
       ref="treeRef"
       @change="changeDisplay"
     />
@@ -35,7 +36,7 @@
     setup() {
       const editRef = ref<any>(null);
       const treeRef = ref<any>(null);
-      const isBlocksTree = ref<boolean>(false);
+      const treeType = ref<string>('1');
 
       // 获取编辑表单
       function getEditRef() {
@@ -48,7 +49,11 @@
 
       // 编辑成功回调
       function handleEditSuccess() {
-        getTreeRef().fetch();
+        if (treeType.value === '1') {
+          getTreeRef().fetch();
+        } else {
+          getTreeRef().fetch();
+        }
       }
 
       // 选中树的节点
@@ -67,7 +72,7 @@
       }
 
       function changeDisplay(type: string) {
-        isBlocksTree.value = type === '1';
+        treeType.value = type;
       }
 
       return {
@@ -78,7 +83,7 @@
         handleTreeAdd,
         handleTreeEdit,
         changeDisplay,
-        isBlocksTree,
+        treeType,
       };
     },
   });
