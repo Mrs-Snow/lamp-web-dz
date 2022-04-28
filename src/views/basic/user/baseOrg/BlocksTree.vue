@@ -74,7 +74,7 @@
   const isHorizontal = ref<boolean>(false); // 是否垂直展示
   const collapsable = ref<boolean>(false); // 折叠节点
   const spinning = ref<boolean>(false); // 加载 ...
-  const labelClassName = ref<string>('bg-primary'); // 主题背景类名
+  const labelClassName = ref<string>('bg-orange'); // 主题背景类名
   const labelClassNameItem = reactive([
     { value: 'bg-primary', label: '主题背景' },
     { value: 'bg-white', label: '洁白无瑕' },
