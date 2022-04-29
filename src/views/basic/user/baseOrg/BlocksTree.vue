@@ -13,10 +13,20 @@
         <a-button v-hasAnyPermission="[RoleEnum.ORG_SWITCH]" class="mr-2" @click="handleAdd()">
           新增
         </a-button>
-        <a-button v-hasAnyPermission="[RoleEnum.ORG_SWITCH]" class="mr-2" @click="handleEdit()">
+        <a-button
+          v-hasAnyPermission="[RoleEnum.ORG_SWITCH]"
+          :disabled="isEmpty(state.current.id) || isNullOrUnDef(state.current.id)"
+          class="mr-2"
+          @click="handleEdit()"
+        >
           编辑
         </a-button>
-        <a-button v-hasAnyPermission="[RoleEnum.ORG_SWITCH]" class="mr-2" @click="handleDelete()">
+        <a-button
+          v-hasAnyPermission="[RoleEnum.ORG_SWITCH]"
+          :disabled="isEmpty(state.current.id) || isNullOrUnDef(state.current.id)"
+          class="mr-2"
+          @click="handleDelete()"
+        >
           删除
         </a-button>
       </Space>
@@ -65,12 +75,13 @@
   // 引入VueBlocksTree组件
   import VueBlocksTree from 'vue3-blocks-tree';
   import 'vue3-blocks-tree/dist/vue3-blocks-tree.css';
+  import { isEmpty, isNullOrUnDef } from '/@/utils/is';
   import { RoleEnum } from '/@/enums/roleEnum';
-  import { TreeItem } from '/@/components/Tree';
   import { remove, tree } from '/@/api/basic/user/baseOrg';
   import { findNodeByKey } from '/@/utils/helper/treeHelper';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useI18n } from '/@/hooks/web/useI18n';
+  import { BaseOrgResultVO } from '/@/api/basic/user/model/baseOrgModel';
 
   const SelectOption = Select.Option;
 
@@ -78,7 +89,7 @@
     name: string;
     expand: boolean;
     key: number;
-    children?: TreeItem[];
+    children?: BaseOrgResultVO[];
   }
 
   const App = createApp({});
@@ -107,14 +118,14 @@
   // const treeData = reactive<TreeResult>();
   const state = reactive({
     treeData: { name: '机构(单位/部门)树', expand: false, key: 0, children: [] } as TreeResult,
-    current: {} as TreeItem,
+    current: {} as BaseOrgResultVO,
   });
 
   // 不同类型接口切换
   async function fetch() {
     spinning.value = true;
     try {
-      state.treeData.children = (await tree()) as unknown as TreeItem[];
+      state.treeData.children = (await tree()) as BaseOrgResultVO[];
     } finally {
       spinning.value = false;
     }
@@ -137,6 +148,9 @@
       const node = findNodeByKey(data.id, state.treeData.children || []);
       const parent = findNodeByKey(node?.parentId, state.treeData.children || []);
       emit('select', parent, node);
+    } else {
+      state.current = { id: '', name: '根节点' };
+      emit('select', { id: '', name: '根节点' });
     }
   }
 
@@ -160,12 +174,16 @@
       const parent = findNodeByKey(state.current.parentId, state.treeData.children || []);
       console.log(parent, current);
       emit('edit', parent, current);
+    } else {
+      createMessage.warn('请先选择节点');
     }
   }
 
   function handleDelete() {
     if (state.current.id) {
       batchDelete([state.current.id]);
+    } else {
+      createMessage.warn('请先选择节点');
     }
   }
 
@@ -186,6 +204,8 @@
 
   defineExpose({
     fetch,
+    isEmpty,
+    isNullOrUnDef,
   });
 </script>
 

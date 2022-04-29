@@ -1,6 +1,6 @@
 <template>
   <PageWrapper dense contentClass="flex">
-    <BaseOrgTree
+    <BaseBlocksTree
       v-if="treeType === '2'"
       class="md:w-1/2"
       @select="handleTreeSelect"
@@ -9,7 +9,7 @@
       ref="treeRef"
       @change="changeDisplay"
     />
-    <BaseBlocksTree
+    <BaseOrgTree
       v-else
       class="md:w-1/2"
       @select="handleTreeSelect"
@@ -18,6 +18,7 @@
       ref="treeRef"
       @change="changeDisplay"
     />
+
     <Edit class="md:w-1/2" @success="handleEditSuccess" ref="editRef" />
   </PageWrapper>
 </template>
@@ -36,7 +37,7 @@
     setup() {
       const editRef = ref<any>(null);
       const treeRef = ref<any>(null);
-      const treeType = ref<string>('1');
+      const treeType = ref<string>('2');
 
       // 获取编辑表单
       function getEditRef() {
