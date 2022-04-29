@@ -86,6 +86,12 @@ export const importSearchFormSchema = (dsChange: Fn, setFieldsValue): FormSchema
       field: 'dsId',
       label: '数据源',
       component: 'ApiSelect',
+      itemProps: {
+        extra: '若报错：连不上数据源，请到【租户管理】-【数据源维护】页面配置数据库的账号密码',
+      },
+      helpMessage: [
+        '为什么要将【数据源维护】放在【租户管理】下，为了保持和datasource模式一致性，若你确定只使用column模式，可以自己调整。',
+      ],
       componentProps: {
         api: query,
         afterFetch: (options) => {

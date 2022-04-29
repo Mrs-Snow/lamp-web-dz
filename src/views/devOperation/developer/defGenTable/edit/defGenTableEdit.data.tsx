@@ -272,7 +272,10 @@ export const baseEditFormSchema = (): FormSchema[] => {
       label: '@DS',
       field: 'isDs',
       component: 'RadioGroup',
-      helpMessage: ['ServiceImpl类是否标记@DS注解'],
+      helpMessage: ['ServiceImpl类是否标记@DS注解，加上该注解后，sql操作会自动切换数据源'],
+      itemProps: {
+        extra: 'datasource模式才会使用该参数，column、none模式请忽略',
+      },
       componentProps: ({ formActionType }) => {
         return {
           ...yesNoComponentProps(),
@@ -344,7 +347,10 @@ export const baseEditFormSchema = (): FormSchema[] => {
       label: '@TenantLine',
       field: 'isTenantLine',
       component: 'RadioGroup',
-      helpMessage: ['Mapper类是否标记@TenantLine注解'],
+      helpMessage: ['Mapper类是否标记@TenantLine注解，加上该注解sql操作不会自动拼接租户ID'],
+      itemProps: {
+        extra: 'column模式才会使用该参数，datasource、none模式请忽略',
+      },
       componentProps: {
         ...yesNoComponentProps(),
       },

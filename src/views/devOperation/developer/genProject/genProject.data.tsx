@@ -160,6 +160,9 @@ export const editFormSchema = (changeTab: Fn): FormSchema[] => {
       label: '端口号',
       field: 'serverPort',
       component: 'InputNumber',
+      itemProps: {
+        extra: 'lamp-cloud项目 新建服务的端口号，lamp-boot项目请忽略该参数',
+      },
       componentProps: {
         onFocus: () => {
           changeTab('project_serverPort');
