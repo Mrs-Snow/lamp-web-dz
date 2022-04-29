@@ -66,7 +66,7 @@
   </PageWrapper>
 </template>
 <script lang="ts">
-  import { defineComponent, reactive } from 'vue';
+  import { computed, defineComponent, reactive, ref } from 'vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { BasicTable, TableAction, useTable } from '/@/components/Table';
@@ -87,13 +87,21 @@
     setup() {
       const { t } = useI18n();
       const searchInfo = reactive<Recordable>({});
+      const currentOrg = ref<Recordable>({});
       const { createMessage, createConfirm } = useMessage();
       // 编辑页弹窗
       const [registerDrawer, { openDrawer }] = useDrawer();
 
+      const getTitle = computed(() => {
+        return (
+          (currentOrg.value?.name ? `【${currentOrg.value?.name}】的` : '') +
+          t('basic.user.basePosition.table.title')
+        );
+      });
+
       // 表格
       const [registerTable, { reload, getSelectRowKeys }] = useTable({
-        title: t('basic.user.basePosition.table.title'),
+        title: getTitle,
         api: page,
         columns: columns(),
         formConfig: {
@@ -197,13 +205,15 @@
         });
       }
 
-      function handleOrgSelect(_parent = {}, record = { id: '' }) {
-        searchInfo.orgId = record?.id;
+      function handleOrgSelect(_parent = {}, record = { id: '' }, childrenIds = []) {
+        searchInfo.orgIdList = childrenIds;
+        currentOrg.value = record;
         reload();
       }
 
       function handleReset() {
-        searchInfo.orgId = '';
+        searchInfo.mainOrgIdList = [];
+        currentOrg.value = {};
         reload();
       }
 

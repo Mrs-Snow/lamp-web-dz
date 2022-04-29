@@ -1,5 +1,5 @@
 <template>
-  <PageWrapper dense contentFullHeight fixedHeight contentClass="flex">
+  <PageWrapper contentClass="flex" contentFullHeight dense fixedHeight>
     <BaseOrgTree
       ref="treeRef"
       class="md:w-1/5"
@@ -105,7 +105,7 @@
   </PageWrapper>
 </template>
 <script lang="ts">
-  import { defineComponent, reactive } from 'vue';
+  import { defineComponent, reactive, computed, ref } from 'vue';
   import { Tag } from 'ant-design-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
@@ -139,16 +139,23 @@
     setup() {
       const { t } = useI18n();
       const searchInfo = reactive<Recordable>({});
+      const currentOrg = ref<Recordable>({});
       const { createMessage, createConfirm } = useMessage();
       // 编辑页弹窗
       const [registerDrawer, { openDrawer }] = useDrawer();
       // 绑定角色
       const [registerModal, { openModal }] = useModal();
       const [registerInvitationModal, { openModal: openInvitationModal }] = useModal();
+      const getTitle = computed(() => {
+        return (
+          (currentOrg.value?.name ? `【${currentOrg.value?.name}】的` : '') +
+          t('basic.user.baseEmployee.table.title')
+        );
+      });
 
       // 表格
       const [registerTable, { reload, getSelectRowKeys }] = useTable({
-        title: t('basic.user.baseEmployee.table.title'),
+        title: getTitle,
         api: page,
         columns: columns(),
         formConfig: {
@@ -269,13 +276,15 @@
         });
       }
 
-      function handleOrgSelect(_parent = {}, record = { id: '' }) {
-        searchInfo.mainOrgId = record?.id;
+      function handleOrgSelect(_parent = {}, record = { id: '' }, childrenIds = []) {
+        searchInfo.mainOrgIdList = childrenIds;
+        currentOrg.value = record;
         reload();
       }
 
       function handleReset() {
-        searchInfo.mainOrgId = '';
+        searchInfo.mainOrgIdList = [];
+        currentOrg.value = {};
         reload();
       }
 

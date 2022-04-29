@@ -15,36 +15,10 @@ const DEFAULT_CONFIG: TreeHelperConfig = {
 const getConfig = (config: Partial<TreeHelperConfig>) => Object.assign({}, DEFAULT_CONFIG, config);
 
 /**
- * 根据 key 查询节点
- * @param key 唯一键
- * @param list 树列表
+ * 将list集合转换为tree型集合
+ * @param list
+ * @param config
  */
-export function findNodeByKey(key: any, list: any[], config: Partial<TreeHelperConfig> = {}) {
-  const conf = getConfig(config) as TreeHelperConfig;
-  const { id, name, children } = conf;
-  if (key === '0') {
-    return { [id]: '0', [name]: '根节点' };
-  }
-  if (!key) {
-    return { [id]: key, [name]: '根节点' };
-  }
-
-  for (let i = 0; i < list.length; i++) {
-    const item = list[i];
-    if (item[id] === key) {
-      return item;
-    }
-    if (item[children]) {
-      const res = findNodeByKey(key, item[children]);
-      if (res) {
-        return res;
-      }
-    }
-  }
-  return null;
-}
-
-// tree from list
 export function listToTree<T = any>(list: any[], config: Partial<TreeHelperConfig> = {}): T[] {
   const conf = getConfig(config) as TreeHelperConfig;
   const nodeMap = new Map();
@@ -62,6 +36,11 @@ export function listToTree<T = any>(list: any[], config: Partial<TreeHelperConfi
   return result;
 }
 
+/**
+ * 将tree集合转换为list型集合
+ * @param tree
+ * @param config
+ */
 export function treeToList<T = any>(tree: any, config: Partial<TreeHelperConfig> = {}): T {
   config = getConfig(config);
   const { children } = config;
@@ -73,6 +52,42 @@ export function treeToList<T = any>(tree: any, config: Partial<TreeHelperConfig>
   return result;
 }
 
+/**
+ * 根据 key 在Tree结构集合中 查询节点
+ * @param key 唯一键
+ * @param tree 树列表
+ */
+export function findNodeByKey(key: any, tree: any[], config: Partial<TreeHelperConfig> = {}) {
+  const conf = getConfig(config) as TreeHelperConfig;
+  const { id, name, children } = conf;
+  if (key === '0') {
+    return { [id]: '0', [name]: '根节点' };
+  }
+  if (!key) {
+    return { [id]: key, [name]: '根节点' };
+  }
+
+  for (let i = 0; i < tree.length; i++) {
+    const item = tree[i];
+    if (item[id] === key) {
+      return item;
+    }
+    if (item[children]) {
+      const res = findNodeByKey(key, item[children]);
+      if (res) {
+        return res;
+      }
+    }
+  }
+  return null;
+}
+
+/**
+ * 在tree结构中根据func回调查找节点
+ * @param tree
+ * @param func
+ * @param config
+ */
 export function findNode<T = any>(
   tree: any,
   func: Fn,
@@ -88,6 +103,12 @@ export function findNode<T = any>(
   return null;
 }
 
+/**
+ * 在tree结构中根据func回调查找节点
+ * @param tree
+ * @param func
+ * @param config
+ */
 export function findNodeAll<T = any>(
   tree: any,
   func: Fn,

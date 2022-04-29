@@ -1,7 +1,8 @@
 <template>
   <div class="bg-white m-4 mr-2 overflow-hidden">
     <div v-if="query" class="m-4">
-      <a-button class="mr-2" type="primary" @click="handleReset()"> 重置</a-button>
+      <a-button class="mr-2" type="primary" @click="handleReset()">重置</a-button>
+      <Checkbox v-model:checked="recursion">本级及子级</Checkbox>
     </div>
     <div v-else class="m-4">
       <a-button
@@ -47,6 +48,7 @@
 </template>
 <script lang="ts">
   import { defineComponent, h, onMounted, ref, unref } from 'vue';
+  import { Checkbox } from 'ant-design-vue'; // antd组件
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
   import {
@@ -56,7 +58,7 @@
     TreeActionType,
     TreeItem,
   } from '/@/components/Tree';
-  import { eachTree, findNodeByKey } from '/@/utils/helper/treeHelper';
+  import { eachTree, findChildrenByParentId, findNodeByKey } from '/@/utils/helper/treeHelper';
   import { RoleEnum } from '/@/enums/roleEnum';
 
   import { remove, tree } from '/@/api/basic/user/baseOrg';
@@ -65,7 +67,7 @@
 
   export default defineComponent({
     name: 'BaseOrgManagement',
-    components: { BasicTree, OrgRole },
+    components: { BasicTree, OrgRole, Checkbox },
     props: {
       query: {
         type: Boolean,
@@ -78,6 +80,7 @@
       const { createMessage, createConfirm } = useMessage();
       const treeRef = ref<Nullable<TreeActionType>>(null);
       const treeData = ref<TreeItem[]>([]);
+      const recursion = ref<boolean>(false);
       // 绑定角色
       const [registerModal, { openModal }] = useModal();
 
@@ -111,7 +114,13 @@
         if (keys[0]) {
           const node = findNodeByKey(keys[0], treeData.value);
           const parent = findNodeByKey(node?.parentId, treeData.value);
-          emit('select', parent, node);
+          let childrenIds: string[] = [];
+          if (recursion.value) {
+            childrenIds = findChildrenByParentId(keys[0], treeData.value);
+          } else {
+            childrenIds = [node.id];
+          }
+          emit('select', parent, node, childrenIds);
         }
       }
 
@@ -268,6 +277,7 @@
 
       // 重置
       function handleReset() {
+        getTree().setSelectedKeys([]);
         emit('reset');
       }
 
@@ -291,6 +301,7 @@
         RoleEnum,
         registerModal,
         handleSuccess,
+        recursion,
       };
     },
   });
