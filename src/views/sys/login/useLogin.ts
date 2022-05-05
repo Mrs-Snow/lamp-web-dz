@@ -1,8 +1,9 @@
 import type { ValidationRule } from 'ant-design-vue/lib/form/Form';
 import type { RuleObject } from 'ant-design-vue/lib/form/interface';
-import { ref, computed, unref, Ref } from 'vue';
+import { computed, ref, Ref, unref } from 'vue';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { useGlobSetting } from '/@/hooks/setting';
+import { MultiTenantTypeEnum } from '/@/enums/biz/tenant';
 
 export enum LoginStateEnum {
   LOGIN,
@@ -82,7 +83,7 @@ export function useFormRules(formData?: Recordable) {
       username: accountFormRule,
       password: passwordFormRule,
     };
-    if (globSetting.multiTenantType !== 'NONE') {
+    if (globSetting.multiTenantType !== MultiTenantTypeEnum.NONE) {
       loginRule['tenantView'] = tenantFormRule;
     }
     if (globSetting.showCaptcha === 'true') {

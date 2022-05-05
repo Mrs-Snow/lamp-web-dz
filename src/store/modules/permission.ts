@@ -25,10 +25,12 @@ import { useMessage } from '/@/hooks/web/useMessage';
 import { PageEnum } from '/@/enums/pageEnum';
 
 import { BeforeRoutes } from '/@/router/routes/index';
+import { MultiTenantTypeEnum } from '/@/enums/biz/tenant';
 
 const globSetting = useGlobSetting();
 const BASE_APP_ID = globSetting.baseApplicationId;
 const DEV_OPER_APP_ID = globSetting.devOperationApplicationId;
+const MULTI_TENANT_TYPE = globSetting.multiTenantType;
 
 interface PermissionState {
   // Whether the route has been dynamically added
@@ -206,12 +208,13 @@ export const usePermissionStore = defineStore({
           // 动态引入组件
           routeList = transformObjToRoute(routeList);
 
+          const isNotNone = MULTI_TENANT_TYPE !== MultiTenantTypeEnum.NONE; // 非NONE模式
           const isBase = applicationId === BASE_APP_ID; // 基础平台才显示 我的企业
           const isDevOper = applicationId === DEV_OPER_APP_ID; // 开发运营系统才显示 vben官方的静态示例
           // 后台路由(routeList) + 前端写死的路由(BeforeRoutes、AfterRoutes、AfterMyTenantRoutes)
           const afterRouteList = [
             ...AfterRoutes,
-            ...(isBase ? AfterMyTenantRoutes : []),
+            ...(isBase && isNotNone ? AfterMyTenantRoutes : []),
             ...(isDevOper ? AfterVbenRoutes : []),
           ];
 

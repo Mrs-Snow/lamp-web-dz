@@ -1,54 +1,54 @@
 <template>
   <LoginFormTitle v-show="getShow" class="enter-x" />
   <Form
-    class="p-4 enter-x"
+    v-show="getShow"
+    ref="formRef"
     :model="formData"
     :rules="getFormRules"
-    ref="formRef"
-    v-show="getShow"
+    class="p-4 enter-x"
     @keypress.enter="handleLogin"
   >
     <FormItem name="grantType">
-      <Input size="large" v-model:value="formData.grantType" :hidden="true" />
+      <Input v-model:value="formData.grantType" :hidden="true" size="large" />
     </FormItem>
     <FormItem name="key">
-      <Input size="large" v-model:value="formData.key" :hidden="true" />
+      <Input v-model:value="formData.key" :hidden="true" size="large" />
     </FormItem>
-    <FormItem name="username" class="enter-x">
+    <FormItem class="enter-x" name="username">
       <Input
-        size="large"
         v-model:value="formData.username"
         :placeholder="t('sys.login.userName')"
         class="fix-auto-fill"
+        size="large"
       />
     </FormItem>
-    <FormItem name="password" class="enter-x">
+    <FormItem class="enter-x" name="password">
       <InputPassword
-        size="large"
-        visibilityToggle
-        autocomplete="off"
         v-model:value="formData.password"
         :placeholder="t('sys.login.password')"
+        autocomplete="off"
+        size="large"
+        visibilityToggle
       />
     </FormItem>
 
-    <ARow class="enter-x" v-show="formState.showCaptcha">
+    <ARow v-show="formState.showCaptcha" class="enter-x">
       <ACol>
         <FormItem class="code-input" name="code">
           <Input
-            size="large"
-            visibilityToggle
             v-model:value="formData.code"
             :placeholder="t('sys.login.captcha')"
+            size="large"
+            visibilityToggle
           />
         </FormItem>
 
         <img
           v-show="true"
           :src="formState.captchaSrc"
-          @click="loadCaptcha"
           alt="captcha"
           class="code-image"
+          @click="loadCaptcha"
         />
       </ACol>
     </ARow>
@@ -65,7 +65,7 @@
       <ACol :span="12">
         <FormItem :style="{ 'text-align': 'right' }">
           <!-- No logic, you need to deal with it yourself -->
-          <Button type="link" size="small" @click="setLoginState(LoginStateEnum.RESET_PASSWORD)">
+          <Button size="small" type="link" @click="setLoginState(LoginStateEnum.RESET_PASSWORD)">
             {{ t('sys.login.forgetPassword') }}
           </Button>
         </FormItem>
@@ -73,7 +73,7 @@
     </ARow>
 
     <FormItem class="enter-x">
-      <Button type="primary" size="large" block @click="handleLogin" :loading="formState.loading">
+      <Button :loading="formState.loading" block size="large" type="primary" @click="handleLogin">
         {{ t('sys.login.loginButton') }} {{ devFlag }}
       </Button>
       <!-- <Button size="large" class="mt-4 enter-x" block @click="handleRegister">
@@ -100,7 +100,7 @@
 
     <Divider class="enter-x">{{ t('sys.login.otherSignIn') }}</Divider>
 
-    <div class="flex justify-evenly enter-x" :class="`${prefixCls}-sign-in-way`">
+    <div :class="`${prefixCls}-sign-in-way`" class="flex justify-evenly enter-x">
       <GithubFilled />
       <WechatFilled />
       <AlipayCircleFilled />
@@ -110,16 +110,16 @@
   </Form>
 </template>
 <script lang="ts" setup>
-  import { reactive, ref, toRaw, unref, computed, onMounted } from 'vue';
+  import { computed, onMounted, reactive, ref, toRaw, unref } from 'vue';
   import { isDevMode } from '/@/utils/env';
 
-  import { Checkbox, Form, Input, Row, Col, Button, Divider } from 'ant-design-vue';
+  import { Button, Checkbox, Col, Divider, Form, Input, Row } from 'ant-design-vue';
   import {
-    GithubFilled,
-    WechatFilled,
     AlipayCircleFilled,
+    GithubFilled,
     GoogleCircleFilled,
     TwitterCircleFilled,
+    WechatFilled,
   } from '@ant-design/icons-vue';
   import LoginFormTitle from './LoginFormTitle.vue';
 
@@ -128,9 +128,10 @@
   import { useMessage } from '/@/hooks/web/useMessage';
 
   import { useUserStore } from '/@/store/modules/user';
-  import { LoginStateEnum, useLoginState, useFormRules, useFormValid } from './useLogin';
+  import { LoginStateEnum, useFormRules, useFormValid, useLoginState } from './useLogin';
   import { useDesign } from '/@/hooks/web/useDesign';
   import { randomNum } from '/@/utils';
+  import { MultiTenantTypeEnum } from '/@/enums/biz/tenant';
 
   const ACol = Col;
   const ARow = Row;
@@ -167,7 +168,7 @@
   const formState = reactive({
     loading: false,
     captchaSrc: '',
-    isMultiTenant: globSetting.multiTenantType !== 'NONE',
+    isMultiTenant: globSetting.multiTenantType !== MultiTenantTypeEnum.NONE,
     showCaptcha: globSetting.showCaptcha === 'true',
   });
 

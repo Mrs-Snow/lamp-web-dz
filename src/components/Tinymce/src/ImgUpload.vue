@@ -25,6 +25,7 @@
   import { useGlobSetting } from '/@/hooks/setting';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { getTenantId, getToken, getApplicationId } from '/@/utils/auth';
+  import { MultiTenantTypeEnum } from '/@/enums/biz/tenant';
 
   export default defineComponent({
     name: 'TinymceImageUpload',
@@ -101,7 +102,7 @@
         headers[tokenKey] = `${token}`;
       }
       // 增加租户编码
-      if (multiTenantType !== 'NONE') {
+      if (multiTenantType !== MultiTenantTypeEnum.NONE) {
         headers[tenantIdKey] = getTenantId();
       }
       // 添加客户端信息
