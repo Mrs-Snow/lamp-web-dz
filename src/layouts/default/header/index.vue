@@ -20,7 +20,10 @@
       <LayoutBreadcrumb v-if="getShowContent && getShowBread" :theme="getHeaderTheme" />
 
       <!-- 企业列表 -->
-      <TenantList :theme="getHeaderTheme" />
+      <TenantList
+        v-if="globSetting.multiTenantType !== MultiTenantTypeEnum.NONE"
+        :theme="getHeaderTheme"
+      />
     </div>
     <!-- left end -->
 
@@ -86,6 +89,7 @@
 
   import { MenuModeEnum, MenuSplitTyeEnum } from '/@/enums/menuEnum';
   import { SettingButtonPositionEnum } from '/@/enums/appEnum';
+  import { MultiTenantTypeEnum } from '/@/enums/biz/tenant';
   import { AppLocalePicker } from '/@/components/Application';
 
   import {
@@ -216,6 +220,7 @@
         getShowSetting,
         globSetting,
         getShowSearch,
+        MultiTenantTypeEnum,
       };
     },
   });

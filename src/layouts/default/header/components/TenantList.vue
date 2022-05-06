@@ -29,7 +29,7 @@
         </Menu>
       </template>
     </Dropdown>
-    <span v-else class="tenantName">暂无企业</span>
+    <span v-else :class="[tenantNameCls]">暂无企业</span>
   </div>
 </template>
 <script lang="ts">
