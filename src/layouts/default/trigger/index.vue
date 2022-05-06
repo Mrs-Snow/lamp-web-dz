@@ -9,6 +9,7 @@
   import HeaderTrigger from './HeaderTrigger.vue';
 
   export default defineComponent({
+    // 菜单折叠按钮
     name: 'LayoutTrigger',
     components: {
       SiderTrigger: createAsyncComponent(() => import('./SiderTrigger.vue')),

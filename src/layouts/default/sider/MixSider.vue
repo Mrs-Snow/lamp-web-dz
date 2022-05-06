@@ -87,7 +87,6 @@
   import { Icon } from '/@/components/Icon';
   import { AppLogo } from '/@/components/Application';
   import { useMenuSetting } from '/@/hooks/setting/useMenuSetting';
-  import { usePermissionStore } from '/@/store/modules/permission';
   import { useDragLine } from './useLayoutSider';
   import { useGlobSetting } from '/@/hooks/setting';
   import { useDesign } from '/@/hooks/web/useDesign';
@@ -102,6 +101,7 @@
   import { useUserStore } from '/@/store/modules/user';
 
   export default defineComponent({
+    // 左侧菜单混合模式
     name: 'LayoutMixSider',
     components: {
       ScrollContainer,

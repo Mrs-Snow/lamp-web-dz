@@ -11,6 +11,7 @@
   import { propTypes } from '/@/utils/propTypes';
 
   export default defineComponent({
+    // 菜单顶部折叠按钮
     name: 'HeaderTrigger',
     components: { MenuUnfoldOutlined, MenuFoldOutlined },
     props: {

@@ -34,6 +34,7 @@
 
   import { useOpenKeys } from './useOpenKeys';
   export default defineComponent({
+    // 左侧折叠菜单（手风琴）
     name: 'SimpleMenu',
     components: {
       Menu,

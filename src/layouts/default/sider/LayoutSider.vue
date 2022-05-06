@@ -41,6 +41,7 @@
 
   import DragBar from './DragBar.vue';
   export default defineComponent({
+    // 左侧菜单栏
     name: 'LayoutSideBar',
     components: { Sider: Layout.Sider, LayoutMenu, DragBar, LayoutTrigger },
     setup() {

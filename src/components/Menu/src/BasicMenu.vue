@@ -35,6 +35,7 @@
   import { getAllParentPath } from '/@/router/helper/menuHelper';
 
   export default defineComponent({
+    // 顶部菜单
     name: 'BasicMenu',
     components: {
       Menu,

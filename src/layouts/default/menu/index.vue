@@ -24,12 +24,12 @@
     name: 'LayoutMenu',
     props: {
       theme: propTypes.oneOf(['light', 'dark']),
-
+      // 拆分类型
       splitType: {
         type: Number as PropType<MenuSplitTyeEnum>,
         default: MenuSplitTyeEnum.NONE,
       },
-
+      // 是否水平菜单
       isHorizontal: propTypes.bool,
       // menu Mode
       menuMode: {

@@ -10,6 +10,7 @@
   import { useMenuSetting } from '/@/hooks/setting/useMenuSetting';
 
   export default defineComponent({
+    // 菜单底部折叠按钮
     name: 'SiderTrigger',
     components: { DoubleRightOutlined, DoubleLeftOutlined },
     setup() {
