@@ -1,15 +1,15 @@
 <template>
   <BasicModal
-    v-bind="$attrs"
-    @register="registerModal"
-    showFooter
-    width="70%"
+    :defaultFullscreen="true"
     :keyboard="true"
     :maskClosable="true"
+    showFooter
     title="导入表结构"
-    :defaultFullscreen="true"
-    @ok="handleSubmit"
+    v-bind="$attrs"
+    width="70%"
     @cancel="handleCancel"
+    @ok="handleSubmit"
+    @register="registerModal"
   >
     <BasicTable @register="registerTable" />
   </BasicModal>
