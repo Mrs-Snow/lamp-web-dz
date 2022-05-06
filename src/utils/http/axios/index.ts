@@ -43,11 +43,11 @@ const transform: AxiosTransform = {
     // 不进行任何处理，直接返回
     // 用于页面代码可能需要直接获取code，data，message这些信息时开启
     if (!isTransformResponse) {
-      return res.data;
+      return res?.data;
     }
     // 错误的时候返回
 
-    const resData = res.data;
+    const resData = res?.data;
     if (!resData) {
       // return '[HTTP] Request has no return value';
       throw new Error(t('sys.api.apiRequestFailed'));
