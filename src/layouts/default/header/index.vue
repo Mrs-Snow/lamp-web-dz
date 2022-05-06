@@ -19,7 +19,7 @@
       <!-- 面包屑 -->
       <LayoutBreadcrumb v-if="getShowContent && getShowBread" :theme="getHeaderTheme" />
 
-      <!-- 企业列表 -->
+      <!-- 企业列表, NONE模式不显示 -->
       <TenantList
         v-if="globSetting.multiTenantType !== MultiTenantTypeEnum.NONE"
         :theme="getHeaderTheme"
