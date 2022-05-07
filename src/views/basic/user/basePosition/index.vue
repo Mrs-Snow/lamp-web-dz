@@ -212,7 +212,7 @@
       }
 
       function handleReset() {
-        searchInfo.mainOrgIdList = [];
+        searchInfo.orgIdList = [];
         currentOrg.value = {};
         reload();
       }
