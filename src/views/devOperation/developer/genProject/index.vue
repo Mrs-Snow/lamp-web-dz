@@ -13,6 +13,20 @@
         <a-button class="!ml-4" @click="resetForm"> 重置</a-button>
         <a-button class="!ml-4" type="primary" @click="handleSubmit">立即生成</a-button>
       </div>
+      <BasicTitle line span>注意事项</BasicTitle>
+      <Alert message="注意事项" show-icon>
+        <template #description>
+          <p>
+            1. {基础包}.{模块名}
+            需要和【代码生成】-【修改代码配置】中{父包名}.{模块名}一致，否则生成的服务swagger文档可能无法显示（需要手动调整）
+          </p>
+          <p> 2. 若需要修改 groupId，需要和项目代码中的groupId中保持一致 </p>
+          <p>
+            3. {基础包} 需要与启动类所在的基础包一致，否则需要修改项目中
+            @ComponentScan和@MapperScan中的配置
+          </p>
+        </template>
+      </Alert>
     </div>
 
     <div class="bg-white m-4 p-4 ml-2 overflow-hidden md:w-1/3">
@@ -35,10 +49,11 @@
 </template>
 <script lang="ts">
   import { defineComponent, onMounted, ref } from 'vue';
-  import { Tabs } from 'ant-design-vue';
+  import { Alert, Tabs } from 'ant-design-vue';
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { PageWrapper } from '/@/components/Page';
   import ThumbUrl from '/@/components/Upload/src/ThumbUrl.vue';
+  import { BasicTitle } from '/@/components/Basic';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { Api, generator, getDef } from '/@/api/devOperation/developer/defGenProject';
@@ -62,7 +77,15 @@
 
   export default defineComponent({
     name: '项目生成',
-    components: { ThumbUrl, BasicForm, PageWrapper, Tabs, TabPane: Tabs.TabPane },
+    components: {
+      ThumbUrl,
+      BasicForm,
+      PageWrapper,
+      Tabs,
+      TabPane: Tabs.TabPane,
+      BasicTitle,
+      Alert,
+    },
     setup() {
       const { t } = useI18n();
       const { createMessage } = useMessage();
