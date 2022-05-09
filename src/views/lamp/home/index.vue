@@ -8,6 +8,7 @@
         <ApplicationCard
           :api="findMyApplication"
           :class="['enter-y', myAppCls]"
+          @more="handleStart"
           title="我的应用 (点击应用进行切换应用，体验不同应用的功能)"
         />
         <DynamicInfo :loading="loading" class="!my-4 enter-y" />

@@ -1,9 +1,9 @@
 <template>
-  <Card title="最新动态" v-bind="$attrs">
+  <Card :title="getTitle" v-bind="$attrs">
     <template #extra>
-      <a-button type="link" size="small" href="https://www.oschina.net/p/lamp-cloud">更多</a-button>
+      <a-button href="https://www.oschina.net/p/lamp-cloud" size="small" type="link">更多</a-button>
     </template>
-    <List item-layout="horizontal" :data-source="dynamicInfoItems">
+    <List :data-source="dynamicInfoItems" item-layout="horizontal">
       <template #renderItem="{ item }">
         <ListItem>
           <ListItemMeta>
@@ -11,7 +11,7 @@
               {{ item.date }}
             </template>
             <!-- eslint-disable-next-line -->
-            <template #title> {{ item.name }} <span v-html="item.desc"> </span> </template>
+            <template #title> {{ item.name }} <span v-html="item.desc"> </span></template>
             <template #avatar>
               <Icon :icon="item.avatar" :size="30" />
             </template>
@@ -22,10 +22,15 @@
   </Card>
 </template>
 <script lang="ts" setup>
+  import { computed } from 'vue';
   import { Card, List } from 'ant-design-vue';
   import { dynamicInfoItems } from './data';
   import { Icon } from '/@/components/Icon';
+  import { useGlobSetting } from '/@/hooks/setting';
 
   const ListItem = List.Item;
   const ListItemMeta = List.Item.Meta;
+
+  const globSetting = useGlobSetting();
+  const getTitle = computed(() => `最新动态(${globSetting.multiTenantType})`);
 </script>

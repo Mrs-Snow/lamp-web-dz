@@ -1,5 +1,6 @@
 <template>
   <Card :loading="loading" :title="props.title" hoverable v-bind="$attrs">
+    <template #extra><a href="javascript:void(0);" @click="handleMore">详情</a></template>
     <template v-for="item in applicationList" :key="item.id">
       <CardGrid :class="getAppCardClass(item)" class="!md:w-1/3 !w-full" @click="customClick(item)">
         <span class="flex" style="right: 0; position: relative">
@@ -93,7 +94,8 @@
         default: null,
       },
     },
-    setup(props) {
+    emits: ['more'],
+    setup(props, { emit }) {
       const { createMessage, createConfirm } = useMessage();
       const { refreshMenu } = usePermission();
       const { replace } = useRouter();
@@ -182,6 +184,10 @@
         createMessage.success(`修改成功`);
       }
 
+      function handleMore() {
+        emit('more');
+      }
+
       return {
         props,
         ExpireStateEnum,
@@ -192,6 +198,7 @@
         loading,
         handleUpdateDefApp,
         defApplicationId,
+        handleMore,
       };
     },
   });
