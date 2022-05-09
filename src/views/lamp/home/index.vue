@@ -8,7 +8,7 @@
         <ApplicationCard
           :api="findMyApplication"
           :class="['enter-y', myAppCls]"
-          @more="handleStart"
+          @more="handleStart(true)"
           title="我的应用 (点击应用进行切换应用，体验不同应用的功能)"
         />
         <DynamicInfo :loading="loading" class="!my-4 enter-y" />
@@ -88,7 +88,7 @@
     createSuccessModal({ content: '请联系贵公司管理员邀请您加入公司。' });
   }
 
-  function handleStart() {
+  function handleStart(flag = false) {
     let steps = [] as intro.Step[];
     // 可以根据自身的需求，改成用户首次登陆系统时提示（可以通过redis记录用户是否首次登陆，或增加一张表来记录。）
     if (unref(isUser)) {
@@ -165,7 +165,7 @@
         },
       ];
     }
-    if (userStore.getApplicationId === BASE_APP_ID && !isDevMode()) {
+    if ((userStore.getApplicationId === BASE_APP_ID && !isDevMode()) || flag) {
       intro()
         .setOptions({
           //对应的按钮
