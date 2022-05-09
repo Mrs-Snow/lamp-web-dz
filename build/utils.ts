@@ -60,12 +60,38 @@ function getConfFiles() {
 }
 
 /**
+ * 获取命令行中传入的参数
+ */
+function getConfByScript() {
+  const script = process.env.npm_lifecycle_script;
+  const regex = new RegExp('([A-Za-z_\\d]+)=([A-Za-z_\\d]+)', 'g');
+  let matcher;
+  const scriptEnv = {};
+  while ((matcher = regex.exec(script as string)) !== null) {
+    if (matcher.index === regex.lastIndex) {
+      regex.lastIndex++;
+    }
+
+    if (matcher) {
+      const key = matcher[1] as string;
+      const value = matcher[2] as string;
+      scriptEnv[key] = value;
+    }
+  }
+
+  return scriptEnv;
+}
+
+/**
  * Get the environment variables starting with the specified prefix
  * @param match prefix
  * @param confFiles ext
  */
 export function getEnvConfig(match = 'VITE_GLOB_', confFiles = getConfFiles()) {
   let envConfig = {};
+
+  // 配置文件中的配置
+  // .env.{mode} > .env 中的配置
   confFiles.forEach((item) => {
     try {
       const env = dotenv.parse(fs.readFileSync(path.resolve(process.cwd(), item)));
@@ -74,6 +100,12 @@ export function getEnvConfig(match = 'VITE_GLOB_', confFiles = getConfFiles()) {
       console.error(`Error in parsing ${item}`, e);
     }
   });
+
+  // 命令行中的配置
+  const scriptConfig = getConfByScript();
+  envConfig = { ...envConfig, ...scriptConfig };
+  console.log('命令行中的参数已经覆盖配置文件中的参数 %o', scriptConfig);
+
   const reg = new RegExp(`^(${match})`);
   Object.keys(envConfig).forEach((key) => {
     if (!reg.test(key)) {
