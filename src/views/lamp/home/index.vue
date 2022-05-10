@@ -225,13 +225,4 @@
     margin: auto;
     height: 100%;
   }
-
-  #driver-highlighted-element-stage {
-    background: transparent !important;
-    outline: 5000px solid rgba(0, 0, 0, 0.75);
-  }
-
-  #driver-page-overlay {
-    background: none !important;
-  }
 </style>
