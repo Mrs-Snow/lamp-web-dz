@@ -8,8 +8,8 @@
         <ApplicationCard
           :api="findMyApplication"
           :class="['enter-y', myAppCls]"
-          @more="handleStart(true)"
           title="我的应用 (点击应用进行切换应用，体验不同应用的功能)"
+          @more="handleStart(true)"
         />
         <DynamicInfo :loading="loading" class="!my-4 enter-y" />
       </div>
@@ -66,8 +66,9 @@
   import { findMyApplication } from '/@/api/lamp/profile/userInfo';
   import illustration from '/@/assets/svg/illustration.svg';
 
-  import intro from 'intro.js';
-  import 'intro.js/minified/introjs.min.css';
+  import Driver from 'driver.js';
+  import 'driver.js/dist/driver.min.css';
+
   import { useGlobSetting } from '/@/hooks/setting';
 
   const loading = ref(false);
@@ -88,94 +89,121 @@
     createSuccessModal({ content: '请联系贵公司管理员邀请您加入公司。' });
   }
 
+  const driver = new Driver({
+    allowClose: false, //禁止点击外部关闭
+    doneBtnText: '知道了', // 完成按钮标题
+    closeBtnText: '跳过', // 关闭按钮标题
+    nextBtnText: '下一步 &rarr;', // 下一步按钮标题
+    prevBtnText: '上一步 &larr;', // 上一步按钮标题
+  });
+
   function handleStart(flag = false) {
-    let steps = [] as intro.Step[];
+    let steps = [] as any[];
     // 可以根据自身的需求，改成用户首次登陆系统时提示（可以通过redis记录用户是否首次登陆，或增加一张表来记录。）
     if (unref(isUser)) {
       steps = [
         {
-          title: '欢迎访问',
-          intro:
-            '欢迎体验《灯灯》SaaS快速开发平台 👋 <br/><span style="color: red;">首次使用，请认真阅读引导！</span>',
+          element: `.${prefixVar}-layout-header-left`,
+          // element: document.querySelector(`.${prefixVar}-layout-header-left`)!,
+          stageBackground: 'rgb(255, 255, 255, 0.3)',
+          popover: {
+            title: '当前企业',
+            description:
+              '欢迎体验《灯灯》SaaS快速开发平台 👋 <br/><span style="color: red;">首次使用，请认真阅读引导！</span> <br/> 当您属于多个企业时，可以在此切换当前企业。',
+            position: 'right',
+          },
         },
         {
-          title: '当前企业',
-          element: document.querySelector(`.${prefixVar}-layout-header-left`)!,
-          intro: '当您属于多个企业时，可以在此切换当前企业。',
-          position: 'right',
-        },
-        {
-          title: '用户功能区',
           element: document.querySelector(`.${prefixVar}-layout-header-action`)!,
-          intro: '您可以在此修改您的个人信息。',
+          stageBackground: 'rgb(255, 255, 255, 0.3)',
+          popover: {
+            title: '用户功能区',
+            description: '您可以在此修改您的个人信息。',
+          },
         },
         {
-          title: '我的应用',
           element: document.querySelector(`.${myAppCls}`)!,
-          intro: '当您所在的企业购买了多个应用时，可以在此切换应用，每个应用拥有不同的功能。',
+          popover: {
+            title: '我的应用',
+            description:
+              '当您所在的企业购买了多个应用时，可以在此切换应用，每个应用拥有不同的功能。',
+          },
         },
         {
-          title: '基础平台',
           element: document.querySelector(`.${prefixVar}-basicPlatform`)!,
-          intro:
-            '企业(租户)的工作台，拥有平台最基础最核心的功能，开发者可以继续开发和完善平台的基础功能。',
+          popover: {
+            title: '基础平台',
+            description:
+              '企业(租户)的工作台，拥有平台最基础最核心的功能，开发者可以继续开发和完善平台的基础功能。',
+          },
         },
         {
-          title: '开发运营系统',
           element: document.querySelector(`.${prefixVar}-devOperation`)!,
-          intro:
-            '开发者或运营者使用的系统，拥有平台级功能；开发者或运营者可以在此给企业（租户）开通企业账号和应用权限等。',
+          popover: {
+            title: '开发运营系统',
+            description:
+              '开发者或运营者使用的系统，拥有平台级功能；开发者或运营者可以在此给企业（租户）开通企业账号和应用权限等。',
+          },
         },
         {
-          title: '业务系统',
           element: document.querySelector(`.${prefixVar}-businessSystem`)!,
-          intro:
-            '此系统是开发者根据自身的业务需求进行二次开发。开发完毕后，通过应用授权或购买的方式给企业开通访问权限。',
+          popover: {
+            title: '业务系统',
+            description:
+              '此系统是开发者根据自身的业务需求进行二次开发。开发完毕后，通过应用授权或购买的方式给企业开通访问权限。',
+          },
         },
       ];
     } else {
       steps = [
         {
-          title: '欢迎访问',
-          intro:
-            '欢迎体验《灯灯》SaaS快速开发平台 👋<br/><span style="color: red;">首次使用，请认真阅读引导！</span>',
-        },
-        {
-          title: '注册企业',
-          element: document.querySelector(`.${rtCls}`)!,
-          intro: '您可以点击此按钮，填写企业信息成为企业主~',
-          position: 'left',
-        },
-        {
-          title: '成为员工',
-          element: document.querySelector(`.${beCls}`)!,
-          intro: '您也可以申请成为其他企业的员工~',
-          position: 'right',
-        },
-        {
-          title: '当前企业',
           element: document.querySelector(`.${prefixVar}-layout-header-left`)!,
-          intro: '当您属于多个企业时，可以在此切换当前企业。',
-          position: 'right',
+          stageBackground: 'rgb(255, 255, 255, 0.3)',
+          popover: {
+            title: '欢迎访问',
+            description:
+              '欢迎体验《灯灯》SaaS快速开发平台 👋<br/><span style="color: red;">首次使用，请认真阅读引导！</span>',
+          },
         },
         {
-          title: '用户功能区',
+          element: document.querySelector(`.${rtCls}`)!,
+          popover: {
+            title: '注册企业',
+            description: '您可以点击此按钮，填写企业信息成为企业主~',
+            position: 'left',
+          },
+        },
+        {
+          element: document.querySelector(`.${beCls}`)!,
+          popover: {
+            title: '成为员工',
+            description: '您也可以申请成为其他企业的员工~',
+            position: 'right',
+          },
+        },
+        {
+          element: document.querySelector(`.${prefixVar}-layout-header-left`)!,
+          stageBackground: 'rgb(255, 255, 255, 0.3)',
+          popover: {
+            title: '当前企业',
+            description: '当您属于多个企业时，可以在此切换当前企业。',
+            position: 'right',
+          },
+        },
+        {
           element: document.querySelector(`.${prefixVar}-layout-header-action`)!,
-          intro: '您可以在此修改你的个人信息。',
+          stageBackground: 'rgb(255, 255, 255, 0.3)',
+          popover: {
+            title: '用户功能区',
+            description: '您可以在此修改你的个人信息。',
+          },
         },
       ];
     }
     if ((userStore.getApplicationId === BASE_APP_ID && !isDevMode()) || flag) {
-      intro()
-        .setOptions({
-          //对应的按钮
-          prevLabel: '上一步 &larr;',
-          nextLabel: '下一步 &rarr;',
-          skipLabel: '跳过',
-          doneLabel: '结束',
-          steps,
-        })
-        .start();
+      driver.reset();
+      driver.defineSteps(steps);
+      driver.start();
     }
   }
 
@@ -196,5 +224,14 @@
   .ant-empty-image img {
     margin: auto;
     height: 100%;
+  }
+
+  #driver-highlighted-element-stage {
+    background: transparent !important;
+    outline: 5000px solid rgba(0, 0, 0, 0.75);
+  }
+
+  #driver-page-overlay {
+    background: none !important;
   }
 </style>
