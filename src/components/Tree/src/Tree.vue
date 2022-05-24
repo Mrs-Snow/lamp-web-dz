@@ -147,6 +147,7 @@
           contextMenuOptions.items = menuList;
         }
         if (!contextMenuOptions.items?.length) return;
+        contextMenuOptions.items = contextMenuOptions.items.filter((item) => !item.hidden);
         createContextMenu(contextMenuOptions);
       }
 
