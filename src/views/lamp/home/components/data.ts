@@ -56,6 +56,12 @@ export const navItems: NavItem[] = [
 export const dynamicInfoItems: DynamicInfoItem[] = [
   {
     avatar: 'dynamic-avatar-1|svg',
+    name: '4.6.1 已发布：',
+    date: '2022-05-24',
+    desc: `<a href="https://www.oschina.net/news/197090">《灯灯》4.6.1发布，修复fastjson安全漏洞！</a>`,
+  },
+  {
+    avatar: 'dynamic-avatar-1|svg',
     name: '4.6.0 已发布：',
     date: '2022-05-10',
     desc: `<a href="https://www.oschina.net/news/195073">代码生成器适配3种模式、6个项目，column、none模式首次发布！</a>`,
