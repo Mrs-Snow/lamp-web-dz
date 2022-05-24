@@ -106,6 +106,17 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       label: '基础信息',
     },
     {
+      label: t('basic.user.baseEmployee.username'),
+      field: 'username',
+      component: 'Input',
+      dynamicDisabled: () => {
+        return [ActionEnum.VIEW].includes(type.value);
+      },
+      colProps: {
+        span: 12,
+      },
+    },
+    {
       label: t('basic.user.baseEmployee.realName'),
       field: 'realName',
       component: 'Input',
