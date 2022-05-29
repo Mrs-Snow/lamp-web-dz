@@ -507,11 +507,11 @@ export const initDataFormSchema = (onChange: Fn): FormSchema[] => {
       componentProps: {
         options: [
           {
-            label: '本地',
+            label: '系统内置数据源',
             value: TenantConnectTypeEnum.SYSTEM,
           },
           {
-            label: '远程',
+            label: '自定义数据源',
             value: TenantConnectTypeEnum.CUSTOM,
             disabled: ![
               MultiTenantTypeEnum.DATASOURCE,
