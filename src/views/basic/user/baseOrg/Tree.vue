@@ -42,13 +42,21 @@
       search
       toolbar
       @select="handleSelect"
-    />
+    >
+      <template #titleBefore="item">
+        <template v-if="item.echoMap?.type">
+          <Tag :color="item.type === OrgTypeEnum.COMPANY ? 'error' : 'processing'">
+            {{ item.echoMap?.type }}
+          </Tag>
+        </template>
+      </template>
+    </BasicTree>
     <OrgRole @register="registerModal" @success="handleSuccess" />
   </div>
 </template>
 <script lang="ts">
   import { defineComponent, h, onMounted, ref, unref } from 'vue';
-  import { Checkbox } from 'ant-design-vue'; // antd组件
+  import { Checkbox, Tag } from 'ant-design-vue'; // antd组件
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
   import {
@@ -60,6 +68,7 @@
   } from '/@/components/Tree';
   import { eachTree, findChildrenByParentId, findNodeByKey } from '/@/utils/helper/treeHelper';
   import { RoleEnum } from '/@/enums/roleEnum';
+  import { OrgTypeEnum } from '/@/enums/biz/base';
 
   import { remove, tree } from '/@/api/basic/user/baseOrg';
   import { useModal } from '/@/components/Modal';
@@ -67,7 +76,7 @@
 
   export default defineComponent({
     name: 'BaseOrgManagement',
-    components: { BasicTree, OrgRole, Checkbox },
+    components: { BasicTree, OrgRole, Checkbox, Tag },
     props: {
       query: {
         type: Boolean,
@@ -102,6 +111,7 @@
         eachTree(treeData.value, (item) => {
           item.key = item.id;
           item.title = item.name;
+          item.slots = { titleBefore: 'titleBefore' };
           return item;
         });
         setTimeout(() => {
@@ -302,6 +312,7 @@
         registerModal,
         handleSuccess,
         recursion,
+        OrgTypeEnum,
       };
     },
   });

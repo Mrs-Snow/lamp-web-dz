@@ -10,6 +10,10 @@ export enum DataTypeEnum {
   SYSTEM = '10',
   BUSINESS = '20',
 }
+export enum OrgTypeEnum {
+  COMPANY = '10',
+  DEPT = '20',
+}
 
 // 角色类别
 export enum RoleCategoryEnum {
