@@ -2,7 +2,7 @@
   <div class="bg-white m-4 mr-2 overflow-hidden">
     <div v-if="query" class="m-4">
       <a-button class="mr-2" type="primary" @click="handleReset()">重置</a-button>
-      <Checkbox v-model:checked="recursion">本级及子级</Checkbox>
+      <Checkbox v-model:checked="recursion" @change="handleQuery()">本级及子级</Checkbox>
     </div>
     <div v-else class="m-4">
       <a-button
@@ -34,11 +34,11 @@
       ref="treeRef"
       :actionList="actionList"
       :beforeRightClick="getRightMenuList"
+      :checkable="!query"
       :clickRowToExpand="false"
       :title="t('basic.user.baseOrg.table.title')"
       :treeData="treeData"
       checkStrictly
-      checkable
       search
       toolbar
       @select="handleSelect"
@@ -291,6 +291,11 @@
         emit('reset');
       }
 
+      // 选择 本级及子级
+      function handleQuery() {
+        handleSelect(getTree().getSelectedKeys() as string[]);
+      }
+
       // 新增或编辑成功回调
       function handleSuccess() {
         fetch();
@@ -308,6 +313,7 @@
         handleSelect,
         changeDisplay,
         handleReset,
+        handleQuery,
         RoleEnum,
         registerModal,
         handleSuccess,
