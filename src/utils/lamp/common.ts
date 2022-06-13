@@ -1,6 +1,5 @@
 import { useMessage } from '/@/hooks/web/useMessage';
-import componentSetting from '/@/settings/componentSetting';
-import { SORT_FIELD } from '/@/settings/componentSetting';
+import componentSetting, { SORT_FIELD } from '/@/settings/componentSetting';
 import { isArray, isFunction, isString } from '/@/utils/is';
 import { DictEnum, EnumEnum } from '/@/enums/commonEnum';
 import { asyncFindDictList, asyncFindEnumList } from '/@/api/lamp/common/general';
@@ -58,6 +57,26 @@ export const handleFetchParams = (data: Recordable) => {
   }
   tempData.model = model;
   return tempData;
+};
+
+export const blobToObj = (data) => {
+  return new Promise((resolve) => {
+    if (data?.type == 'application/json') {
+      const reader = new FileReader();
+      reader.readAsText(data, 'utf-8');
+      reader.onload = function (e) {
+        try {
+          const parseObj = JSON.parse(e.target?.result as string);
+          resolve(parseObj);
+        } catch (error) {
+          resolve({
+            code: -1,
+            msg: '获取失败',
+          });
+        }
+      };
+    }
+  });
 };
 
 /**

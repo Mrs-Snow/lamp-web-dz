@@ -20,7 +20,7 @@
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { downloadFile } from '/@/utils/lamp/common';
+  import { blobToObj, downloadFile } from '/@/utils/lamp/common';
   import {
     downloadZip,
     generatorCode,
@@ -91,6 +91,9 @@
           } else {
             createMessage.error('下载失败，请认真检查【生成信息】是否填写完整并保存成功！');
           }
+        } catch (e: any) {
+          const obj = (await blobToObj(e?.response?.data)) as any;
+          createMessage.error(obj.msg);
         } finally {
           setLoading(false);
         }
