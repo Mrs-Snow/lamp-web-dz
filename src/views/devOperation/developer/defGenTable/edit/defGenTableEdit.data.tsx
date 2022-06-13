@@ -61,7 +61,10 @@ export const baseEditFormSchema = (): FormSchema[] => {
     {
       field: 'batch',
       label: 'batch',
-      component: 'Input',
+      component: 'RadioGroup',
+      componentProps: {
+        ...yesNoComponentProps(),
+      },
       defaultValue: false,
       show: false,
     },

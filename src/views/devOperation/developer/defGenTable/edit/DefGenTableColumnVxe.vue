@@ -1,5 +1,8 @@
 <template>
-  <vxe-grid ref="xGrid" v-bind="gridOptions">
+  <div v-if="batch"
+    >批量操作暂不支持修改字段，如果确实需要个性化修改字典配置，请单个修改后在生成！</div
+  >
+  <vxe-grid v-else ref="xGrid" v-bind="gridOptions">
     <template #operate="{ row }">
       <template v-if="$refs.xGrid.isActiveByRow(row)">
         <a-button
@@ -65,6 +68,7 @@
       const { t } = useI18n();
       const { createMessage } = useMessage();
       const tableId = ref<string>('');
+      const batch = ref<boolean>(false);
 
       const xGrid = ref({} as VxeGridInstance);
       const validRules = ref({} as VxeTablePropTypes.EditRules);
@@ -142,7 +146,11 @@
         },
       });
 
-      async function load(tId: string) {
+      async function load(tId: string, b: boolean) {
+        batch.value = b;
+        if (b) {
+          return;
+        }
         if (tId) {
           tableId.value = tId;
 
@@ -222,6 +230,7 @@
         cancelRowEvent,
         editRowEvent,
         syncRowEvent,
+        batch,
       };
     },
   });

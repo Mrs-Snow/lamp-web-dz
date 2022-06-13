@@ -10,7 +10,7 @@
       <div class="step-form-form">
         <Steps :current="current" size="small" type="navigation" @change="changeSteps">
           <Step :status="status" title="生成信息" />
-          <Step v-if="!batch" title="字段信息" />
+          <Step title="字段信息" />
           <Step title="代码预览" />
           <Step title="立即生成" />
         </Steps>
@@ -29,13 +29,13 @@
       <div v-show="current === 0">
         <EditIndex ref="formRef" @loading="setLoading" />
       </div>
-      <div v-show="!batch && current === 1">
+      <div v-show="current === 1">
         <DefGenTableColumn ref="columnRef" />
       </div>
-      <div v-show="current === (batch ? 1 : 2)">
+      <div v-show="current === 2">
         <EditPreview ref="previewRef" />
       </div>
-      <div v-show="current === (batch ? 2 : 3)">
+      <div v-show="current === 3">
         <EditGenerator ref="generatorRef" />
       </div>
     </div>
@@ -124,9 +124,7 @@
         setLoading(true);
         try {
           await getFormRef().loadDetail(pageState.tableId);
-          if (!pageState.batch) {
-            await getColumnRef().load(pageState.tableId);
-          }
+          await getColumnRef().load(pageState.tableId, pageState.batch);
           await getGeneratorRef().loadDetail(pageState.tableId);
         } finally {
           setLoading(false);
@@ -151,7 +149,8 @@
               return;
             }
           }
-          const previewIndex = pageState.batch ? 1 : 2;
+          const previewIndex = 2;
+          // const previewIndex = pageState.batch ? 1 : 2;
           if (curr === previewIndex) {
             await getPreviewRef().load(pageState.tableId);
           }
