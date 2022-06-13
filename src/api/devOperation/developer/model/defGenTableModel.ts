@@ -153,7 +153,7 @@ export interface DefGenTableImportVO {
 
 export interface DefGenTableResultVO {
   echoMap?: any;
-  id?: string; // 编号
+  id: string; // 编号
   createdBy?: string; // 创建者
   createdTime?: string; // 创建时间
   updatedBy?: string; // 更新者

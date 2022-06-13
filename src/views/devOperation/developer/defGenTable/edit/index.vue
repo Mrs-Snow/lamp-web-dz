@@ -2,7 +2,7 @@
   <BasicForm @register="registerBasicForm" />
 </template>
 <script lang="ts">
-  import { defineComponent } from 'vue';
+  import { defineComponent, ref } from 'vue';
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
@@ -22,6 +22,7 @@
     setup(_, { emit }) {
       const { t } = useI18n();
       const { createMessage } = useMessage();
+      const tableIdListRef = ref<string[]>([]);
 
       function setLoading(loading: boolean) {
         setProps({ submitButtonOptions: { loading: loading } });
@@ -51,7 +52,7 @@
           setLoading(true);
 
           const params = await validate();
-
+          params.tableIdList = tableIdListRef.value;
           await update(params);
           createMessage.success('保存成功');
         } finally {
@@ -60,7 +61,16 @@
       }
 
       async function loadDetail(tableId: string) {
-        const record = await detail(tableId);
+        let tableIdList;
+        if (tableId.includes(',')) {
+          tableIdList = tableId.split(',');
+        } else {
+          tableIdList = [tableId];
+        }
+        tableIdListRef.value = tableIdList;
+        const record = await detail(tableIdList[0]);
+
+        record.batch = tableIdList.length > 1;
         setFieldsValue(record);
         if (record.menuApplicationId) {
           const treeData = await queryMenu({ applicationId: record.menuApplicationId });

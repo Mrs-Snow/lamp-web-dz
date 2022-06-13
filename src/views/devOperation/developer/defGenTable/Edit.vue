@@ -1,16 +1,16 @@
 <template>
   <PageWrapper :content="content" :title="title">
     <template #extra>
-      <a-button type="primary" :loading="loading" v-if="current === 0" @click="handleSubmit"
-        >保存</a-button
-      >
+      <a-button v-if="current === 0" :loading="loading" type="primary" @click="handleSubmit">
+        保存
+      </a-button>
     </template>
 
     <template #footer>
       <div class="step-form-form">
         <Steps :current="current" size="small" type="navigation" @change="changeSteps">
-          <Step title="生成信息" :status="status" />
-          <Step title="字段信息" />
+          <Step :status="status" title="生成信息" />
+          <Step v-if="!batch" title="字段信息" />
           <Step title="代码预览" />
           <Step title="立即生成" />
         </Steps>
@@ -29,13 +29,13 @@
       <div v-show="current === 0">
         <EditIndex ref="formRef" @loading="setLoading" />
       </div>
-      <div v-show="current === 1">
+      <div v-show="!batch && current === 1">
         <DefGenTableColumn ref="columnRef" />
       </div>
-      <div v-show="current === 2">
+      <div v-show="current === (batch ? 1 : 2)">
         <EditPreview ref="previewRef" />
       </div>
-      <div v-show="current === 3">
+      <div v-show="current === (batch ? 2 : 3)">
         <EditGenerator ref="generatorRef" />
       </div>
     </div>
@@ -81,6 +81,7 @@
         tableId: '',
         status: '',
         current: 0,
+        batch: false,
       });
       const compState = reactive({
         absolute: false,
@@ -117,10 +118,15 @@
         pageState.tableId = routeParams.id as string;
         pageState.title = routeQuery.title as string;
         pageState.content = routeQuery.content as string;
+        if (routeParams.id.includes(',')) {
+          pageState.batch = true;
+        }
         setLoading(true);
         try {
           await getFormRef().loadDetail(pageState.tableId);
-          await getColumnRef().load(pageState.tableId);
+          if (!pageState.batch) {
+            await getColumnRef().load(pageState.tableId);
+          }
           await getGeneratorRef().loadDetail(pageState.tableId);
         } finally {
           setLoading(false);
@@ -145,7 +151,8 @@
               return;
             }
           }
-          if (curr === 2) {
+          const previewIndex = pageState.batch ? 1 : 2;
+          if (curr === previewIndex) {
             await getPreviewRef().load(pageState.tableId);
           }
           pageState.current = curr;

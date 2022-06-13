@@ -32,6 +32,7 @@ export default {
     query: 'Query',
     import: 'Import',
     export: 'Export',
+    preview: 'Preview',
     view: 'View',
     details: 'Details',
     download: 'Download',

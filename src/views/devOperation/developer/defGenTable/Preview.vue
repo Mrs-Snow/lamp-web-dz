@@ -10,23 +10,38 @@
     @ok="handleSubmit"
     @register="registerModal"
   >
-    <RadioGroup v-model:value="template" style="margin-right: 2rem" @change="changeTabs">
-      <RadioButton :value="TemplateEnum.BACKEND">后端</RadioButton>
-      <RadioButton :value="TemplateEnum.WEB_PLUS">前端</RadioButton>
-    </RadioGroup>
-    <a-button preIcon="ant-design:reload-outlined" type="link" @click="reload()">刷新</a-button>
-    <Spin :spinning="spinning" size="large">
-      <Tabs style="min-height: 400px">
-        <TabPane v-for="(value, key) in codeMap" :key="key" :tab="getKey(key)">
-          <pre>
-        <a-button
-            preIcon="ant-design:copy-outlined" style="float: left" type="link"
-            @click="handleCopy(value)">复制</a-button>
-        <code class="hljs" v-html="highlightedCode(value, key)"></code>
-      </pre>
-        </TabPane>
-      </Tabs>
-    </Spin>
+    <Tabs @change="changeTable($event)">
+      <TabPane
+        v-for="(tableVal, tableKey) in tableMap"
+        :key="tableKey"
+        :tab="getTableName(tableKey)"
+      >
+        <RadioGroup
+          v-model:value="template"
+          style="margin-right: 2rem"
+          @change="changeTabs(tableKey, $event)"
+        >
+          <RadioButton :value="TemplateEnum.BACKEND">后端</RadioButton>
+          <RadioButton :value="TemplateEnum.WEB_PLUS">前端</RadioButton>
+        </RadioGroup>
+        <a-button preIcon="ant-design:reload-outlined" type="link" @click="reload(tableKey)">
+          刷新
+        </a-button>
+
+        <Spin :spinning="spinning" size="large">
+          <Tabs style="min-height: 400px">
+            <TabPane v-for="(value, key) in tableVal[template]" :key="key" :tab="getKey(key)">
+              <pre>
+              <a-button
+                preIcon="ant-design:copy-outlined" style="float: left" type="link"
+                @click="handleCopy(value)">复制</a-button>
+              <code class="hljs" v-html="highlightedCode(value, key)"></code>
+            </pre>
+            </TabPane>
+          </Tabs>
+        </Spin>
+      </TabPane>
+    </Tabs>
   </BasicModal>
 </template>
 <script lang="ts">
@@ -36,7 +51,7 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { TemplateEnum } from '/@/enums/biz/tenant';
-  import { previewCode } from '/@/api/devOperation/developer/defGenTable';
+  import { findTableList, previewCode } from '/@/api/devOperation/developer/defGenTable';
   import { useCopyToClipboard } from '/@/hooks/web/useCopyToClipboard';
 
   import hljs from 'highlight.js/lib/core';
@@ -75,34 +90,44 @@
     },
     setup(_, { emit }) {
       const { t } = useI18n();
-      const cacheMap = ref<any>({});
-      const codeMap = ref<any>({});
-      const tId = ref<string>('');
+      const tableMap = ref<any>({});
+      const tableIdListRef = ref<string[]>([]);
+      const tableNameMap = ref<any>({});
       const spinning = ref<boolean>(false);
       const template = ref<TemplateEnum>(TemplateEnum.BACKEND);
       const { createMessage } = useMessage();
       const { clipboardRef, copiedRef } = useCopyToClipboard();
 
       const [registerModal, { setModalProps, closeModal }] = useModalInner(async (row) => {
-        tId.value = row.record.id;
+        tableIdListRef.value = row.tableIdList;
         setModalProps({ confirmLoading: false });
         try {
           template.value = row.template || TemplateEnum.BACKEND;
-          await reload();
+
+          tableMap.value = {};
+          for (const tableId of row.tableIdList) {
+            tableMap.value[tableId] = {};
+          }
+
+          const list = await findTableList(row.tableIdList);
+
+          for (const item of list) {
+            tableNameMap.value[item.id] = item.name;
+          }
+
+          await reload(row.tableIdList[0]);
         } finally {
           setModalProps({ confirmLoading: false });
         }
       });
 
-      const reload = async (temp?: TemplateEnum) => {
+      const reload = async (tableId: string, temp?: TemplateEnum) => {
         try {
           spinning.value = true;
-
           temp = temp || template.value;
-          codeMap.value = {};
-          const map = await previewCode(tId.value, temp);
-          codeMap.value = map;
-          cacheMap.value[temp] = map;
+          tableMap.value[tableId][temp] = {};
+          const map = await previewCode(tableId, temp);
+          tableMap.value[tableId][temp] = map;
         } finally {
           spinning.value = false;
         }
@@ -132,12 +157,20 @@
         }
       }
 
-      async function changeTabs(e) {
+      async function changeTabs(tableId: string, e: ChangeEvent) {
         const template = e.target.value;
-        if (cacheMap.value[template]) {
-          codeMap.value = cacheMap.value[template];
+
+        if (tableMap.value[tableId]?.[template]) {
         } else {
-          await reload(template);
+          await reload(tableId, template as TemplateEnum);
+        }
+      }
+
+      async function changeTable(tableId: string) {
+        const temp = template.value;
+        if (tableMap.value[tableId]?.[temp]) {
+        } else {
+          await reload(tableId, temp as TemplateEnum);
         }
       }
 
@@ -149,11 +182,14 @@
         return k;
       }
 
+      function getTableName(key: string) {
+        return tableNameMap.value[key];
+      }
+
       return {
         t,
         registerModal,
         handleSubmit,
-        codeMap,
         highlightedCode,
         handleCopy,
         reload,
@@ -162,6 +198,10 @@
         template,
         spinning,
         getKey,
+        tableMap,
+        getTableName,
+        tableIdListRef,
+        changeTable,
       };
     },
   });

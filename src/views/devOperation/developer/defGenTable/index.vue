@@ -19,6 +19,74 @@
         >
           {{ t('common.title.import') }}
         </a-button>
+        <a-button
+          v-hasAnyPermission="[RoleEnum.TENANT_DEVELOPER_TOOLS_GENERATOR_IMPORT]"
+          preIcon="ant-design:cloud-upload-outlined"
+          type="primary"
+          @click="handleBatchEdit"
+        >
+          {{ t('common.title.edit') }}
+        </a-button>
+        <a-button
+          v-hasAnyPermission="[RoleEnum.TENANT_DEVELOPER_TOOLS_GENERATOR_IMPORT]"
+          preIcon="ant-design:cloud-upload-outlined"
+          type="primary"
+          @click="handleBatchPreview"
+        >
+          {{ t('common.title.preview') }}
+        </a-button>
+
+        <Dropdown
+          :dropMenuList="[
+            {
+              text: '前端',
+              event: TemplateEnum.WEB_PLUS,
+            },
+            {
+              text: '后端',
+              event: TemplateEnum.BACKEND,
+            },
+          ]"
+          :trigger="['click']"
+          overlayClassName="app-locale-picker-overlay"
+          placement="bottom"
+          @menu-event="(e) => handleBatchDownload(e.event)"
+        >
+          <a-button
+            v-hasAnyPermission="[RoleEnum.TENANT_DEVELOPER_TOOLS_GENERATOR_IMPORT]"
+            :disabled="loading"
+            preIcon="ant-design:cloud-upload-outlined"
+            type="primary"
+          >
+            {{ t('common.title.download') }}
+          </a-button>
+        </Dropdown>
+
+        <Dropdown
+          :dropMenuList="[
+            {
+              text: '前端',
+              event: TemplateEnum.WEB_PLUS,
+            },
+            {
+              text: '后端',
+              event: TemplateEnum.BACKEND,
+            },
+          ]"
+          :trigger="['click']"
+          overlayClassName="app-locale-picker-overlay"
+          placement="bottom"
+          @menu-event="(e) => handleBatchGenerator(e.event)"
+        >
+          <a-button
+            v-hasAnyPermission="[RoleEnum.TENANT_DEVELOPER_TOOLS_GENERATOR_IMPORT]"
+            :disabled="loading"
+            preIcon="ant-design:cloud-upload-outlined"
+            type="primary"
+          >
+            生成
+          </a-button>
+        </Dropdown>
       </template>
       <template #bodyCell="{ column, record }">
         <template v-if="column.dataIndex === 'action'">
@@ -86,12 +154,13 @@
   </PageWrapper>
 </template>
 <script lang="ts">
-  import { defineComponent } from 'vue';
+  import { defineComponent, ref } from 'vue';
   import { useRouter } from 'vue-router';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { BasicTable, TableAction, useTable } from '/@/components/Table';
   import { PageWrapper } from '/@/components/Page';
+  import { Dropdown } from '/@/components/Dropdown';
   import { useModal } from '/@/components/Modal';
   import { RoleEnum } from '/@/enums/roleEnum';
   import { downloadFile, handleFetchParams } from '/@/utils/lamp/common';
@@ -110,16 +179,17 @@
   export default defineComponent({
     // 若需要开启页面缓存，请将此参数跟菜单名保持一致
     name: '代码生成',
-    components: { BasicTable, PageWrapper, ImportModal, TableAction, Preview },
+    components: { BasicTable, PageWrapper, ImportModal, TableAction, Preview, Dropdown },
     setup() {
       const { t } = useI18n();
       const { createMessage, createConfirm } = useMessage();
       const [registerModal, { openModal }] = useModal();
       const [registerPreviewModal, { openModal: openPreviewModal }] = useModal();
       const { replace } = useRouter();
+      const loading = ref<boolean>(false);
 
       // 表格
-      const [registerTable, { reload, getSelectRowKeys }] = useTable({
+      const [registerTable, { reload, getSelectRowKeys, getSelectRows }] = useTable({
         title: t('devOperation.developer.defGenTable.table.title'),
         api: page,
         columns: columns(),
@@ -150,12 +220,58 @@
         },
       });
 
+      function setLoading(load: boolean) {
+        loading.value = load;
+      }
+
       // 同步字段
       async function handleSync(record: Recordable, e: Event) {
         e?.stopPropagation();
         await syncField(record.id);
         createMessage.success('同步成功');
         reload();
+      }
+
+      async function handleBatchDownload(template: TemplateEnum, e: Event) {
+        e?.stopPropagation();
+        const ids = getSelectRowKeys();
+        if (!ids || ids.length <= 0) {
+          createMessage.warning('请至少选择一条数据');
+          return;
+        }
+
+        setLoading(true);
+        try {
+          const response = await downloadZip(ids, template);
+          if (response) {
+            downloadFile(response);
+            createMessage.success(t('common.tips.downloadSuccess'));
+          } else {
+            createMessage.error('下载失败，请认真检查【生成信息】是否填写完整并保存成功！');
+          }
+        } finally {
+          setLoading(false);
+        }
+      }
+
+      async function handleBatchGenerator(template: TemplateEnum, e: Event) {
+        e?.stopPropagation();
+        const ids = getSelectRowKeys();
+        if (!ids || ids.length <= 0) {
+          createMessage.warning('请至少选择一条数据');
+          return;
+        }
+
+        try {
+          setLoading(true);
+
+          const defGenVo = { ids: ids, template };
+          await generatorCode(defGenVo);
+
+          createMessage.success('代码生成成功，请在[生成路径]查看');
+        } finally {
+          setLoading(false);
+        }
       }
 
       // 生成或下载代码
@@ -185,7 +301,18 @@
       // 弹出预览页面
       function handlePreview(record: Recordable, template: string, e: Event) {
         e?.stopPropagation();
-        openPreviewModal(true, { record, template });
+        openPreviewModal(true, { tableIdList: [record.id], template });
+      }
+
+      // 弹出预览页面
+      function handleBatchPreview(e: Event) {
+        e?.stopPropagation();
+        const ids = getSelectRowKeys();
+        if (!ids || ids.length <= 0) {
+          createMessage.warning('请至少选择一条数据');
+          return;
+        }
+        openPreviewModal(true, { tableIdList: ids, template: TemplateEnum.BACKEND });
       }
 
       // 弹出编辑页面
@@ -238,6 +365,38 @@
         });
       }
 
+      // 批量编辑
+      function handleBatchEdit(e: Event) {
+        e?.stopPropagation();
+        const rows = getSelectRows();
+        if (!rows || rows.length <= 0) {
+          createMessage.warning('请至少选择一条数据');
+          return;
+        }
+        if (rows.length == 1) {
+          handleEdit(rows[0], e);
+        } else {
+          let ids = '';
+          let titles = '';
+          for (let i = 0; i < rows.length; i++) {
+            const row = rows[i];
+            ids += row.id;
+            titles += row.name;
+            if (i != rows.length - 1) {
+              ids += ',';
+              titles += ',';
+            }
+          }
+          replace({
+            name: RouteEnum.CODE_GENERATOR_EDIT,
+            params: { id: ids },
+            query: {
+              title: `批量编辑：${titles}`,
+            },
+          });
+        }
+      }
+
       return {
         t,
         RoleEnum,
@@ -252,6 +411,11 @@
         handleDelete,
         handleSuccess,
         handleBatchDelete,
+        handleBatchEdit,
+        handleBatchPreview,
+        handleBatchDownload,
+        handleBatchGenerator,
+        loading,
         TemplateEnum,
       };
     },

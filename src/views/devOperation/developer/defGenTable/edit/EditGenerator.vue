@@ -39,7 +39,7 @@
       const { t } = useI18n();
       const { createMessage } = useMessage();
       const fieldTemplate = ref<Recordable>({});
-      const tableId = ref<string>('');
+      const tableIdListRef = ref<string[]>([]);
       const loading = ref<boolean>(false);
 
       const [registerBasicForm, { validate, setFieldsValue, setProps }] = useForm({
@@ -61,8 +61,15 @@
         submitFunc: generatorBackend,
       });
 
-      async function loadDetail(tId: string) {
-        tableId.value = tId;
+      async function loadDetail(tableId: string) {
+        let tableIdList;
+        if (tableId.includes(',')) {
+          tableIdList = tableId.split(',');
+        } else {
+          tableIdList = [tableId];
+        }
+        tableIdListRef.value = tableIdList;
+
         const ft = await getFieldTemplate();
         fieldTemplate.value = ft;
         const defFileOverrideStrategy = await getDefFileOverrideStrategy();
@@ -77,7 +84,7 @@
       async function download(template: TemplateEnum) {
         setLoading(true);
         try {
-          const response = await downloadZip([unref(tableId)], template);
+          const response = await downloadZip(unref(tableIdListRef), template);
           if (response) {
             downloadFile(response);
             createMessage.success(t('common.tips.downloadSuccess'));
@@ -98,7 +105,7 @@
             fileOverrideConfig[fieldTemplate.value[key]] = params[key];
           }
 
-          const defGenVo = { ids: [tableId.value], template, fileOverrideConfig };
+          const defGenVo = { ids: unref(tableIdListRef), template, fileOverrideConfig };
           await generatorCode(defGenVo);
 
           createMessage.success('代码生成成功，请在[生成路径]查看');

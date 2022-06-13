@@ -31,6 +31,7 @@ export default {
     delete: '删除',
     query: '查询',
     import: '导入',
+    preview: '预览',
     export: '导出',
     view: '查看',
     details: '详情',

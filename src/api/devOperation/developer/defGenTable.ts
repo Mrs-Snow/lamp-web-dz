@@ -73,6 +73,10 @@ export const Api = {
     url: `${ServicePrefixEnum.GENERATOR}/${MODULAR}/getDefFileOverrideStrategy`,
     method: RequestEnum.GET,
   } as AxiosRequestConfig,
+  FindTableList: {
+    url: `${ServicePrefixEnum.GENERATOR}/${MODULAR}/findTableList`,
+    method: RequestEnum.POST,
+  } as AxiosRequestConfig,
 };
 
 export const page = (params: PageParams<DefGenTablePageQuery>) =>
@@ -96,6 +100,12 @@ export const previewCode = (id: string, template: string) =>
   defHttp.request<any>({
     ...Api.PreviewCode,
     params: { id, template },
+  });
+
+export const findTableList = (params: string[]) =>
+  defHttp.request<DefGenTableResultVO[]>({
+    ...Api.FindTableList,
+    params,
   });
 
 export const importCheck = (tableNames: string[]) =>
