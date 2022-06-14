@@ -20,7 +20,7 @@
           {{ t('common.title.import') }}
         </a-button>
         <a-button
-          v-hasAnyPermission="[RoleEnum.TENANT_DEVELOPER_TOOLS_GENERATOR_IMPORT]"
+          v-hasAnyPermission="[RoleEnum.TENANT_DEVELOPER_TOOLS_GENERATOR_EDIT]"
           preIcon="ant-design:cloud-upload-outlined"
           type="primary"
           @click="handleBatchEdit"
@@ -28,7 +28,7 @@
           {{ t('common.title.edit') }}
         </a-button>
         <a-button
-          v-hasAnyPermission="[RoleEnum.TENANT_DEVELOPER_TOOLS_GENERATOR_IMPORT]"
+          v-hasAnyPermission="[RoleEnum.TENANT_DEVELOPER_TOOLS_GENERATOR_PREVIEW]"
           preIcon="ant-design:cloud-upload-outlined"
           type="primary"
           @click="handleBatchPreview"
@@ -53,7 +53,7 @@
           @menu-event="(e) => handleBatchDownload(e.event)"
         >
           <a-button
-            v-hasAnyPermission="[RoleEnum.TENANT_DEVELOPER_TOOLS_GENERATOR_IMPORT]"
+            v-hasAnyPermission="[RoleEnum.TENANT_DEVELOPER_TOOLS_GENERATOR_PREVIEW]"
             :disabled="loading"
             preIcon="ant-design:cloud-upload-outlined"
             type="primary"
@@ -79,7 +79,7 @@
           @menu-event="(e) => handleBatchGenerator(e.event)"
         >
           <a-button
-            v-hasAnyPermission="[RoleEnum.TENANT_DEVELOPER_TOOLS_GENERATOR_IMPORT]"
+            v-hasAnyPermission="[RoleEnum.TENANT_DEVELOPER_TOOLS_GENERATOR_PREVIEW]"
             :disabled="loading"
             preIcon="ant-design:cloud-upload-outlined"
             type="primary"
