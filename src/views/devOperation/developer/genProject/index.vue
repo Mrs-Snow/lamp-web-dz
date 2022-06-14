@@ -12,6 +12,7 @@
         <a-button @click="resetFields"> 清空</a-button>
         <a-button class="!ml-4" @click="resetForm"> 重置</a-button>
         <a-button class="!ml-4" type="primary" @click="handleSubmit">立即生成</a-button>
+        <a-button class="!ml-4" type="primary" @click="handleDownload">立即下载</a-button>
       </div>
       <BasicTitle line span>注意事项</BasicTitle>
       <Alert message="注意事项" show-icon>
@@ -44,6 +45,7 @@
       <a-button @click="resetFields"> 清空</a-button>
       <a-button @click="resetForm"> 重置</a-button>
       <a-button type="primary" @click="handleSubmit">立即生成</a-button>
+      <a-button type="primary" @click="handleDownload">立即下载</a-button>
     </template>
   </PageWrapper>
 </template>
@@ -56,10 +58,11 @@
   import { BasicTitle } from '/@/components/Basic';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { Api, generator, getDef } from '/@/api/devOperation/developer/defGenProject';
+  import { Api, download, generator, getDef } from '/@/api/devOperation/developer/defGenProject';
   import { getValidateRules } from '/@/api/lamp/common/formValidateService';
   import { customFormSchemaRules, editFormSchema } from './genProject.data';
   import { useLoading } from '/@/components/Loading';
+  import { blobToObj, downloadFile } from '/@/utils/lamp/common';
 
   interface TabModel {
     name: string;
@@ -160,6 +163,25 @@
         }
       }
 
+      async function handleDownload() {
+        try {
+          openFullLoading();
+          const params = await validate();
+          const response = await download(params);
+          if (response) {
+            downloadFile(response);
+            createMessage.success(t('common.tips.downloadSuccess'));
+          } else {
+            createMessage.error('下载失败，请认真检查【生成信息】是否填写完整并保存成功！');
+          }
+        } catch (e: any) {
+          const obj = (await blobToObj(e?.response?.data)) as any;
+          createMessage.error(obj.msg);
+        } finally {
+          closeFullLoading();
+        }
+      }
+
       return {
         t,
         activeKey,
@@ -169,6 +191,7 @@
         handleSubmit,
         resetForm,
         resetFields,
+        handleDownload,
       };
     },
   });

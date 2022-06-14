@@ -15,6 +15,10 @@ export const Api = {
     url: `${ServicePrefixEnum.GENERATOR}/${MODULAR}/generator`,
     method: RequestEnum.POST,
   } as AxiosRequestConfig,
+  Download: {
+    url: `${ServicePrefixEnum.GENERATOR}/${MODULAR}/download`,
+    method: RequestEnum.POST,
+  } as AxiosRequestConfig,
 };
 
 export const getDef = () => defHttp.request<ProjectGeneratorVO>({ ...Api.GetDef });
@@ -24,3 +28,12 @@ export const generator = (params: ProjectGeneratorVO) =>
     ...Api.Generator,
     params,
   });
+export const download = (params: ProjectGeneratorVO) =>
+  defHttp.request<any>(
+    {
+      ...Api.Download,
+      responseType: 'blob',
+      params,
+    },
+    { isReturnNativeResponse: true },
+  );
