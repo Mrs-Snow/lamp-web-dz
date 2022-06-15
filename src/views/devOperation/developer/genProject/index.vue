@@ -11,7 +11,7 @@
       <div class="flex justify-center">
         <a-button @click="resetFields"> 清空</a-button>
         <a-button class="!ml-4" @click="resetForm"> 重置</a-button>
-        <a-button class="!ml-4" type="primary" @click="handleSubmit">立即生成</a-button>
+        <a-button class="!ml-4" type="primary" @click="handleSubmit">本地生成</a-button>
         <a-button class="!ml-4" type="primary" @click="handleDownload">立即下载</a-button>
       </div>
       <BasicTitle line span>注意事项</BasicTitle>
@@ -26,6 +26,11 @@
             3. {基础包} 需要与启动类所在的基础包一致，否则需要修改项目中
             @ComponentScan和@MapperScan中的配置
           </p>
+          <p>
+            4. {本地生成}
+            适用于开发者本机启动项目后，直接将"代码"生成在开发者所在电脑，部署在测试环境上的系统，无法将代码生成在开发者电脑。
+          </p>
+          <p> 5. {立即下载} 适用于测试环境启动项目后，开发者将生成的代码下载到开发者的电脑。 </p>
         </template>
       </Alert>
     </div>
@@ -44,7 +49,7 @@
     <template #extra>
       <a-button @click="resetFields"> 清空</a-button>
       <a-button @click="resetForm"> 重置</a-button>
-      <a-button type="primary" @click="handleSubmit">立即生成</a-button>
+      <a-button type="primary" @click="handleSubmit">本地生成</a-button>
       <a-button type="primary" @click="handleDownload">立即下载</a-button>
     </template>
   </PageWrapper>
