@@ -76,7 +76,7 @@ export const baseEditFormSchema = (): FormSchema[] => {
       colProps: {
         span: 12,
       },
-      ifShow: ({ values }) => {
+      show: ({ values }) => {
         return !values.batch;
       },
     },
@@ -95,7 +95,7 @@ export const baseEditFormSchema = (): FormSchema[] => {
       colProps: {
         span: 12,
       },
-      ifShow: ({ values }) => {
+      show: ({ values }) => {
         return !values.batch;
       },
     },
@@ -107,7 +107,7 @@ export const baseEditFormSchema = (): FormSchema[] => {
         span: 12,
       },
       helpMessage: ['修改实体名称后，会影响Controller、Service、Manager、Mapper、VO的名称'],
-      ifShow: ({ values }) => {
+      show: ({ values }) => {
         return !values.batch;
       },
     },
@@ -128,7 +128,7 @@ export const baseEditFormSchema = (): FormSchema[] => {
         span: 12,
       },
       helpMessage: ['体现在代码注释中'],
-      ifShow: ({ values }) => {
+      show: ({ values }) => {
         return !values.batch;
       },
     },
@@ -140,7 +140,7 @@ export const baseEditFormSchema = (): FormSchema[] => {
         span: 12,
       },
       helpMessage: ['体现在swagger文档'],
-      ifShow: ({ values }) => {
+      show: ({ values }) => {
         return !values.batch;
       },
     },
