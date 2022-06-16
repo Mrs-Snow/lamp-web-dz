@@ -6,14 +6,14 @@ import { useI18n } from '/@/hooks/web/useI18n';
 import { useUserStore } from './user';
 import { useAppStoreWithOut } from './app';
 import { toRaw } from 'vue';
-import { transformObjToRoute, flatMultiLevelRoutes } from '/@/router/helper/routeHelper';
+import { flatMultiLevelRoutes, transformObjToRoute } from '/@/router/helper/routeHelper';
 import { transformRouteToMenu } from '/@/router/helper/menuHelper';
 
 import projectSetting from '/@/settings/projectSetting';
 import { useGlobSetting } from '/@/hooks/setting';
 import { PermissionModeEnum } from '/@/enums/appEnum';
 
-import { asyncRoutes, AfterRoutes, AfterVbenRoutes, AfterMyTenantRoutes } from '/@/router/routes';
+import { AfterMyTenantRoutes, AfterRoutes, AfterVbenRoutes, asyncRoutes } from '/@/router/routes';
 import { ERROR_LOG_ROUTE, PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
 
 import { filter } from '/@/utils/helper/treeHelper';
@@ -33,8 +33,6 @@ const DEV_OPER_APP_ID = globSetting.devOperationApplicationId;
 const MULTI_TENANT_TYPE = globSetting.multiTenantType;
 
 interface PermissionState {
-  // Permission code list
-  permCodeList: string[] | number[];
   // Whether the route has been dynamically added
   // 路由是否动态添加
   isDynamicAddedRoute: boolean;
@@ -155,6 +153,7 @@ export const usePermissionStore = defineStore({
       const patchHomeAffix = (routes: AppRouteRecordRaw[]) => {
         if (!routes || routes.length === 0) return;
         let homePath: string = PageEnum.BASE_HOME;
+
         function patcher(routes: AppRouteRecordRaw[], parentPath = '') {
           if (parentPath) parentPath = parentPath + '/';
           routes.forEach((route: AppRouteRecordRaw) => {
