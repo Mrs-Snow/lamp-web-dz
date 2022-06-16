@@ -56,8 +56,8 @@ export const navItems: NavItem[] = [
 export const dynamicInfoItems: DynamicInfoItem[] = [
   {
     avatar: 'dynamic-avatar-1|svg',
-    name: '4.7.0 即将发布：',
-    date: '2022-06-??',
+    name: '4.7.0 已发布：',
+    date: '2022-06-17',
     desc: `<a href="https://www.oschina.net/news/197090">《灯灯》4.7.0发布，代码生成器支持批量生成、预览、下载、修改；支持下载项目结构;</a>`,
   },
   {
