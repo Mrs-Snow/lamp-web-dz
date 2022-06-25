@@ -18,6 +18,8 @@ export enum ServicePrefixEnum {
   SYSTEM = '/system',
   // 代码生成器服务
   GENERATOR = '/generator',
+  // 工作流
+  ACTIVITI = '/activiti',
 }
 
 /**
