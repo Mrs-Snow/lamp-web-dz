@@ -48,6 +48,7 @@
   // components
   import { Dropdown, Menu } from 'ant-design-vue';
   import { useRouter } from 'vue-router';
+  import type { MenuInfo } from 'ant-design-vue/lib/menu/src/interface';
 
   import { defineComponent, computed, ref } from 'vue';
 
@@ -114,8 +115,8 @@
         });
       }
 
-      function handleMenuClick(e: { key: MenuEvent }) {
-        switch (e.key) {
+      function handleMenuClick(e: MenuInfo) {
+        switch (e.key as MenuEvent) {
           case 'profile':
             openProfile();
             break;
@@ -155,6 +156,12 @@
     font-size: 12px;
     cursor: pointer;
     align-items: center;
+
+    img {
+      width: 24px;
+      height: 24px;
+      margin-right: 12px;
+    }
 
     &__header {
       border-radius: 50%;
