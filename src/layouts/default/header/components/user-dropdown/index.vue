@@ -4,7 +4,7 @@
       <AvatarPreview
         :isDef="true"
         :fileId="getUserInfo?.avatarId"
-        :errorTxt="getUserInfo?.nickName?.substr(0, 1)"
+        :errorTxt="getUserInfo?.nickName?.substring(0, 1)"
         :style="{ 'margin-right': '0.5rem' }"
       />
       <span :class="`${prefixCls}__info hidden md:block`">
