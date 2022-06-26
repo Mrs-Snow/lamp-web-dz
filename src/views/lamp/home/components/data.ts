@@ -56,9 +56,15 @@ export const navItems: NavItem[] = [
 export const dynamicInfoItems: DynamicInfoItem[] = [
   {
     avatar: 'dynamic-avatar-1|svg',
+    name: '4.8.0 已发布：',
+    date: '2022-06-28',
+    desc: `<a href="https://www.oschina.net/news/199859">《灯灯》4.8.0发布，Activiti 工作流首次发布(仅none、column模式)</a>`,
+  },
+  {
+    avatar: 'dynamic-avatar-1|svg',
     name: '4.7.0 已发布：',
     date: '2022-06-17',
-    desc: `<a href="https://www.oschina.net/news/197090">《灯灯》4.7.0发布，代码生成器支持批量生成、预览、下载、修改；支持下载项目结构;</a>`,
+    desc: `<a href="https://www.oschina.net/news/199859">《灯灯》4.7.0发布，代码生成器支持批量生成、预览、下载、修改；支持下载项目结构;</a>`,
   },
   {
     avatar: 'dynamic-avatar-1|svg',
