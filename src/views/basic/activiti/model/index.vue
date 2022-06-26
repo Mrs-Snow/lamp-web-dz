@@ -113,9 +113,9 @@
         const tenant = getTenantId();
         const applicationId = getApplicationId();
         const token = getToken();
-        // lamp-boot
+        // lamp-boot 本地开发，请使用此链接
         // let url = `/static/index?modelId=${record.id}&ApplicationId=${applicationId}&TenantId=${tenant}&Token=${token}`;
-        // lamp-cloud
+        // lamp-cloud 本地和生产和 lamp-boot 生产，请使用此链接
         let url = `/api/activiti/static/index?modelId=${record.id}&ApplicationId=${applicationId}&TenantId=${tenant}&Token=${token}`;
         // 本地需要直接访问网关
         openWindow((isDevMode() ? 'http://localhost:18760' : '') + url);
