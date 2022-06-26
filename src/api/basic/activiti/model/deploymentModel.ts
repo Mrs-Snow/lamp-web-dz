@@ -14,8 +14,8 @@ export interface ProcessDefinitionDO {
   deploymentTime: string;
   diagramResourceName: string;
   resourceName: string;
-  suspendState: string;
-  suspendStateName: string;
+  suspensionState: string;
+  suspensionStateName: string;
 }
 
 export interface DefinitionUploadVO {

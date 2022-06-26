@@ -26,7 +26,7 @@
                 onClick: handleTrans.bind(null, record),
               },
               {
-                label: record.suspendState === '2' ? '激活' : '挂起',
+                label: record.suspensionState === 2 ? '激活' : '挂起',
                 auth: RoleEnum.BASIC_FLOW_ACTIVITI_DEPLOYMENT_STATE,
                 onClick: handleStatus.bind(null, record),
               },
@@ -143,10 +143,10 @@
         try {
           const flag = await updateState(record.id, record.suspensionState);
           if (flag) {
-            createMessage.success(t('common.tips.editSuccess'));
+            createMessage.success(t('common.tips.updateSuccess'));
             handleSuccess();
           } else {
-            createMessage.success(t('common.tips.editFail'));
+            createMessage.success(t('common.tips.updateFail'));
           }
         } finally {
           closeFullLoading();

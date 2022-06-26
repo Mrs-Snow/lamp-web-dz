@@ -10,13 +10,14 @@
     @register="registerModal"
   >
     <pre v-if="type === 'xml'">
-      <code class="hljs" v-html="buildXml()"/>
+      <code class="hljs" v-html="buildXml()"></code>
     </pre>
-    <img v-else :src="img" style="width: 100%"/>
+    <Image v-else :src="img" />
   </BasicModal>
 </template>
 <script lang="ts">
   import { defineComponent, reactive, toRefs } from 'vue';
+  import { Image } from 'ant-design-vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
@@ -29,7 +30,7 @@
 
   export default defineComponent({
     name: 'DeploymentView',
-    components: { BasicModal },
+    components: { BasicModal, Image },
     emits: ['success', 'register'],
     setup(_, { emit }) {
       const { t } = useI18n();

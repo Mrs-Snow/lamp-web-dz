@@ -52,6 +52,7 @@ export default {
     exportSuccess: 'Export Success',
     addFail: 'Add Fail',
     editFail: 'Edit Fail',
+    updateFail: 'Update Fail',
     copyFail: 'Copy Fail',
     deleteFail: 'Delete Fail',
     uploadSuccess: 'Upload Success',
