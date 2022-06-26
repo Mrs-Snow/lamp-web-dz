@@ -2,7 +2,12 @@
   <PageWrapper contentFullHeight dense>
     <BasicTable @register="registerTable">
       <template #toolbar>
-        <a-button type="primary" @click="handleAdd">{{ t('common.title.add') }}</a-button>
+        <a-button
+          v-hasAnyPermission="[RoleEnum.BASIC_FLOW_ACTIVITI_MODEL_ADD]"
+          type="primary"
+          @click="handleAdd"
+          >{{ t('common.title.add') }}
+        </a-button>
       </template>
       <template #bodyCell="{ column, record }">
         <template v-if="column.dataIndex === 'action'">
@@ -10,19 +15,23 @@
             :actions="[
               {
                 label: '编辑',
+                auth: RoleEnum.BASIC_FLOW_ACTIVITI_MODEL_EDIT,
                 onClick: handleEdit.bind(null, record),
               },
               {
                 label: '发布',
+                auth: RoleEnum.BASIC_FLOW_ACTIVITI_MODEL_PUBLISH,
                 onClick: handlePublish.bind(null, record),
               },
               {
                 label: '下载',
+                auth: RoleEnum.BASIC_FLOW_ACTIVITI_MODEL_DOWNLOAD,
                 onClick: handleDownload.bind(null, record),
               },
               {
                 label: t('common.title.delete'),
                 color: 'error',
+                auth: RoleEnum.BASIC_FLOW_ACTIVITI_MODEL_DELETE,
                 popConfirm: {
                   title: t('common.tips.confirmDelete'),
                   confirm: handleDelete.bind(null, record),
@@ -51,6 +60,7 @@
   import { getApplicationId, getTenantId, getToken } from '/@/utils/auth';
   import { download, page, publish, remove } from '/@/api/basic/activiti/model';
   import { columns, searchFormSchema } from './model.data';
+  import { RoleEnum } from '/@/enums/roleEnum';
   import EditModal from './Edit.vue';
 
   export default defineComponent({
@@ -154,6 +164,7 @@
         handleEdit,
         handleDelete,
         handleSuccess,
+        RoleEnum,
       };
     },
   });

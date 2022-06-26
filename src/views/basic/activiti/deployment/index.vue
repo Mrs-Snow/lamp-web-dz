@@ -2,10 +2,19 @@
   <PageWrapper contentFullHeight dense>
     <BasicTable @register="registerTable">
       <template #toolbar>
-        <a-button type="primary" @click="handleBatchDelete">
+        <a-button
+          v-hasAnyPermission="[RoleEnum.BASIC_FLOW_ACTIVITI_DEPLOYMENT_DELETE]"
+          type="primary"
+          @click="handleBatchDelete"
+        >
           {{ t('common.title.delete') }}
         </a-button>
-        <a-button type="primary" @click="handleUpload">{{ t('common.title.upload') }}</a-button>
+        <a-button
+          v-hasAnyPermission="[RoleEnum.BASIC_FLOW_ACTIVITI_DEPLOYMENT_UPLOAD]"
+          type="primary"
+          @click="handleUpload"
+          >{{ t('common.title.upload') }}
+        </a-button>
       </template>
       <template #bodyCell="{ column, record }">
         <template v-if="column.dataIndex === 'action'">
@@ -13,22 +22,27 @@
             :actions="[
               {
                 label: '转换模型',
+                auth: RoleEnum.BASIC_FLOW_ACTIVITI_DEPLOYMENT_TRAN,
                 onClick: handleTrans.bind(null, record),
               },
               {
                 label: record.suspendState === '2' ? '激活' : '挂起',
+                auth: RoleEnum.BASIC_FLOW_ACTIVITI_DEPLOYMENT_STATE,
                 onClick: handleStatus.bind(null, record),
               },
               {
                 label: '流程图',
+                auth: RoleEnum.BASIC_FLOW_ACTIVITI_DEPLOYMENT_DRAW,
                 onClick: handleDraw.bind(null, record),
               },
               {
                 label: 'XML',
                 onClick: handleXml.bind(null, record),
+                auth: RoleEnum.BASIC_FLOW_ACTIVITI_DEPLOYMENT_XML,
               },
               {
                 label: t('common.title.delete'),
+                auth: RoleEnum.BASIC_FLOW_ACTIVITI_DEPLOYMENT_DELETE,
                 color: 'error',
                 popConfirm: {
                   title: t('common.tips.confirmDelete'),
@@ -56,6 +70,7 @@
   import { columns, searchFormSchema } from './deployment.data';
   import UploadModal from './Upload.vue';
   import ViewModal from './View.vue';
+  import { RoleEnum } from '/@/enums/roleEnum';
   import { useModal } from '/@/components/Modal';
 
   export default defineComponent({
@@ -191,6 +206,7 @@
         handleSuccess,
         handleBatchDelete,
         registerModal,
+        RoleEnum,
       };
     },
   });

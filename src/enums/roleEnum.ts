@@ -156,6 +156,19 @@ export enum RoleEnum {
   // 登录日志
   BASIC_SYSTEM_LOGIN_LOG_DELETE = 'basic:system:loginLog:delete',
   BASIC_SYSTEM_LOGIN_LOG_VIEW = 'basic:system:loginLog:view',
+  // 工作流-流程管理
+  BASIC_FLOW_ACTIVITI_DEPLOYMENT_UPLOAD = 'basic:flow:activiti:deployment:upload',
+  BASIC_FLOW_ACTIVITI_DEPLOYMENT_TRAN = 'basic:flow:activiti:deployment:tran',
+  BASIC_FLOW_ACTIVITI_DEPLOYMENT_STATE = 'basic:flow:activiti:deployment:state',
+  BASIC_FLOW_ACTIVITI_DEPLOYMENT_DRAW = 'basic:flow:activiti:deployment:draw',
+  BASIC_FLOW_ACTIVITI_DEPLOYMENT_XML = 'basic:flow:activiti:deployment:xml',
+  BASIC_FLOW_ACTIVITI_DEPLOYMENT_DELETE = 'basic:flow:activiti:deployment:delete',
+  // 工作流-模型管理
+  BASIC_FLOW_ACTIVITI_MODEL_ADD = 'basic:flow:activiti:model:add',
+  BASIC_FLOW_ACTIVITI_MODEL_EDIT = 'basic:flow:activiti:model:edit',
+  BASIC_FLOW_ACTIVITI_MODEL_PUBLISH = 'basic:flow:activiti:model:publish',
+  BASIC_FLOW_ACTIVITI_MODEL_DOWNLOAD = 'basic:flow:activiti:model:download',
+  BASIC_FLOW_ACTIVITI_MODEL_DELETE = 'basic:flow:activiti:model:delete',
 }
 
 export enum PermModeEnum {
