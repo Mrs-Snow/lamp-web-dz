@@ -112,6 +112,9 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       dynamicDisabled: () => {
         return [ActionEnum.VIEW].includes(type.value);
       },
+      show: () => {
+        return [ActionEnum.ADD, ActionEnum.COPY].includes(type.value);
+      },
       colProps: {
         span: 12,
       },
