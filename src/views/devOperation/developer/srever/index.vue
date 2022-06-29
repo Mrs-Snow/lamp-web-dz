@@ -43,6 +43,7 @@
         rowKey: 'dirName',
         pagination: false,
         showIndexColumn: false,
+        scroll: { y: 300 },
       });
 
       onMounted(async () => {

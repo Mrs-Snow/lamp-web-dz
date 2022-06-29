@@ -6,39 +6,43 @@ export const cpuSchema: DescItem[] = [
     field: 'cpuNum',
     label: 'CPU核',
   },
-  {
-    field: 'total',
-    label: '总使用率',
-  },
+  // {
+  //   field: 'total',
+  //   label: '总使用率',
+  // },
   {
     field: 'sys',
-    label: '系统使用率',
+    label: '系统使用率（%）',
   },
   {
     field: 'used',
-    label: '用户使用率',
+    label: '用户使用率（%）',
   },
   {
     field: 'wait',
-    label: '当前等待率',
+    label: '当前等待率（%）',
   },
   {
     field: 'free',
-    label: '当前空闲率',
+    label: '当前空闲率（%）',
   },
 ];
 export const memSchema: DescItem[] = [
   {
     field: 'total',
-    label: '内存总量',
+    label: '内存总量（G）',
   },
   {
     field: 'used',
-    label: '已用内存',
+    label: '已用内存（G）',
   },
   {
     field: 'free',
-    label: '剩余内存',
+    label: '剩余内存（G）',
+  },
+  {
+    field: 'usage',
+    label: '使用率（%）',
   },
 ];
 
@@ -56,12 +60,32 @@ export const jvmSchema: DescItem[] = [
     label: 'JVM空闲内存(M)',
   },
   {
+    field: 'usage',
+    label: '使用率（%）',
+  },
+  {
+    field: 'name',
+    label: 'Jvm名称',
+  },
+  {
     field: 'version',
     label: 'JDK版本',
   },
   {
+    field: 'startTime',
+    label: '启动时间',
+  },
+  {
+    field: 'runTime',
+    label: '运行时长',
+  },
+  {
     field: 'home',
     label: 'JDK路径',
+  },
+  {
+    field: 'inputArgs',
+    label: '运行参数',
   },
 ];
 
