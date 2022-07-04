@@ -1,0 +1,16 @@
+export default {
+  table: { title: '消息列表' },
+  id: '短信记录ID',
+  templateId: '消息模板',
+  status: '执行状态',
+  channel: '发送渠道',
+  param: '参数 ',
+  title: '标题',
+  content: '发送内容',
+  sendTime: '发送时间',
+  draft: '是否草稿',
+  createdBy: '创建人ID',
+  createdTime: '创建时间',
+  updatedBy: '最后修改人',
+  updatedTime: '最后修改时间',
+};

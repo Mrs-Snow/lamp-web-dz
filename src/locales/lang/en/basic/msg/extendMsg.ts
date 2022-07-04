@@ -1,0 +1,16 @@
+export default {
+  table: { title: 'ExtendMsg list' },
+  id: 'Id',
+  templateId: 'TemplateId',
+  status: 'Status',
+  channel: 'Channel',
+  param: 'Param',
+  title: 'Title',
+  content: 'Content',
+  sendTime: 'SendTime',
+  draft: 'Draft',
+  createdBy: 'CreatedBy',
+  createdTime: 'CreatedTime',
+  updatedBy: 'UpdatedBy',
+  updatedTime: 'UpdatedTime',
+};
