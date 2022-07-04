@@ -7,14 +7,11 @@
           color="error"
           v-hasAnyPermission="[RoleEnum.TENANT_USER_DELETE]"
           @click="handleBatchDelete"
-          >{{ t('common.title.delete') }}</a-button
-        >
-        <a-button
-          type="primary"
-          v-hasAnyPermission="[RoleEnum.TENANT_USER_ADD]"
-          @click="handleAdd"
-          >{{ t('common.title.add') }}</a-button
-        >
+          >{{ t('common.title.delete') }}
+        </a-button>
+        <a-button type="primary" v-hasAnyPermission="[RoleEnum.TENANT_USER_ADD]" @click="handleAdd"
+          >{{ t('common.title.add') }}
+        </a-button>
       </template>
       <template #bodyCell="{ column, record }">
         <template v-if="column.dataIndex === 'action'">
@@ -60,6 +57,7 @@
       </template>
     </BasicTable>
     <EditModal @register="registerDrawer" @success="handleSuccess" />
+    <RestPasswordModal @register="registerModal" @success="handleSuccess" />
   </PageWrapper>
 </template>
 <script lang="ts">
@@ -69,22 +67,25 @@
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
   import { PageWrapper } from '/@/components/Page';
   import { useDrawer } from '/@/components/Drawer';
+  import { useModal } from '/@/components/Modal';
   import { handleFetchParams } from '/@/utils/lamp/common';
   import { ActionEnum } from '/@/enums/commonEnum';
-  import { page, remove, resetPassword } from '/@/api/devOperation/tenant/defUser';
+  import { page, remove } from '/@/api/devOperation/tenant/defUser';
   import { columns, searchFormSchema } from './defUser.data';
   import { RoleEnum } from '/@/enums/roleEnum';
   import EditModal from './Edit.vue';
+  import RestPasswordModal from './RestPassword.vue';
 
   export default defineComponent({
     // 若需要开启页面缓存，请将此参数跟菜单名保持一致
     name: '用户维护',
-    components: { BasicTable, PageWrapper, EditModal, TableAction },
+    components: { BasicTable, PageWrapper, EditModal, RestPasswordModal, TableAction },
     setup() {
       const { t } = useI18n();
       const { createMessage, createConfirm } = useMessage();
       // 编辑页弹窗
       const [registerDrawer, { openDrawer }] = useDrawer();
+      const [registerModal, { openModal }] = useModal();
 
       // 表格
       const [registerTable, { reload, getSelectRowKeys }] = useTable({
@@ -124,6 +125,7 @@
           type: ActionEnum.COPY,
         });
       }
+
       // 弹出查看页面
       function handleView(record: Recordable, e: Event) {
         e?.stopPropagation();
@@ -167,17 +169,12 @@
           batchDelete([record.id]);
         }
       }
+
       // 重置密码
       function handleResetPwd(record: Recordable) {
-        createConfirm({
-          iconType: 'warning',
-          content: `是否确认要重置${record.nickName}的密码？`,
-          onOk: async () => {
-            await resetPassword({ id: record.id, isUseSystemPassword: true });
-            createMessage.success('重置成功！密码已重置为系统参数配置的默认密码');
-          },
-        });
+        openModal(true, { record });
       }
+
       // 点击批量删除
       function handleBatchDelete() {
         const ids = getSelectRowKeys();
@@ -207,6 +204,7 @@
         handleBatchDelete,
         handleResetPwd,
         RoleEnum,
+        registerModal,
       };
     },
   });

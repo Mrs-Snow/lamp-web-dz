@@ -1,4 +1,4 @@
-import { Ref, h, unref } from 'vue';
+import { h, Ref, unref } from 'vue';
 import { Switch } from 'ant-design-vue';
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
@@ -12,10 +12,10 @@ import {
 import { ActionEnum, DictEnum } from '/@/enums/commonEnum';
 import { FormSchemaExt, RuleType } from '/@/api/lamp/common/formValidateService';
 import {
-  checkUsername,
   checkEmail,
   checkIdCard,
   checkMobile,
+  checkUsername,
   updateState,
 } from '/@/api/devOperation/tenant/defUser';
 
@@ -325,6 +325,77 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       ifShow: () => {
         return type.value === ActionEnum.VIEW;
       },
+    },
+  ];
+};
+
+// 重置密码
+export const restPasswordFormSchema = (): FormSchema[] => {
+  return [
+    {
+      field: 'id',
+      label: 'ID',
+      component: 'Input',
+      show: false,
+    },
+    {
+      label: '使用系统内置密码',
+      field: 'isUseSystemPassword',
+      component: 'RadioButtonGroup',
+      componentProps: {
+        ...yesNoComponentProps(),
+      },
+      defaultValue: true,
+    },
+    {
+      label: t('devOperation.tenant.defUser.password'),
+      field: 'password',
+      component: 'InputPassword',
+      componentProps: {
+        autocomplete: 'off',
+        placeholder: '当前密码',
+      },
+      ifShow: ({ values }) => {
+        return !values.isUseSystemPassword;
+      },
+    },
+    {
+      label: '确认密码',
+      field: 'confirmPassword',
+      component: 'InputPassword',
+      componentProps: {
+        autocomplete: 'off',
+        placeholder: '当前密码',
+      },
+      ifShow: ({ values }) => {
+        return !values.isUseSystemPassword;
+      },
+    },
+  ];
+};
+
+export const restPasswordFormSchemaRules = (
+  getFieldsValue: () => Recordable,
+): Partial<FormSchemaExt>[] => {
+  return [
+    {
+      field: 'confirmPassword',
+      type: RuleType.append,
+      rules: [
+        {
+          trigger: ['change', 'blur'],
+          required: true,
+          validator: (_, value) => {
+            if (!value) {
+              return Promise.reject('确认密码不能为空');
+            }
+            if (value !== getFieldsValue().password) {
+              return Promise.reject('两次输入的密码不一致!');
+            }
+            return Promise.resolve();
+          },
+        },
+      ],
     },
   ];
 };
