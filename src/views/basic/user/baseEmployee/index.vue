@@ -73,6 +73,12 @@
             ]"
             :dropDownActions="[
               {
+                label: '重置密码',
+                icon: 'ant-design:rest-filled',
+                onClick: handleResetPwd.bind(null, record),
+                auth: RoleEnum.EMPLOYEE_REST_PWD,
+              },
+              {
                 label: t('common.title.edit'),
                 icon: 'ant-design:edit-outlined',
                 onClick: handleEdit.bind(null, record),
@@ -102,6 +108,7 @@
     <EditModal @register="registerDrawer" @success="handleSuccess" />
     <InvitationUserModal @register="registerInvitationModal" @success="handleSuccess" />
     <EmployeeRole @register="registerModal" @success="handleSuccess" />
+    <RestPasswordModal @register="registerRestPwdModal" @success="handleSuccess" />
   </PageWrapper>
 </template>
 <script lang="ts">
@@ -122,6 +129,7 @@
   import EditModal from './Edit.vue';
   import InvitationUserModal from './InvitationUser.vue';
   import BaseOrgTree from '../baseOrg/Tree.vue';
+  import RestPasswordModal from './RestPassword.vue';
 
   export default defineComponent({
     // 若需要开启页面缓存，请将此参数跟菜单名保持一致
@@ -135,6 +143,7 @@
       Tag,
       EmployeeRole,
       BaseOrgTree,
+      RestPasswordModal,
     },
     setup() {
       const { t } = useI18n();
@@ -145,6 +154,7 @@
       const [registerDrawer, { openDrawer }] = useDrawer();
       // 绑定角色
       const [registerModal, { openModal }] = useModal();
+      const [registerRestPwdModal, { openModal: openRestPwdModal }] = useModal();
       const [registerInvitationModal, { openModal: openInvitationModal }] = useModal();
       const getTitle = computed(() => {
         return (
@@ -218,6 +228,12 @@
         });
       }
 
+      // 重置密码
+      function handleResetPwd(record: Recordable) {
+        const row = { ...record };
+        row.id = row.userId;
+        openRestPwdModal(true, { record: row });
+      }
       // 弹出编辑页面
       function handleEdit(record: Recordable, e: Event) {
         e?.stopPropagation();
@@ -294,10 +310,12 @@
         registerDrawer,
         registerModal,
         registerInvitationModal,
+        registerRestPwdModal,
         handleView,
         handleAdd,
         handleCopy,
         handleEdit,
+        handleResetPwd,
         handleDelete,
         handleSuccess,
         handleBatchDelete,

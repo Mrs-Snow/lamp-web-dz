@@ -104,6 +104,7 @@ export enum RoleEnum {
 
   // 员工维护
   EMPLOYEE_ADD = 'basic:user:employee:add',
+  EMPLOYEE_REST_PWD = 'basic:user:employee:rest:pwd',
   EMPLOYEE_EDIT = 'basic:user:employee:edit',
   EMPLOYEE_DELETE = 'basic:user:employee:delete',
   EMPLOYEE_VIEW = 'basic:user:employee:view',
