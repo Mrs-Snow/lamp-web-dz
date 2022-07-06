@@ -6,6 +6,7 @@ import 'codemirror/theme/material-palenight.css';
 
 // modes
 import 'codemirror/mode/javascript/javascript';
+import 'codemirror/mode/groovy/groovy';
 import 'codemirror/mode/css/css';
 import 'codemirror/mode/htmlmixed/htmlmixed';
 // addons

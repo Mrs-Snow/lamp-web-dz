@@ -5,6 +5,7 @@
       @change="handleValueChange"
       :mode="mode"
       :readonly="readonly"
+      :tabSize="tabSize"
     />
   </div>
 </template>
@@ -25,6 +26,7 @@
       },
     },
     readonly: { type: Boolean },
+    tabSize: { type: Number, default: 2 },
     autoFormat: { type: Boolean, default: true },
   });
 

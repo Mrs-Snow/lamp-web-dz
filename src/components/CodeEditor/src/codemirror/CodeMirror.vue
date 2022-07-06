@@ -16,6 +16,7 @@
   // modes
   import 'codemirror/mode/javascript/javascript';
   import 'codemirror/mode/css/css';
+  import 'codemirror/mode/groovy/groovy';
   import 'codemirror/mode/htmlmixed/htmlmixed';
 
   const props = defineProps({
@@ -29,6 +30,7 @@
     },
     value: { type: String, default: '' },
     readonly: { type: Boolean, default: false },
+    tabSize: { type: Number, default: 2 },
   });
 
   const emit = defineEmits(['change']);
@@ -82,15 +84,24 @@
       autoCloseTags: true,
       foldGutter: true,
       gutters: ['CodeMirror-linenumbers'],
+      //line选择是是否加亮
+      styleActiveLine: true,
+      //括号匹配
+      matchBrackets: true,
     };
 
     editor = CodeMirror(el.value!, {
       value: '',
       mode: props.mode,
       readOnly: props.readonly,
-      tabSize: 2,
-      theme: 'material-palenight',
+      tabSize: props.tabSize,
+
+      // 主题
+      theme: 'idea',
+      // theme: 'material-palenight',
+      // 软换行
       lineWrapping: true,
+      //是否显示行数
       lineNumbers: true,
       ...addonOptions,
     });
