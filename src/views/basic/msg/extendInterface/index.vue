@@ -10,11 +10,7 @@
         >
           {{ t('common.title.delete') }}
         </a-button>
-        <a-button
-          type="primary"
-          preIcon="ant-design:plus-outlined"
-          @click="handleAdd"
-        >
+        <a-button type="primary" preIcon="ant-design:plus-outlined" @click="handleAdd">
           {{ t('common.title.add') }}
         </a-button>
       </template>
@@ -123,6 +119,7 @@
           type: ActionEnum.COPY,
         });
       }
+
       // 弹出新增页面
       function handleAdd() {
         openModal(true, {

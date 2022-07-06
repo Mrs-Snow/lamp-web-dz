@@ -5,6 +5,7 @@ export default {
   name: 'Name',
   execMode: 'ExecMode',
   script: 'Script',
+  implClass: 'implClass',
   state: 'State',
   createdTime: 'CreatedTime',
   createdBy: 'CreatedBy',

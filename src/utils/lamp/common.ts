@@ -197,13 +197,31 @@ export const enumComponentProps = (type: EnumEnum | string, excludes?: string | 
   };
 };
 
-export const dictComponentProps = (type: DictEnum | string, excludes?: string | string[]) => {
+export const dictAllComponentProps = (
+  type: DictEnum | string,
+  extendFirst = true,
+  excludes?: string | string[],
+) => {
+  return dictComponentProps(
+    type,
+    { label: '所有', text: '所有', value: null },
+    extendFirst,
+    excludes,
+  );
+};
+
+export const dictComponentProps = (
+  type: DictEnum | string,
+  extend = { label: '所有', text: '所有', value: null },
+  extendFirst = true,
+  excludes?: string | string[],
+) => {
   if (excludes && isString(excludes)) {
     excludes = [excludes];
   }
   return {
     api: asyncFindDictList,
-    params: { type, excludes },
+    params: { type, extend, extendFirst, excludes },
     resultField: 'data',
     showSearch: true,
     filterOption: (input: string, option: any) => {

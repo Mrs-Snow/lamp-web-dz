@@ -1,4 +1,9 @@
-import { ExtendInterfaceSaveVO, ExtendInterfaceUpdateVO, ExtendInterfaceResultVO, ExtendInterfacePageQuery } from './model/extendInterfaceModel';
+import {
+  ExtendInterfaceSaveVO,
+  ExtendInterfaceUpdateVO,
+  ExtendInterfaceResultVO,
+  ExtendInterfacePageQuery,
+} from './model/extendInterfaceModel';
 import { PageParams, PageResult } from '/@/api/model/baseModel';
 import { defHttp } from '/@/utils/http/axios';
 import { RequestEnum } from '/@/enums/httpEnum';
@@ -6,10 +11,7 @@ import { ServicePrefixEnum } from '/@/enums/commonEnum';
 import type { AxiosRequestConfig } from 'axios';
 
 const MODULAR = 'extendInterface';
-// tips: 建议在ServicePrefixEnum中新增：BASE = '/base'，并将下方代码改为： const ServicePrefix = ServicePrefixEnum.BASE;
-// tips: /base 需要与 lamp-gateway-server.yml中配置的Path一致，否则无法正常调用接口！！！
-// const ServicePrefix = ServicePrefixEnum.BASE;
-const ServicePrefix = '/base';
+const ServicePrefix = ServicePrefixEnum.BASE;
 
 export const Api = {
   Page: {
@@ -42,7 +44,11 @@ export const Api = {
   } as AxiosRequestConfig,
 };
 
-export const copy = (id: string) => defHttp.request<ExtendInterfaceResultVO>({ ...Api.Copy, params: { id } });
+export const copy = (id: string) =>
+  defHttp.request<ExtendInterfaceResultVO>({
+    ...Api.Copy,
+    params: { id },
+  });
 
 export const page = (params: PageParams<ExtendInterfacePageQuery>) =>
   defHttp.request<PageResult<ExtendInterfaceResultVO>>({ ...Api.Page, params });
@@ -50,12 +56,19 @@ export const page = (params: PageParams<ExtendInterfacePageQuery>) =>
 export const detail = (id: string) =>
   defHttp.request<ExtendInterfaceResultVO>({ ...Api.Detail, params: { id } });
 
-export const query = (params: ExtendInterfacePageQuery) => defHttp.request<ExtendInterfaceResultVO[]>({ ...Api.Query, params });
+export const query = (params: ExtendInterfacePageQuery) =>
+  defHttp.request<ExtendInterfaceResultVO[]>({
+    ...Api.Query,
+    params,
+  });
 
-export const save = (params: ExtendInterfaceSaveVO) => defHttp.request<ExtendInterfaceResultVO>({ ...Api.Save, params });
+export const save = (params: ExtendInterfaceSaveVO) =>
+  defHttp.request<ExtendInterfaceResultVO>({
+    ...Api.Save,
+    params,
+  });
 
 export const update = (params: ExtendInterfaceUpdateVO) =>
   defHttp.request<ExtendInterfaceResultVO>({ ...Api.Update, params });
 
 export const remove = (params: string[]) => defHttp.request<boolean>({ ...Api.Delete, params });
-

@@ -38,3 +38,7 @@ export enum ProjectTypeEnum {
   CLOUD = 'CLOUD',
   BOOT = 'BOOT',
 }
+export enum InterfaceExecModeEnum {
+  IMPL_CLASS = '01',
+  SCRIPT = '02',
+}
