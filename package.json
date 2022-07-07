@@ -79,7 +79,7 @@
     "vue-router": "^4.0.15",
     "vue-types": "^4.1.1",
     "vue3-blocks-tree": "^0.6.1",
-    "vxe-table": "^4.2.3",
+    "vxe-table": "^4.2.8",
     "vxe-table-plugin-antd": "^3.0.5",
     "xe-utils": "^3.5.4",
     "xlsx": "^0.18.5"

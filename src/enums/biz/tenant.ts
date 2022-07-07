@@ -7,10 +7,12 @@ export enum TenantStatusEnum {
   REFUSE = '30',
   AGREED = '35',
 }
+
 export enum TenantTypeEnum {
   CREATE = 'CREATE',
   REGISTER = 'REGISTER',
 }
+
 export enum TenantConnectTypeEnum {
   SYSTEM = 'SYSTEM',
   CUSTOM = 'CUSTOM',
@@ -47,6 +49,12 @@ export enum ApplicationGrantTypeEnum {
   CANCEL = '30',
 }
 
+/**
+ * 路由名称
+ * 【运营平台】-【应用管理】-【资源维护】 中的“名称” 字段保持一致
+ *
+ * 注意：【运营平台】-【应用管理】-【资源维护】中配置的资源名称，在某个应用下需要全局唯一！
+ */
 export enum RouteEnum {
   DICT_ITEM = '字典项维护',
   APPLICATION_RESOURCE = '应用资源维护',
@@ -58,6 +66,7 @@ export enum RouteEnum {
   BASIC_MY_MSG = '我的消息',
   BASIC_MY_MSG_VIEW = '查看我的消息',
   BASIC_MSG = '消息管理',
+  BASIC_MSG_PROPERTY = '接口设置',
   TENANT_VIEW = '查看企业信息',
   CODE_GENERATOR_EDIT = '修改代码配置',
 }
@@ -92,11 +101,13 @@ export enum GenTypeEnum {
   GEN = 'GEN',
   ZIP = 'ZIP',
 }
+
 // 弹窗方式
 export enum PopupTypeEnum {
   MODAL = 'MODAL',
   DRAWER = 'DRAWER',
 }
+
 // 父类实体类型
 export enum EntitySuperClassEnum {
   SUPER_ENTITY = 'SUPER_ENTITY',
@@ -104,6 +115,7 @@ export enum EntitySuperClassEnum {
   TREE_ENTITY = 'TREE_ENTITY',
   NONE = 'NONE',
 }
+
 // "SQL 比较条件常量定义类"
 export enum SqlConditionEnum {
   EQUAL = 'EQUAL',
@@ -113,6 +125,7 @@ export enum SqlConditionEnum {
   LIKE_LEFT = 'LIKE_LEFT',
   LIKE_RIGHT = 'LIKE_RIGHT',
 }
+
 // 父类
 export enum SuperClassEnum {
   SUPER_CLASS = 'SUPER_CLASS',
@@ -123,12 +136,14 @@ export enum SuperClassEnum {
   NONE_CS = 'NONE_CS',
   NONE = 'NONE',
 }
+
 // 模板类型
 export enum TplEnum {
   SIMPLE = 'SIMPLE',
   TREE = 'TREE',
   MAIN_SUB = 'MAIN_SUB',
 }
+
 //代码模板
 export enum TemplateEnum {
   BACKEND = 'BACKEND',

@@ -8,7 +8,7 @@ const formatterYesNo = ({ cellValue }) => {
   return cellValue ? t('lamp.common.enable') : t('lamp.common.disable');
 };
 
-export const formItems = () => {
+export const formItems = (): any[] => {
   return [
     {
       field: 'key',

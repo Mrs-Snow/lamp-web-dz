@@ -31,7 +31,7 @@
       const dictId = ref<string>('');
 
       const typeRef = ref<ActionEnum>(ActionEnum.ADD);
-      const xGrid = ref<VxeGridInstance>({});
+      const xGrid = ref<VxeGridInstance>({} as VxeGridInstance);
       const validRules = ref<VxeTablePropTypes.EditRules>({});
 
       const gridOptions = reactive<VxeGridProps>({
