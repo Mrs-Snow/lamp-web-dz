@@ -204,16 +204,16 @@ export const dictAllComponentProps = (
 ) => {
   return dictComponentProps(
     type,
-    { label: '所有', text: '所有', value: null },
     extendFirst,
+    { label: '所有', text: '所有', value: null },
     excludes,
   );
 };
 
 export const dictComponentProps = (
   type: DictEnum | string,
-  extend = { label: '所有', text: '所有', value: null },
   extendFirst = true,
+  extend?: any,
   excludes?: string | string[],
 ) => {
   if (excludes && isString(excludes)) {
