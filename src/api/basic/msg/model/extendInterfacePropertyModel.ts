@@ -7,6 +7,13 @@ export interface ExtendInterfacePropertyPageQuery {
   remarks?: string; // 备注
 }
 
+export interface ExtendInterfacePropertyBatchSaveVO {
+  insertRecords?: ExtendInterfacePropertySaveVO[];
+  updateRecords?: ExtendInterfacePropertySaveVO[];
+  removeRecords?: ExtendInterfacePropertySaveVO[];
+  pendingRecords?: ExtendInterfacePropertySaveVO[];
+}
+
 export interface ExtendInterfacePropertySaveVO {
   interfaceId?: string; // 接口ID
   name?: string; // 参数名称

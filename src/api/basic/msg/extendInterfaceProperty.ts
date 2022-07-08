@@ -1,4 +1,10 @@
-import { ExtendInterfacePropertySaveVO, ExtendInterfacePropertyUpdateVO, ExtendInterfacePropertyResultVO, ExtendInterfacePropertyPageQuery } from './model/extendInterfacePropertyModel';
+import {
+  ExtendInterfacePropertyUpdateVO,
+  ExtendInterfacePropertyResultVO,
+  ExtendInterfacePropertyPageQuery,
+  ExtendInterfacePropertySaveVO,
+  ExtendInterfacePropertyBatchSaveVO,
+} from './model/extendInterfacePropertyModel';
 import { PageParams, PageResult } from '/@/api/model/baseModel';
 import { defHttp } from '/@/utils/http/axios';
 import { RequestEnum } from '/@/enums/httpEnum';
@@ -6,10 +12,7 @@ import { ServicePrefixEnum } from '/@/enums/commonEnum';
 import type { AxiosRequestConfig } from 'axios';
 
 const MODULAR = 'extendInterfaceProperty';
-// tips: 建议在ServicePrefixEnum中新增：BASE = '/base'，并将下方代码改为： const ServicePrefix = ServicePrefixEnum.BASE;
-// tips: /base 需要与 lamp-gateway-server.yml中配置的Path一致，否则无法正常调用接口！！！
-// const ServicePrefix = ServicePrefixEnum.BASE;
-const ServicePrefix = '/base';
+const ServicePrefix = ServicePrefixEnum.BASE;
 
 export const Api = {
   Page: {
@@ -22,6 +25,10 @@ export const Api = {
   } as AxiosRequestConfig,
   Copy: {
     url: `${ServicePrefix}/${MODULAR}/copy`,
+    method: RequestEnum.POST,
+  } as AxiosRequestConfig,
+  BatchSave: {
+    url: `${ServicePrefix}/${MODULAR}/batchSave`,
     method: RequestEnum.POST,
   } as AxiosRequestConfig,
   Save: {
@@ -42,7 +49,11 @@ export const Api = {
   } as AxiosRequestConfig,
 };
 
-export const copy = (id: string) => defHttp.request<ExtendInterfacePropertyResultVO>({ ...Api.Copy, params: { id } });
+export const copy = (id: string) =>
+  defHttp.request<ExtendInterfacePropertyResultVO>({
+    ...Api.Copy,
+    params: { id },
+  });
 
 export const page = (params: PageParams<ExtendInterfacePropertyPageQuery>) =>
   defHttp.request<PageResult<ExtendInterfacePropertyResultVO>>({ ...Api.Page, params });
@@ -50,12 +61,24 @@ export const page = (params: PageParams<ExtendInterfacePropertyPageQuery>) =>
 export const detail = (id: string) =>
   defHttp.request<ExtendInterfacePropertyResultVO>({ ...Api.Detail, params: { id } });
 
-export const query = (params: ExtendInterfacePropertyPageQuery) => defHttp.request<ExtendInterfacePropertyResultVO[]>({ ...Api.Query, params });
+export const query = (params: ExtendInterfacePropertyPageQuery) =>
+  defHttp.request<ExtendInterfacePropertyResultVO[]>({
+    ...Api.Query,
+    params,
+  });
 
-export const save = (params: ExtendInterfacePropertySaveVO) => defHttp.request<ExtendInterfacePropertyResultVO>({ ...Api.Save, params });
+export const batchSave = (params: ExtendInterfacePropertyBatchSaveVO) =>
+  defHttp.request<ExtendInterfacePropertyResultVO>({
+    ...Api.BatchSave,
+    params,
+  });
+export const save = (params: ExtendInterfacePropertySaveVO) =>
+  defHttp.request<ExtendInterfacePropertyResultVO>({
+    ...Api.Save,
+    params,
+  });
 
 export const update = (params: ExtendInterfacePropertyUpdateVO) =>
   defHttp.request<ExtendInterfacePropertyResultVO>({ ...Api.Update, params });
 
 export const remove = (params: string[]) => defHttp.request<boolean>({ ...Api.Delete, params });
-

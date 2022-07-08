@@ -111,10 +111,14 @@ VXETable.setup({
       filter: true,
       // 启用表单代理，当点击表单提交按钮时会自动触发 reload 行为
       form: true,
+      //是否显示内置的消息提示（可以设为 false 关闭内置的消息提示）
+      message: false,
       // 对应响应结果 { result: [], page: { total: 100 } }
       props: {
         result: 'records', // 配置响应结果列表字段
         total: 'total', // 配置响应结果总页数字段
+        // 只对 pager-config 配置了有效，响应结果中获取提示消息的属性
+        message: 'msg',
       },
     },
   },

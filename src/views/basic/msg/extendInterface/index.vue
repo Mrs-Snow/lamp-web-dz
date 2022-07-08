@@ -29,6 +29,11 @@
                 onClick: handleEdit.bind(null, record),
               },
               {
+                tooltip: '接口设置',
+                icon: 'ant-design:edit-outlined',
+                onClick: handleProperty.bind(null, record),
+              },
+              {
                 tooltip: t('common.title.copy'),
                 icon: 'ant-design:copy-outlined',
                 onClick: handleCopy.bind(null, record),
@@ -53,6 +58,7 @@
 </template>
 <script lang="ts">
   import { defineComponent } from 'vue';
+  import { useRouter } from 'vue-router';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
@@ -63,6 +69,7 @@
   import { page, remove } from '/@/api/basic/msg/extendInterface';
   import { columns, searchFormSchema } from './extendInterface.data';
   import EditModal from './Edit.vue';
+  import { RouteEnum } from '/@/enums/biz/tenant';
 
   export default defineComponent({
     // 若需要开启页面缓存，请将此参数跟菜单名保持一致
@@ -77,6 +84,7 @@
       const { t } = useI18n();
       const { createMessage, createConfirm } = useMessage();
       const [registerModal, { openModal }] = useModal();
+      const { replace } = useRouter();
 
       // 表格
       const [registerTable, { reload, getSelectRowKeys }] = useTable({
@@ -145,6 +153,15 @@
         });
       }
 
+      // 接口设置
+      function handleProperty(record: Recordable, e: Event) {
+        e?.stopPropagation();
+        replace({
+          name: RouteEnum.BASIC_MSG_PROPERTY,
+          params: { id: record.id },
+        });
+      }
+
       // 新增或编辑成功回调
       function handleSuccess() {
         reload();
@@ -190,6 +207,7 @@
         handleAdd,
         handleCopy,
         handleEdit,
+        handleProperty,
         handleDelete,
         handleBatchDelete,
         handleSuccess,
