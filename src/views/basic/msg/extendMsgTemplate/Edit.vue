@@ -45,25 +45,27 @@
           },
         });
 
-      const [registerModel, { setModalProps: setProps, closeModal: close }] = useModalInner(async (data) => {
-        setProps({ confirmLoading: false });
-        await resetSchema(editFormSchema(type));
-        await resetFields();
-        type.value = data?.type || ActionEnum.ADD;
+      const [registerModel, { setModalProps: setProps, closeModal: close }] = useModalInner(
+        async (data) => {
+          setProps({ confirmLoading: false });
+          await resetSchema(editFormSchema(type));
+          await resetFields();
+          type.value = data?.type || ActionEnum.ADD;
 
-        if (unref(type) !== ActionEnum.ADD) {
-          // 赋值
-          const record = { ...data?.record };
-          await setFieldsValue(record);
-        }
+          if (unref(type) !== ActionEnum.ADD) {
+            // 赋值
+            const record = { ...data?.record };
+            await setFieldsValue(record);
+          }
 
-        if (unref(type) !== ActionEnum.VIEW) {
-          let validateApi = Api[VALIDATE_API[unref(type)]];
-          await getValidateRules(validateApi, customFormSchemaRules(type)).then(async (rules) => {
-            rules && rules.length > 0 && (await updateSchema(rules));
-          });
-        }
-      });
+          if (unref(type) !== ActionEnum.VIEW) {
+            let validateApi = Api[VALIDATE_API[unref(type)]];
+            await getValidateRules(validateApi, customFormSchemaRules(type)).then(async (rules) => {
+              rules && rules.length > 0 && (await updateSchema(rules));
+            });
+          }
+        },
+      );
 
       async function handleSubmit() {
         try {

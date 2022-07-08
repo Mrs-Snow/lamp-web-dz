@@ -13,6 +13,7 @@ export default {
   autoRead: 'AutoRead',
   remindMode: 'RemindMode',
   url: 'Url',
+  state: 'State',
   createdBy: 'CreatedBy',
   createdTime: 'CreatedTime',
   updatedBy: 'UpdatedBy',

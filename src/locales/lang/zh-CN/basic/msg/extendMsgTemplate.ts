@@ -13,6 +13,7 @@ export default {
   autoRead: '自动已读',
   remindMode: '提醒方式',
   url: '跳转地址',
+  state: '状态',
   createdBy: '创建人ID',
   createdTime: '创建时间',
   updatedBy: '最后修改人',

@@ -42,3 +42,8 @@ export enum InterfaceExecModeEnum {
   IMPL_CLASS = '01',
   SCRIPT = '02',
 }
+export enum MsgTemplateTypeEnum {
+  SMS = '01',
+  EMAIL = '02',
+  NOTICE = '03',
+}
