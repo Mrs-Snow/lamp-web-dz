@@ -212,7 +212,7 @@ export const editFormSchema = (_type: Ref<ActionEnum>): FormSchema[] => {
 
 // 前端自定义表单验证规则
 export const customFormSchemaRules = (
-  type: Ref<ActionEnum>,
+  _type: Ref<ActionEnum>,
   getFieldsValue: () => Recordable,
 ): Partial<FormSchemaExt>[] => {
   return [
@@ -223,9 +223,6 @@ export const customFormSchemaRules = (
         {
           trigger: ['change', 'blur'],
           async validator(_, value) {
-            if (type.value === ActionEnum.EDIT) {
-              return Promise.resolve();
-            }
             if (value && (await check(value, getFieldsValue()?.id))) {
               return Promise.reject(t('basic.msg.extendMsgTemplate.code') + '已经存在');
             }

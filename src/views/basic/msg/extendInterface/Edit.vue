@@ -35,20 +35,22 @@
       const type = ref<ActionEnum>(ActionEnum.ADD);
       const { createMessage } = useMessage();
 
-      const [registerForm, { setFieldsValue, resetFields, updateSchema, validate, resetSchema }] =
-        useForm({
-          name: 'ExtendInterfaceEdit',
-          labelWidth: 100,
-          schemas: editFormSchema(type),
-          showActionButtonGroup: false,
-          disabled: (_) => {
-            return unref(type) === ActionEnum.VIEW;
-          },
-          baseColProps: { span: 24 },
-          actionColOptions: {
-            span: 23,
-          },
-        });
+      const [
+        registerForm,
+        { setFieldsValue, getFieldsValue, resetFields, updateSchema, validate, resetSchema },
+      ] = useForm({
+        name: 'ExtendInterfaceEdit',
+        labelWidth: 100,
+        schemas: editFormSchema(type),
+        showActionButtonGroup: false,
+        disabled: (_) => {
+          return unref(type) === ActionEnum.VIEW;
+        },
+        baseColProps: { span: 24 },
+        actionColOptions: {
+          span: 23,
+        },
+      });
 
       const [registerModel, { setModalProps: setProps, closeModal: close }] = useModalInner(
         async (data) => {
@@ -65,9 +67,11 @@
 
           if (unref(type) !== ActionEnum.VIEW) {
             let validateApi = Api[VALIDATE_API[unref(type)]];
-            await getValidateRules(validateApi, customFormSchemaRules(type)).then(async (rules) => {
-              rules && rules.length > 0 && (await updateSchema(rules));
-            });
+            await getValidateRules(validateApi, customFormSchemaRules(type, getFieldsValue)).then(
+              async (rules) => {
+                rules && rules.length > 0 && (await updateSchema(rules));
+              },
+            );
           }
         },
       );

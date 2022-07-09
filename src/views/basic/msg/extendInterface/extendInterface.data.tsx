@@ -5,8 +5,9 @@ import { stateComponentProps } from '/@/utils/lamp/common';
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { ActionEnum } from '/@/enums/commonEnum';
-import { FormSchemaExt } from '/@/api/lamp/common/formValidateService';
+import { FormSchemaExt, RuleType } from '/@/api/lamp/common/formValidateService';
 import { InterfaceExecModeEnum } from '/@/enums/biz/base';
+import { check } from '/@/api/basic/msg/extendInterface';
 
 const { t } = useI18n();
 // 列表页字段
@@ -148,6 +149,25 @@ export const editFormSchema = (_type: Ref<ActionEnum>): FormSchema[] => {
 };
 
 // 前端自定义表单验证规则
-export const customFormSchemaRules = (_): Partial<FormSchemaExt>[] => {
-  return [];
+export const customFormSchemaRules = (
+  _type: Ref<ActionEnum>,
+  getFieldsValue: () => Recordable,
+): Partial<FormSchemaExt>[] => {
+  return [
+    {
+      field: 'code',
+      type: RuleType.append,
+      rules: [
+        {
+          trigger: ['change', 'blur'],
+          async validator(_, value) {
+            if (value && (await check(value, getFieldsValue()?.id))) {
+              return Promise.reject(t('basic.msg.extendInterface.code') + '已经存在');
+            }
+            return Promise.resolve();
+          },
+        },
+      ],
+    },
+  ];
 };

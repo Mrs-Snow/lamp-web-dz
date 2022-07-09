@@ -42,6 +42,10 @@ export const Api = {
     url: `${ServicePrefix}/${MODULAR}/query`,
     method: RequestEnum.POST,
   } as AxiosRequestConfig,
+  Check: {
+    url: `${ServicePrefix}/${MODULAR}/check`,
+    method: RequestEnum.GET,
+  } as AxiosRequestConfig,
 };
 
 export const copy = (id: string) =>
@@ -72,3 +76,6 @@ export const update = (params: ExtendInterfaceUpdateVO) =>
   defHttp.request<ExtendInterfaceResultVO>({ ...Api.Update, params });
 
 export const remove = (params: string[]) => defHttp.request<boolean>({ ...Api.Delete, params });
+
+export const check = (code: string, id?: string) =>
+  defHttp.request<boolean>({ ...Api.Check, params: { code, id } });
