@@ -9,7 +9,7 @@
   >
     <BasicForm @register="registerForm">
       <template #script="{ model, field }">
-        <CodeEditor tabSize="4" v-model:value="model[field]" :mode="MODE.GROOVY" />
+        <CodeEditor :tabSize="4" v-model:value="model[field]" :mode="MODE.GROOVY" />
       </template>
     </BasicForm>
   </BasicModal>

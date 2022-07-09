@@ -6,13 +6,22 @@
     :maskClosable="false"
     @ok="handleSubmit"
     :keyboard="true"
+    defaultFullscreen
   >
-    <BasicForm @register="registerForm" />
+    <BasicForm @register="registerForm">
+      <template #script="{ model, field }">
+        <CodeEditor :tabSize="4" v-model:value="model[field]" :mode="MODE.GROOVY" />
+      </template>
+      <template #content="{ model, field }">
+        <CodeEditor :tabSize="4" v-model:value="model[field]" :mode="MODE.HTML" />
+      </template>
+    </BasicForm>
   </BasicModal>
 </template>
 <script lang="ts">
   import { defineComponent, ref, unref } from 'vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
+  import { CodeEditor, MODE } from '/@/components/CodeEditor';
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
@@ -23,27 +32,29 @@
 
   export default defineComponent({
     name: '编辑短信模板维护',
-    components: { BasicModal, BasicForm },
+    components: { BasicModal, BasicForm, CodeEditor },
     emits: ['success', 'register'],
     setup(_, { emit }) {
       const { t } = useI18n();
       const type = ref<ActionEnum>(ActionEnum.ADD);
       const { createMessage } = useMessage();
 
-      const [registerForm, { setFieldsValue, resetFields, updateSchema, validate, resetSchema }] =
-        useForm({
-          name: 'ExtendMsgTemplateEdit',
-          labelWidth: 100,
-          schemas: editFormSchema(type),
-          showActionButtonGroup: false,
-          disabled: (_) => {
-            return unref(type) === ActionEnum.VIEW;
-          },
-          baseColProps: { span: 24 },
-          actionColOptions: {
-            span: 23,
-          },
-        });
+      const [
+        registerForm,
+        { setFieldsValue, getFieldsValue, resetFields, updateSchema, validate, resetSchema },
+      ] = useForm({
+        name: 'ExtendMsgTemplateEdit',
+        labelWidth: 100,
+        schemas: editFormSchema(type),
+        showActionButtonGroup: false,
+        disabled: (_) => {
+          return unref(type) === ActionEnum.VIEW;
+        },
+        baseColProps: { span: 24 },
+        actionColOptions: {
+          span: 23,
+        },
+      });
 
       const [registerModel, { setModalProps: setProps, closeModal: close }] = useModalInner(
         async (data) => {
@@ -60,9 +71,11 @@
 
           if (unref(type) !== ActionEnum.VIEW) {
             let validateApi = Api[VALIDATE_API[unref(type)]];
-            await getValidateRules(validateApi, customFormSchemaRules(type)).then(async (rules) => {
-              rules && rules.length > 0 && (await updateSchema(rules));
-            });
+            await getValidateRules(validateApi, customFormSchemaRules(type, getFieldsValue)).then(
+              async (rules) => {
+                rules && rules.length > 0 && (await updateSchema(rules));
+              },
+            );
           }
         },
       );
@@ -88,7 +101,7 @@
         }
       }
 
-      return { type, t, registerModel, registerForm, handleSubmit };
+      return { type, MODE, t, registerModel, registerForm, handleSubmit };
     },
   });
 </script>
