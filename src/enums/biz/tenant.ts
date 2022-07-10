@@ -67,6 +67,7 @@ export enum RouteEnum {
   BASIC_MY_MSG_VIEW = '查看我的消息',
   BASIC_MSG = '消息管理',
   BASIC_MSG_PROPERTY = '接口设置',
+  BASIC_MSG_INTERFACE_LOGGING = '日志执行记录',
   TENANT_VIEW = '查看企业信息',
   CODE_GENERATOR_EDIT = '修改代码配置',
 }
