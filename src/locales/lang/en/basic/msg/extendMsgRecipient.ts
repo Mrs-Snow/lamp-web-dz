@@ -1,7 +1,7 @@
 export default {
   table: { title: 'ExtendMsgRecipient list' },
   id: 'Id',
-  taskId: 'TaskId',
+  msgId: 'MsgId',
   recipient: 'Recipient',
   createdBy: 'CreatedBy',
   createdTime: 'CreatedTime',

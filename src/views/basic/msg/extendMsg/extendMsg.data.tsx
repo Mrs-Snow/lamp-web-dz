@@ -1,8 +1,9 @@
 import { Ref } from 'vue';
+import { DictEnum } from '/@/enums/commonEnum';
 import { EnumEnum } from '/@/enums/commonEnum';
 import { dateUtil } from '/@/utils/dateUtil';
+import { dictComponentProps } from '/@/utils/lamp/common';
 import { enumComponentProps } from '/@/utils/lamp/common';
-import { yesNoComponentProps } from '/@/utils/lamp/common';
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { ActionEnum } from '/@/enums/commonEnum';
@@ -15,6 +16,11 @@ export const columns = (): BasicColumn[] => {
     {
       title: t('basic.msg.extendMsg.templateId'),
       dataIndex: 'templateId',
+    },
+    {
+      title: t('basic.msg.extendMsg.type'),
+      dataIndex: ['echoMap', 'type'],
+      key: 'type',
     },
     {
       title: t('basic.msg.extendMsg.status'),
@@ -43,8 +49,12 @@ export const columns = (): BasicColumn[] => {
       dataIndex: 'sendTime',
     },
     {
-      title: t('basic.msg.extendMsg.draft'),
-      dataIndex: 'draft',
+      title: t('basic.msg.extendMsg.bizId'),
+      dataIndex: 'bizId',
+    },
+    {
+      title: t('basic.msg.extendMsg.bizType'),
+      dataIndex: 'bizType',
     },
     {
       title: t('lamp.common.createdTime'),
@@ -61,6 +71,18 @@ export const searchFormSchema = (): FormSchema[] => {
       label: t('basic.msg.extendMsg.templateId'),
       field: 'templateId',
       component: 'Input',
+      colProps: { span: 6 },
+    },
+    {
+      label: t('basic.msg.extendMsg.type'),
+      field: 'type',
+      component: 'ApiRadioGroup',
+      componentProps: {
+        // 建议将魔法数参数移动到 DictEnum 中，并添加为: EchoDictType_Base_MSG_TEMPLATE_TYPE = 'MSG_TEMPLATE_TYPE';
+        // 'MSG_TEMPLATE_TYPE' 需要与 后端DictType类中的参数 以及 def_dict表中的key字段 保持一致，否则无法回显！
+        // ...dictComponentProps(DictEnum.EchoDictType_Base_MSG_TEMPLATE_TYPE),
+        ...dictComponentProps('MSG_TEMPLATE_TYPE'),
+      },
       colProps: { span: 6 },
     },
     {
@@ -117,12 +139,15 @@ export const searchFormSchema = (): FormSchema[] => {
       colProps: { span: 6 },
     },
     {
-      label: t('basic.msg.extendMsg.draft'),
-      field: 'draft',
-      component: 'RadioGroup',
-      componentProps: {
-        ...yesNoComponentProps(),
-      },
+      label: t('basic.msg.extendMsg.bizId'),
+      field: 'bizId',
+      component: 'Input',
+      colProps: { span: 6 },
+    },
+    {
+      label: t('basic.msg.extendMsg.bizType'),
+      field: 'bizType',
+      component: 'Input',
       colProps: { span: 6 },
     },
     {
@@ -149,6 +174,17 @@ export const editFormSchema = (_type: Ref<ActionEnum>): FormSchema[] => {
       component: 'Input',
     },
     {
+      label: t('basic.msg.extendMsg.type'),
+      field: 'type',
+      component: 'ApiRadioGroup',
+      componentProps: {
+        // 建议将魔法数参数移动到 DictEnum 中，并添加为: EchoDictType_Base_MSG_TEMPLATE_TYPE = 'MSG_TEMPLATE_TYPE';
+        // 'MSG_TEMPLATE_TYPE' 需要与 后端DictType类中的参数 以及 def_dict表中的key字段 保持一致，否则无法回显！
+        // ...dictComponentProps(DictEnum.EchoDictType_Base_MSG_TEMPLATE_TYPE),
+        ...dictComponentProps('MSG_TEMPLATE_TYPE'),
+      },
+    },
+    {
       label: t('basic.msg.extendMsg.status'),
       field: 'status',
       component: 'ApiRadioGroup',
@@ -196,13 +232,14 @@ export const editFormSchema = (_type: Ref<ActionEnum>): FormSchema[] => {
       },
     },
     {
-      label: t('basic.msg.extendMsg.draft'),
-      field: 'draft',
-      component: 'RadioGroup',
-      defaultValue: false,
-      componentProps: {
-        ...yesNoComponentProps(),
-      },
+      label: t('basic.msg.extendMsg.bizId'),
+      field: 'bizId',
+      component: 'Input',
+    },
+    {
+      label: t('basic.msg.extendMsg.bizType'),
+      field: 'bizType',
+      component: 'Input',
     },
   ];
 };

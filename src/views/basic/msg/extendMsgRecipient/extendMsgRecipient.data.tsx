@@ -10,8 +10,8 @@ const { t } = useI18n();
 export const columns = (): BasicColumn[] => {
   return [
     {
-      title: t('basic.msg.extendMsgRecipient.taskId'),
-      dataIndex: 'taskId',
+      title: t('basic.msg.extendMsgRecipient.msgId'),
+      dataIndex: 'msgId',
     },
     {
       title: t('basic.msg.extendMsgRecipient.recipient'),
@@ -29,8 +29,8 @@ export const columns = (): BasicColumn[] => {
 export const searchFormSchema = (): FormSchema[] => {
   return [
     {
-      label: t('basic.msg.extendMsgRecipient.taskId'),
-      field: 'taskId',
+      label: t('basic.msg.extendMsgRecipient.msgId'),
+      field: 'msgId',
       component: 'Input',
       colProps: { span: 6 },
     },
@@ -59,8 +59,8 @@ export const editFormSchema = (_type: Ref<ActionEnum>): FormSchema[] => {
       show: false,
     },
     {
-      label: t('basic.msg.extendMsgRecipient.taskId'),
-      field: 'taskId',
+      label: t('basic.msg.extendMsgRecipient.msgId'),
+      field: 'msgId',
       component: 'Input',
     },
     {

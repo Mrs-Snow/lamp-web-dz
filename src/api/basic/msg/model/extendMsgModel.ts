@@ -1,35 +1,41 @@
 export interface ExtendMsgPageQuery {
   templateId?: string; // 消息模板
+  type?: string; // 消息类型
   status?: string; // 执行状态
   channel?: string; // 发送渠道
-  param?: string; // 参数 
+  param?: string; // 参数
   title?: string; // 标题
   content?: string; // 发送内容
   sendTime?: string; // 发送时间
-  draft?: boolean; // 是否草稿
+  bizId?: string; // 业务ID
+  bizType?: string; // 业务类型
 }
 
 export interface ExtendMsgSaveVO {
   templateId?: string; // 消息模板
+  type?: string; // 消息类型
   status?: string; // 执行状态
   channel?: string; // 发送渠道
-  param?: string; // 参数 
+  param?: string; // 参数
   title?: string; // 标题
   content?: string; // 发送内容
   sendTime?: string; // 发送时间
-  draft?: boolean; // 是否草稿
+  bizId?: string; // 业务ID
+  bizType?: string; // 业务类型
 }
 
 export interface ExtendMsgUpdateVO {
   id: string;
   templateId?: string; // 消息模板
+  type?: string; // 消息类型
   status?: string; // 执行状态
   channel?: string; // 发送渠道
-  param?: string; // 参数 
+  param?: string; // 参数
   title?: string; // 标题
   content?: string; // 发送内容
   sendTime?: string; // 发送时间
-  draft?: boolean; // 是否草稿
+  bizId?: string; // 业务ID
+  bizType?: string; // 业务类型
 }
 
 export interface ExtendMsgResultVO {
@@ -40,11 +46,13 @@ export interface ExtendMsgResultVO {
   updatedBy?: string; // 最后修改人
   updatedTime?: string; // 最后修改时间
   templateId?: string; // 消息模板
+  type?: string; // 消息类型
   status?: string; // 执行状态
   channel?: string; // 发送渠道
-  param?: string; // 参数 
+  param?: string; // 参数
   title?: string; // 标题
   content?: string; // 发送内容
   sendTime?: string; // 发送时间
-  draft?: boolean; // 是否草稿
+  bizId?: string; // 业务ID
+  bizType?: string; // 业务类型
 }

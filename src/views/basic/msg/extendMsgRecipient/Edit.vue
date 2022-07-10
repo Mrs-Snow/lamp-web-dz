@@ -22,7 +22,7 @@
   import { customFormSchemaRules, editFormSchema } from './extendMsgRecipient.data';
 
   export default defineComponent({
-    name: '编辑短信模板维护',
+    name: '编辑消息接收人维护',
     components: { BasicModal, BasicForm },
     emits: ['success', 'register'],
     setup(_, { emit }) {
