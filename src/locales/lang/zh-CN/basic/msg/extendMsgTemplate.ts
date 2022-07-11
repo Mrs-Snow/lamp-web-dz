@@ -14,6 +14,8 @@ export default {
   remindMode: '提醒方式',
   url: '跳转地址',
   state: '状态',
+  interfaceId: '关联接口',
+  templateCode: '短信模板',
   createdBy: '创建人ID',
   createdTime: '创建时间',
   updatedBy: '最后修改人',

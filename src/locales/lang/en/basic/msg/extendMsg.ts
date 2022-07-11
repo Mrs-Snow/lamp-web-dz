@@ -9,6 +9,7 @@ export default {
   title: 'Title',
   content: 'Content',
   sendTime: 'SendTime',
+  author: 'Author',
   bizId: 'BizId',
   bizType: 'BizType',
   createdBy: 'CreatedBy',

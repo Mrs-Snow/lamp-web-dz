@@ -13,6 +13,7 @@ import { ActionEnum } from '/@/enums/commonEnum';
 import { FormSchemaExt, RuleType } from '/@/api/lamp/common/formValidateService';
 import { MsgTemplateTypeEnum } from '/@/enums/biz/base';
 import { check } from '/@/api/basic/msg/extendMsgTemplate';
+import { query } from '/@/api/basic/msg/extendInterface';
 
 const { t } = useI18n();
 // 列表页字段
@@ -120,6 +121,16 @@ export const editFormSchema = (_type: Ref<ActionEnum>): FormSchema[] => {
       },
     },
     {
+      label: t('basic.msg.extendMsgTemplate.interfaceId'),
+      field: 'interfaceId',
+      component: 'ApiSelect',
+      componentProps: {
+        api: query,
+        labelField: 'name',
+        valueField: 'id',
+      },
+    },
+    {
       label: t('basic.msg.extendMsgTemplate.state'),
       field: 'state',
       component: 'RadioButtonGroup',
@@ -164,6 +175,14 @@ export const editFormSchema = (_type: Ref<ActionEnum>): FormSchema[] => {
       label: t('basic.msg.extendMsgTemplate.remarks'),
       field: 'remarks',
       component: 'InputTextArea',
+    },
+    {
+      label: t('basic.msg.extendMsgTemplate.templateCode'),
+      field: 'templateCode',
+      component: 'Input',
+      ifShow: ({ values }) => {
+        return values.type === MsgTemplateTypeEnum.SMS;
+      },
     },
     {
       label: t('basic.msg.extendMsgTemplate.target'),

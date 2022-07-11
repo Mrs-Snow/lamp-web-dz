@@ -13,6 +13,8 @@ export default {
   autoRead: 'AutoRead',
   remindMode: 'RemindMode',
   url: 'Url',
+  interfaceId: 'InterfaceId',
+  templateCode: 'TemplateCode',
   state: 'State',
   createdBy: 'CreatedBy',
   createdTime: 'CreatedTime',
