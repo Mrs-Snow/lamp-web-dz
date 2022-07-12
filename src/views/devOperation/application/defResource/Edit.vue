@@ -51,16 +51,18 @@
       const type = ref<ActionEnum>(ActionEnum.VIEW);
       const confirmLoading = ref<boolean>(false);
       const title = ref<string>('未选中任何资源');
-      const [register, { setFieldsValue, resetFields, resetSchema, updateSchema, validate }] =
-        useForm({
-          labelWidth: 110,
-          showActionButtonGroup: false,
-          schemas: editFormSchema(type),
-          baseColProps: { span: 24 },
-          disabled: () => {
-            return unref(type) === ActionEnum.VIEW;
-          },
-        });
+      const [
+        register,
+        { setFieldsValue, getFieldsValue, resetFields, resetSchema, updateSchema, validate },
+      ] = useForm({
+        labelWidth: 110,
+        showActionButtonGroup: false,
+        schemas: editFormSchema(type),
+        baseColProps: { span: 24 },
+        disabled: () => {
+          return unref(type) === ActionEnum.VIEW;
+        },
+      });
 
       // 提交
       async function handleSubmit() {
@@ -125,7 +127,10 @@
         if (unref(type) !== ActionEnum.VIEW) {
           let validateApi = Api[VALIDATE_API[unref(type)]];
 
-          const rules = await getValidateRules(validateApi, customFormSchemaRules(type));
+          const rules = await getValidateRules(
+            validateApi,
+            customFormSchemaRules(type, getFieldsValue),
+          );
           rules && rules.length > 0 && (await updateSchema(rules));
           // getValidateRules(validateApi, customFormSchemaRules(type)).then(async (rules) => {
           //   console.log(rules);

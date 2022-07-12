@@ -631,7 +631,10 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
 const CODE_REG = /^[a-zA-Z0-9_:,;*]*$/;
 
 // 前端自定义表单验证规则
-export const customFormSchemaRules = (type: Ref<ActionEnum>): Partial<FormSchemaExt>[] => {
+export const customFormSchemaRules = (
+  type: Ref<ActionEnum>,
+  getFieldsValue: () => Recordable,
+): Partial<FormSchemaExt>[] => {
   return [
     {
       field: 'code',
@@ -648,7 +651,7 @@ export const customFormSchemaRules = (type: Ref<ActionEnum>): Partial<FormSchema
               if (!CODE_REG.test(value)) {
                 return Promise.reject('编码只能包括: [英文大小写][数字][_][;][,][:][*]');
               }
-              if (await check(value)) {
+              if (await check(value, getFieldsValue().id)) {
                 return Promise.reject('编码已经存在');
               }
             }
