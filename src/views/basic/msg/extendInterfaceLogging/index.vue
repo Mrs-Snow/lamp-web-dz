@@ -40,7 +40,8 @@
   </PageWrapper>
 </template>
 <script lang="ts">
-  import { defineComponent } from 'vue';
+  import { defineComponent, ref, onMounted } from 'vue';
+  import { useRouter } from 'vue-router';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
@@ -65,6 +66,8 @@
       const { t } = useI18n();
       const { createMessage, createConfirm } = useMessage();
       const [registerModal, { openModal }] = useModal();
+      const logId = ref<string>('');
+      const { currentRoute } = useRouter();
 
       // 表格
       const [registerTable, { reload, getSelectRowKeys }] = useTable({
@@ -84,6 +87,10 @@
           },
         },
         beforeFetch: handleFetchParams,
+        immediate: false,
+        searchInfo: {
+          logId: logId,
+        },
         useSearchForm: true,
         showTableSetting: true,
         bordered: true,
@@ -97,6 +104,12 @@
           title: t('common.column.action'),
           dataIndex: 'action',
         },
+      });
+
+      onMounted(async () => {
+        const routeParams = currentRoute.value?.params;
+        logId.value = routeParams.id as string;
+        await reload();
       });
 
       // 弹出查看页面
