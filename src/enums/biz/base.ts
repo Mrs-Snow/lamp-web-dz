@@ -57,6 +57,12 @@ export enum SourceTypeEnum {
   APP = 'APP',
   SERVICE = 'SERVICE',
 }
+export enum TaskStatusEnum {
+  DRAFT = 'DRAFT',
+  WAITING = 'WAITING',
+  SUCCESS = 'SUCCESS',
+  FAIL = 'FAIL',
+}
 
 export enum MsgTypeEnum {
   TO_DO = 'TO_DO',

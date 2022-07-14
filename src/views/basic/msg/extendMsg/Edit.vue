@@ -1,8 +1,21 @@
 <template>
-  <PageWrapper class="high-form" contentBackground contentClass="p-4" title="发送消息">
+  <PageWrapper class="high-form" contentBackground contentClass="p-4" title="发布消息">
     <BasicForm @register="registerForm" />
     <template #rightFooter>
-      <a-button v-if="type !== ActionEnum.VIEW" class="ml-4" type="primary" @click="handleSubmit">
+      <a-button
+        v-if="type !== ActionEnum.VIEW"
+        class="ml-4"
+        type="primary"
+        @click="handleSubmit(true)"
+      >
+        暂存
+      </a-button>
+      <a-button
+        v-if="type !== ActionEnum.VIEW"
+        class="ml-4"
+        type="primary"
+        @click="handleSubmit(false)"
+      >
         立即发送
       </a-button>
     </template>
@@ -65,7 +78,7 @@
           await setFieldsValue({ ...record });
         }
 
-        if ([ActionEnum.ADD, ActionEnum.COPY].includes(unref(type))) {
+        if ([ActionEnum.ADD, ActionEnum.EDIT, ActionEnum.COPY].includes(unref(type))) {
           let validateApi = Api[VALIDATE_API[unref(type)]];
           const rules = await getValidateRules(validateApi, customFormSchemaRules(type));
           rules && rules.length > 0 && (await updateSchema(rules));
@@ -76,9 +89,10 @@
         tip: t('common.requestingText'),
       });
 
-      async function handleSubmit() {
+      async function handleSubmit(draft = false) {
         try {
           const params = await validate();
+          params.draft = draft;
 
           openFullLoading();
           await send(params);

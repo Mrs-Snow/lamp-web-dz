@@ -1,17 +1,17 @@
 <template>
-  <PageWrapper dense contentFullHeight>
+  <PageWrapper contentFullHeight dense>
     <BasicTable @register="registerTable">
       <template #toolbar>
         <a-button
-          type="primary"
           color="error"
           preIcon="ant-design:delete-outlined"
+          type="primary"
           @click="handleBatchDelete"
         >
           {{ t('common.title.delete') }}
         </a-button>
-        <a-button type="primary" preIcon="ant-design:plus-outlined" @click="handleAdd">
-          {{ t('common.title.add') }}
+        <a-button preIcon="ant-design:plus-outlined" type="primary" @click="handleAdd">
+          发布
         </a-button>
       </template>
       <template #bodyCell="{ column, record }">
@@ -27,6 +27,9 @@
                 tooltip: t('common.title.edit'),
                 icon: 'ant-design:edit-outlined',
                 onClick: handleEdit.bind(null, record),
+                ifShow: () => {
+                  return record.status === TaskStatusEnum.DRAFT;
+                },
               },
               {
                 tooltip: t('common.title.copy'),
@@ -55,10 +58,11 @@
   import { useRouter } from 'vue-router';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { BasicTable, useTable, TableAction } from '/@/components/Table';
+  import { BasicTable, TableAction, useTable } from '/@/components/Table';
   import { PageWrapper } from '/@/components/Page';
   import { handleFetchParams } from '/@/utils/lamp/common';
   import { ActionEnum } from '/@/enums/commonEnum';
+  import { TaskStatusEnum } from '/@/enums/biz/base';
   import { page, remove } from '/@/api/basic/msg/extendMsg';
   import { columns, searchFormSchema } from './extendMsg.data';
 
@@ -195,6 +199,7 @@
         handleSuccess,
         handleBatchDelete,
         RoleEnum,
+        TaskStatusEnum,
       };
     },
   });

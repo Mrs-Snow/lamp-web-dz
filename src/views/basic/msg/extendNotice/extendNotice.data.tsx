@@ -37,12 +37,6 @@ export const columns = (): BasicColumn[] => {
 export const searchFormSchema = (): FormSchema[] => {
   return [
     {
-      label: t('basic.msg.extendNotice.bizType'),
-      field: 'bizType',
-      component: 'Input',
-      colProps: { span: 8 },
-    },
-    {
       label: t('basic.msg.extendNotice.remindMode'),
       field: 'remindMode',
       component: 'ApiSelect',

@@ -20,6 +20,11 @@ const { t } = useI18n();
 export const columns = (): BasicColumn[] => {
   return [
     {
+      title: t('basic.msg.extendMsg.remindMode'),
+      dataIndex: ['echoMap', 'remindMode'],
+      key: 'status',
+    },
+    {
       title: t('basic.msg.extendMsg.status'),
       dataIndex: ['echoMap', 'status'],
       key: 'status',
