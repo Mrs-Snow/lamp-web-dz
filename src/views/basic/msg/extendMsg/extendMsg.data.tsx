@@ -1,7 +1,6 @@
 import { h, Ref } from 'vue';
 import { dateUtil } from '/@/utils/dateUtil';
-import { dictComponentProps } from '/@/utils/lamp/common';
-import { enumComponentProps } from '/@/utils/lamp/common';
+import { dictComponentProps, enumAllComponentProps } from '/@/utils/lamp/common';
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { Tinymce } from '/@/components/Tinymce/index';
@@ -68,7 +67,7 @@ export const searchFormSchema = (): FormSchema[] => {
       component: 'ApiRadioGroup',
       componentProps: {
         isBtn: true,
-        ...enumComponentProps(EnumEnum.TaskStatus),
+        ...enumAllComponentProps(EnumEnum.TaskStatus),
       },
       colProps: { span: 16 },
     },

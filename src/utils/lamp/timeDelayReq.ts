@@ -32,7 +32,7 @@ export class TimeDelayReq {
   resMap: Map<string, DelayResult> = new Map<string, DelayResult>(); // 结果集缓存
   cacheTime = 60 * 1000 * 30; // 默认缓存30分钟
   delay = 100; // 请求延时
-  isUseCache = false; // 是否使用缓存
+  isUseCache = true; // 是否使用缓存
   cacheKey: CacheKeyFunc = JSON.stringify; // 默认获取缓存key的方式
   api: ApiFunc = async () => new Map<string, DelayResult>(); // 具体执行请求的方法
   getErrorData: ErrorDataFunc | undefined = undefined; // 错误处理函数

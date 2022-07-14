@@ -182,13 +182,31 @@ export const formatFileSize = (value) => {
   return '文件太大';
 };
 
-export const enumComponentProps = (type: EnumEnum | string, excludes?: string | string[]) => {
+export const enumAllComponentProps = (
+  type: DictEnum | string,
+  extendFirst = true,
+  excludes?: string | string[],
+) => {
+  return enumComponentProps(
+    type,
+    extendFirst,
+    { label: '所有', text: '所有', value: null },
+    excludes,
+  );
+};
+
+export const enumComponentProps = (
+  type: EnumEnum | string,
+  extendFirst = true,
+  extend?: any,
+  excludes?: string | string[],
+) => {
   if (excludes && isString(excludes)) {
     excludes = [excludes];
   }
   return {
     api: asyncFindEnumList,
-    params: { type, excludes },
+    params: { type, extendFirst, extend, excludes },
     resultField: 'data',
     showSearch: true,
     filterOption: (input: string, option: any) => {
