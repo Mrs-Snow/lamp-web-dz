@@ -10,11 +10,7 @@
         >
           {{ t('common.title.delete') }}
         </a-button>
-        <a-button
-          type="primary"
-          preIcon="ant-design:plus-outlined"
-          @click="handleAdd"
-        >
+        <a-button type="primary" preIcon="ant-design:plus-outlined" @click="handleAdd">
           {{ t('common.title.add') }}
         </a-button>
       </template>
@@ -52,21 +48,22 @@
         </template>
       </template>
     </BasicTable>
-    <EditModal @register="registerModal" @success="handleSuccess" />
   </PageWrapper>
 </template>
 <script lang="ts">
   import { defineComponent } from 'vue';
+  import { useRouter } from 'vue-router';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
   import { PageWrapper } from '/@/components/Page';
-  import { useModal } from '/@/components/Modal';
   import { handleFetchParams } from '/@/utils/lamp/common';
   import { ActionEnum } from '/@/enums/commonEnum';
   import { page, remove } from '/@/api/basic/msg/extendMsg';
   import { columns, searchFormSchema } from './extendMsg.data';
-  import EditModal from './Edit.vue';
+
+  import { RouteEnum } from '/@/enums/biz/tenant';
+  import { RoleEnum } from '/@/enums/roleEnum';
 
   export default defineComponent({
     // 若需要开启页面缓存，请将此参数跟菜单名保持一致
@@ -75,12 +72,11 @@
       BasicTable,
       PageWrapper,
       TableAction,
-      EditModal,
     },
     setup() {
       const { t } = useI18n();
       const { createMessage, createConfirm } = useMessage();
-      const [registerModal, { openModal }] = useModal();
+      const { replace } = useRouter();
 
       // 表格
       const [registerTable, { reload, getSelectRowKeys }] = useTable({
@@ -116,35 +112,38 @@
       });
 
       // 弹出复制页面
-      function handleCopy(record: Recordable, e: Event) {
-        e?.stopPropagation();
-        openModal(true, {
-          record,
-          type: ActionEnum.COPY,
+      function handleCopy(record: Recordable, e) {
+        e.stopPropagation();
+
+        replace({
+          name: RouteEnum.BASIC_MSG_ADD,
+          params: { type: ActionEnum.COPY, id: record.id },
         });
       }
+
       // 弹出新增页面
       function handleAdd() {
-        openModal(true, {
-          type: ActionEnum.ADD,
+        replace({
+          name: RouteEnum.BASIC_MSG_ADD,
+          params: { type: ActionEnum.ADD, id: '0' },
         });
       }
 
       // 弹出查看页面
       function handleView(record: Recordable, e: Event) {
-        e?.stopPropagation();
-        openModal(true, {
-          record,
-          type: ActionEnum.VIEW,
+        e.stopPropagation();
+        replace({
+          name: RouteEnum.BASIC_MSG_ADD,
+          params: { type: ActionEnum.VIEW, id: record.id },
         });
       }
 
       // 弹出编辑页面
       function handleEdit(record: Recordable, e: Event) {
-        e?.stopPropagation();
-        openModal(true, {
-          record,
-          type: ActionEnum.EDIT,
+        e.stopPropagation();
+        replace({
+          name: RouteEnum.BASIC_MSG_ADD,
+          params: { type: ActionEnum.EDIT, id: record.id },
         });
       }
 
@@ -188,14 +187,14 @@
       return {
         t,
         registerTable,
-        registerModal,
         handleView,
         handleAdd,
         handleCopy,
         handleEdit,
         handleDelete,
-        handleBatchDelete,
         handleSuccess,
+        handleBatchDelete,
+        RoleEnum,
       };
     },
   });

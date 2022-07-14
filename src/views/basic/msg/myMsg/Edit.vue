@@ -16,7 +16,8 @@
   import { useTabs } from '/@/hooks/web/useTabs';
   import { useRouter } from 'vue-router';
   import { RouteEnum } from '/@/enums/biz/tenant';
-  import { ActionEnum, MsgTypeEnum } from '/@/enums/commonEnum';
+  import { ActionEnum } from '/@/enums/commonEnum';
+  import { MsgTypeEnum } from '/@/enums/biz/base';
   import { get } from '/@/api/basic/msg/eMsg';
   import { editFormSchema } from './myMsg.data';
 

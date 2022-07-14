@@ -51,7 +51,7 @@
   import { useDesign } from '/@/hooks/web/useDesign';
   import { PageResult } from '/@/api/model/baseModel';
   import { EMsgResultVO } from '/@/api/basic/msg/model/eMsgModel';
-  import { MsgTypeEnum } from '/@/enums/commonEnum';
+  import { MsgTypeEnum } from '/@/enums/biz/base';
   import { RouteEnum } from '/@/enums/biz/tenant';
 
   export default defineComponent({

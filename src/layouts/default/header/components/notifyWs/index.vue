@@ -31,7 +31,8 @@
   import { useUserStore } from '/@/store/modules/user';
   import { RouteEnum } from '/@/enums/biz/tenant';
   import { mark } from '/@/api/basic/msg/eMsg';
-  import { ActionEnum, MsgTypeEnum } from '/@/enums/commonEnum';
+  import { ActionEnum } from '/@/enums/commonEnum';
+  import { MsgTypeEnum } from '/@/enums/biz/base';
   import { EMsgResultVO } from '/@/api/basic/msg/model/eMsgModel';
   import NoticeList from './NoticeList.vue';
   import { TabItem } from './data';

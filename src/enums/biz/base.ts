@@ -47,3 +47,20 @@ export enum MsgTemplateTypeEnum {
   EMAIL = '02',
   NOTICE = '03',
 }
+//[01-待办 02-预警 03-提醒]
+export enum NoticeRemindModeEnum {
+  TO_DO = '01',
+  EARLY_WARNING = '02',
+  NOTICE = '03',
+}
+export enum SourceTypeEnum {
+  APP = 'APP',
+  SERVICE = 'SERVICE',
+}
+
+export enum MsgTypeEnum {
+  TO_DO = 'TO_DO',
+  NOTIFY = 'NOTIFY',
+  NOTICE = 'NOTICE',
+  EARLY_WARNING = 'EARLY_WARNING',
+}

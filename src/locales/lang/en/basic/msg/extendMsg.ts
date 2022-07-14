@@ -10,6 +10,7 @@ export default {
   content: 'Content',
   sendTime: 'SendTime',
   author: 'Author',
+  remindMode: 'RemindMode',
   bizId: 'BizId',
   bizType: 'BizType',
   createdBy: 'CreatedBy',

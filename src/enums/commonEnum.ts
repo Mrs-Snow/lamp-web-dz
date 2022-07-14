@@ -139,10 +139,3 @@ export enum DictEnum {
   DictionaryType_Global_EDUCATION = 'GLOBAL_EDUCATION',
   DictionaryType_Global_DATA_TYPE = 'DATA_TYPE',
 }
-
-export enum MsgTypeEnum {
-  TO_DO = 'TO_DO',
-  NOTIFY = 'NOTIFY',
-  NOTICE = 'NOTICE',
-  EARLY_WARNING = 'EARLY_WARNING',
-}

@@ -68,7 +68,8 @@
   import { useTabs } from '/@/hooks/web/useTabs';
   import { useLoading } from '/@/components/Loading';
   import { RouteEnum } from '/@/enums/biz/tenant';
-  import { ActionEnum, MsgTypeEnum, VALIDATE_API } from '/@/enums/commonEnum';
+  import { ActionEnum, VALIDATE_API } from '/@/enums/commonEnum';
+  import { MsgTypeEnum } from '/@/enums/biz/base';
   import { Api, get, save } from '/@/api/basic/msg/eMsg';
   import { query as queryRole } from '/@/api/basic/system/baseRole';
   import { query as queryUser } from '/@/api/basic/user/baseEmployee';

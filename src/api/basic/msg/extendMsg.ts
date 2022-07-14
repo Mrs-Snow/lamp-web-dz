@@ -1,4 +1,9 @@
-import { ExtendMsgSaveVO, ExtendMsgUpdateVO, ExtendMsgResultVO, ExtendMsgPageQuery } from './model/extendMsgModel';
+import {
+  ExtendMsgSaveVO,
+  ExtendMsgUpdateVO,
+  ExtendMsgResultVO,
+  ExtendMsgPageQuery,
+} from './model/extendMsgModel';
 import { PageParams, PageResult } from '/@/api/model/baseModel';
 import { defHttp } from '/@/utils/http/axios';
 import { RequestEnum } from '/@/enums/httpEnum';
@@ -8,8 +13,7 @@ import type { AxiosRequestConfig } from 'axios';
 const MODULAR = 'extendMsg';
 // tips: 建议在ServicePrefixEnum中新增：BASE = '/base'，并将下方代码改为： const ServicePrefix = ServicePrefixEnum.BASE;
 // tips: /base 需要与 lamp-gateway-server.yml中配置的Path一致，否则无法正常调用接口！！！
-// const ServicePrefix = ServicePrefixEnum.BASE;
-const ServicePrefix = '/base';
+const ServicePrefix = ServicePrefixEnum.BASE;
 
 export const Api = {
   Page: {
@@ -28,6 +32,10 @@ export const Api = {
     url: `${ServicePrefix}/${MODULAR}`,
     method: RequestEnum.POST,
   } as AxiosRequestConfig,
+  Send: {
+    url: `${ServicePrefix}/${MODULAR}/send`,
+    method: RequestEnum.POST,
+  } as AxiosRequestConfig,
   Update: {
     url: `${ServicePrefix}/${MODULAR}`,
     method: RequestEnum.PUT,
@@ -40,9 +48,16 @@ export const Api = {
     url: `${ServicePrefix}/${MODULAR}/query`,
     method: RequestEnum.POST,
   } as AxiosRequestConfig,
+  Get: (id: string) => {
+    return {
+      url: `${ServicePrefix}/${MODULAR}/${id}`,
+      method: RequestEnum.GET,
+    } as AxiosRequestConfig;
+  },
 };
 
-export const copy = (id: string) => defHttp.request<ExtendMsgResultVO>({ ...Api.Copy, params: { id } });
+export const copy = (id: string) =>
+  defHttp.request<ExtendMsgResultVO>({ ...Api.Copy, params: { id } });
 
 export const page = (params: PageParams<ExtendMsgPageQuery>) =>
   defHttp.request<PageResult<ExtendMsgResultVO>>({ ...Api.Page, params });
@@ -50,12 +65,26 @@ export const page = (params: PageParams<ExtendMsgPageQuery>) =>
 export const detail = (id: string) =>
   defHttp.request<ExtendMsgResultVO>({ ...Api.Detail, params: { id } });
 
-export const query = (params: ExtendMsgPageQuery) => defHttp.request<ExtendMsgResultVO[]>({ ...Api.Query, params });
+export const query = (params: ExtendMsgPageQuery) =>
+  defHttp.request<ExtendMsgResultVO[]>({
+    ...Api.Query,
+    params,
+  });
 
-export const save = (params: ExtendMsgSaveVO) => defHttp.request<ExtendMsgResultVO>({ ...Api.Save, params });
+export const get = (id: string) => defHttp.request<ExtendMsgResultVO>({ ...Api.Get(id) });
+
+export const save = (params: ExtendMsgSaveVO) =>
+  defHttp.request<ExtendMsgResultVO>({
+    ...Api.Save,
+    params,
+  });
+export const send = (params: ExtendMsgSaveVO) =>
+  defHttp.request<boolean>({
+    ...Api.Send,
+    params,
+  });
 
 export const update = (params: ExtendMsgUpdateVO) =>
   defHttp.request<ExtendMsgResultVO>({ ...Api.Update, params });
 
 export const remove = (params: string[]) => defHttp.request<boolean>({ ...Api.Delete, params });
-

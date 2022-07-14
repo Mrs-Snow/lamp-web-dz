@@ -30,7 +30,8 @@
   import NoticeList from './NoticeList.vue';
   import { useDesign } from '/@/hooks/web/useDesign';
   import { myMsg, mark } from '/@/api/basic/msg/eMsg';
-  import { ActionEnum, MsgTypeEnum } from '/@/enums/commonEnum';
+  import { ActionEnum } from '/@/enums/commonEnum';
+  import { MsgTypeEnum } from '/@/enums/biz/base';
   import { EMsgResultVO } from '/@/api/basic/msg/model/eMsgModel';
   import { PageEnum } from '/@/enums/pageEnum';
   import { RouteEnum } from '/@/enums/biz/tenant';

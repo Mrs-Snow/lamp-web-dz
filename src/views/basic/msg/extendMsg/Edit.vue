@@ -1,92 +1,96 @@
 <template>
-  <BasicModal
-    v-bind="$attrs"
-    @register="registerModel"
-    :title="t(`common.title.${type}`)"
-    :maskClosable="false"
-    @ok="handleSubmit"
-    :keyboard="true"
-  >
+  <PageWrapper class="high-form" contentBackground contentClass="p-4" title="发送消息">
     <BasicForm @register="registerForm" />
-  </BasicModal>
+    <template #rightFooter>
+      <a-button v-if="type !== ActionEnum.VIEW" class="ml-4" type="primary" @click="handleSubmit">
+        立即发送
+      </a-button>
+    </template>
+  </PageWrapper>
 </template>
 <script lang="ts">
-  import { defineComponent, ref, unref } from 'vue';
-  import { BasicModal, useModalInner } from '/@/components/Modal';
+  import { defineComponent, onMounted, ref, unref } from 'vue';
+  import { Select } from 'ant-design-vue';
+  import { useRouter } from 'vue-router';
   import { BasicForm, useForm } from '/@/components/Form/index';
+  import { PageWrapper } from '/@/components/Page';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
+  import { useTabs } from '/@/hooks/web/useTabs';
+  import { useLoading } from '/@/components/Loading';
+  import { RouteEnum } from '/@/enums/biz/tenant';
   import { ActionEnum, VALIDATE_API } from '/@/enums/commonEnum';
-  import { Api, save, update } from '/@/api/basic/msg/extendMsg';
+  import { Api, get, send } from '/@/api/basic/msg/extendMsg';
   import { getValidateRules } from '/@/api/lamp/common/formValidateService';
   import { customFormSchemaRules, editFormSchema } from './extendMsg.data';
+  import { NoticeRemindModeEnum } from '/@/enums/biz/base';
 
   export default defineComponent({
-    name: '编辑消息维护',
-    components: { BasicModal, BasicForm },
+    name: 'EMsgEdit',
+    components: {
+      BasicForm,
+      [Select.name]: Select,
+      PageWrapper,
+    },
     emits: ['success', 'register'],
-    setup(_, { emit }) {
+    setup(_) {
       const { t } = useI18n();
-      const type = ref<ActionEnum>(ActionEnum.ADD);
+      const type = ref(ActionEnum.ADD);
       const { createMessage } = useMessage();
+      const { replace, currentRoute } = useRouter();
+      const { closeCurrent } = useTabs();
 
-      const [registerForm, { setFieldsValue, resetFields, updateSchema, validate, resetSchema }] =
-        useForm({
-          name: 'ExtendMsgEdit',
-          labelWidth: 100,
-          schemas: editFormSchema(type),
-          showActionButtonGroup: false,
-          disabled: (_) => {
-            return unref(type) === ActionEnum.VIEW;
-          },
-          baseColProps: { span: 24 },
-          actionColOptions: {
-            span: 23,
-          },
-        });
+      const [registerForm, { setFieldsValue, resetFields, updateSchema, validate }] = useForm({
+        labelWidth: 100,
+        schemas: editFormSchema(type),
+        showActionButtonGroup: false,
+        baseColProps: { span: 24 },
+        actionColOptions: {
+          span: 23,
+        },
+      });
 
-      const [registerModel, { setModalProps: setProps, closeModal: close }] = useModalInner(async (data) => {
-        setProps({ confirmLoading: false });
-        await resetSchema(editFormSchema(type));
+      onMounted(() => {
+        const { params } = currentRoute.value;
+        const id = params.id;
+        load({ type: params?.type, id });
+      });
+
+      const load = async (data: Recordable) => {
         await resetFields();
-        type.value = data?.type || ActionEnum.ADD;
+        type.value = data?.type;
 
-        if (unref(type) !== ActionEnum.ADD) {
-          // 赋值
-          const record = { ...data?.record };
-          await setFieldsValue(record);
+        if (![ActionEnum.ADD].includes(unref(type))) {
+          const record = await get(data?.id);
+          await setFieldsValue({ ...record });
         }
 
-        if (unref(type) !== ActionEnum.VIEW) {
+        if ([ActionEnum.ADD, ActionEnum.COPY].includes(unref(type))) {
           let validateApi = Api[VALIDATE_API[unref(type)]];
-          await getValidateRules(validateApi, customFormSchemaRules(type)).then(async (rules) => {
-            rules && rules.length > 0 && (await updateSchema(rules));
-          });
+          const rules = await getValidateRules(validateApi, customFormSchemaRules(type));
+          rules && rules.length > 0 && (await updateSchema(rules));
         }
+      };
+
+      const [openFullLoading, closeFullLoading] = useLoading({
+        tip: t('common.requestingText'),
       });
 
       async function handleSubmit() {
         try {
           const params = await validate();
-          setProps({ confirmLoading: true });
 
-          if (unref(type) !== ActionEnum.VIEW) {
-            if (unref(type) === ActionEnum.EDIT) {
-              await update(params);
-            } else {
-              params.id = null;
-              await save(params);
-            }
-            createMessage.success(t(`common.tips.${type.value}Success`));
-          }
-          close();
-          emit('success');
+          openFullLoading();
+          await send(params);
+          createMessage.success(t(`common.tips.${type.value}Success`));
+          await closeCurrent();
+          replace({ name: RouteEnum.BASIC_MSG });
         } finally {
-          setProps({ confirmLoading: false });
+          closeFullLoading();
         }
       }
 
-      return { type, t, registerModel, registerForm, handleSubmit };
+      return { t, registerForm, type, handleSubmit, ActionEnum, NoticeRemindModeEnum };
     },
   });
 </script>

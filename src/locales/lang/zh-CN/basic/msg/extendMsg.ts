@@ -10,6 +10,7 @@ export default {
   content: '发送内容',
   sendTime: '发送时间',
   author: '发布人姓名',
+  remindMode: '提醒方式',
   bizId: '业务ID',
   bizType: '业务类型',
   createdBy: '创建人ID',

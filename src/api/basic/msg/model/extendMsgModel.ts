@@ -22,6 +22,8 @@ export interface ExtendMsgSaveVO {
   sendTime?: string; // 发送时间
   bizId?: string; // 业务ID
   bizType?: string; // 业务类型
+  draft?: boolean; // 是否草稿
+  recipientList?: string[];
 }
 
 export interface ExtendMsgUpdateVO {
@@ -36,6 +38,8 @@ export interface ExtendMsgUpdateVO {
   sendTime?: string; // 发送时间
   bizId?: string; // 业务ID
   bizType?: string; // 业务类型
+  draft?: boolean; // 是否草稿
+  recipientList?: string[];
 }
 
 export interface ExtendMsgResultVO {
@@ -55,4 +59,6 @@ export interface ExtendMsgResultVO {
   sendTime?: string; // 发送时间
   bizId?: string; // 业务ID
   bizType?: string; // 业务类型
+
+  recipientList?: string[];
 }

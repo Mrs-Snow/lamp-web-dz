@@ -10,12 +10,8 @@
         >
           {{ t('common.title.delete') }}
         </a-button>
-        <a-button
-          type="primary"
-          preIcon="ant-design:plus-outlined"
-          @click="handleAdd"
-        >
-          {{ t('common.title.add') }}
+        <a-button type="primary" preIcon="ant-design:plus-outlined" @click="handleRead">
+          标记已读
         </a-button>
       </template>
       <template #bodyCell="{ column, record }">
@@ -26,16 +22,6 @@
                 tooltip: t('common.title.view'),
                 icon: 'ant-design:search-outlined',
                 onClick: handleView.bind(null, record),
-              },
-              {
-                tooltip: t('common.title.edit'),
-                icon: 'ant-design:edit-outlined',
-                onClick: handleEdit.bind(null, record),
-              },
-              {
-                tooltip: t('common.title.copy'),
-                icon: 'ant-design:copy-outlined',
-                onClick: handleCopy.bind(null, record),
               },
               {
                 tooltip: t('common.title.delete'),
@@ -70,7 +56,7 @@
 
   export default defineComponent({
     // 若需要开启页面缓存，请将此参数跟菜单名保持一致
-    name: '短信模板维护',
+    name: '我的消息',
     components: {
       BasicTable,
       PageWrapper,
@@ -115,16 +101,8 @@
         },
       });
 
-      // 弹出复制页面
-      function handleCopy(record: Recordable, e: Event) {
-        e?.stopPropagation();
-        openModal(true, {
-          record,
-          type: ActionEnum.COPY,
-        });
-      }
       // 弹出新增页面
-      function handleAdd() {
+      function handleRead() {
         openModal(true, {
           type: ActionEnum.ADD,
         });
@@ -136,15 +114,6 @@
         openModal(true, {
           record,
           type: ActionEnum.VIEW,
-        });
-      }
-
-      // 弹出编辑页面
-      function handleEdit(record: Recordable, e: Event) {
-        e?.stopPropagation();
-        openModal(true, {
-          record,
-          type: ActionEnum.EDIT,
         });
       }
 
@@ -190,9 +159,7 @@
         registerTable,
         registerModal,
         handleView,
-        handleAdd,
-        handleCopy,
-        handleEdit,
+        handleRead,
         handleDelete,
         handleBatchDelete,
         handleSuccess,
