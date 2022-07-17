@@ -87,6 +87,7 @@ export function register(params: RegisterVO, mode: ErrorMessageMode = 'modal') {
 export function getUserInfoById(_mode: ErrorMessageMode = 'none', userId?: string) {
   return defHttp.get<DefUserInfoResultVO>({
     ...Api.getUserInfoById,
+    timeout: 2 * 60 * 1000,
     params: { userId: userId },
   });
 }
