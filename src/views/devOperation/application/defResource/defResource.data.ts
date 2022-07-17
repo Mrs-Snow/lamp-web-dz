@@ -612,7 +612,7 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       field: 'metaJson',
       component: 'Input',
       slot: 'metaJson',
-      helpMessage: ['在元数据中可以配置路由meta参数中的特殊参数'],
+      helpMessage: ['在元数据中可以配置路由meta参数中的特殊参数', '如何配置请全局搜索：RouteMeta'],
     },
     {
       label: t('devOperation.application.defResource.describe'),
