@@ -13,7 +13,7 @@
                 <span style="color: #fb441b">({{ item.data.total }}) </span></template
               >
               <!-- 绑定title-click事件的通知列表中标题是“可点击”的-->
-              <NoticeList :value="item.data" :msgType="item.key" @title-click="onNoticeClick" />
+              <NoticeList :value="item.data" :remindMode="item.key" @title-click="onNoticeClick" />
             </TabPane>
           </template>
         </Tabs>
@@ -29,10 +29,10 @@
   import { TabItem } from './data';
   import NoticeList from './NoticeList.vue';
   import { useDesign } from '/@/hooks/web/useDesign';
-  import { myMsg, mark } from '/@/api/basic/msg/eMsg';
+  import { myNotice, mark } from '/@/api/basic/msg/extendNotice';
   import { ActionEnum } from '/@/enums/commonEnum';
-  import { MsgTypeEnum } from '/@/enums/biz/base';
-  import { EMsgResultVO } from '/@/api/basic/msg/model/eMsgModel';
+  import { ExtendNoticeResultVO } from '/@/api/basic/msg/model/extendNoticeModel';
+  import { NoticeRemindModeEnum } from '/@/enums/biz/base';
   import { PageEnum } from '/@/enums/pageEnum';
   import { RouteEnum } from '/@/enums/biz/tenant';
 
@@ -44,7 +44,7 @@
       const listData = ref<TabItem[]>([]);
 
       async function loadMyMsg() {
-        const allMsg = await myMsg({
+        const allMsg = await myNotice({
           current: 1,
           size: 5,
           model: {},
@@ -53,24 +53,19 @@
         listData.value = [];
 
         listData.value.push({
-          key: MsgTypeEnum.TO_DO,
+          key: NoticeRemindModeEnum.TO_DO,
           name: '待办',
           data: allMsg?.todoList,
         });
         listData.value.push({
-          key: MsgTypeEnum.NOTIFY,
-          name: '通知',
-          data: allMsg?.notifyList,
-        });
-        listData.value.push({
-          key: MsgTypeEnum.NOTICE,
-          name: '公告',
-          data: allMsg?.noticeList,
-        });
-        listData.value.push({
-          key: MsgTypeEnum.EARLY_WARNING,
+          key: NoticeRemindModeEnum.EARLY_WARNING,
           name: '预警',
           data: allMsg?.earlyWarningList,
+        });
+        listData.value.push({
+          key: NoticeRemindModeEnum.NOTICE,
+          name: '提醒',
+          data: allMsg?.noticeList,
         });
       }
 
@@ -81,7 +76,7 @@
       setInterval(() => {
         const { path } = currentRoute.value;
         if (path !== PageEnum.BASE_LOGIN) {
-          // loadMyMsg();
+          loadMyMsg();
         }
       }, 5 * 60000);
 
@@ -92,8 +87,7 @@
         }
         return num;
       });
-
-      async function onNoticeClick(record: EMsgResultVO) {
+      async function onNoticeClick(record: ExtendNoticeResultVO) {
         const flag = await mark([record.id]);
         if (flag) {
           loadMyMsg();

@@ -63,10 +63,3 @@ export enum TaskStatusEnum {
   SUCCESS = 'SUCCESS',
   FAIL = 'FAIL',
 }
-
-export enum MsgTypeEnum {
-  TO_DO = 'TO_DO',
-  NOTIFY = 'NOTIFY',
-  NOTICE = 'NOTICE',
-  EARLY_WARNING = 'EARLY_WARNING',
-}

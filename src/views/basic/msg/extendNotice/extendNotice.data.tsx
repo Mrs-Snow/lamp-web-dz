@@ -1,11 +1,13 @@
 import { Ref } from 'vue';
-import { DictEnum } from '/@/enums/commonEnum';
+import { ActionEnum, DictEnum } from '/@/enums/commonEnum';
 import { dateUtil } from '/@/utils/dateUtil';
-import { dictComponentProps, dictAllComponentProps } from '/@/utils/lamp/common';
-import { yesNoComponentProps } from '/@/utils/lamp/common';
+import {
+  dictAllComponentProps,
+  dictComponentProps,
+  yesNoComponentProps,
+} from '/@/utils/lamp/common';
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
-import { ActionEnum } from '/@/enums/commonEnum';
 import { FormSchemaExt } from '/@/api/lamp/common/formValidateService';
 
 const { t } = useI18n();
@@ -16,6 +18,15 @@ export const columns = (): BasicColumn[] => {
       title: t('basic.msg.extendNotice.remindMode'),
       dataIndex: ['echoMap', 'remindMode'],
       key: 'remindMode',
+      width: 120,
+    },
+    {
+      title: t('basic.msg.extendNotice.isRead'),
+      dataIndex: 'isRead',
+      width: 100,
+      format: (text) => {
+        return text ? t('lamp.common.yes') : t('lamp.common.no');
+      },
     },
     {
       title: t('basic.msg.extendNotice.title'),
@@ -37,15 +48,6 @@ export const columns = (): BasicColumn[] => {
 export const searchFormSchema = (): FormSchema[] => {
   return [
     {
-      label: t('basic.msg.extendNotice.remindMode'),
-      field: 'remindMode',
-      component: 'ApiSelect',
-      componentProps: {
-        ...dictAllComponentProps(DictEnum.EchoDictType_Base_NOTICE_REMIND_MODE),
-      },
-      colProps: { span: 8 },
-    },
-    {
       label: t('basic.msg.extendNotice.title'),
       field: 'title',
       component: 'Input',
@@ -55,6 +57,24 @@ export const searchFormSchema = (): FormSchema[] => {
       label: t('basic.msg.extendNotice.author'),
       field: 'author',
       component: 'Input',
+      colProps: { span: 8 },
+    },
+    {
+      label: t('basic.msg.extendNotice.remindMode'),
+      field: 'remindMode',
+      component: 'ApiSelect',
+      componentProps: {
+        ...dictAllComponentProps(DictEnum.EchoDictType_Base_NOTICE_REMIND_MODE),
+      },
+      colProps: { span: 8 },
+    },
+    {
+      label: t('basic.msg.extendNotice.isRead'),
+      field: 'isRead',
+      component: 'RadioButtonGroup',
+      componentProps: {
+        ...yesNoComponentProps(true),
+      },
       colProps: { span: 8 },
     },
     {

@@ -267,13 +267,23 @@ export const stateComponentProps = (all?: boolean) => {
   }
 };
 
-export const yesNoComponentProps = () => {
-  return {
-    options: [
-      { label: t('lamp.common.yes'), value: true },
-      { label: t('lamp.common.no'), value: false },
-    ],
-  };
+export const yesNoComponentProps = (all = false) => {
+  if (all) {
+    return {
+      options: [
+        { label: '所有', value: null },
+        { label: t('lamp.common.yes'), value: true },
+        { label: t('lamp.common.no'), value: false },
+      ],
+    };
+  } else {
+    return {
+      options: [
+        { label: t('lamp.common.yes'), value: true },
+        { label: t('lamp.common.no'), value: false },
+      ],
+    };
+  }
 };
 
 export const stateFilters = () => {

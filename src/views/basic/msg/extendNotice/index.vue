@@ -1,16 +1,16 @@
 <template>
-  <PageWrapper dense contentFullHeight>
+  <PageWrapper contentFullHeight dense>
     <BasicTable @register="registerTable">
       <template #toolbar>
         <a-button
-          type="primary"
           color="error"
           preIcon="ant-design:delete-outlined"
+          type="primary"
           @click="handleBatchDelete"
         >
           {{ t('common.title.delete') }}
         </a-button>
-        <a-button type="primary" preIcon="ant-design:plus-outlined" @click="handleRead">
+        <a-button preIcon="ant-design:plus-outlined" type="primary" @click="handleRead">
           标记已读
         </a-button>
       </template>
@@ -42,10 +42,11 @@
   </PageWrapper>
 </template>
 <script lang="ts">
-  import { defineComponent } from 'vue';
+  import { defineComponent, onMounted, nextTick } from 'vue';
+  import { useRouter } from 'vue-router';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { BasicTable, useTable, TableAction } from '/@/components/Table';
+  import { BasicTable, TableAction, useTable } from '/@/components/Table';
   import { PageWrapper } from '/@/components/Page';
   import { useModal } from '/@/components/Modal';
   import { handleFetchParams } from '/@/utils/lamp/common';
@@ -67,9 +68,10 @@
       const { t } = useI18n();
       const { createMessage, createConfirm } = useMessage();
       const [registerModal, { openModal }] = useModal();
+      const { currentRoute } = useRouter();
 
       // 表格
-      const [registerTable, { reload, getSelectRowKeys }] = useTable({
+      const [registerTable, { reload, getSelectRowKeys, setFieldsValue }] = useTable({
         title: t('basic.msg.extendNotice.table.title'),
         api: page,
         columns: columns(),
@@ -88,6 +90,7 @@
         beforeFetch: handleFetchParams,
         useSearchForm: true,
         showTableSetting: true,
+        immediate: false,
         bordered: true,
         rowKey: 'id',
         rowSelection: {
@@ -99,6 +102,15 @@
           title: t('common.column.action'),
           dataIndex: 'action',
         },
+      });
+
+      onMounted(async () => {
+        const { query } = currentRoute.value;
+        const remindMode = query.remindMode as string;
+        await setFieldsValue({ remindMode });
+        nextTick(async () => {
+          await reload();
+        });
       });
 
       // 弹出新增页面

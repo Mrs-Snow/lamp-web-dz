@@ -1,5 +1,5 @@
-import { EMsgResultVO } from '/@/api/basic/msg/model/eMsgModel';
 import { PageResult } from '/@/api/model/baseModel';
+import { ExtendNoticeResultVO } from '/@/api/basic/msg/model/extendNoticeModel';
 
 export interface ListItem {
   id: string;
@@ -20,5 +20,5 @@ export interface ListItem {
 export interface TabItem {
   key: string;
   name: string;
-  data: PageResult<EMsgResultVO>;
+  data: PageResult<ExtendNoticeResultVO>;
 }

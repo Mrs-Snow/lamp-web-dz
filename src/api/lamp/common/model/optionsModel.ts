@@ -14,6 +14,8 @@ export type OptionsGetResultModel = BasicFetchResult<OptionsItem[]>;
 export interface CodeQueryVO {
   type: string;
   excludes?: string | string[];
+  extend?: OptionsItem;
+  extendFirst: boolean;
 }
 
 export interface SystemApiVO {

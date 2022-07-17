@@ -6,14 +6,14 @@
           <template #title>
             <div class="title">
               <a-typography-paragraph
-                @click="handleTitleClick(item)"
-                style="width: 100%; margin-bottom: 0 !important"
-                :style="{ cursor: isTitleClickable ? 'pointer' : '' }"
+                :content="item.title"
                 :delete="!!item.isRead"
                 :ellipsis="
                   $props.titleRows > 0 ? { rows: $props.titleRows, tooltip: !!item.title } : false
                 "
-                :content="item.title"
+                :style="{ cursor: isTitleClickable ? 'pointer' : '' }"
+                style="width: 100%; margin-bottom: 0 !important"
+                @click="handleTitleClick(item)"
               />
             </div>
           </template>
@@ -31,15 +31,15 @@
     </template>
     <template #loadMore>
       <div
+        v-if="value.total > 0"
         :style="{
           textAlign: 'center',
           marginTop: '12px',
           height: '32px',
           lineHeight: '32px',
         }"
-        v-if="value.total > 0"
       >
-        <a href="javascript:void(0);" @click="loadMore(msgType)"> 查看全部 >> </a>
+        <a href="javascript:void(0);" @click="loadMore(remindMode)"> 查看全部 >> </a>
       </div>
     </template>
   </a-list>
@@ -50,8 +50,8 @@
   import { useRouter } from 'vue-router';
   import { useDesign } from '/@/hooks/web/useDesign';
   import { PageResult } from '/@/api/model/baseModel';
-  import { EMsgResultVO } from '/@/api/basic/msg/model/eMsgModel';
-  import { MsgTypeEnum } from '/@/enums/biz/base';
+  import { ExtendNoticeResultVO } from '/@/api/basic/msg/model/extendNoticeModel';
+  import { NoticeRemindModeEnum } from '/@/enums/biz/base';
   import { RouteEnum } from '/@/enums/biz/tenant';
 
   export default defineComponent({
@@ -63,19 +63,19 @@
     },
     props: {
       value: {
-        type: Object as PropType<PageResult<EMsgResultVO>>,
+        type: Object as PropType<PageResult<ExtendNoticeResultVO>>,
         default: () => {},
       },
       titleRows: {
         type: Number,
         default: 1,
       },
-      msgType: {
+      remindMode: {
         type: String,
-        default: MsgTypeEnum.TO_DO,
+        default: NoticeRemindModeEnum.TO_DO,
       },
       onTitleClick: {
-        type: Function as PropType<(item: EMsgResultVO) => void>,
+        type: Function as PropType<(item: ExtendNoticeResultVO) => void>,
       },
     },
     emits: ['update:currentPage'],
@@ -89,16 +89,17 @@
 
       const isTitleClickable = computed(() => !!props.onTitleClick);
 
-      function handleTitleClick(item: EMsgResultVO) {
+      function handleTitleClick(item: ExtendNoticeResultVO) {
         props.onTitleClick && props.onTitleClick(item);
       }
 
-      function loadMore(msgType: string) {
+      function loadMore(remindMode: string) {
         replace({
           name: RouteEnum.BASIC_MY_MSG,
-          query: { msgType: msgType },
+          query: { remindMode },
         });
       }
+
       return { prefixCls, getData, handleTitleClick, isTitleClickable, loadMore };
     },
   });

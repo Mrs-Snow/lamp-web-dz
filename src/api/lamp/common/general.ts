@@ -31,12 +31,15 @@ export const findSystemApi = (serviceProfix: string) => {
 };
 
 /**
- * @description: Get 字典
+ * @description: Get 蜜桔
  */
 export const findEnumListByType = (params: CodeQueryVO[] = []) => {
   return defHttp.request<OptionsGetResultModel>({ ...Api.FindEnumListByType, params });
 };
 
+/**
+ * @description: Get 字典
+ */
 export const findCodeListByType = (params: CodeQueryVO[] = []) => {
   return defHttp.request<OptionsGetResultModel>({
     ...Api.FindCodeListByType,

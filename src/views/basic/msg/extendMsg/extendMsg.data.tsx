@@ -23,11 +23,13 @@ export const columns = (): BasicColumn[] => {
       title: t('basic.msg.extendMsg.remindMode'),
       dataIndex: ['echoMap', 'remindMode'],
       key: 'status',
+      width: 120,
     },
     {
       title: t('basic.msg.extendMsg.status'),
       dataIndex: ['echoMap', 'status'],
       key: 'status',
+      width: 120,
     },
     {
       title: t('basic.msg.extendMsg.title'),

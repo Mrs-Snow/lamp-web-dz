@@ -13,7 +13,7 @@
                 <span style="color: #fb441b">({{ item.data.total }}) </span></template
               >
               <!-- 绑定title-click事件的通知列表中标题是“可点击”的-->
-              <NoticeList :value="item.data" :msgType="item.key" @title-click="onNoticeClick" />
+              <NoticeList :value="item.data" :remindMode="item.key" @title-click="onNoticeClick" />
             </TabPane>
           </template>
         </Tabs>
@@ -30,10 +30,10 @@
   import { useDesign } from '/@/hooks/web/useDesign';
   import { useUserStore } from '/@/store/modules/user';
   import { RouteEnum } from '/@/enums/biz/tenant';
-  import { mark } from '/@/api/basic/msg/eMsg';
+  import { mark } from '/@/api/basic/msg/extendNotice';
   import { ActionEnum } from '/@/enums/commonEnum';
-  import { MsgTypeEnum } from '/@/enums/biz/base';
-  import { EMsgResultVO } from '/@/api/basic/msg/model/eMsgModel';
+  import { ExtendNoticeResultVO } from '/@/api/basic/msg/model/extendNoticeModel';
+  import { NoticeRemindModeEnum } from '/@/enums/biz/base';
   import NoticeList from './NoticeList.vue';
   import { TabItem } from './data';
 
@@ -46,7 +46,7 @@
       const userStore = useUserStore();
       const employeeId = userStore.getUserInfo.employeeId;
       const tenantId = userStore.getTenantId;
-
+      console.log('ws1');
       const host = window.location.host;
       const protocol = window.location.protocol;
       const state = reactive({
@@ -68,22 +68,17 @@
           listData.value = [];
 
           listData.value.push({
-            key: MsgTypeEnum.TO_DO,
+            key: NoticeRemindModeEnum.TO_DO,
             name: '待办',
             data: jsonResult.data?.todoList,
           });
           listData.value.push({
-            key: MsgTypeEnum.NOTIFY,
-            name: '通知',
-            data: jsonResult.data?.notifyList,
-          });
-          listData.value.push({
-            key: MsgTypeEnum.NOTICE,
-            name: '公告',
+            key: NoticeRemindModeEnum.NOTICE,
+            name: '提醒',
             data: jsonResult.data?.noticeList,
           });
           listData.value.push({
-            key: MsgTypeEnum.EARLY_WARNING,
+            key: NoticeRemindModeEnum.EARLY_WARNING,
             name: '预警',
             data: jsonResult.data?.earlyWarningList,
           });
@@ -121,7 +116,7 @@
         return num;
       });
 
-      async function onNoticeClick(record: EMsgResultVO) {
+      async function onNoticeClick(record: ExtendNoticeResultVO) {
         const flag = await mark([record.id]);
         if (flag) {
           send('pull');
