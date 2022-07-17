@@ -1,92 +1,59 @@
 <template>
-  <BasicModal
-    v-bind="$attrs"
-    @register="registerModel"
-    :title="t(`common.title.${type}`)"
-    :maskClosable="false"
-    @ok="handleSubmit"
-    :keyboard="true"
-  >
+  <PageWrapper class="high-form" contentBackground contentClass="p-4" title="查看消息">
     <BasicForm @register="registerForm" />
-  </BasicModal>
+  </PageWrapper>
 </template>
 <script lang="ts">
-  import { defineComponent, ref, unref } from 'vue';
-  import { BasicModal, useModalInner } from '/@/components/Modal';
+  import { defineComponent, onMounted, ref, unref } from 'vue';
+  import { useRouter } from 'vue-router';
   import { BasicForm, useForm } from '/@/components/Form/index';
+  import { PageWrapper } from '/@/components/Page';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { useMessage } from '/@/hooks/web/useMessage';
-  import { ActionEnum, VALIDATE_API } from '/@/enums/commonEnum';
-  import { Api, save, update } from '/@/api/basic/msg/extendNotice';
-  import { getValidateRules } from '/@/api/lamp/common/formValidateService';
-  import { customFormSchemaRules, editFormSchema } from './extendNotice.data';
+  import { ActionEnum } from '/@/enums/commonEnum';
+  import { get } from '/@/api/basic/msg/extendNotice';
+  import { editFormSchema } from './extendNotice.data';
+  import { NoticeRemindModeEnum } from '/@/enums/biz/base';
 
   export default defineComponent({
-    name: '编辑短信模板维护',
-    components: { BasicModal, BasicForm },
+    name: '查看我的消息',
+    components: {
+      BasicForm,
+      PageWrapper,
+    },
     emits: ['success', 'register'],
-    setup(_, { emit }) {
+    setup(_) {
       const { t } = useI18n();
-      const type = ref<ActionEnum>(ActionEnum.ADD);
-      const { createMessage } = useMessage();
+      const type = ref(ActionEnum.ADD);
+      const { currentRoute } = useRouter();
 
-      const [registerForm, { setFieldsValue, resetFields, updateSchema, validate, resetSchema }] =
-        useForm({
-          name: 'ExtendNoticeEdit',
-          labelWidth: 100,
-          schemas: editFormSchema(type),
-          showActionButtonGroup: false,
-          disabled: (_) => {
-            return unref(type) === ActionEnum.VIEW;
-          },
-          baseColProps: { span: 24 },
-          actionColOptions: {
-            span: 23,
-          },
-        });
-
-      const [registerModel, { setModalProps: setProps, closeModal: close }] = useModalInner(async (data) => {
-        setProps({ confirmLoading: false });
-        await resetSchema(editFormSchema(type));
-        await resetFields();
-        type.value = data?.type || ActionEnum.ADD;
-
-        if (unref(type) !== ActionEnum.ADD) {
-          // 赋值
-          const record = { ...data?.record };
-          await setFieldsValue(record);
-        }
-
-        if (unref(type) !== ActionEnum.VIEW) {
-          let validateApi = Api[VALIDATE_API[unref(type)]];
-          await getValidateRules(validateApi, customFormSchemaRules(type)).then(async (rules) => {
-            rules && rules.length > 0 && (await updateSchema(rules));
-          });
-        }
+      const [registerForm, { setFieldsValue, resetFields }] = useForm({
+        labelWidth: 100,
+        schemas: editFormSchema(type),
+        showActionButtonGroup: false,
+        baseColProps: { span: 24 },
+        disabled: true,
+        actionColOptions: {
+          span: 23,
+        },
       });
 
-      async function handleSubmit() {
-        try {
-          const params = await validate();
-          setProps({ confirmLoading: true });
+      onMounted(() => {
+        const { params } = currentRoute.value;
+        const id = params.id;
+        load({ type: params?.type, id });
+      });
 
-          if (unref(type) !== ActionEnum.VIEW) {
-            if (unref(type) === ActionEnum.EDIT) {
-              await update(params);
-            } else {
-              params.id = null;
-              await save(params);
-            }
-            createMessage.success(t(`common.tips.${type.value}Success`));
-          }
-          close();
-          emit('success');
-        } finally {
-          setProps({ confirmLoading: false });
+      const load = async (data: Recordable) => {
+        await resetFields();
+        type.value = data?.type;
+
+        if (![ActionEnum.ADD].includes(unref(type))) {
+          const record = await get(data?.id);
+          await setFieldsValue({ ...record });
         }
-      }
+      };
 
-      return { type, t, registerModel, registerForm, handleSubmit };
+      return { t, registerForm, type, ActionEnum, NoticeRemindModeEnum };
     },
   });
 </script>

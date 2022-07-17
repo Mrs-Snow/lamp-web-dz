@@ -1,6 +1,5 @@
-import { Ref } from 'vue';
-import { ActionEnum, DictEnum } from '/@/enums/commonEnum';
-import { dateUtil } from '/@/utils/dateUtil';
+import { h, Ref } from 'vue';
+import { ActionEnum, DictEnum, FileBizTypeEnum, FileBucketEnum } from '/@/enums/commonEnum';
 import {
   dictAllComponentProps,
   dictComponentProps,
@@ -9,6 +8,8 @@ import {
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { FormSchemaExt } from '/@/api/lamp/common/formValidateService';
+import { MsgTemplateTypeEnum, SourceTypeEnum } from '/@/enums/biz/base';
+import { Tinymce } from '/@/components/Tinymce';
 
 const { t } = useI18n();
 // 列表页字段
@@ -96,113 +97,59 @@ export const editFormSchema = (_type: Ref<ActionEnum>): FormSchema[] => {
       show: false,
     },
     {
-      label: t('basic.msg.extendNotice.bizId'),
-      field: 'bizId',
+      label: t('basic.msg.extendNotice.channel'),
+      field: 'channel',
       component: 'Input',
+      show: false,
+      defaultValue: SourceTypeEnum.APP,
     },
     {
-      label: t('basic.msg.extendNotice.bizType'),
-      field: 'bizType',
+      label: t('basic.msg.extendNotice.type'),
+      field: 'type',
       component: 'Input',
-    },
-    {
-      label: t('basic.msg.extendNotice.recipientId'),
-      field: 'recipientId',
-      component: 'Input',
-    },
-    {
-      label: t('basic.msg.extendNotice.remindMode'),
-      field: 'remindMode',
-      component: 'ApiRadioGroup',
-      componentProps: {
-        // 建议将魔法数参数移动到 DictEnum 中，并添加为: EchoDictType_Base_NOTICE_REMIND_MODE = 'NOTICE_REMIND_MODE';
-        // 'NOTICE_REMIND_MODE' 需要与 后端DictType类中的参数 以及 def_dict表中的key字段 保持一致，否则无法回显！
-        // ...dictComponentProps(DictEnum.EchoDictType_Base_NOTICE_REMIND_MODE),
-        ...dictComponentProps('NOTICE_REMIND_MODE'),
-      },
+      show: false,
+      defaultValue: MsgTemplateTypeEnum.NOTICE,
     },
     {
       label: t('basic.msg.extendNotice.title'),
       field: 'title',
       component: 'Input',
-    },
-    {
-      label: t('basic.msg.extendNotice.content'),
-      field: 'content',
-      component: 'Input',
+      colProps: { span: 12 },
     },
     {
       label: t('basic.msg.extendNotice.author'),
       field: 'author',
       component: 'Input',
+      colProps: { span: 12 },
     },
     {
-      label: t('basic.msg.extendNotice.url'),
-      field: 'url',
+      label: t('basic.msg.extendNotice.remindMode'),
+      field: 'remindMode',
+      component: 'ApiSelect',
+      componentProps: {
+        ...dictComponentProps(DictEnum.EchoDictType_Base_NOTICE_REMIND_MODE),
+      },
+      colProps: { span: 12 },
+    },
+    {
+      label: t('basic.msg.extendNotice.content'),
+      field: 'content',
       component: 'Input',
-    },
-    {
-      label: t('basic.msg.extendNotice.target'),
-      field: 'target',
-      component: 'ApiRadioGroup',
-      componentProps: {
-        // 建议将魔法数参数移动到 DictEnum 中，并添加为: EchoDictType_Base_NOTICE_TARGET = 'NOTICE_TARGET';
-        // 'NOTICE_TARGET' 需要与 后端DictType类中的参数 以及 def_dict表中的key字段 保持一致，否则无法回显！
-        // ...dictComponentProps(DictEnum.EchoDictType_Base_NOTICE_TARGET),
-        ...dictComponentProps('NOTICE_TARGET'),
+      render: ({ model, field }) => {
+        return h(Tinymce, {
+          value: model[field],
+          options: {
+            readonly: true,
+          },
+          onChange: (value: string) => {
+            model[field] = value;
+          },
+          uploadParams: {
+            bizType: FileBizTypeEnum.EXTEND_MSG_CONTENT,
+            bucket: FileBucketEnum.public,
+          },
+        });
       },
-    },
-    {
-      label: t('basic.msg.extendNotice.autoRead'),
-      field: 'autoRead',
-      component: 'RadioGroup',
-      componentProps: {
-        ...yesNoComponentProps(),
-      },
-    },
-    {
-      label: t('basic.msg.extendNotice.handleTime'),
-      field: 'handleTime',
-      component: 'DatePicker',
-      componentProps: {
-        format: 'YYYY-MM-DD HH:mm:ss',
-        valueFormat: 'YYYY-MM-DD HH:mm:ss',
-        showTime: { defaultValue: dateUtil('00:00:00', 'HH:mm:ss') },
-      },
-    },
-    {
-      label: t('basic.msg.extendNotice.readTime'),
-      field: 'readTime',
-      component: 'DatePicker',
-      componentProps: {
-        format: 'YYYY-MM-DD HH:mm:ss',
-        valueFormat: 'YYYY-MM-DD HH:mm:ss',
-        showTime: { defaultValue: dateUtil('00:00:00', 'HH:mm:ss') },
-      },
-    },
-    {
-      label: t('basic.msg.extendNotice.isRead'),
-      field: 'isRead',
-      component: 'RadioGroup',
-      defaultValue: false,
-      componentProps: {
-        ...yesNoComponentProps(),
-      },
-    },
-    {
-      label: t('basic.msg.extendNotice.isHandle'),
-      field: 'isHandle',
-      component: 'RadioGroup',
-      defaultValue: false,
-      componentProps: {
-        ...yesNoComponentProps(),
-      },
-    },
-    {
-      label: t('basic.msg.extendNotice.createdOrgId'),
-      field: 'createdOrgId',
-      component: 'Input',
-      defaultValue: '0',
     },
   ];
 };

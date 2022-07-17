@@ -1,7 +1,7 @@
 <template>
   <div :class="prefixCls">
-    <Popover title="" trigger="click" :overlayClassName="`${prefixCls}__overlay`">
-      <Badge :count="count" dot :numberStyle="numberStyle">
+    <Popover :overlayClassName="`${prefixCls}__overlay`" title="" trigger="click">
+      <Badge :count="count" :numberStyle="numberStyle" dot>
         <BellOutlined />
       </Badge>
       <template #content>
@@ -13,7 +13,7 @@
                 <span style="color: #fb441b">({{ item.data.total }}) </span></template
               >
               <!-- 绑定title-click事件的通知列表中标题是“可点击”的-->
-              <NoticeList :value="item.data" :remindMode="item.key" @title-click="onNoticeClick" />
+              <NoticeList :remindMode="item.key" :value="item.data" @title-click="onNoticeClick" />
             </TabPane>
           </template>
         </Tabs>
@@ -22,8 +22,8 @@
   </div>
 </template>
 <script lang="ts">
-  import { computed, defineComponent, ref, onMounted, reactive } from 'vue';
-  import { Popover, Tabs, Badge } from 'ant-design-vue';
+  import { computed, defineComponent, onMounted, reactive, ref } from 'vue';
+  import { Badge, Popover, Tabs } from 'ant-design-vue';
   import { BellOutlined } from '@ant-design/icons-vue';
   import { useRouter } from 'vue-router';
   import { useWebSocket } from '@vueuse/core';
@@ -117,9 +117,11 @@
       });
 
       async function onNoticeClick(record: ExtendNoticeResultVO) {
-        const flag = await mark([record.id]);
-        if (flag) {
-          send('pull');
+        if (record.autoRead) {
+          const flag = await mark([record.id]);
+          if (flag) {
+            send('pull');
+          }
         }
         replace({
           name: RouteEnum.BASIC_MY_MSG_VIEW,

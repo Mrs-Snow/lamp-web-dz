@@ -23,7 +23,6 @@
 </template>
 <script lang="ts">
   import { defineComponent, onMounted, ref, unref } from 'vue';
-  import { Select } from 'ant-design-vue';
   import { useRouter } from 'vue-router';
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { PageWrapper } from '/@/components/Page';
@@ -39,10 +38,9 @@
   import { NoticeRemindModeEnum } from '/@/enums/biz/base';
 
   export default defineComponent({
-    name: 'EMsgEdit',
+    name: '发布消息',
     components: {
       BasicForm,
-      [Select.name]: Select,
       PageWrapper,
     },
     emits: ['success', 'register'],

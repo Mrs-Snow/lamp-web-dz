@@ -51,6 +51,12 @@ export const Api = {
     url: `${ServicePrefix}/${MODULAR}/anyone/myNotice`,
     method: RequestEnum.POST,
   } as AxiosRequestConfig,
+  Get: (id) => {
+    return {
+      url: `${ServicePrefix}/${MODULAR}/anyone/${id}`,
+      method: RequestEnum.GET,
+    } as AxiosRequestConfig;
+  },
 };
 
 export const copy = (id: string) =>
@@ -69,6 +75,10 @@ export const query = (params: ExtendNoticePageQuery) =>
   defHttp.request<ExtendNoticeResultVO[]>({
     ...Api.Query,
     params,
+  });
+export const get = (id: string) =>
+  defHttp.request<ExtendNoticeResultVO>({
+    ...Api.Get(id),
   });
 
 export const save = (params: ExtendNoticeSaveVO) =>

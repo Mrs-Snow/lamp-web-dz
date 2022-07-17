@@ -38,22 +38,20 @@
         </template>
       </template>
     </BasicTable>
-    <EditModal @register="registerModal" @success="handleSuccess" />
   </PageWrapper>
 </template>
 <script lang="ts">
-  import { defineComponent, onMounted, nextTick } from 'vue';
+  import { defineComponent, nextTick, onMounted } from 'vue';
   import { useRouter } from 'vue-router';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { BasicTable, TableAction, useTable } from '/@/components/Table';
   import { PageWrapper } from '/@/components/Page';
-  import { useModal } from '/@/components/Modal';
   import { handleFetchParams } from '/@/utils/lamp/common';
   import { ActionEnum } from '/@/enums/commonEnum';
-  import { page, remove } from '/@/api/basic/msg/extendNotice';
+  import { mark, page, remove } from '/@/api/basic/msg/extendNotice';
   import { columns, searchFormSchema } from './extendNotice.data';
-  import EditModal from './Edit.vue';
+  import { RouteEnum } from '/@/enums/biz/tenant';
 
   export default defineComponent({
     // 若需要开启页面缓存，请将此参数跟菜单名保持一致
@@ -62,13 +60,11 @@
       BasicTable,
       PageWrapper,
       TableAction,
-      EditModal,
     },
     setup() {
       const { t } = useI18n();
       const { createMessage, createConfirm } = useMessage();
-      const [registerModal, { openModal }] = useModal();
-      const { currentRoute } = useRouter();
+      const { replace, currentRoute } = useRouter();
 
       // 表格
       const [registerTable, { reload, getSelectRowKeys, setFieldsValue }] = useTable({
@@ -113,20 +109,37 @@
         });
       });
 
-      // 弹出新增页面
-      function handleRead() {
-        openModal(true, {
-          type: ActionEnum.ADD,
+      // 标记已读
+      async function handleRead() {
+        const ids = getSelectRowKeys();
+        if (!ids || ids.length <= 0) {
+          createMessage.warning(t('common.tips.pleaseSelectTheData'));
+          return;
+        }
+        createConfirm({
+          iconType: 'warning',
+          content: '确定要将已勾选数据标记为已读吗？',
+          onOk: async () => {
+            try {
+              await mark(ids);
+              createMessage.success('标记成功');
+              handleSuccess();
+            } catch (e) {}
+          },
         });
       }
 
       // 弹出查看页面
-      function handleView(record: Recordable, e: Event) {
+      async function handleView(record: Recordable, e: Event) {
         e?.stopPropagation();
-        openModal(true, {
-          record,
-          type: ActionEnum.VIEW,
-        });
+        if (record.autoRead) {
+          await mark([record.id]);
+
+          replace({
+            name: RouteEnum.BASIC_MY_MSG_VIEW,
+            params: { type: ActionEnum.VIEW, id: record.id },
+          });
+        }
       }
 
       // 新增或编辑成功回调
@@ -169,7 +182,6 @@
       return {
         t,
         registerTable,
-        registerModal,
         handleView,
         handleRead,
         handleDelete,

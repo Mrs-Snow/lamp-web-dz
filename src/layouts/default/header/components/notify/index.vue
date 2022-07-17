@@ -88,9 +88,11 @@
         return num;
       });
       async function onNoticeClick(record: ExtendNoticeResultVO) {
-        const flag = await mark([record.id]);
-        if (flag) {
-          loadMyMsg();
+        if (record.autoRead) {
+          const flag = await mark([record.id]);
+          if (flag) {
+            loadMyMsg();
+          }
         }
         replace({
           name: RouteEnum.BASIC_MY_MSG_VIEW,
