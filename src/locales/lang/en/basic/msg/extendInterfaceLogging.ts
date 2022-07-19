@@ -7,6 +7,7 @@ export default {
   params: 'Params',
   result: 'Result',
   bizId: 'BizId',
+  errorMsg: 'ErrorMsg',
   createdTime: 'CreatedTime',
   createdBy: 'CreatedBy',
   updatedTime: 'UpdatedTime',

@@ -11,17 +11,15 @@ const { t } = useI18n();
 export const columns = (): BasicColumn[] => {
   return [
     {
-      title: t('basic.msg.extendInterfaceLogging.logId'),
-      dataIndex: 'logId',
-    },
-    {
       title: t('basic.msg.extendInterfaceLogging.execTime'),
       dataIndex: 'execTime',
+      width: 180,
     },
     {
       title: t('basic.msg.extendInterfaceLogging.status'),
       dataIndex: ['echoMap', 'status'],
       key: 'status',
+      width: 100,
     },
     {
       title: t('basic.msg.extendInterfaceLogging.params'),
@@ -32,8 +30,8 @@ export const columns = (): BasicColumn[] => {
       dataIndex: 'result',
     },
     {
-      title: t('basic.msg.extendInterfaceLogging.bizId'),
-      dataIndex: 'bizId',
+      title: t('basic.msg.extendInterfaceLogging.errorMsg'),
+      dataIndex: 'errorMsg',
     },
     {
       title: t('lamp.common.createdTime'),
@@ -117,6 +115,11 @@ export const editFormSchema = (_type: Ref<ActionEnum>): FormSchema[] => {
     {
       label: t('basic.msg.extendInterfaceLogging.result'),
       field: 'result',
+      component: 'Input',
+    },
+    {
+      label: t('basic.msg.extendInterfaceLogging.errorMsg'),
+      field: 'errorMsg',
       component: 'Input',
     },
     {

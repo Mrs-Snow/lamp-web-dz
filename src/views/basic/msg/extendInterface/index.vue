@@ -24,14 +24,14 @@
                 onClick: handleView.bind(null, record),
               },
               {
+                tooltip: '接口设置',
+                icon: 'ant-design:setting-outlined',
+                onClick: handleProperty.bind(null, record),
+              },
+              {
                 tooltip: t('common.title.edit'),
                 icon: 'ant-design:edit-outlined',
                 onClick: handleEdit.bind(null, record),
-              },
-              {
-                tooltip: '接口设置',
-                icon: 'ant-design:edit-outlined',
-                onClick: handleProperty.bind(null, record),
               },
               {
                 tooltip: t('common.title.copy'),
