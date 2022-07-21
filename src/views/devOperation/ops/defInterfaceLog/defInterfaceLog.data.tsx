@@ -1,5 +1,7 @@
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
+import { query } from '/@/api/devOperation/tenant/tenant';
+import { TenantStatusEnum } from '/@/enums/biz/tenant';
 
 const { t } = useI18n();
 // 列表页字段
@@ -30,19 +32,34 @@ export const columns = (): BasicColumn[] => {
   ];
 };
 
-export const searchFormSchema = (): FormSchema[] => {
+export const searchFormSchema = (tenantChange): FormSchema[] => {
   return [
+    {
+      field: 'tenantId',
+      label: '所属租户',
+      component: 'ApiSelect',
+      colProps: { span: 8 },
+      componentProps: {
+        api: query,
+        params: { status: TenantStatusEnum.NORMAL },
+        labelField: 'name',
+        valueField: 'id',
+        allowClear: false,
+        onChange: tenantChange,
+      },
+      defaultValue: '1',
+    },
     {
       label: t('basic.msg.extendInterfaceLog.name'),
       field: 'name',
       component: 'Input',
-      colProps: { span: 12 },
+      colProps: { span: 8 },
     },
     {
       field: 'createTimeRange',
       label: t('lamp.common.createdTime'),
       component: 'RangePicker',
-      colProps: { span: 12 },
+      colProps: { span: 8 },
     },
   ];
 };

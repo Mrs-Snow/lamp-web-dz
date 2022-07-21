@@ -1,11 +1,11 @@
 <template>
-  <PageWrapper dense contentFullHeight>
+  <PageWrapper contentFullHeight dense>
     <BasicTable @register="registerTable">
       <template #toolbar>
         <a-button
-          type="primary"
           color="error"
           preIcon="ant-design:delete-outlined"
+          type="primary"
           @click="handleBatchDelete"
         >
           {{ t('common.title.delete') }}
@@ -16,10 +16,11 @@
           <TableAction
             :actions="[
               {
-                tooltip: '执行记录',
+                tooltip: t('common.title.view'),
                 icon: 'ant-design:search-outlined',
-                onClick: handleLogging.bind(null, record),
+                onClick: handleView.bind(null, record),
               },
+
               {
                 tooltip: t('common.title.delete'),
                 icon: 'ant-design:delete-outlined',
@@ -35,40 +36,47 @@
         </template>
       </template>
     </BasicTable>
+    <EditModal @register="registerModal" @success="handleSuccess" />
   </PageWrapper>
 </template>
 <script lang="ts">
-  import { defineComponent } from 'vue';
+  import { defineComponent, onMounted, ref } from 'vue';
   import { useRouter } from 'vue-router';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { BasicTable, useTable, TableAction } from '/@/components/Table';
+  import { BasicTable, TableAction, useTable } from '/@/components/Table';
   import { PageWrapper } from '/@/components/Page';
+  import { useModal } from '/@/components/Modal';
   import { handleFetchParams } from '/@/utils/lamp/common';
-  import { page, remove } from '/@/api/basic/msg/extendInterface';
-  import { columns, searchFormSchema } from './defInterfaceLog.data';
-  import { RouteEnum } from '/@/enums/biz/tenant';
+  import { ActionEnum } from '/@/enums/commonEnum';
+  import { page, remove } from '/@/api/basic/msg/extendInterfaceLogging';
+  import { columns, searchFormSchema } from './defInterfaceLogging.data';
+  import EditModal from './Edit.vue';
 
   export default defineComponent({
     // 若需要开启页面缓存，请将此参数跟菜单名保持一致
-    name: '接口执行日志维护',
+    name: '接口执行日志记录维护',
     components: {
       BasicTable,
       PageWrapper,
       TableAction,
+      EditModal,
     },
     setup() {
       const { t } = useI18n();
-      const { replace } = useRouter();
       const { createMessage, createConfirm } = useMessage();
+      const [registerModal, { openModal }] = useModal();
+      const logId = ref<string>('');
+      const tenantId = ref<string>('');
+      const { currentRoute } = useRouter();
 
       // 表格
       const [registerTable, { reload, getSelectRowKeys }] = useTable({
-        title: t('basic.msg.extendInterfaceLog.table.title'),
+        title: t('basic.msg.extendInterfaceLogging.table.title'),
         api: page,
         columns: columns(),
         formConfig: {
-          name: 'DefInterfaceLogSearch',
+          name: 'DefInterfaceLoggingSearch',
           labelWidth: 120,
           schemas: searchFormSchema(),
           autoSubmitOnEnter: true,
@@ -80,6 +88,11 @@
           },
         },
         beforeFetch: handleFetchParams,
+        immediate: false,
+        searchInfo: {
+          logId,
+          tenantId,
+        },
         useSearchForm: true,
         showTableSetting: true,
         bordered: true,
@@ -95,16 +108,26 @@
         },
       });
 
-      function handleSuccess() {
-        reload();
+      onMounted(async () => {
+        const routeParams = currentRoute.value?.params;
+        const routeQuery = currentRoute.value?.query;
+        logId.value = routeParams.id as string;
+        tenantId.value = routeQuery.tenantId as string;
+        await reload();
+      });
+
+      // 弹出查看页面
+      function handleView(record: Recordable, e: Event) {
+        e?.stopPropagation();
+        openModal(true, {
+          record,
+          type: ActionEnum.VIEW,
+        });
       }
 
-      function handleLogging(record: Recordable, e: Event) {
-        e?.stopPropagation();
-        replace({
-          name: RouteEnum.BASIC_MSG_INTERFACE_LOGGING,
-          params: { id: record.id },
-        });
+      // 新增或编辑成功回调
+      function handleSuccess() {
+        reload();
       }
 
       async function batchDelete(ids: string[]) {
@@ -142,10 +165,11 @@
       return {
         t,
         registerTable,
+        registerModal,
+        handleView,
         handleDelete,
         handleBatchDelete,
         handleSuccess,
-        handleLogging,
       };
     },
   });
