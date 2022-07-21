@@ -12,21 +12,21 @@ import { useI18n } from '/@/hooks/web/useI18n';
 import { ActionEnum } from '/@/enums/commonEnum';
 import { FormSchemaExt, RuleType } from '/@/api/lamp/common/formValidateService';
 import { MsgTemplateTypeEnum } from '/@/enums/biz/base';
-import { check } from '/@/api/basic/msg/extendMsgTemplate';
-import { query } from '/@/api/basic/msg/extendInterface';
+import { check } from '/@/api/devOperation/msg/defMsgTemplate';
+import { query } from '/@/api/devOperation/msg/defInterface';
 
 const { t } = useI18n();
 // 列表页字段
 export const columns = (): BasicColumn[] => {
   return [
     {
-      title: t('basic.msg.extendMsgTemplate.type'),
+      title: t('devOperation.msg.defMsgTemplate.type'),
       dataIndex: ['echoMap', 'type'],
       key: 'type',
       width: 100,
     },
     {
-      title: t('basic.msg.extendMsgTemplate.state'),
+      title: t('devOperation.msg.defMsgTemplate.state'),
       dataIndex: 'state',
       width: 80,
       customRender: ({ record }) => {
@@ -36,15 +36,15 @@ export const columns = (): BasicColumn[] => {
       },
     },
     {
-      title: t('basic.msg.extendMsgTemplate.code'),
+      title: t('devOperation.msg.defMsgTemplate.code'),
       dataIndex: 'code',
     },
     {
-      title: t('basic.msg.extendMsgTemplate.name'),
+      title: t('devOperation.msg.defMsgTemplate.name'),
       dataIndex: 'name',
     },
     {
-      title: t('basic.msg.extendMsgTemplate.title'),
+      title: t('devOperation.msg.defMsgTemplate.title'),
       dataIndex: 'title',
     },
     {
@@ -59,7 +59,7 @@ export const columns = (): BasicColumn[] => {
 export const searchFormSchema = (): FormSchema[] => {
   return [
     {
-      label: t('basic.msg.extendMsgTemplate.type'),
+      label: t('devOperation.msg.defMsgTemplate.type'),
       field: 'type',
       component: 'ApiSelect',
       componentProps: {
@@ -68,19 +68,19 @@ export const searchFormSchema = (): FormSchema[] => {
       colProps: { span: 8 },
     },
     {
-      label: t('basic.msg.extendMsgTemplate.code'),
+      label: t('devOperation.msg.defMsgTemplate.code'),
       field: 'code',
       component: 'Input',
       colProps: { span: 8 },
     },
     {
-      label: t('basic.msg.extendMsgTemplate.name'),
+      label: t('devOperation.msg.defMsgTemplate.name'),
       field: 'name',
       component: 'Input',
       colProps: { span: 8 },
     },
     {
-      label: t('basic.msg.extendMsgTemplate.state'),
+      label: t('devOperation.msg.defMsgTemplate.state'),
       field: 'state',
       component: 'RadioButtonGroup',
       componentProps: {
@@ -89,7 +89,7 @@ export const searchFormSchema = (): FormSchema[] => {
       colProps: { span: 8 },
     },
     {
-      label: t('basic.msg.extendMsgTemplate.title'),
+      label: t('devOperation.msg.defMsgTemplate.title'),
       field: 'title',
       component: 'Input',
       colProps: { span: 8 },
@@ -113,7 +113,7 @@ export const editFormSchema = (_type: Ref<ActionEnum>): FormSchema[] => {
       show: false,
     },
     {
-      label: t('basic.msg.extendMsgTemplate.type'),
+      label: t('devOperation.msg.defMsgTemplate.type'),
       field: 'type',
       component: 'ApiSelect',
       componentProps: {
@@ -121,7 +121,7 @@ export const editFormSchema = (_type: Ref<ActionEnum>): FormSchema[] => {
       },
     },
     {
-      label: t('basic.msg.extendMsgTemplate.interfaceId'),
+      label: t('devOperation.msg.defMsgTemplate.interfaceId'),
       field: 'interfaceId',
       component: 'ApiSelect',
       componentProps: {
@@ -131,7 +131,7 @@ export const editFormSchema = (_type: Ref<ActionEnum>): FormSchema[] => {
       },
     },
     {
-      label: t('basic.msg.extendMsgTemplate.state'),
+      label: t('devOperation.msg.defMsgTemplate.state'),
       field: 'state',
       component: 'RadioButtonGroup',
       componentProps: {
@@ -140,49 +140,49 @@ export const editFormSchema = (_type: Ref<ActionEnum>): FormSchema[] => {
       defaultValue: true,
     },
     {
-      label: t('basic.msg.extendMsgTemplate.code'),
+      label: t('devOperation.msg.defMsgTemplate.code'),
       field: 'code',
       component: 'Input',
     },
     {
-      label: t('basic.msg.extendMsgTemplate.name'),
+      label: t('devOperation.msg.defMsgTemplate.name'),
       field: 'name',
       component: 'Input',
     },
     {
-      label: t('basic.msg.extendMsgTemplate.title'),
+      label: t('devOperation.msg.defMsgTemplate.title'),
       field: 'title',
       component: 'Input',
     },
     {
-      label: t('basic.msg.extendMsgTemplate.sign'),
+      label: t('devOperation.msg.defMsgTemplate.sign'),
       field: 'sign',
       component: 'Input',
     },
     {
-      label: t('basic.msg.extendMsgTemplate.content'),
+      label: t('devOperation.msg.defMsgTemplate.content'),
       field: 'content',
       component: 'Input',
       slot: 'content',
     },
     {
-      label: t('basic.msg.extendMsgTemplate.script'),
+      label: t('devOperation.msg.defMsgTemplate.script'),
       field: 'script',
       component: 'Input',
       slot: 'script',
     },
     // {
-    //   label: t('basic.msg.extendMsgTemplate.param'),
+    //   label: t('devOperation.msg.defMsgTemplate.param'),
     //   field: 'param',
     //   component: 'Input',
     // },
     {
-      label: t('basic.msg.extendMsgTemplate.remarks'),
+      label: t('devOperation.msg.defMsgTemplate.remarks'),
       field: 'remarks',
       component: 'InputTextArea',
     },
     {
-      label: t('basic.msg.extendMsgTemplate.templateCode'),
+      label: t('devOperation.msg.defMsgTemplate.templateCode'),
       field: 'templateCode',
       component: 'Input',
       ifShow: ({ values }) => {
@@ -190,7 +190,7 @@ export const editFormSchema = (_type: Ref<ActionEnum>): FormSchema[] => {
       },
     },
     {
-      label: t('basic.msg.extendMsgTemplate.target'),
+      label: t('devOperation.msg.defMsgTemplate.target'),
       field: 'target',
       component: 'ApiRadioGroup',
       componentProps: {
@@ -201,7 +201,7 @@ export const editFormSchema = (_type: Ref<ActionEnum>): FormSchema[] => {
       },
     },
     {
-      label: t('basic.msg.extendMsgTemplate.autoRead'),
+      label: t('devOperation.msg.defMsgTemplate.autoRead'),
       field: 'autoRead',
       component: 'RadioGroup',
       defaultValue: true,
@@ -213,7 +213,7 @@ export const editFormSchema = (_type: Ref<ActionEnum>): FormSchema[] => {
       },
     },
     {
-      label: t('basic.msg.extendMsgTemplate.remindMode'),
+      label: t('devOperation.msg.defMsgTemplate.remindMode'),
       field: 'remindMode',
       component: 'ApiRadioGroup',
       componentProps: {
@@ -224,7 +224,7 @@ export const editFormSchema = (_type: Ref<ActionEnum>): FormSchema[] => {
       },
     },
     {
-      label: t('basic.msg.extendMsgTemplate.url'),
+      label: t('devOperation.msg.defMsgTemplate.url'),
       field: 'url',
       component: 'Input',
       ifShow: ({ values }) => {
@@ -248,7 +248,7 @@ export const customFormSchemaRules = (
           trigger: ['change', 'blur'],
           async validator(_, value) {
             if (value && (await check(value, getFieldsValue()?.id))) {
-              return Promise.reject(t('basic.msg.extendMsgTemplate.code') + '已经存在');
+              return Promise.reject(t('devOperation.msg.defMsgTemplate.code') + '已经存在');
             }
             return Promise.resolve();
           },

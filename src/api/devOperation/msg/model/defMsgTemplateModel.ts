@@ -1,4 +1,4 @@
-export interface ExtendMsgTemplatePageQuery {
+export interface DefMsgTemplatePageQuery {
   type?: string; // 消息类型
   code?: string; // 模板标识
   name?: string; // 模板名称
@@ -14,7 +14,7 @@ export interface ExtendMsgTemplatePageQuery {
   url?: string; // 跳转地址
 }
 
-export interface ExtendMsgTemplateSaveVO {
+export interface DefMsgTemplateSaveVO {
   type?: string; // 消息类型
   code?: string; // 模板标识
   name?: string; // 模板名称
@@ -30,7 +30,7 @@ export interface ExtendMsgTemplateSaveVO {
   url?: string; // 跳转地址
 }
 
-export interface ExtendMsgTemplateUpdateVO {
+export interface DefMsgTemplateUpdateVO {
   id: string;
   type?: string; // 消息类型
   code?: string; // 模板标识
@@ -47,7 +47,7 @@ export interface ExtendMsgTemplateUpdateVO {
   url?: string; // 跳转地址
 }
 
-export interface ExtendMsgTemplateResultVO {
+export interface DefMsgTemplateResultVO {
   echoMap?: any;
   id?: string; // 模板ID
   createdBy?: string; // 创建人ID

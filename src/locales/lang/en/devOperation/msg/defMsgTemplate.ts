@@ -1,5 +1,5 @@
 export default {
-  table: { title: 'ExtendMsgTemplate list' },
+  table: { title: 'DefMsgTemplate list' },
   id: 'Id',
   type: 'Type',
   code: 'Code',
