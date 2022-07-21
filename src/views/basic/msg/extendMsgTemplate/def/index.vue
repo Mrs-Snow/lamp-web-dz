@@ -2,11 +2,11 @@
   <BasicModal
     :keyboard="true"
     :maskClosable="false"
-    title="导入系统字典"
+    title="导入消息模板"
     v-bind="$attrs"
     width="80%"
-    okText="导入"
     @ok="handleSubmit"
+    okText="导入"
     @register="registerModal"
   >
     <PageWrapper contentFullHeight dense>
@@ -31,9 +31,9 @@
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { PageWrapper } from '/@/components/Page';
   import { handleFetchParams } from '/@/utils/lamp/common';
-  import { page } from '/@/api/devOperation/system/defDict';
-  import { importDict } from '/@/api/basic/base/baseDict';
-  import { defColumns, searchFormSchema } from '../baseDict.data';
+  import { page } from '/@/api/devOperation/ops/defMsgTemplate';
+  import { importMsgTemplate } from '/@/api/basic/msg/extendMsgTemplate';
+  import { columns, searchFormSchema } from './defMsgTemplate.data';
 
   export default defineComponent({
     // 若需要开启页面缓存，请将此参数跟菜单名保持一致
@@ -48,7 +48,7 @@
       const [registerTable, { getSelectRowKeys }] = useTable({
         title: t('basic.base.baseDict.table.title'),
         api: page,
-        columns: defColumns(),
+        columns: columns(),
         formConfig: {
           labelWidth: 120,
           schemas: searchFormSchema(),
@@ -59,7 +59,7 @@
         bordered: true,
         rowKey: 'id',
         rowSelection: {
-          type: 'radio',
+          type: 'checkbox',
         },
       });
 
@@ -70,9 +70,9 @@
       async function handleSubmit() {
         try {
           setModalProps({ confirmLoading: true });
-          const dictIds = getSelectRowKeys();
-          if (dictIds && dictIds.length > 0) {
-            await importDict(dictIds[0]);
+          const ids = getSelectRowKeys();
+          if (ids && ids.length > 0) {
+            await importMsgTemplate(ids);
 
             createMessage.success(t(`common.tips.importSuccess`));
             closeModal();

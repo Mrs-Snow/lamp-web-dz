@@ -66,7 +66,7 @@
   import { useModal } from '/@/components/Modal';
   import { handleFetchParams } from '/@/utils/lamp/common';
   import { ActionEnum } from '/@/enums/commonEnum';
-  import { page, remove } from '/@/api/devOperation/msg/defInterface';
+  import { page, remove } from '/@/api/devOperation/ops/defInterface';
   import { columns, searchFormSchema } from './defInterface.data';
   import EditModal from './Edit.vue';
   import { RouteEnum } from '/@/enums/biz/tenant';
@@ -88,7 +88,7 @@
 
       // 表格
       const [registerTable, { reload, getSelectRowKeys }] = useTable({
-        title: t('devOperation.msg.defInterface.table.title'),
+        title: t('devOperation.ops.defInterface.table.title'),
         api: page,
         columns: columns(),
         formConfig: {

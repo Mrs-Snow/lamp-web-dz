@@ -21,7 +21,7 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { ActionEnum, VALIDATE_API } from '/@/enums/commonEnum';
-  import { Api, save, update } from '/@/api/devOperation/msg/defInterface';
+  import { Api, save, update } from '/@/api/devOperation/ops/defInterface';
   import { getValidateRules } from '/@/api/lamp/common/formValidateService';
   import { customFormSchemaRules, editFormSchema } from './defInterface.data';
   import { CodeEditor, MODE } from '/@/components/CodeEditor';

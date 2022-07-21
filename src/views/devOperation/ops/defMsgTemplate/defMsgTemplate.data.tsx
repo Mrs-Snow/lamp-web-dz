@@ -1,32 +1,31 @@
 import { Ref } from 'vue';
 import { Tag } from 'ant-design-vue';
-import { DictEnum } from '/@/enums/commonEnum';
+import { ActionEnum, DictEnum } from '/@/enums/commonEnum';
 import {
-  dictComponentProps,
   dictAllComponentProps,
+  dictComponentProps,
   stateComponentProps,
+  yesNoComponentProps,
 } from '/@/utils/lamp/common';
-import { yesNoComponentProps } from '/@/utils/lamp/common';
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
-import { ActionEnum } from '/@/enums/commonEnum';
 import { FormSchemaExt, RuleType } from '/@/api/lamp/common/formValidateService';
 import { MsgTemplateTypeEnum } from '/@/enums/biz/base';
-import { check } from '/@/api/devOperation/msg/defMsgTemplate';
-import { query } from '/@/api/devOperation/msg/defInterface';
+import { check } from '/@/api/devOperation/ops/defMsgTemplate';
+import { query } from '/@/api/devOperation/ops/defInterface';
 
 const { t } = useI18n();
 // 列表页字段
 export const columns = (): BasicColumn[] => {
   return [
     {
-      title: t('devOperation.msg.defMsgTemplate.type'),
+      title: t('devOperation.ops.defMsgTemplate.type'),
       dataIndex: ['echoMap', 'type'],
       key: 'type',
       width: 100,
     },
     {
-      title: t('devOperation.msg.defMsgTemplate.state'),
+      title: t('devOperation.ops.defMsgTemplate.state'),
       dataIndex: 'state',
       width: 80,
       customRender: ({ record }) => {
@@ -36,15 +35,15 @@ export const columns = (): BasicColumn[] => {
       },
     },
     {
-      title: t('devOperation.msg.defMsgTemplate.code'),
+      title: t('devOperation.ops.defMsgTemplate.code'),
       dataIndex: 'code',
     },
     {
-      title: t('devOperation.msg.defMsgTemplate.name'),
+      title: t('devOperation.ops.defMsgTemplate.name'),
       dataIndex: 'name',
     },
     {
-      title: t('devOperation.msg.defMsgTemplate.title'),
+      title: t('devOperation.ops.defMsgTemplate.title'),
       dataIndex: 'title',
     },
     {
@@ -59,7 +58,7 @@ export const columns = (): BasicColumn[] => {
 export const searchFormSchema = (): FormSchema[] => {
   return [
     {
-      label: t('devOperation.msg.defMsgTemplate.type'),
+      label: t('devOperation.ops.defMsgTemplate.type'),
       field: 'type',
       component: 'ApiSelect',
       componentProps: {
@@ -68,19 +67,19 @@ export const searchFormSchema = (): FormSchema[] => {
       colProps: { span: 8 },
     },
     {
-      label: t('devOperation.msg.defMsgTemplate.code'),
+      label: t('devOperation.ops.defMsgTemplate.code'),
       field: 'code',
       component: 'Input',
       colProps: { span: 8 },
     },
     {
-      label: t('devOperation.msg.defMsgTemplate.name'),
+      label: t('devOperation.ops.defMsgTemplate.name'),
       field: 'name',
       component: 'Input',
       colProps: { span: 8 },
     },
     {
-      label: t('devOperation.msg.defMsgTemplate.state'),
+      label: t('devOperation.ops.defMsgTemplate.state'),
       field: 'state',
       component: 'RadioButtonGroup',
       componentProps: {
@@ -89,7 +88,7 @@ export const searchFormSchema = (): FormSchema[] => {
       colProps: { span: 8 },
     },
     {
-      label: t('devOperation.msg.defMsgTemplate.title'),
+      label: t('devOperation.ops.defMsgTemplate.title'),
       field: 'title',
       component: 'Input',
       colProps: { span: 8 },
@@ -113,7 +112,7 @@ export const editFormSchema = (_type: Ref<ActionEnum>): FormSchema[] => {
       show: false,
     },
     {
-      label: t('devOperation.msg.defMsgTemplate.type'),
+      label: t('devOperation.ops.defMsgTemplate.type'),
       field: 'type',
       component: 'ApiSelect',
       componentProps: {
@@ -121,7 +120,7 @@ export const editFormSchema = (_type: Ref<ActionEnum>): FormSchema[] => {
       },
     },
     {
-      label: t('devOperation.msg.defMsgTemplate.interfaceId'),
+      label: t('devOperation.ops.defMsgTemplate.interfaceId'),
       field: 'interfaceId',
       component: 'ApiSelect',
       componentProps: {
@@ -131,7 +130,7 @@ export const editFormSchema = (_type: Ref<ActionEnum>): FormSchema[] => {
       },
     },
     {
-      label: t('devOperation.msg.defMsgTemplate.state'),
+      label: t('devOperation.ops.defMsgTemplate.state'),
       field: 'state',
       component: 'RadioButtonGroup',
       componentProps: {
@@ -140,49 +139,52 @@ export const editFormSchema = (_type: Ref<ActionEnum>): FormSchema[] => {
       defaultValue: true,
     },
     {
-      label: t('devOperation.msg.defMsgTemplate.code'),
+      label: t('devOperation.ops.defMsgTemplate.code'),
       field: 'code',
       component: 'Input',
     },
     {
-      label: t('devOperation.msg.defMsgTemplate.name'),
+      label: t('devOperation.ops.defMsgTemplate.name'),
       field: 'name',
       component: 'Input',
     },
     {
-      label: t('devOperation.msg.defMsgTemplate.title'),
+      label: t('devOperation.ops.defMsgTemplate.title'),
       field: 'title',
       component: 'Input',
     },
     {
-      label: t('devOperation.msg.defMsgTemplate.sign'),
-      field: 'sign',
-      component: 'Input',
-    },
-    {
-      label: t('devOperation.msg.defMsgTemplate.content'),
+      label: t('devOperation.ops.defMsgTemplate.content'),
       field: 'content',
       component: 'Input',
       slot: 'content',
     },
     {
-      label: t('devOperation.msg.defMsgTemplate.script'),
+      label: t('devOperation.ops.defMsgTemplate.script'),
       field: 'script',
       component: 'Input',
       slot: 'script',
     },
     // {
-    //   label: t('devOperation.msg.defMsgTemplate.param'),
+    //   label: t('devOperation.ops.defMsgTemplate.param'),
     //   field: 'param',
     //   component: 'Input',
     // },
     {
-      label: t('devOperation.msg.defMsgTemplate.remarks'),
+      label: t('devOperation.ops.defMsgTemplate.remarks'),
       field: 'remarks',
       component: 'InputTextArea',
     },
     {
-      label: t('devOperation.msg.defMsgTemplate.templateCode'),
+      label: t('devOperation.ops.defMsgTemplate.sign'),
+      field: 'sign',
+      component: 'Input',
+      ifShow: ({ values }) => {
+        return values.type === MsgTemplateTypeEnum.SMS;
+      },
+    },
+    {
+      label: t('devOperation.ops.defMsgTemplate.templateCode'),
       field: 'templateCode',
       component: 'Input',
       ifShow: ({ values }) => {
@@ -190,7 +192,7 @@ export const editFormSchema = (_type: Ref<ActionEnum>): FormSchema[] => {
       },
     },
     {
-      label: t('devOperation.msg.defMsgTemplate.target'),
+      label: t('devOperation.ops.defMsgTemplate.target'),
       field: 'target',
       component: 'ApiRadioGroup',
       componentProps: {
@@ -201,7 +203,7 @@ export const editFormSchema = (_type: Ref<ActionEnum>): FormSchema[] => {
       },
     },
     {
-      label: t('devOperation.msg.defMsgTemplate.autoRead'),
+      label: t('devOperation.ops.defMsgTemplate.autoRead'),
       field: 'autoRead',
       component: 'RadioGroup',
       defaultValue: true,
@@ -213,7 +215,7 @@ export const editFormSchema = (_type: Ref<ActionEnum>): FormSchema[] => {
       },
     },
     {
-      label: t('devOperation.msg.defMsgTemplate.remindMode'),
+      label: t('devOperation.ops.defMsgTemplate.remindMode'),
       field: 'remindMode',
       component: 'ApiRadioGroup',
       componentProps: {
@@ -224,7 +226,7 @@ export const editFormSchema = (_type: Ref<ActionEnum>): FormSchema[] => {
       },
     },
     {
-      label: t('devOperation.msg.defMsgTemplate.url'),
+      label: t('devOperation.ops.defMsgTemplate.url'),
       field: 'url',
       component: 'Input',
       ifShow: ({ values }) => {
@@ -248,10 +250,30 @@ export const customFormSchemaRules = (
           trigger: ['change', 'blur'],
           async validator(_, value) {
             if (value && (await check(value, getFieldsValue()?.id))) {
-              return Promise.reject(t('devOperation.msg.defMsgTemplate.code') + '已经存在');
+              return Promise.reject(t('devOperation.ops.defMsgTemplate.code') + '已经存在');
             }
             return Promise.resolve();
           },
+        },
+      ],
+    },
+    {
+      field: 'templateCode',
+      type: RuleType.append,
+      rules: [
+        {
+          trigger: ['change', 'blur'],
+          required: getFieldsValue()?.type === MsgTemplateTypeEnum.SMS,
+        },
+      ],
+    },
+    {
+      field: 'sign',
+      type: RuleType.append,
+      rules: [
+        {
+          trigger: ['change', 'blur'],
+          required: getFieldsValue()?.type === MsgTemplateTypeEnum.SMS,
         },
       ],
     },

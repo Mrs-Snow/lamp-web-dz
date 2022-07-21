@@ -30,7 +30,7 @@
     Api,
     page as pageRequest,
     batchSave,
-  } from '/@/api/devOperation/msg/defInterfaceProperty';
+  } from '/@/api/devOperation/ops/defInterfaceProperty';
 
   export default defineComponent({
     // 若需要开启页面缓存，请将此参数跟菜单名保持一致

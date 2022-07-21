@@ -1,19 +1,18 @@
 import { Ref } from 'vue';
 import { Tag } from 'ant-design-vue';
-import { DictEnum } from '/@/enums/commonEnum';
+import { ActionEnum, DictEnum } from '/@/enums/commonEnum';
 import {
-  dictComponentProps,
   dictAllComponentProps,
+  dictComponentProps,
   stateComponentProps,
+  yesNoComponentProps,
 } from '/@/utils/lamp/common';
-import { yesNoComponentProps } from '/@/utils/lamp/common';
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
-import { ActionEnum } from '/@/enums/commonEnum';
 import { FormSchemaExt, RuleType } from '/@/api/lamp/common/formValidateService';
 import { MsgTemplateTypeEnum } from '/@/enums/biz/base';
 import { check } from '/@/api/basic/msg/extendMsgTemplate';
-import { query } from '/@/api/basic/msg/extendInterface';
+import { query } from '/@/api/devOperation/ops/defInterface';
 
 const { t } = useI18n();
 // 列表页字段
@@ -119,6 +118,7 @@ export const editFormSchema = (_type: Ref<ActionEnum>): FormSchema[] => {
       componentProps: {
         ...dictComponentProps(DictEnum.EchoDictType_Base_MSG_TEMPLATE_TYPE),
       },
+      dynamicDisabled: true,
     },
     {
       label: t('basic.msg.extendMsgTemplate.interfaceId'),
@@ -129,6 +129,7 @@ export const editFormSchema = (_type: Ref<ActionEnum>): FormSchema[] => {
         labelField: 'name',
         valueField: 'id',
       },
+      dynamicDisabled: true,
     },
     {
       label: t('basic.msg.extendMsgTemplate.state'),
@@ -143,6 +144,7 @@ export const editFormSchema = (_type: Ref<ActionEnum>): FormSchema[] => {
       label: t('basic.msg.extendMsgTemplate.code'),
       field: 'code',
       component: 'Input',
+      dynamicDisabled: true,
     },
     {
       label: t('basic.msg.extendMsgTemplate.name'),
@@ -152,11 +154,6 @@ export const editFormSchema = (_type: Ref<ActionEnum>): FormSchema[] => {
     {
       label: t('basic.msg.extendMsgTemplate.title'),
       field: 'title',
-      component: 'Input',
-    },
-    {
-      label: t('basic.msg.extendMsgTemplate.sign'),
-      field: 'sign',
       component: 'Input',
     },
     {
@@ -180,6 +177,14 @@ export const editFormSchema = (_type: Ref<ActionEnum>): FormSchema[] => {
       label: t('basic.msg.extendMsgTemplate.remarks'),
       field: 'remarks',
       component: 'InputTextArea',
+    },
+    {
+      label: t('basic.msg.extendMsgTemplate.sign'),
+      field: 'sign',
+      component: 'Input',
+      ifShow: ({ values }) => {
+        return values.type === MsgTemplateTypeEnum.SMS;
+      },
     },
     {
       label: t('basic.msg.extendMsgTemplate.templateCode'),
@@ -252,6 +257,26 @@ export const customFormSchemaRules = (
             }
             return Promise.resolve();
           },
+        },
+      ],
+    },
+    {
+      field: 'templateCode',
+      type: RuleType.append,
+      rules: [
+        {
+          trigger: ['change', 'blur'],
+          required: getFieldsValue()?.type === MsgTemplateTypeEnum.SMS,
+        },
+      ],
+    },
+    {
+      field: 'sign',
+      type: RuleType.append,
+      rules: [
+        {
+          trigger: ['change', 'blur'],
+          required: getFieldsValue()?.type === MsgTemplateTypeEnum.SMS,
         },
       ],
     },

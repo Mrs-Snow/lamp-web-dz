@@ -60,7 +60,7 @@
   import { useModal } from '/@/components/Modal';
   import { handleFetchParams } from '/@/utils/lamp/common';
   import { ActionEnum } from '/@/enums/commonEnum';
-  import { page, remove } from '/@/api/devOperation/msg/defMsgTemplate';
+  import { page, remove } from '/@/api/devOperation/ops/defMsgTemplate';
   import { columns, searchFormSchema } from './defMsgTemplate.data';
   import EditModal from './Edit.vue';
 
@@ -80,7 +80,7 @@
 
       // 表格
       const [registerTable, { reload, getSelectRowKeys }] = useTable({
-        title: t('devOperation.msg.defMsgTemplate.table.title'),
+        title: t('devOperation.ops.defMsgTemplate.table.title'),
         api: page,
         columns: columns(),
         formConfig: {

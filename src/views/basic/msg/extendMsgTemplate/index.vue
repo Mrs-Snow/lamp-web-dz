@@ -44,6 +44,7 @@
       </template>
     </BasicTable>
     <EditModal @register="registerModal" @success="handleSuccess" />
+    <ImportMsgTemplateModal @register="registerImportTemplateModal" @success="handleSuccess" />
   </PageWrapper>
 </template>
 <script lang="ts">
@@ -58,6 +59,7 @@
   import { page, remove } from '/@/api/basic/msg/extendMsgTemplate';
   import { columns, searchFormSchema } from './extendMsgTemplate.data';
   import EditModal from './Edit.vue';
+  import ImportMsgTemplateModal from './def/index.vue';
 
   export default defineComponent({
     // 若需要开启页面缓存，请将此参数跟菜单名保持一致
@@ -67,11 +69,13 @@
       PageWrapper,
       TableAction,
       EditModal,
+      ImportMsgTemplateModal,
     },
     setup() {
       const { t } = useI18n();
       const { createMessage, createConfirm } = useMessage();
       const [registerModal, { openModal }] = useModal();
+      const [registerImportTemplateModal, { openModal: openImportTemplate }] = useModal();
 
       // 表格
       const [registerTable, { reload, getSelectRowKeys }] = useTable({
@@ -108,7 +112,7 @@
 
       // 弹出新增页面
       function handleAdd() {
-        openModal(true, {
+        openImportTemplate(true, {
           type: ActionEnum.ADD,
         });
       }
@@ -172,6 +176,7 @@
         t,
         registerTable,
         registerModal,
+        registerImportTemplateModal,
         handleView,
         handleAdd,
         handleEdit,

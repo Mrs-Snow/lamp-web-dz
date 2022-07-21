@@ -46,6 +46,10 @@ export const Api = {
     url: `${ServicePrefix}/${MODULAR}/check`,
     method: RequestEnum.GET,
   } as AxiosRequestConfig,
+  ImportMsgTemplate: {
+    url: `${ServicePrefix}/${MODULAR}/importMsgTemplate`,
+    method: RequestEnum.POST,
+  } as AxiosRequestConfig,
 };
 
 export const copy = (id: string) =>
@@ -79,3 +83,5 @@ export const remove = (params: string[]) => defHttp.request<boolean>({ ...Api.De
 
 export const check = (code: string, id?: string) =>
   defHttp.request<boolean>({ ...Api.Check, params: { code, id } });
+export const importMsgTemplate = (ids: string[]) =>
+  defHttp.request<boolean>({ ...Api.ImportMsgTemplate, params: ids });
