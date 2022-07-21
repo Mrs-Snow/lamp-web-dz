@@ -27,7 +27,7 @@
   import { CodeEditor, MODE } from '/@/components/CodeEditor';
 
   export default defineComponent({
-    name: '编辑短信模板维护',
+    name: '编辑消息模板维护',
     components: { BasicModal, BasicForm, CodeEditor },
     emits: ['success', 'register'],
     setup(_, { emit }) {

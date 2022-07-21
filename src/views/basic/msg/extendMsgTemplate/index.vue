@@ -11,7 +11,7 @@
           {{ t('common.title.delete') }}
         </a-button>
         <a-button type="primary" preIcon="ant-design:plus-outlined" @click="handleAdd">
-          {{ t('common.title.add') }}
+          {{ t('common.title.import') }}
         </a-button>
       </template>
       <template #bodyCell="{ column, record }">
@@ -27,11 +27,6 @@
                 tooltip: t('common.title.edit'),
                 icon: 'ant-design:edit-outlined',
                 onClick: handleEdit.bind(null, record),
-              },
-              {
-                tooltip: t('common.title.copy'),
-                icon: 'ant-design:copy-outlined',
-                onClick: handleCopy.bind(null, record),
               },
               {
                 tooltip: t('common.title.delete'),
@@ -66,7 +61,7 @@
 
   export default defineComponent({
     // 若需要开启页面缓存，请将此参数跟菜单名保持一致
-    name: '短信模板维护',
+    name: '消息模板维护',
     components: {
       BasicTable,
       PageWrapper,
@@ -110,15 +105,6 @@
           dataIndex: 'action',
         },
       });
-
-      // 弹出复制页面
-      function handleCopy(record: Recordable, e: Event) {
-        e?.stopPropagation();
-        openModal(true, {
-          record,
-          type: ActionEnum.COPY,
-        });
-      }
 
       // 弹出新增页面
       function handleAdd() {
@@ -188,7 +174,6 @@
         registerModal,
         handleView,
         handleAdd,
-        handleCopy,
         handleEdit,
         handleDelete,
         handleBatchDelete,
