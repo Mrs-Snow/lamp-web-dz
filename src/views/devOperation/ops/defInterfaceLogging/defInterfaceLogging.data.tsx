@@ -1,10 +1,11 @@
-import { Ref } from 'vue';
+import { h, Ref } from 'vue';
 import { dateUtil } from '/@/utils/dateUtil';
 import { dictAllComponentProps, dictComponentProps } from '/@/utils/lamp/common';
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { ActionEnum, DictEnum } from '/@/enums/commonEnum';
 import { FormSchemaExt } from '/@/api/lamp/common/formValidateService';
+import { JsonPreview } from '/@/components/CodeEditor';
 
 const { t } = useI18n();
 // 列表页字段
@@ -111,11 +112,35 @@ export const editFormSchema = (_type: Ref<ActionEnum>): FormSchema[] => {
       label: t('basic.msg.extendInterfaceLogging.params'),
       field: 'params',
       component: 'Input',
+      render: ({ model, field }) => {
+        try {
+          const obj = JSON.parse(model[field]);
+          if (obj) {
+            return h(JsonPreview, { data: obj });
+          } else {
+            return h('div', model[field]);
+          }
+        } catch (e) {
+          return h('div', model[field]);
+        }
+      },
     },
     {
       label: t('basic.msg.extendInterfaceLogging.result'),
       field: 'result',
       component: 'Input',
+      render: ({ model, field }) => {
+        try {
+          const obj = JSON.parse(model[field]);
+          if (obj) {
+            return h(JsonPreview, { data: obj });
+          } else {
+            return h('div', model[field]);
+          }
+        } catch (e) {
+          return h('div', model[field]);
+        }
+      },
     },
     {
       label: t('basic.msg.extendInterfaceLogging.errorMsg'),

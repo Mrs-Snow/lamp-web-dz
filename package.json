@@ -75,7 +75,7 @@
     "vditor": "^3.8.13",
     "vue": "^3.2.33",
     "vue-i18n": "^9.1.10",
-    "vue-json-pretty": "^2.0.6",
+    "vue-json-pretty": "^2.1.1",
     "vue-router": "^4.0.15",
     "vue-types": "^4.1.1",
     "vue3-blocks-tree": "^0.6.1",

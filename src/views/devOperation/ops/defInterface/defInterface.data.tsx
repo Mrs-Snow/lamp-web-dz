@@ -1,10 +1,12 @@
 import { Ref } from 'vue';
-import { DictEnum } from '/@/enums/commonEnum';
-import { dictAllComponentProps, dictComponentProps } from '/@/utils/lamp/common';
-import { stateComponentProps } from '/@/utils/lamp/common';
+import { ActionEnum, DictEnum } from '/@/enums/commonEnum';
+import {
+  dictAllComponentProps,
+  dictComponentProps,
+  stateComponentProps,
+} from '/@/utils/lamp/common';
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
-import { ActionEnum } from '/@/enums/commonEnum';
 import { FormSchemaExt, RuleType } from '/@/api/lamp/common/formValidateService';
 import { InterfaceExecModeEnum } from '/@/enums/biz/base';
 import { check } from '/@/api/devOperation/ops/defInterface';
@@ -166,6 +168,26 @@ export const customFormSchemaRules = (
             }
             return Promise.resolve();
           },
+        },
+      ],
+    },
+    {
+      field: 'implClass',
+      type: RuleType.append,
+      rules: [
+        {
+          trigger: ['change', 'blur'],
+          required: getFieldsValue()?.execMode == InterfaceExecModeEnum.IMPL_CLASS,
+        },
+      ],
+    },
+    {
+      field: 'script',
+      type: RuleType.append,
+      rules: [
+        {
+          trigger: ['change', 'blur'],
+          required: getFieldsValue()?.execMode == InterfaceExecModeEnum.SCRIPT,
         },
       ],
     },
