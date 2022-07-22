@@ -13,6 +13,7 @@ import { FormSchemaExt, RuleType } from '/@/api/lamp/common/formValidateService'
 import { MsgTemplateTypeEnum } from '/@/enums/biz/base';
 import { check } from '/@/api/devOperation/ops/defMsgTemplate';
 import { query } from '/@/api/devOperation/ops/defInterface';
+import { Rule } from '/@/components/Form';
 
 const { t } = useI18n();
 // 列表页字段
@@ -182,6 +183,13 @@ export const editFormSchema = (_type: Ref<ActionEnum>): FormSchema[] => {
       ifShow: ({ values }) => {
         return values.type === MsgTemplateTypeEnum.SMS;
       },
+      dynamicRules: ({ values }) => {
+        const rules: Rule[] = [];
+        if (values.type === MsgTemplateTypeEnum.SMS) {
+          rules.push({ required: true, message: '不能为空', ruleType: RuleType.append });
+        }
+        return rules;
+      },
     },
     {
       label: t('devOperation.ops.defMsgTemplate.templateCode'),
@@ -189,6 +197,13 @@ export const editFormSchema = (_type: Ref<ActionEnum>): FormSchema[] => {
       component: 'Input',
       ifShow: ({ values }) => {
         return values.type === MsgTemplateTypeEnum.SMS;
+      },
+      dynamicRules: ({ values }) => {
+        const rules: Rule[] = [];
+        if (values.type === MsgTemplateTypeEnum.SMS) {
+          rules.push({ required: true, message: '不能为空', ruleType: RuleType.append });
+        }
+        return rules;
       },
     },
     {
@@ -254,26 +269,6 @@ export const customFormSchemaRules = (
             }
             return Promise.resolve();
           },
-        },
-      ],
-    },
-    {
-      field: 'templateCode',
-      type: RuleType.append,
-      rules: [
-        {
-          trigger: ['change', 'blur'],
-          required: getFieldsValue()?.type === MsgTemplateTypeEnum.SMS,
-        },
-      ],
-    },
-    {
-      field: 'sign',
-      type: RuleType.append,
-      rules: [
-        {
-          trigger: ['change', 'blur'],
-          required: getFieldsValue()?.type === MsgTemplateTypeEnum.SMS,
         },
       ],
     },

@@ -130,7 +130,7 @@ export const editFormSchema = (_type: Ref<ActionEnum>): FormSchema[] => {
       dynamicRules: ({ values }) => {
         const rules: Rule[] = [];
         if (values.execMode === InterfaceExecModeEnum.IMPL_CLASS) {
-          rules.push({ required: true, message: '不能为空' });
+          rules.push({ required: true, message: '不能为空', ruleType: RuleType.append });
         }
         return rules;
       },
@@ -152,7 +152,7 @@ export const editFormSchema = (_type: Ref<ActionEnum>): FormSchema[] => {
       dynamicRules: ({ values }) => {
         const rules: Rule[] = [];
         if (values.execMode === InterfaceExecModeEnum.SCRIPT) {
-          rules.push({ required: true, message: '不能为空' });
+          rules.push({ required: true, message: '不能为空', ruleType: RuleType.append });
         }
         return rules;
       },
