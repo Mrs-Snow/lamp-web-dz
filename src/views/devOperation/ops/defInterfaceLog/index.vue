@@ -51,7 +51,7 @@
 
   export default defineComponent({
     // 若需要开启页面缓存，请将此参数跟菜单名保持一致
-    name: '接口执行日志维护',
+    name: '接口日志',
     components: {
       BasicTable,
       PageWrapper,
