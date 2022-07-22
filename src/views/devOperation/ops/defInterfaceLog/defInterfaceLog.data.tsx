@@ -22,6 +22,8 @@ export const columns = (): BasicColumn[] => {
     {
       title: t('basic.msg.extendInterfaceLog.lastExecTime'),
       dataIndex: 'lastExecTime',
+      sorter: true,
+      width: 180,
     },
     {
       title: t('lamp.common.createdTime'),

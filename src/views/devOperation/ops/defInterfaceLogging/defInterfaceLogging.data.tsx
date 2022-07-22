@@ -1,4 +1,5 @@
 import { h, Ref } from 'vue';
+import { Tag } from 'ant-design-vue';
 import { dateUtil } from '/@/utils/dateUtil';
 import { dictAllComponentProps, dictComponentProps } from '/@/utils/lamp/common';
 import { BasicColumn, FormSchema } from '/@/components/Table';
@@ -6,6 +7,7 @@ import { useI18n } from '/@/hooks/web/useI18n';
 import { ActionEnum, DictEnum } from '/@/enums/commonEnum';
 import { FormSchemaExt } from '/@/api/lamp/common/formValidateService';
 import { JsonPreview } from '/@/components/CodeEditor';
+import { MsgInterfaceLoggingStatusEnum } from '/@/enums/biz/base';
 
 const { t } = useI18n();
 // 列表页字段
@@ -21,6 +23,11 @@ export const columns = (): BasicColumn[] => {
       dataIndex: ['echoMap', 'status'],
       key: 'status',
       width: 100,
+      customRender: ({ record }) => {
+        const text = record.echoMap?.status;
+        const color = record.status === MsgInterfaceLoggingStatusEnum.SUCCESS ? 'success' : 'error';
+        return <Tag color={color}>{text}</Tag>;
+      },
     },
     {
       title: t('basic.msg.extendInterfaceLogging.params'),

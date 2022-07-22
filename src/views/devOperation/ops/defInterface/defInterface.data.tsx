@@ -1,4 +1,5 @@
 import { Ref } from 'vue';
+import { Tag } from 'ant-design-vue';
 import { ActionEnum, DictEnum } from '/@/enums/commonEnum';
 import {
   dictAllComponentProps,
@@ -10,6 +11,7 @@ import { useI18n } from '/@/hooks/web/useI18n';
 import { FormSchemaExt, RuleType } from '/@/api/lamp/common/formValidateService';
 import { InterfaceExecModeEnum } from '/@/enums/biz/base';
 import { check } from '/@/api/devOperation/ops/defInterface';
+import { Rule } from '/@/components/Form';
 
 const { t } = useI18n();
 // 列表页字段
@@ -31,8 +33,11 @@ export const columns = (): BasicColumn[] => {
     {
       title: t('devOperation.ops.defInterface.state'),
       dataIndex: 'state',
-      format: (text) => {
-        return text ? t('lamp.common.enable') : t('lamp.common.disable');
+      width: 100,
+      customRender: ({ record }) => {
+        const text = record.state ? t('lamp.common.enable') : t('lamp.common.disable');
+        const color = record.state ? 'success' : 'error';
+        return <Tag color={color}>{text}</Tag>;
       },
     },
     {
@@ -122,6 +127,13 @@ export const editFormSchema = (_type: Ref<ActionEnum>): FormSchema[] => {
       itemProps: {
         extra: '代码中存在的由Spring管理的实现类',
       },
+      dynamicRules: ({ values }) => {
+        const rules: Rule[] = [];
+        if (values.execMode === InterfaceExecModeEnum.IMPL_CLASS) {
+          rules.push({ required: true, message: '不能为空' });
+        }
+        return rules;
+      },
       ifShow: ({ values }) => {
         return values.execMode === InterfaceExecModeEnum.IMPL_CLASS;
       },
@@ -136,6 +148,13 @@ export const editFormSchema = (_type: Ref<ActionEnum>): FormSchema[] => {
       },
       ifShow: ({ values }) => {
         return values.execMode === InterfaceExecModeEnum.SCRIPT;
+      },
+      dynamicRules: ({ values }) => {
+        const rules: Rule[] = [];
+        if (values.execMode === InterfaceExecModeEnum.SCRIPT) {
+          rules.push({ required: true, message: '不能为空' });
+        }
+        return rules;
       },
     },
     {
@@ -168,26 +187,6 @@ export const customFormSchemaRules = (
             }
             return Promise.resolve();
           },
-        },
-      ],
-    },
-    {
-      field: 'implClass',
-      type: RuleType.append,
-      rules: [
-        {
-          trigger: ['change', 'blur'],
-          required: getFieldsValue()?.execMode == InterfaceExecModeEnum.IMPL_CLASS,
-        },
-      ],
-    },
-    {
-      field: 'script',
-      type: RuleType.append,
-      rules: [
-        {
-          trigger: ['change', 'blur'],
-          required: getFieldsValue()?.execMode == InterfaceExecModeEnum.SCRIPT,
         },
       ],
     },
