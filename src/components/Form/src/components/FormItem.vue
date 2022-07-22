@@ -1,19 +1,19 @@
 <script lang="tsx">
   import type { PropType, Ref } from 'vue';
   import { computed, defineComponent, toRefs, unref } from 'vue';
-  import type { FormActionType, FormProps, FormSchema } from '../types/form';
+  import type { FormActionType, FormProps, FormSchema, Rule } from '../types/form';
   import type { ValidationRule } from 'ant-design-vue/lib/form/Form';
   import type { TableActionType } from '/@/components/Table';
-  import { BasicTitle } from '/@/components/Basic';
+  import { BasicHelp, BasicTitle } from '/@/components/Basic';
   import { Col, Divider, Form } from 'ant-design-vue';
   import { componentMap } from '../componentMap';
-  import { BasicHelp } from '/@/components/Basic';
   import { isBoolean, isFunction, isNull } from '/@/utils/is';
   import { getSlot } from '/@/utils/helper/tsxHelper';
   import { createPlaceholderMessage, setComponentRuleType, simpleComponents } from '../helper';
   import { cloneDeep, upperFirst } from 'lodash-es';
   import { useItemLabelWidth } from '../hooks/useLabelWidth';
   import { useI18n } from '/@/hooks/web/useI18n';
+  import { RuleType } from '/@/api/lamp/common/formValidateService';
 
   export default defineComponent({
     name: 'BasicFormItem',
@@ -166,11 +166,23 @@
           required,
         } = props.schema;
 
+        let rules: ValidationRule[] = cloneDeep(defRules) as ValidationRule[];
+
         if (isFunction(dynamicRules)) {
-          return dynamicRules(unref(getValues)) as ValidationRule[];
+          const dynamicRuleList = dynamicRules(unref(getValues)) as Rule[];
+          if (!rules) {
+            return dynamicRuleList;
+          }
+
+          const first = dynamicRuleList?.[0];
+          // 覆盖
+          if (first?.ruleType === RuleType.cover) {
+            return dynamicRuleList;
+          }
+
+          return [...rules, ...dynamicRuleList];
         }
 
-        let rules: ValidationRule[] = cloneDeep(defRules) as ValidationRule[];
         const { rulesMessageJoinLabel: globalRulesMessageJoinLabel } = props.formProps;
 
         const joinLabel = Reflect.has(props.schema, 'rulesMessageJoinLabel')
