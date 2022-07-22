@@ -1,10 +1,10 @@
 <template>
-  <Dropdown placement="bottomLeft" :overlayClassName="`${prefixCls}-dropdown-overlay`">
+  <Dropdown :overlayClassName="`${prefixCls}-dropdown-overlay`" placement="bottomLeft">
     <span :class="[prefixCls, `${prefixCls}--${theme}`]" class="flex">
       <AvatarPreview
-        :isDef="true"
-        :fileId="getUserInfo?.avatarId"
         :errorTxt="getUserInfo?.nickName?.substring(0, 1)"
+        :fileId="getUserInfo?.avatarId"
+        :isDef="true"
         :style="{ 'margin-right': '0.5rem' }"
       />
       <span :class="`${prefixCls}__info hidden md:block`">
@@ -22,10 +22,16 @@
           icon="ant-design:user-outlined"
         />
         <MenuItem
+          v-if="getShowDoc"
           key="doc"
           :text="t('layout.header.dropdownItemDoc')"
           icon="ion:document-text-outline"
+        />
+        <MenuItem
           v-if="getShowDoc"
+          key="vbenDoc"
+          icon="ion:document-text-outline"
+          text="前端文档"
         />
         <MenuDivider v-if="getShowDoc" />
         <MenuItem
@@ -50,9 +56,9 @@
   import { useRouter } from 'vue-router';
   import type { MenuInfo } from 'ant-design-vue/lib/menu/src/interface';
 
-  import { defineComponent, computed, ref } from 'vue';
+  import { computed, defineComponent, ref } from 'vue';
 
-  import { DOC_URL } from '/@/settings/siteSetting';
+  import { DOC_URL, VBEN_DOC_URL } from '/@/settings/siteSetting';
 
   import { useUserStore } from '/@/store/modules/user';
   import { useHeaderSetting } from '/@/hooks/setting/useHeaderSetting';
@@ -66,7 +72,7 @@
 
   import { createAsyncComponent } from '/@/utils/factory/createAsyncComponent';
 
-  type MenuEvent = 'logout' | 'doc' | 'lock' | 'profile';
+  type MenuEvent = 'logout' | 'doc' | 'lock' | 'profile' | 'vbenDoc';
 
   export default defineComponent({
     name: 'UserDropdown',
@@ -105,8 +111,12 @@
       }
 
       // open doc
-      function openDoc() {
-        openWindow(DOC_URL);
+      function openDoc(flag: boolean) {
+        if (flag) {
+          openWindow(DOC_URL);
+        } else {
+          openWindow(VBEN_DOC_URL);
+        }
       }
 
       function openProfile() {
@@ -124,7 +134,10 @@
             handleLoginOut();
             break;
           case 'doc':
-            openDoc();
+            openDoc(true);
+            break;
+          case 'vbenDoc':
+            openDoc(false);
             break;
           case 'lock':
             handleLock();
