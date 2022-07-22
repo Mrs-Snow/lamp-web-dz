@@ -58,7 +58,7 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { findSystemApi } from '/@/api/lamp/common/general';
   import { HTTP_TAG_MAP } from '/@/enums/httpEnum';
-  import { selectResourceApiFormSchema } from '../defResource.data';
+  import { selectResourceApiFormSchema } from './defResourceApi.data';
 
   export default defineComponent({
     name: 'DefResourceResourceApiSelect',

@@ -14,7 +14,7 @@
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, useForm } from '/@/components/Form';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { editResourceApiFormSchema } from '../defResource.data';
+  import { editResourceApiFormSchema } from './defResourceApi.data';
 
   export default defineComponent({
     name: 'DefResourceApiEdit',

@@ -58,7 +58,7 @@
   import { cloneDeep, uniqueId } from 'lodash-es';
   import { useModal } from '/@/components/Modal';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { resourceApiColumns } from '../defResource.data';
+  import { resourceApiColumns } from './defResourceApi.data';
   import SelectModal from './ResourceApiSelect.vue';
   import EditModal from './ResourceApiEdit.vue';
   import { ActionEnum } from '/@/enums/commonEnum';

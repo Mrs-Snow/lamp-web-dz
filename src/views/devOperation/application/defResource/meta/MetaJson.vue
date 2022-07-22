@@ -40,7 +40,7 @@
   import { useModal } from '/@/components/Modal';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { ActionEnum } from '/@/enums/commonEnum';
-  import { metaJsonColumns } from '../defResource.data';
+  import { metaJsonColumns } from './defResourceMeta.data';
   import EditModal from './MetaEdit.vue';
 
   export default defineComponent({

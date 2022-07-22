@@ -15,7 +15,7 @@
   import { BasicForm, useForm } from '/@/components/Form';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { ActionEnum } from '/@/enums/commonEnum';
-  import { editMetaFormSchema } from '../defResource.data';
+  import { editMetaFormSchema } from './defResourceMeta.data';
 
   export default defineComponent({
     name: 'DefResourceMetaEdit',

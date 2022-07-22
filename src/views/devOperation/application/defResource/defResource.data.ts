@@ -1,18 +1,12 @@
 import { Ref } from 'vue';
-import { BasicColumn, FormSchema } from '/@/components/Table';
+import { FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
-import {
-  dictComponentProps,
-  enumComponentProps,
-  stateComponentProps,
-  yesNoComponentProps,
-} from '/@/utils/lamp/common';
-import { ActionEnum, DictEnum, EnumEnum } from '/@/enums/commonEnum';
+import { dictComponentProps, stateComponentProps, yesNoComponentProps } from '/@/utils/lamp/common';
+import { ActionEnum, DictEnum } from '/@/enums/commonEnum';
 import { FormSchemaExt, RuleType } from '/@/api/lamp/common/formValidateService';
 import { DataScopeEnum, ResourceOpenWithEnum, ResourceTypeEnum } from '/@/enums/biz/tenant';
 import { check, checkName, checkPath } from '/@/api/devOperation/application/defResource';
 import { isUrl } from '/@/utils/is';
-import { findOnlineService } from '/@/api/devOperation/tenant/tenant';
 
 const { t } = useI18n();
 
@@ -79,7 +73,6 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       },
       dynamicRules: ({ model }) => {
         return [
-          { required: true, message: '不能为空' },
           {
             trigger: 'change',
             validator: async (_, value) => {
@@ -150,7 +143,6 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       },
       dynamicRules: ({ model }) => {
         return [
-          { required: true, message: '请填写名称' },
           {
             trigger: ['change', 'blur'],
             async validator(_, value) {
@@ -311,7 +303,6 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       },
       dynamicRules: ({ model }) => {
         return [
-          { required: true, message: '不能为空' },
           {
             trigger: ['change', 'blur'],
             validator: async (_, value) => {
@@ -411,7 +402,6 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       },
       dynamicRules: ({ model }) => {
         return [
-          { required: true, message: '不能为空' },
           {
             trigger: ['change', 'blur'],
             async validator(_, value) {
@@ -660,229 +650,6 @@ export const customFormSchemaRules = (
           },
         },
       ],
-    },
-  ];
-};
-
-// 元数据 表格
-export const metaJsonColumns: BasicColumn[] = [
-  {
-    title: 'key',
-    dataIndex: 'key',
-  },
-  {
-    title: 'value',
-    dataIndex: 'value',
-    format: (text: string | number | boolean) => {
-      if (text === true) {
-        return 'true';
-      } else if (text === false) {
-        return 'false';
-      } else {
-        return text;
-      }
-    },
-  },
-];
-
-// 元数据 编辑表单
-export const editMetaFormSchema = (): FormSchema[] => {
-  return [
-    {
-      label: 'key',
-      field: 'key',
-      component: 'AutoComplete',
-      required: true,
-      helpMessage: ['新增key的选项后，同时也需要后端在RouterMeta实体类中新增字段'],
-      componentProps: {
-        allowClear: true,
-        getPopupContainer: () => document.body,
-        filterOption: (input: string, option) => {
-          return option.value.toUpperCase().indexOf(input.toUpperCase()) >= 0;
-        },
-        options: [
-          { value: 'title' },
-          { value: 'ignoreKeepAlive' },
-          { value: 'affix' },
-          { value: 'transitionName' },
-          { value: 'hideBreadcrumb' },
-          { value: 'carryParam' },
-          { value: 'hideChildrenInMenu' },
-          { value: 'currentActiveMenu' },
-          { value: 'hideTab' },
-          { value: 'hideMenu' },
-          { value: 'ignoreRoute' },
-          { value: 'content' },
-          { value: 'dot' },
-          { value: 'type' },
-        ],
-      },
-    },
-    {
-      label: 'value',
-      field: 'value',
-      component: 'Input',
-      required: true,
-    },
-  ];
-};
-
-// 资源接口 表格
-export const resourceApiColumns: BasicColumn[] = [
-  {
-    title: 'resourceId',
-    dataIndex: 'resourceId',
-    ifShow: false,
-  },
-  // {
-  //   title: t('devOperation.application.defResourceApi.springApplicationName'),
-  //   dataIndex: 'springApplicationName',
-  //   width: 150,
-  // },
-  // {
-  //   title: t('devOperation.application.defResourceApi.controller'),
-  //   dataIndex: 'controller',
-  // },
-  {
-    title: t('devOperation.application.defResourceApi.name'),
-    dataIndex: 'name',
-    align: 'left',
-  },
-  {
-    title: t('devOperation.application.defResourceApi.uri'),
-    dataIndex: 'uri',
-    ellipsis: true,
-    align: 'left',
-  },
-];
-
-// 资源接口 选择表单
-export const selectResourceApiFormSchema = (
-  handleServiceChange: Fn,
-  handleControllerChange: Fn,
-  handleUriChange: Fn,
-  handleUriDeselect: Fn,
-): FormSchema[] => {
-  return [
-    {
-      label: t('devOperation.application.defResourceApi.springApplicationName'),
-      field: 'service',
-      component: 'ApiSelect',
-      helpMessage: [
-        'lamp-cloud: 自动查询后台已经正常启动并注册到nacos中的服务',
-        'lamp-boot: 后台写死lamp-boot-server返回即可',
-      ],
-      componentProps: () => {
-        return {
-          getPopupContainer: () => document.body,
-          onChange: handleServiceChange,
-          showSearch: true,
-          api: findOnlineService,
-          // resultField: 'list',
-          // labelField: 'name',
-          // valueField: 'id',
-          // options: [
-          //   // 后端有几个服务，就写几个
-          //   { value: 'base', label: '基础服务' },
-          //   { value: 'oauth', label: '认证服务' },
-          //   { value: 'system', label: '系统服务' },
-          //   { value: 'gateway', label: '网关服务' },
-          // ],
-        };
-      },
-    },
-    {
-      label: t('devOperation.application.defResourceApi.controller'),
-      field: 'controller',
-      component: 'Select',
-      componentProps: {
-        getPopupContainer: () => document.body,
-        onChange: handleControllerChange,
-        showSearch: true,
-      },
-    },
-    {
-      label: t('devOperation.application.defResourceApi.uri'),
-      field: 'uri',
-      component: 'Select',
-      componentProps: {
-        onChange: handleUriChange,
-        onDeselect: handleUriDeselect,
-        mode: 'multiple',
-        'option-label-prop': 'label',
-        getPopupContainer: () => document.body,
-      },
-    },
-  ];
-};
-
-// 资源接口 编辑表单
-export const editResourceApiFormSchema = (): FormSchema[] => {
-  return [
-    {
-      label: '是否手动录入',
-      field: 'isInput',
-      component: 'RadioGroup',
-      show: false,
-    },
-    {
-      label: '临时id',
-      field: 'tempId',
-      component: 'Input',
-      show: false,
-    },
-    {
-      label: t('devOperation.application.defResourceApi.springApplicationName'),
-      field: 'springApplicationName',
-      component: 'ApiSelect',
-      helpMessage: [
-        'lamp-cloud: 自动查询后台已经正常启动并注册到nacos中的服务',
-        'lamp-boot: 后台写死lamp-boot-server返回即可',
-      ],
-      componentProps: () => {
-        return {
-          getPopupContainer: () => document.body,
-          api: findOnlineService,
-        };
-      },
-      required: true,
-    },
-    {
-      label: t('devOperation.application.defResourceApi.controller'),
-      field: 'controller',
-      component: 'Input',
-      required: true,
-    },
-    {
-      label: t('devOperation.application.defResourceApi.uri'),
-      field: 'uri',
-      component: 'Input',
-      required: true,
-    },
-    {
-      label: t('devOperation.application.defResourceApi.requestMethod'),
-      field: 'requestMethod',
-      component: 'ApiSelect',
-      required: true,
-      componentProps: () => {
-        return {
-          getPopupContainer: () => document.body,
-          ...enumComponentProps(EnumEnum.HttpMethod),
-          // options: [
-          //   { value: 'ALL', label: '所有' },
-          //   { value: 'GET', label: 'GET' },
-          //   { value: 'POST', label: 'POST' },
-          //   { value: 'PUT', label: 'PUT' },
-          //   { value: 'DELETE', label: 'DELETE' },
-          // ],
-        };
-      },
-    },
-    {
-      label: t('devOperation.application.defResourceApi.name'),
-      field: 'name',
-      component: 'Input',
-      required: true,
     },
   ];
 };
