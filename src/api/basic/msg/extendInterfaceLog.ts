@@ -75,11 +75,13 @@ export const update = (params: ExtendInterfaceLogUpdateVO) =>
   defHttp.request<ExtendInterfaceLogResultVO>({ ...Api.Update, params });
 
 export const remove = (tenantId: string, params: string[]) =>
-  defHttp.request<boolean>({
-    ...Api.Delete,
-    headers: {
-      withTenant: false,
-      [tenantIdKey]: tenantId,
+  defHttp.request<boolean>(
+    {
+      ...Api.Delete,
+      headers: {
+        [tenantIdKey]: tenantId,
+      },
+      params,
     },
-    params,
-  });
+    { withTenant: false },
+  );

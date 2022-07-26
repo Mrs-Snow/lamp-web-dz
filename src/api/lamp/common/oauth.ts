@@ -76,7 +76,7 @@ export function register(params: RegisterVO, mode: ErrorMessageMode = 'modal') {
     },
     {
       errorMessageMode: mode,
-      withTenant: true,
+      withTenant: false,
     },
   );
 }
