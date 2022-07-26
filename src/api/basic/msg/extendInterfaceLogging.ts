@@ -1,15 +1,18 @@
 import {
+  ExtendInterfaceLoggingPageQuery,
+  ExtendInterfaceLoggingResultVO,
   ExtendInterfaceLoggingSaveVO,
   ExtendInterfaceLoggingUpdateVO,
-  ExtendInterfaceLoggingResultVO,
-  ExtendInterfaceLoggingPageQuery,
 } from './model/extendInterfaceLoggingModel';
 import { PageParams, PageResult } from '/@/api/model/baseModel';
 import { defHttp } from '/@/utils/http/axios';
 import { RequestEnum } from '/@/enums/httpEnum';
 import { ServicePrefixEnum } from '/@/enums/commonEnum';
 import type { AxiosRequestConfig } from 'axios';
+import { useGlobSetting } from '/@/hooks/setting';
 
+const globSetting = useGlobSetting();
+const { tenantIdKey } = globSetting;
 const MODULAR = 'extendInterfaceLogging';
 const ServicePrefix = ServicePrefixEnum.BASE;
 
@@ -71,4 +74,12 @@ export const save = (params: ExtendInterfaceLoggingSaveVO) =>
 export const update = (params: ExtendInterfaceLoggingUpdateVO) =>
   defHttp.request<ExtendInterfaceLoggingResultVO>({ ...Api.Update, params });
 
-export const remove = (params: string[]) => defHttp.request<boolean>({ ...Api.Delete, params });
+export const remove = (tenantId: string, params: string[]) =>
+  defHttp.request<boolean>({
+    ...Api.Delete,
+    headers: {
+      withTenant: false,
+      [tenantIdKey]: tenantId,
+    },
+    params,
+  });

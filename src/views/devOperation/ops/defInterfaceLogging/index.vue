@@ -131,7 +131,7 @@
       }
 
       async function batchDelete(ids: string[]) {
-        await remove(ids);
+        await remove(tenantId.value, ids);
         createMessage.success(t('common.tips.deleteSuccess'));
         handleSuccess();
       }

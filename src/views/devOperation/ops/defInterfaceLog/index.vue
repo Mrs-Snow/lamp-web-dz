@@ -64,7 +64,7 @@
       const { createMessage, createConfirm } = useMessage();
 
       // 表格
-      const [registerTable, { reload, getSelectRowKeys }] = useTable({
+      const [registerTable, { reload, getSelectRowKeys, getForm }] = useTable({
         title: t('basic.msg.extendInterfaceLog.table.title'),
         api: page,
         columns: columns(),
@@ -113,7 +113,7 @@
       }
 
       async function batchDelete(ids: string[]) {
-        await remove(ids);
+        await remove(getForm()?.getFieldsValue()?.tenantId, ids);
         createMessage.success(t('common.tips.deleteSuccess'));
         handleSuccess();
       }
@@ -133,6 +133,7 @@
           createMessage.warning(t('common.tips.pleaseSelectTheData'));
           return;
         }
+
         createConfirm({
           iconType: 'warning',
           content: t('common.tips.confirmDelete'),
