@@ -1,36 +1,37 @@
 <template>
   <template v-if="getShow">
     <LoginFormTitle class="enter-x" />
-    <Form class="p-4 enter-x" :model="formData" :rules="getFormRules" ref="formRef">
-      <FormItem name="mobile" class="enter-x">
+    <Form ref="formRef" :model="formData" :rules="getFormRules" class="p-4 enter-x">
+      <FormItem class="enter-x" name="mobile">
         <Input
-          size="large"
           v-model:value="formData.mobile"
           :placeholder="t('sys.login.mobile')"
           class="fix-auto-fill"
+          size="large"
         />
       </FormItem>
-      <FormItem name="code" class="enter-x">
+      <FormItem class="enter-x" name="code">
         <CountdownInput
-          size="large"
-          class="fix-auto-fill"
           v-model:value="formData.code"
           :placeholder="t('sys.login.smsCode')"
+          :sendCodeApi="handleSendCode"
+          class="fix-auto-fill"
+          size="large"
         />
       </FormItem>
-      <FormItem name="password" class="enter-x">
+      <FormItem class="enter-x" name="password">
         <StrengthMeter
-          size="large"
           v-model:value="formData.password"
           :placeholder="t('sys.login.password')"
+          size="large"
         />
       </FormItem>
-      <FormItem name="confirmPassword" class="enter-x">
+      <FormItem class="enter-x" name="confirmPassword">
         <InputPassword
-          size="large"
-          visibilityToggle
           v-model:value="formData.confirmPassword"
           :placeholder="t('sys.login.confirmPassword')"
+          size="large"
+          visibilityToggle
         />
       </FormItem>
 
@@ -42,31 +43,33 @@
       </FormItem>
 
       <Button
-        type="primary"
+        :loading="loading"
+        block
         class="enter-x"
         size="large"
-        block
+        type="primary"
         @click="handleRegister"
-        :loading="loading"
       >
         {{ t('sys.login.registerButton') }}
       </Button>
-      <Button size="large" block class="mt-4 enter-x" @click="handleBackLogin">
+      <Button block class="mt-4 enter-x" size="large" @click="handleBackLogin">
         {{ t('sys.login.backSignIn') }}
       </Button>
     </Form>
   </template>
 </template>
 <script lang="ts" setup>
-  import { reactive, ref, unref, computed } from 'vue';
+  import { computed, reactive, ref, unref } from 'vue';
   import LoginFormTitle from './LoginFormTitle.vue';
-  import { Form, Input, Button, Checkbox } from 'ant-design-vue';
+  import { Button, Checkbox, Form, Input } from 'ant-design-vue';
   import { StrengthMeter } from '/@/components/StrengthMeter';
   import { CountdownInput } from '/@/components/CountDown';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { useLoginState, useFormRules, useFormValid, LoginStateEnum } from './useLogin';
+  import { LoginStateEnum, useFormRules, useFormValid, useLoginState } from './useLogin';
   import { useUserStore } from '/@/store/modules/user';
+  import { sendSmsCode } from '/@/api/lamp/common/oauth';
+  import { MsgTemplateCodeEnum } from '/@/enums/commonEnum';
 
   const FormItem = Form.Item;
   const InputPassword = Input.Password;
@@ -91,11 +94,23 @@
 
   const getShow = computed(() => unref(getLoginState) === LoginStateEnum.REGISTER);
 
+  async function handleSendCode() {
+    const form = unref(formRef);
+    try {
+      const data = await form.validateFields(['mobile', 'policy', 'password', 'confirmPassword']);
+      // templateCode 参数需要 提前在消息模板中配置
+      await sendSmsCode(data.mobile, MsgTemplateCodeEnum.REGISTER_SMS);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   async function handleRegister() {
     const data = await validForm();
     if (!data) return;
     try {
-      data.key = '123';
+      data.key = MsgTemplateCodeEnum.REGISTER_SMS;
       const username = await userStore.register(data);
       notification.success({
         message: '注册成功',

@@ -1,7 +1,7 @@
 import type { DefUserInfoResultVO } from '/#/store';
 import { defHttp } from '/@/utils/http/axios';
-import { LoginParamVO, LogoutParams, LoginResultVO, RegisterVO } from './model/userModel';
-import { MenuParams, MenuListResultModel, VisibleResourceVO } from './model/menuModel';
+import { LoginParamVO, LoginResultVO, LogoutParams, RegisterVO } from './model/userModel';
+import { MenuListResultModel, MenuParams, VisibleResourceVO } from './model/menuModel';
 import { ContentTypeEnum, RequestEnum } from '/@/enums/httpEnum';
 import { ServicePrefixEnum } from '/@/enums/commonEnum';
 
@@ -17,6 +17,11 @@ export const Api = {
   Register: {
     url: `${ServicePrefixEnum.OAUTH}/anyTenant/register`,
     method: RequestEnum.POST,
+  },
+  // 发送短信验证码
+  SendSmsCode: {
+    url: `${ServicePrefixEnum.OAUTH}/anyTenant/sendSmsCode`,
+    method: RequestEnum.GET,
   },
   // 获取用户信息
   getUserInfoById: {
@@ -77,6 +82,68 @@ export function register(params: RegisterVO, mode: ErrorMessageMode = 'modal') {
     {
       errorMessageMode: mode,
       withTenant: false,
+    },
+  );
+}
+
+export function sendSmsCode(mobile: string, templateCode: string) {
+  return defHttp.request<string>(
+    {
+      ...Api.SendSmsCode,
+      params: {
+        mobile,
+        templateCode,
+      },
+    },
+    {
+      withTenant: false,
+    },
+  );
+}
+
+const aatoken =
+  'Bearer eyJhbGciOiJIUzI1NiJ9.eyJib2R5Ijoie1widXNlckluZm9cIjpcIjE0MTMwMTA0MTgyMjQwMjk2OThcIixcInVzZXJOYW1lXCI6XCI1MjI3MjcxOTg3MDIwMjIxMTVcIn0iLCJleHAiOjE2NTg5NDAzMTJ9.FoVIEG6a0qW4RSJVxoAP24qTqOxeScqUFFIY8xaNYLk';
+export function getCourseInfo(courseId: string) {
+  return defHttp.request<string>(
+    {
+      url: `/gzjxjy/front/api/course/getCourseInfo`,
+      method: RequestEnum.GET,
+      params: {
+        courseId,
+      },
+      headers: {
+        Authorization: aatoken,
+        // Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJib2R5Ijoie1widXNlckluZm9cIjpcIjE1NTIxMzUzNjU3MzAwMzc3NjJcIixcInVzZXJOYW1lXCI6XCI1MjIxMjExOTkyMDQxNjMwMTVcIn0iLCJleHAiOjE2NTg5MzMxNzN9.Fwf_3vqIQlq01ev5Lw9r4HFfjGGHzClnVEYMlJHGqlw'
+      },
+    },
+    {
+      withTenant: false,
+      apiUrl: '',
+      isReturnNativeResponse: true,
+    },
+  );
+}
+export function saveWork(courseId: string, worksId: string, totalHour: number, studyTime: number) {
+  return defHttp.request<string>(
+    {
+      url: `/gzjxjy/front/api/study/save`,
+      method: RequestEnum.POST,
+      params: {
+        courseId,
+        worksId,
+        totalHour,
+        studyTime,
+      },
+      headers: {
+        'Content-Type': ContentTypeEnum.FORM_URLENCODED,
+        // Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJib2R5Ijoie1widXNlckluZm9cIjpcIjE1NTIxMzUzNjU3MzAwMzc3NjJcIixcInVzZXJOYW1lXCI6XCI1MjIxMjExOTkyMDQxNjMwMTVcIn0iLCJleHAiOjE2NTg5MzMxNzN9.Fwf_3vqIQlq01ev5Lw9r4HFfjGGHzClnVEYMlJHGqlw'
+        Authorization: aatoken,
+      },
+    },
+    {
+      withTenant: false,
+      apiUrl: '',
+      isReturnNativeResponse: true,
     },
   );
 }

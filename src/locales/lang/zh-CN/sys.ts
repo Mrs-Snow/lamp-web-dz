@@ -67,7 +67,7 @@ export default {
 
     signInTitle: '灯灯',
     signInDesc: '中后台快速开发系统',
-    policy: '我同意xxx隐私政策',
+    policy: '我同意遵守《灯灯》隐私政策',
     scanSign: `扫码后点击"确认"，即可完成登录`,
 
     loginButton: '登录',

@@ -139,3 +139,8 @@ export enum DictEnum {
   DictionaryType_Global_EDUCATION = 'GLOBAL_EDUCATION',
   DictionaryType_Global_DATA_TYPE = 'DATA_TYPE',
 }
+
+export enum MsgTemplateCodeEnum {
+  // 注册短信
+  REGISTER_SMS = 'REGISTER_SMS',
+}
