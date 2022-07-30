@@ -9,7 +9,15 @@
   >
     <BasicForm @register="registerForm">
       <template #script="{ model, field }">
-        <CodeEditor :tabSize="4" v-model:value="model[field]" :mode="MODE.GROOVY" />
+        <codemirror
+          v-model="model[field]"
+          :autofocus="true"
+          :extensions="scriptExtensions"
+          :indent-with-tab="true"
+          :style="{ height: '200px' }"
+          :tab-size="2"
+          placeholder="groovy 脚本"
+        />
       </template>
     </BasicForm>
   </BasicModal>
@@ -24,16 +32,19 @@
   import { Api, save, update } from '/@/api/devOperation/ops/defInterface';
   import { getValidateRules } from '/@/api/lamp/common/formValidateService';
   import { customFormSchemaRules, editFormSchema } from './defInterface.data';
-  import { CodeEditor, MODE } from '/@/components/CodeEditor';
+  import { Codemirror } from 'vue-codemirror';
+  import { java } from '@codemirror/lang-java';
+  import { oneDark } from '@codemirror/theme-one-dark';
 
   export default defineComponent({
     name: '编辑消息模板维护',
-    components: { BasicModal, BasicForm, CodeEditor },
+    components: { BasicModal, BasicForm, Codemirror },
     emits: ['success', 'register'],
     setup(_, { emit }) {
       const { t } = useI18n();
       const type = ref<ActionEnum>(ActionEnum.ADD);
       const { createMessage } = useMessage();
+      const scriptExtensions = [java(), oneDark];
 
       const [
         registerForm,
@@ -97,22 +108,7 @@
         }
       }
 
-      return { type, t, registerModel, registerForm, handleSubmit, MODE };
+      return { type, t, scriptExtensions, registerModel, registerForm, handleSubmit };
     },
   });
 </script>
-
-<style lang="less" scoped>
-  //.code {
-  //  position: absolute;
-  //  left: 0;
-  //  right: 0;
-  //  top: 0;
-  //  bottom: 0;
-  //}
-</style>
-<style lang="less">
-  .CodeMirror {
-    height: 100%;
-  }
-</style>

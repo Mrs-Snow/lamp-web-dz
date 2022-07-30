@@ -10,14 +10,28 @@
         </RadioGroup>
       </a-space>
     </template>
-    <CodeEditor v-model:value="value" :mode="modeValue" />
+    <codemirror
+      v-model="value"
+      :autofocus="true"
+      :extensions="scriptExtensions"
+      :indent-with-tab="true"
+      :style="{ height: '200px' }"
+      :tab-size="2"
+      placeholder="groovy 脚本"
+    />
   </PageWrapper>
 </template>
 <script lang="ts">
-  import { defineComponent, ref, unref, h } from 'vue';
-  import { CodeEditor, JsonPreview, MODE } from '/@/components/CodeEditor';
+  import { defineComponent, h, ref, unref } from 'vue';
+  import { JsonPreview, MODE } from '/@/components/CodeEditor';
+  import { Codemirror } from 'vue-codemirror';
+  import { java } from '@codemirror/lang-java';
+  import { json } from '@codemirror/lang-json';
+  import { javascript } from '@codemirror/lang-javascript';
+  import { oneDark } from '@codemirror/theme-one-dark';
+
   import { PageWrapper } from '/@/components/Page';
-  import { Radio, Space, Modal } from 'ant-design-vue';
+  import { Modal, Radio, Space } from 'ant-design-vue';
 
   const jsonData =
     '{"name":"BeJson","url":"http://www.xxx.com","page":88,"isNonProfit":true,"address":{"street":"科技园路.","city":"江苏苏州","country":"中国"},"links":[{"name":"Google","url":"http://www.xxx.com"},{"name":"Baidu","url":"http://www.xxx.com"},{"name":"SoSo","url":"http://www.xxx.com"}]}';
@@ -55,7 +69,7 @@
   `;
   export default defineComponent({
     components: {
-      CodeEditor,
+      Codemirror,
       PageWrapper,
       RadioButton: Radio.Button,
       RadioGroup: Radio.Group,
@@ -63,12 +77,13 @@
     },
     setup() {
       const modeValue = ref<MODE>(MODE.JSON);
-      const value = ref(jsonData);
+      const value = ref(JSON.stringify(JSON.parse(jsonData), null, 2));
+      const scriptExtensions = [java(), javascript(), json(), oneDark];
 
       function handleModeChange(e: ChangeEvent) {
         const mode = e.target.value;
         if (mode === MODE.JSON) {
-          value.value = jsonData;
+          value.value = JSON.stringify(JSON.parse(jsonData), null, 2);
           return;
         }
         if (mode === MODE.HTML) {
@@ -92,7 +107,7 @@
         }
       }
 
-      return { value, modeValue, handleModeChange, showData };
+      return { value, scriptExtensions, modeValue, handleModeChange, showData };
     },
   });
 </script>

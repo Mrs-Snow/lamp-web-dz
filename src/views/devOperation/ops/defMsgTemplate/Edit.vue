@@ -10,10 +10,26 @@
   >
     <BasicForm @register="registerForm">
       <template #script="{ model, field }">
-        <CodeEditor :tabSize="4" v-model:value="model[field]" :mode="MODE.GROOVY" />
+        <codemirror
+          v-model="model[field]"
+          :autofocus="true"
+          :extensions="scriptExtensions"
+          :indent-with-tab="true"
+          :style="{ height: '200px' }"
+          :tab-size="2"
+          placeholder="groovy 脚本"
+        />
       </template>
       <template #content="{ model, field }">
-        <CodeEditor :tabSize="4" v-model:value="model[field]" :mode="MODE.HTML" />
+        <codemirror
+          v-model="model[field]"
+          :autofocus="true"
+          :extensions="contentExtensions"
+          :indent-with-tab="true"
+          :style="{ height: '200px' }"
+          :tab-size="2"
+          placeholder="Freemarker 脚本"
+        />
       </template>
     </BasicForm>
   </BasicModal>
@@ -21,7 +37,10 @@
 <script lang="ts">
   import { defineComponent, ref, unref } from 'vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
-  import { CodeEditor, MODE } from '/@/components/CodeEditor';
+  import { Codemirror } from 'vue-codemirror';
+  import { java } from '@codemirror/lang-java';
+  import { html } from '@codemirror/lang-html';
+  import { oneDark } from '@codemirror/theme-one-dark';
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
@@ -32,13 +51,14 @@
 
   export default defineComponent({
     name: '编辑消息模板维护',
-    components: { BasicModal, BasicForm, CodeEditor },
+    components: { BasicModal, BasicForm, Codemirror },
     emits: ['success', 'register'],
     setup(_, { emit }) {
       const { t } = useI18n();
       const type = ref<ActionEnum>(ActionEnum.ADD);
       const { createMessage } = useMessage();
-
+      const scriptExtensions = [java(), oneDark];
+      const contentExtensions = [html(), oneDark];
       const [
         registerForm,
         { setFieldsValue, getFieldsValue, resetFields, updateSchema, validate, resetSchema },
@@ -101,7 +121,15 @@
         }
       }
 
-      return { type, MODE, t, registerModel, registerForm, handleSubmit };
+      return {
+        type,
+        scriptExtensions,
+        contentExtensions,
+        t,
+        registerModel,
+        registerForm,
+        handleSubmit,
+      };
     },
   });
 </script>
