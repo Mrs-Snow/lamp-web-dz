@@ -2,20 +2,20 @@
   <template v-if="getShow">
     <LoginFormTitle class="enter-x" />
     <Form ref="formRef" :model="formData" :rules="getFormRules" class="p-4 enter-x">
-      <FormItem class="enter-x" name="mobile">
+      <FormItem class="enter-x" name="email">
         <Input
-          v-model:value="formData.mobile"
-          :placeholder="t('sys.login.mobile')"
+          v-model:value="formData.email"
           class="fix-auto-fill"
+          placeholder="邮箱"
           size="large"
         />
       </FormItem>
       <FormItem class="enter-x" name="code">
         <CountdownInput
           v-model:value="formData.code"
-          :placeholder="t('sys.login.smsCode')"
           :sendCodeApi="handleSendCode"
           class="fix-auto-fill"
+          placeholder="验证码"
           size="large"
         />
       </FormItem>
@@ -60,15 +60,16 @@
 </template>
 <script lang="ts" setup>
   import { computed, reactive, ref, unref } from 'vue';
-  import LoginFormTitle from './LoginFormTitle.vue';
   import { Button, Checkbox, Form, Input } from 'ant-design-vue';
+  import type { RuleObject } from 'ant-design-vue/lib/form/interface';
+  import LoginFormTitle from './LoginFormTitle.vue';
   import { StrengthMeter } from '/@/components/StrengthMeter';
   import { CountdownInput } from '/@/components/CountDown';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { LoginStateEnum, useFormRules, useFormValid, useLoginState } from './useLogin';
+  import { LoginStateEnum, useFormValid, useLoginState } from './useLogin';
   import { useUserStore } from '/@/store/modules/user';
-  import { sendSmsCode } from '/@/api/lamp/common/oauth';
+  import { sendEmailCode } from '/@/api/lamp/common/oauth';
   import { MsgTemplateCodeEnum } from '/@/enums/commonEnum';
 
   const FormItem = Form.Item;
@@ -84,22 +85,51 @@
   const formData = reactive({
     password: '',
     confirmPassword: '',
-    mobile: '',
+    email: '',
     code: '',
     policy: false,
   });
 
-  const { getFormRules } = useFormRules(formData);
+  const getFormRules = {
+    code: {
+      required: true,
+      message: '请填写验证码',
+      trigger: 'change',
+    },
+    email: {
+      required: true,
+      message: '请填写邮箱',
+      trigger: 'change',
+    },
+    password: {
+      required: true,
+      message: '请填写密码',
+      trigger: 'change',
+    },
+    confirmPassword: {
+      required: true,
+      message: '请填写确认密码',
+      trigger: 'change',
+    },
+    policy: {
+      required: true,
+      message: '请勾选隐私政策',
+      validator: async (_: RuleObject, value: boolean) => {
+        return !value ? Promise.reject(t('sys.login.policyPlaceholder')) : Promise.resolve();
+      },
+      trigger: 'change',
+    },
+  };
   const { validForm } = useFormValid(formRef);
 
-  const getShow = computed(() => unref(getLoginState) === LoginStateEnum.REGISTER);
+  const getShow = computed(() => unref(getLoginState) === LoginStateEnum.REGISTER_EMAIL);
 
   async function handleSendCode() {
     const form = unref(formRef);
     try {
-      const data = await form.validateFields(['mobile', 'policy', 'password', 'confirmPassword']);
+      const data = await form.validateFields(['email', 'policy', 'password', 'confirmPassword']);
       // templateCode 参数需要 提前在消息模板中配置
-      await sendSmsCode(data.mobile, MsgTemplateCodeEnum.REGISTER_SMS);
+      await sendEmailCode(data.email, MsgTemplateCodeEnum.REGISTER_EMAIL);
       return true;
     } catch (e) {
       return false;
@@ -110,8 +140,8 @@
     const data = await validForm();
     if (!data) return;
     try {
-      data.key = MsgTemplateCodeEnum.REGISTER_SMS;
-      const username = await userStore.registerByMobile(data);
+      data.key = MsgTemplateCodeEnum.REGISTER_EMAIL;
+      const username = await userStore.registerByEmail(data);
       notification.success({
         message: '注册成功',
         description: `注册成功,请使用${username}登录系统`,

@@ -1,29 +1,33 @@
 <template>
   <template v-if="getShow">
     <LoginFormTitle class="enter-x" />
-    <Form class="p-4 enter-x" :model="formData" :rules="getFormRules" ref="formRef">
-      <FormItem name="mobile" class="enter-x">
+    <Form ref="formRef" :model="formData" :rules="getFormRules" class="p-4 enter-x">
+      <FormItem name="grantType">
+        <Input v-model:value="formData.grantType" :hidden="true" size="large" />
+      </FormItem>
+      <FormItem class="enter-x" name="username">
         <Input
-          size="large"
-          v-model:value="formData.mobile"
+          v-model:value="formData.username"
           :placeholder="t('sys.login.mobile')"
           class="fix-auto-fill"
+          size="large"
         />
       </FormItem>
-      <FormItem name="sms" class="enter-x">
+      <FormItem class="enter-x" name="code">
         <CountdownInput
-          size="large"
-          class="fix-auto-fill"
-          v-model:value="formData.sms"
+          v-model:value="formData.code"
           :placeholder="t('sys.login.smsCode')"
+          :sendCodeApi="handleSendCode"
+          class="fix-auto-fill"
+          size="large"
         />
       </FormItem>
 
       <FormItem class="enter-x">
-        <Button type="primary" size="large" block @click="handleLogin" :loading="loading">
+        <Button :loading="loading" block size="large" type="primary" @click="handleLogin">
           {{ t('sys.login.loginButton') }}
         </Button>
-        <Button size="large" block class="mt-4" @click="handleBackLogin">
+        <Button block class="mt-4" size="large" @click="handleBackLogin">
           {{ t('sys.login.backSignIn') }}
         </Button>
       </FormItem>
@@ -31,33 +35,76 @@
   </template>
 </template>
 <script lang="ts" setup>
-  import { reactive, ref, computed, unref } from 'vue';
-  import { Form, Input, Button } from 'ant-design-vue';
+  import { computed, reactive, ref, toRaw, unref } from 'vue';
+  import { Button, Form, Input } from 'ant-design-vue';
   import { CountdownInput } from '/@/components/CountDown';
   import LoginFormTitle from './LoginFormTitle.vue';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { useLoginState, useFormRules, useFormValid, LoginStateEnum } from './useLogin';
+  import { useUserStore } from '/@/store/modules/user';
+  import { LoginStateEnum, useFormValid, useLoginState } from './useLogin';
+  import { sendSmsCode } from '/@/api/lamp/common/oauth';
+  import { MsgTemplateCodeEnum } from '/@/enums/commonEnum';
+  import { useMessage } from '/@/hooks/web/useMessage';
 
   const FormItem = Form.Item;
   const { t } = useI18n();
+  const userStore = useUserStore();
   const { handleBackLogin, getLoginState } = useLoginState();
-  const { getFormRules } = useFormRules();
+  const { notification } = useMessage();
+  const getFormRules = {
+    code: {
+      required: true,
+      message: '请填写验证码',
+      trigger: 'change',
+    },
+    username: {
+      required: true,
+      message: '请填写手机号',
+      trigger: 'change',
+    },
+  };
 
   const formRef = ref();
   const loading = ref(false);
 
   const formData = reactive({
-    mobile: '',
-    sms: '',
+    username: '',
+    grantType: 'MOBILE',
+    code: '',
   });
 
   const { validForm } = useFormValid(formRef);
 
   const getShow = computed(() => unref(getLoginState) === LoginStateEnum.MOBILE);
 
+  async function handleSendCode() {
+    const form = unref(formRef);
+    try {
+      const data = await form.validateFields(['username']);
+      // templateCode 参数需要 提前在消息模板中配置
+      await sendSmsCode(data.username, MsgTemplateCodeEnum.MOBILE_LOGIN);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   async function handleLogin() {
     const data = await validForm();
     if (!data) return;
-    console.log(data);
+    try {
+      loading.value = true;
+      const userInfo = await userStore.login(toRaw(data));
+      if (userInfo) {
+        notification.success({
+          message: t('sys.login.loginSuccessTitle'),
+          description: `${t('sys.login.loginSuccessDesc')}`,
+          duration: 3,
+        });
+      }
+    } catch (error) {
+    } finally {
+      loading.value = false;
+    }
   }
 </script>

@@ -43,7 +43,7 @@
             <ForgetPasswordForm />
             <RegisterForm />
             <MobileForm />
-            <QrCodeForm />
+            <EmailRegisterForm />
           </div>
         </div>
       </div>
@@ -59,13 +59,12 @@
 </template>
 <script lang="ts" setup>
   import { computed } from 'vue';
-  import { AppLogo } from '/@/components/Application';
-  import { AppLocalePicker, AppDarkModeToggle } from '/@/components/Application';
+  import { AppDarkModeToggle, AppLocalePicker, AppLogo } from '/@/components/Application';
   import LoginForm from './LoginForm.vue';
   import ForgetPasswordForm from './ForgetPasswordForm.vue';
   import RegisterForm from './RegisterForm.vue';
   import MobileForm from './MobileForm.vue';
-  import QrCodeForm from './QrCodeForm.vue';
+  import EmailRegisterForm from './EmailRegisterForm.vue';
   import { useGlobSetting } from '/@/hooks/setting';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useDesign } from '/@/hooks/web/useDesign';

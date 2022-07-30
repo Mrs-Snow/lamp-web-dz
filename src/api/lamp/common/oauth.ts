@@ -1,6 +1,12 @@
 import type { DefUserInfoResultVO } from '/#/store';
 import { defHttp } from '/@/utils/http/axios';
-import { LoginParamVO, LoginResultVO, LogoutParams, RegisterVO } from './model/userModel';
+import {
+  LoginParamVO,
+  LoginResultVO,
+  LogoutParams,
+  RegisterByEmailVO,
+  RegisterByMobileVO,
+} from './model/userModel';
 import { MenuListResultModel, MenuParams, VisibleResourceVO } from './model/menuModel';
 import { ContentTypeEnum, RequestEnum } from '/@/enums/httpEnum';
 import { ServicePrefixEnum } from '/@/enums/commonEnum';
@@ -14,13 +20,22 @@ export const Api = {
     url: `${ServicePrefixEnum.OAUTH}/anyTenant/login`,
   },
   // 用户注册
-  Register: {
-    url: `${ServicePrefixEnum.OAUTH}/anyTenant/register`,
+  RegisterByMobile: {
+    url: `${ServicePrefixEnum.OAUTH}/anyTenant/registerByMobile`,
+    method: RequestEnum.POST,
+  },
+  RegisterByEmail: {
+    url: `${ServicePrefixEnum.OAUTH}/anyTenant/registerByEmail`,
     method: RequestEnum.POST,
   },
   // 发送短信验证码
   SendSmsCode: {
     url: `${ServicePrefixEnum.OAUTH}/anyTenant/sendSmsCode`,
+    method: RequestEnum.GET,
+  },
+  // 发送邮箱验证码
+  SendEmailCode: {
+    url: `${ServicePrefixEnum.OAUTH}/anyTenant/sendEmailCode`,
     method: RequestEnum.GET,
   },
   // 获取用户信息
@@ -73,10 +88,22 @@ export function loginApi(params: LoginParamVO, mode: ErrorMessageMode = 'modal')
   );
 }
 
-export function register(params: RegisterVO, mode: ErrorMessageMode = 'modal') {
+export function registerByMobile(params: RegisterByMobileVO, mode: ErrorMessageMode = 'modal') {
   return defHttp.request<string>(
     {
-      ...Api.Register,
+      ...Api.RegisterByMobile,
+      params,
+    },
+    {
+      errorMessageMode: mode,
+      withTenant: false,
+    },
+  );
+}
+export function registerByEmail(params: RegisterByEmailVO, mode: ErrorMessageMode = 'modal') {
+  return defHttp.request<string>(
+    {
+      ...Api.RegisterByEmail,
       params,
     },
     {
@@ -100,9 +127,23 @@ export function sendSmsCode(mobile: string, templateCode: string) {
     },
   );
 }
+export function sendEmailCode(email: string, templateCode: string) {
+  return defHttp.request<string>(
+    {
+      ...Api.SendEmailCode,
+      params: {
+        email,
+        templateCode,
+      },
+    },
+    {
+      withTenant: false,
+    },
+  );
+}
 
 const aatoken =
-  'Bearer eyJhbGciOiJIUzI1NiJ9.eyJib2R5Ijoie1widXNlckluZm9cIjpcIjE0MTMwMTA0MTgyMjQwMjk2OThcIixcInVzZXJOYW1lXCI6XCI1MjI3MjcxOTg3MDIwMjIxMTVcIn0iLCJleHAiOjE2NTg5NDAzMTJ9.FoVIEG6a0qW4RSJVxoAP24qTqOxeScqUFFIY8xaNYLk';
+  'Bearer eyJhbGciOiJIUzI1NiJ9.eyJib2R5Ijoie1widXNlckluZm9cIjpcIjE0MTQ4Mzg3MzM3OTAyNTMwNThcIixcInVzZXJOYW1lXCI6XCI1MjAyMDExOTgyMDUyNTQ0MjJcIn0iLCJleHAiOjE2NTkwMDU1ODZ9.hi8ZrzWVkhUmslT3jErgzxo4hpb0Dkrecll00n1ezrg';
 export function getCourseInfo(courseId: string) {
   return defHttp.request<string>(
     {

@@ -87,9 +87,7 @@
         </Button>
       </ACol>
       <ACol :md="8" :xs="24" class="!my-2 !md:my-0 xs:mx-0 md:mx-2">
-        <Button block @click="setLoginState(LoginStateEnum.QR_CODE)">
-          {{ t('sys.login.qrSignInFormTitle') }}
-        </Button>
+        <Button block @click="setLoginState(LoginStateEnum.REGISTER_EMAIL)"> 邮箱注册</Button>
       </ACol>
       <ACol :md="6" :xs="24">
         <Button block @click="setLoginState(LoginStateEnum.REGISTER)">

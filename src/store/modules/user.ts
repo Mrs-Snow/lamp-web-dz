@@ -5,23 +5,29 @@ import { store } from '/@/store';
 import { RoleEnum } from '/@/enums/roleEnum';
 import { PageEnum } from '/@/enums/pageEnum';
 import {
-  ROLES_KEY,
-  TOKEN_KEY,
-  REFRESH_TOKEN_KEY,
-  TENANT_ID_KEY,
-  USER_INFO_KEY,
-  EXPIRE_TIME_KEY,
   APPLICATION_ID_KEY,
+  EXPIRE_TIME_KEY,
+  REFRESH_TOKEN_KEY,
+  ROLES_KEY,
+  TENANT_ID_KEY,
+  TOKEN_KEY,
+  USER_INFO_KEY,
 } from '/@/enums/cacheEnum';
 import { getAuthCache, setAuthCache } from '/@/utils/auth';
-import type { LoginParamVO, LogoutParams, RegisterVO } from '/@/api/lamp/common/model/userModel';
+import type {
+  LoginParamVO,
+  LogoutParams,
+  RegisterByEmailVO,
+  RegisterByMobileVO,
+} from '/@/api/lamp/common/model/userModel';
 
 import {
-  loginApi,
-  register,
-  loadCaptcha,
   doLogout,
   getUserInfoById,
+  loadCaptcha,
+  loginApi,
+  registerByEmail,
+  registerByMobile,
   switchTenant,
 } from '/@/api/lamp/common/oauth';
 
@@ -257,9 +263,16 @@ export const useUserStore = defineStore({
     /**
      * @description: register
      */
-    async register(params: RegisterVO): Promise<string> {
+    async registerByMobile(params: RegisterByMobileVO): Promise<string> {
       try {
-        return await register(params);
+        return await registerByMobile(params);
+      } catch (error) {
+        return Promise.reject(error);
+      }
+    },
+    async registerByEmail(params: RegisterByEmailVO): Promise<string> {
+      try {
+        return await registerByEmail(params);
       } catch (error) {
         return Promise.reject(error);
       }

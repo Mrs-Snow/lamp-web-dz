@@ -15,10 +15,15 @@ export interface LoginParamVO {
 export interface RegisterVO {
   code: string;
   key: string;
-  mobile: string;
   password: string;
   confirmPassword: GrantType;
   nickName?: string;
+}
+export interface RegisterByMobileVO extends RegisterVO {
+  mobile: string;
+}
+export interface RegisterByEmailVO extends RegisterVO {
+  email: string;
 }
 
 /**

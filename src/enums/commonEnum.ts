@@ -143,4 +143,8 @@ export enum DictEnum {
 export enum MsgTemplateCodeEnum {
   // 注册短信
   REGISTER_SMS = 'REGISTER_SMS',
+  // 注册邮件验证码
+  REGISTER_EMAIL = 'REGISTER_EMAIL',
+  //手机登录短信
+  MOBILE_LOGIN = 'MOBILE_LOGIN',
 }

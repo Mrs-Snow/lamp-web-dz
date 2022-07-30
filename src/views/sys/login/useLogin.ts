@@ -11,6 +11,7 @@ export enum LoginStateEnum {
   RESET_PASSWORD,
   MOBILE,
   QR_CODE,
+  REGISTER_EMAIL,
 }
 
 const currentState = ref(LoginStateEnum.LOGIN);
