@@ -3,6 +3,7 @@
     <BasicTable @register="registerTable">
       <template #toolbar>
         <a-button
+          v-hasAnyPermission="[RoleEnum.TENANT_OPS_INTERFACES_LOG_LOGGING_DELETE]"
           color="error"
           preIcon="ant-design:delete-outlined"
           type="primary"
@@ -20,8 +21,8 @@
                 icon: 'ant-design:search-outlined',
                 onClick: handleView.bind(null, record),
               },
-
               {
+                auth: RoleEnum.TENANT_OPS_INTERFACES_LOG_LOGGING_DELETE,
                 tooltip: t('common.title.delete'),
                 icon: 'ant-design:delete-outlined',
                 color: 'error',
@@ -47,6 +48,7 @@
   import { BasicTable, TableAction, useTable } from '/@/components/Table';
   import { PageWrapper } from '/@/components/Page';
   import { useModal } from '/@/components/Modal';
+  import { RoleEnum } from '/@/enums/roleEnum';
   import { handleFetchParams } from '/@/utils/lamp/common';
   import { ActionEnum } from '/@/enums/commonEnum';
   import { page, remove } from '/@/api/basic/msg/extendInterfaceLogging';
@@ -164,6 +166,7 @@
 
       return {
         t,
+        RoleEnum,
         registerTable,
         registerModal,
         handleView,

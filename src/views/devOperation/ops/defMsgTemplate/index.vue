@@ -3,6 +3,7 @@
     <BasicTable @register="registerTable">
       <template #toolbar>
         <a-button
+          v-hasAnyPermission="[RoleEnum.TENANT_OPS_TEMPLATE_DELETE]"
           type="primary"
           color="error"
           preIcon="ant-design:delete-outlined"
@@ -10,7 +11,12 @@
         >
           {{ t('common.title.delete') }}
         </a-button>
-        <a-button type="primary" preIcon="ant-design:plus-outlined" @click="handleAdd">
+        <a-button
+          v-hasAnyPermission="[RoleEnum.TENANT_OPS_TEMPLATE_ADD]"
+          type="primary"
+          preIcon="ant-design:plus-outlined"
+          @click="handleAdd"
+        >
           {{ t('common.title.add') }}
         </a-button>
       </template>
@@ -19,21 +25,25 @@
           <TableAction
             :actions="[
               {
+                auth: RoleEnum.TENANT_OPS_TEMPLATE_VIEW,
                 tooltip: t('common.title.view'),
                 icon: 'ant-design:search-outlined',
                 onClick: handleView.bind(null, record),
               },
               {
+                auth: RoleEnum.TENANT_OPS_TEMPLATE_EDIT,
                 tooltip: t('common.title.edit'),
                 icon: 'ant-design:edit-outlined',
                 onClick: handleEdit.bind(null, record),
               },
               {
+                auth: RoleEnum.TENANT_OPS_TEMPLATE_ADD,
                 tooltip: t('common.title.copy'),
                 icon: 'ant-design:copy-outlined',
                 onClick: handleCopy.bind(null, record),
               },
               {
+                auth: RoleEnum.TENANT_OPS_TEMPLATE_DELETE,
                 tooltip: t('common.title.delete'),
                 icon: 'ant-design:delete-outlined',
                 color: 'error',
@@ -55,9 +65,10 @@
   import { defineComponent } from 'vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { BasicTable, useTable, TableAction } from '/@/components/Table';
+  import { BasicTable, TableAction, useTable } from '/@/components/Table';
   import { PageWrapper } from '/@/components/Page';
   import { useModal } from '/@/components/Modal';
+  import { RoleEnum } from '/@/enums/roleEnum';
   import { handleFetchParams } from '/@/utils/lamp/common';
   import { ActionEnum } from '/@/enums/commonEnum';
   import { page, remove } from '/@/api/devOperation/ops/defMsgTemplate';
@@ -184,6 +195,7 @@
 
       return {
         t,
+        RoleEnum,
         registerTable,
         registerModal,
         handleView,

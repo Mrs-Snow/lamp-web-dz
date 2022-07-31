@@ -3,6 +3,7 @@
     <BasicTable @register="registerTable">
       <template #toolbar>
         <a-button
+          v-hasAnyPermission="[RoleEnum.BASIC_MSG_MSG_DELETE]"
           color="error"
           preIcon="ant-design:delete-outlined"
           type="primary"
@@ -10,7 +11,12 @@
         >
           {{ t('common.title.delete') }}
         </a-button>
-        <a-button preIcon="ant-design:plus-outlined" type="primary" @click="handleAdd">
+        <a-button
+          v-hasAnyPermission="[RoleEnum.BASIC_MSG_MSG_ADD]"
+          preIcon="ant-design:plus-outlined"
+          type="primary"
+          @click="handleAdd"
+        >
           发布
         </a-button>
       </template>
@@ -19,11 +25,13 @@
           <TableAction
             :actions="[
               {
+                auth: RoleEnum.BASIC_MSG_MSG_VIEW,
                 tooltip: t('common.title.view'),
                 icon: 'ant-design:search-outlined',
                 onClick: handleView.bind(null, record),
               },
               {
+                auth: RoleEnum.BASIC_MSG_MSG_EDIT,
                 tooltip: t('common.title.edit'),
                 icon: 'ant-design:edit-outlined',
                 onClick: handleEdit.bind(null, record),
@@ -32,11 +40,13 @@
                 },
               },
               {
+                auth: RoleEnum.BASIC_MSG_MSG_ADD,
                 tooltip: t('common.title.copy'),
                 icon: 'ant-design:copy-outlined',
                 onClick: handleCopy.bind(null, record),
               },
               {
+                auth: RoleEnum.BASIC_MSG_MSG_DELETE,
                 tooltip: t('common.title.delete'),
                 icon: 'ant-design:delete-outlined',
                 color: 'error',

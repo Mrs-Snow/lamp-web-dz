@@ -86,6 +86,22 @@ export enum RoleEnum {
   TENANT_DEVELOPER_TOOLS_GENERATOR_EDIT_EDIT = 'tenant:developer:tools:generator:edit:edit',
   TENANT_DEVELOPER_TOOLS_GENERATOR_EDIT_SYNC = 'tenant:developer:tools:generator:edit:sync',
 
+  // 运维平台-接口管理
+  TENANT_OPS_INTERFACES_ADD = 'tenant:ops:interfaces:add',
+  TENANT_OPS_INTERFACES_EDIT = 'tenant:ops:interfaces:edit',
+  TENANT_OPS_INTERFACES_DELETE = 'tenant:ops:interfaces:delete',
+  TENANT_OPS_INTERFACES_VIEW = 'tenant:ops:interfaces:view',
+  TENANT_OPS_INTERFACES_PROPERTY = 'tenant:ops:interfaces:property',
+  // 运维平台-模板管理
+  TENANT_OPS_TEMPLATE_ADD = 'tenant:ops:template:add',
+  TENANT_OPS_TEMPLATE_EDIT = 'tenant:ops:template:edit',
+  TENANT_OPS_TEMPLATE_DELETE = 'tenant:ops:template:delete',
+  TENANT_OPS_TEMPLATE_VIEW = 'tenant:ops:template:view',
+  // 运维平台-接口日志
+  TENANT_OPS_INTERFACES_LOG_DELETE = 'tenant:ops:interfaces:log:delete',
+  TENANT_OPS_INTERFACES_LOG_LOGGING = 'tenant:ops:interfaces:log:logging',
+  TENANT_OPS_INTERFACES_LOG_LOGGING_DELETE = 'tenant:ops:interfaces:log:logging:delete',
+
   // 附件管理
   TENANT_SYSTEM_FILE_UPLOAD = 'tenant:system:file:upload',
   TENANT_SYSTEM_FILE_DEBUG_UPLOAD = 'tenant:system:file:debug:upload',
@@ -93,14 +109,21 @@ export enum RoleEnum {
   TENANT_SYSTEM_FILE_DELETE = 'tenant:system:file:delete',
 
   // 基础平台
-  // 消息管理
-  MSG_MSG_ADD = 'basic:msg:msg:add',
-  MSG_MSG_EDIT = 'basic:msg:msg:edit',
-  MSG_MSG_DELETE = 'basic:msg:msg:delete',
-  MSG_MSG_VIEW = 'basic:msg:msg:view',
-  // 我的消息
-  MSG_MY_MSG_DELETE = 'basic:msg:myMsg:delete',
-  MSG_MY_MSG_VIEW = 'basic:msg:myMsg:edit',
+  // 消息中心-消息管理
+  BASIC_MSG_MSG_ADD = 'basic:msg:msg:add',
+  BASIC_MSG_MSG_EDIT = 'basic:msg:msg:edit',
+  BASIC_MSG_MSG_DELETE = 'basic:msg:msg:delete',
+  BASIC_MSG_MSG_VIEW = 'basic:msg:msg:view',
+
+  // 消息中心-个性模板
+  BASIC_MSG_TEMPLATE_IMPORT = 'basic:msg:template:import',
+  BASIC_MSG_TEMPLATE_EDIT = 'basic:msg:template:edit',
+  BASIC_MSG_TEMPLATE_DELETE = 'basic:msg:template:delete',
+  BASIC_MSG_TEMPLATE_VIEW = 'basic:msg:template:view',
+
+  // 消息中心-我的消息
+  BASIC_MSG_NOTICE_DELETE = 'basic:msg:myMsg:delete',
+  BASIC_MSG_NOTICE_VIEW = 'basic:msg:myMsg:edit',
 
   // 员工维护
   EMPLOYEE_ADD = 'basic:user:employee:add',

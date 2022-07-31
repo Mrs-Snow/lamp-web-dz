@@ -3,6 +3,7 @@
     <BasicTable @register="registerTable">
       <template #toolbar>
         <a-button
+          v-hasAnyPermission="[RoleEnum.TENANT_OPS_INTERFACES_LOG_DELETE]"
           color="error"
           preIcon="ant-design:delete-outlined"
           type="primary"
@@ -16,11 +17,13 @@
           <TableAction
             :actions="[
               {
+                auth: RoleEnum.TENANT_OPS_INTERFACES_LOG_LOGGING,
                 tooltip: '执行记录',
                 icon: 'ant-design:search-outlined',
                 onClick: handleLogging.bind(null, record),
               },
               {
+                auth: RoleEnum.TENANT_OPS_INTERFACES_LOG_DELETE,
                 tooltip: t('common.title.delete'),
                 icon: 'ant-design:delete-outlined',
                 color: 'error',
@@ -44,6 +47,7 @@
   import { useMessage } from '/@/hooks/web/useMessage';
   import { BasicTable, TableAction, useTable } from '/@/components/Table';
   import { PageWrapper } from '/@/components/Page';
+  import { RoleEnum } from '/@/enums/roleEnum';
   import { handleFetchParams } from '/@/utils/lamp/common';
   import { page, remove } from '/@/api/basic/msg/extendInterfaceLog';
   import { columns, searchFormSchema } from './defInterfaceLog.data';
@@ -147,6 +151,7 @@
 
       return {
         t,
+        RoleEnum,
         registerTable,
         handleDelete,
         handleBatchDelete,

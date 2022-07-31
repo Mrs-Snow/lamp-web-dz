@@ -3,6 +3,7 @@
     <BasicTable @register="registerTable">
       <template #toolbar>
         <a-button
+          v-hasAnyPermission="[RoleEnum.BASIC_MSG_NOTICE_DELETE]"
           color="error"
           preIcon="ant-design:delete-outlined"
           type="primary"
@@ -19,11 +20,13 @@
           <TableAction
             :actions="[
               {
+                auth: RoleEnum.BASIC_MSG_NOTICE_VIEW,
                 tooltip: t('common.title.view'),
                 icon: 'ant-design:search-outlined',
                 onClick: handleView.bind(null, record),
               },
               {
+                auth: RoleEnum.BASIC_MSG_NOTICE_DELETE,
                 tooltip: t('common.title.delete'),
                 icon: 'ant-design:delete-outlined',
                 color: 'error',
@@ -47,6 +50,7 @@
   import { useMessage } from '/@/hooks/web/useMessage';
   import { BasicTable, TableAction, useTable } from '/@/components/Table';
   import { PageWrapper } from '/@/components/Page';
+  import { RoleEnum } from '/@/enums/roleEnum';
   import { handleFetchParams } from '/@/utils/lamp/common';
   import { ActionEnum } from '/@/enums/commonEnum';
   import { mark, page, remove } from '/@/api/basic/msg/extendNotice';
@@ -181,6 +185,7 @@
 
       return {
         t,
+        RoleEnum,
         registerTable,
         handleView,
         handleRead,
