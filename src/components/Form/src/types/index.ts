@@ -115,6 +115,7 @@ export type ComponentType =
   | 'Slider'
   | 'Rate'
   | 'Divider'
+  | 'ApiTransfer'
   | 'Transfer'
   | 'CropperAvatar'
   | 'BasicTitle';

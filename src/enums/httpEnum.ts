@@ -3,7 +3,7 @@
  */
 export enum ResultEnum {
   SUCCESS = 0,
-  ERROR = 1,
+  ERROR = -1,
   TIMEOUT = 401,
   // 登录 未授权。 客户端在访问请求的资源之前，对自己进行认证。，可以简单的理解为没有登录此站。
   UNAUTHORIZED = 401,

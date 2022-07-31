@@ -253,9 +253,9 @@
           footer: unref(getFooterProps),
           ...unref(getExpandOption),
         };
-        if (slots.expandedRowRender) {
-          propsData = omit(propsData, 'scroll');
-        }
+        // if (slots.expandedRowRender) {
+        //   propsData = omit(propsData, 'scroll');
+        // }
 
         propsData = omit(propsData, ['class', 'onChange']);
         return propsData;
@@ -382,9 +382,9 @@
       }
     }
 
-    //.ant-tag {
-    //  margin-right: 0;
-    //}
+    .ant-tag {
+      margin-right: 0;
+    }
 
     .ant-table-wrapper {
       padding: 6px;
@@ -404,11 +404,6 @@
     .ant-table {
       width: 100%;
       overflow-x: hidden;
-
-      // 有hug
-      //.ant-table-body {
-      //  overflow: auto !important;
-      //}
 
       &-title {
         display: flex;

@@ -1,8 +1,9 @@
 // Interface data format used to return a unified format
+import { ResultEnum } from '/@/enums/httpEnum';
 
 export function resultSuccess<T = Recordable>(data: T, { msg = 'ok' } = {}) {
   return {
-    code: 0,
+    code: ResultEnum.SUCCESS,
     data,
     msg,
     type: 'success',
@@ -28,7 +29,7 @@ export function resultPageSuccess<T = any>(
   };
 }
 
-export function resultError(msg = 'Request failed', { code = -1, data = null } = {}) {
+export function resultError(msg = 'Request failed', { code = ResultEnum.ERROR, data = null } = {}) {
   return {
     code,
     data,
@@ -39,11 +40,9 @@ export function resultError(msg = 'Request failed', { code = -1, data = null } =
 
 export function pagination<T = any>(pageNo: number, pageSize: number, array: T[]): T[] {
   const offset = (pageNo - 1) * Number(pageSize);
-  const ret =
-    offset + Number(pageSize) >= array.length
-      ? array.slice(offset, array.length)
-      : array.slice(offset, offset + Number(pageSize));
-  return ret;
+  return offset + Number(pageSize) >= array.length
+    ? array.slice(offset, array.length)
+    : array.slice(offset, offset + Number(pageSize));
 }
 
 export interface requestParams {

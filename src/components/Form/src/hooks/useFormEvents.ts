@@ -242,12 +242,14 @@ export function useFormEvents({
     }
 
     const obj: Recordable = {};
+    const currentFieldsValue = getFieldsValue();
     schemas.forEach((item) => {
       if (
         !simpleComponents.includes(item.component) &&
         Reflect.has(item, 'field') &&
         item.field &&
-        !isNullOrUnDef(item.defaultValue)
+        !isNullOrUnDef(item.defaultValue) &&
+        !(item.field in currentFieldsValue)
       ) {
         obj[item.field] = item.defaultValue;
       }
