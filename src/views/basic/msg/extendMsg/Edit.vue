@@ -32,7 +32,7 @@
   import { useLoading } from '/@/components/Loading';
   import { RouteEnum } from '/@/enums/biz/tenant';
   import { ActionEnum, VALIDATE_API } from '/@/enums/commonEnum';
-  import { Api, get, send } from '/@/api/basic/msg/extendMsg';
+  import { Api, get, publish } from '/@/api/basic/msg/extendMsg';
   import { getValidateRules } from '/@/api/lamp/common/formValidateService';
   import { customFormSchemaRules, editFormSchema } from './extendMsg.data';
   import { NoticeRemindModeEnum } from '/@/enums/biz/base';
@@ -93,7 +93,7 @@
           params.draft = draft;
 
           openFullLoading();
-          await send(params);
+          await publish(params);
           createMessage.success(t(`common.tips.${type.value}Success`));
           await closeCurrent();
           replace({ name: RouteEnum.BASIC_MSG });

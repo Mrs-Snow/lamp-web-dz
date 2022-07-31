@@ -32,8 +32,8 @@ export const Api = {
     url: `${ServicePrefix}/${MODULAR}`,
     method: RequestEnum.POST,
   } as AxiosRequestConfig,
-  Send: {
-    url: `${ServicePrefix}/${MODULAR}/send`,
+  Publish: {
+    url: `${ServicePrefix}/${MODULAR}/publish`,
     method: RequestEnum.POST,
   } as AxiosRequestConfig,
   Update: {
@@ -78,9 +78,9 @@ export const save = (params: ExtendMsgSaveVO) =>
     ...Api.Save,
     params,
   });
-export const send = (params: ExtendMsgSaveVO) =>
+export const publish = (params: ExtendMsgSaveVO) =>
   defHttp.request<boolean>({
-    ...Api.Send,
+    ...Api.Publish,
     params,
   });
 
