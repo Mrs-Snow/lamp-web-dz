@@ -87,12 +87,10 @@
         </Button>
       </ACol>
       <ACol :md="8" :xs="24" class="!my-2 !md:my-0 xs:mx-0 md:mx-2">
-        <Button block @click="setLoginState(LoginStateEnum.REGISTER_EMAIL)"> 邮箱注册</Button>
+        <Button block @click="setLoginState(LoginStateEnum.REGISTER_EMAIL)">邮箱注册</Button>
       </ACol>
       <ACol :md="6" :xs="24">
-        <Button block @click="setLoginState(LoginStateEnum.REGISTER)">
-          {{ t('sys.login.registerButton') }}
-        </Button>
+        <Button block @click="setLoginState(LoginStateEnum.REGISTER)">手机注册</Button>
       </ACol>
     </ARow>
 
