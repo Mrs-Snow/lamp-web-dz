@@ -2,7 +2,10 @@ import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { query } from '/@/api/devOperation/tenant/tenant';
 import { TenantStatusEnum } from '/@/enums/biz/tenant';
+import { MultiTenantTypeEnum } from '/@/enums/biz/tenant';
+import { useGlobSetting } from '/@/hooks/setting';
 
+const globSetting = useGlobSetting();
 const { t } = useI18n();
 // 列表页字段
 export const columns = (): BasicColumn[] => {
@@ -49,6 +52,7 @@ export const searchFormSchema = (tenantChange): FormSchema[] => {
         allowClear: false,
         onChange: tenantChange,
       },
+      ifShow: globSetting.multiTenantType !== MultiTenantTypeEnum.NONE,
       defaultValue: '1',
     },
     {
