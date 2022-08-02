@@ -58,7 +58,7 @@ export const dynamicInfoItems: DynamicInfoItem[] = [
     avatar: 'dynamic-avatar-1|svg',
     name: '4.9.0 已发布：',
     date: '2022-08-01',
-    desc: `<a href="https://www.oschina.net/news/203648/lamp-cloud-4-9-0-beta0-released">《灯灯》4.9.0 正式版发布，消息中心全新上线，支持解析Groovy脚本、动态替换Freemarker格式的消息模板、提供消息发送接口</a>`,
+    desc: `<a href="https://www.oschina.net/news/204848">《灯灯》4.9.0 正式版发布，消息中心全新上线，支持解析Groovy脚本、动态替换Freemarker格式的消息模板、提供消息发送接口</a>`,
   },
   {
     avatar: 'dynamic-avatar-1|svg',
