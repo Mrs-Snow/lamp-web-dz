@@ -142,53 +142,6 @@ export function sendEmailCode(email: string, templateCode: string) {
   );
 }
 
-const aatoken =
-  'Bearer eyJhbGciOiJIUzI1NiJ9.eyJib2R5Ijoie1widXNlckluZm9cIjpcIjE0MTQ4Mzg3MzM3OTAyNTMwNThcIixcInVzZXJOYW1lXCI6XCI1MjAyMDExOTgyMDUyNTQ0MjJcIn0iLCJleHAiOjE2NTkwMDU1ODZ9.hi8ZrzWVkhUmslT3jErgzxo4hpb0Dkrecll00n1ezrg';
-export function getCourseInfo(courseId: string) {
-  return defHttp.request<string>(
-    {
-      url: `/gzjxjy/front/api/course/getCourseInfo`,
-      method: RequestEnum.GET,
-      params: {
-        courseId,
-      },
-      headers: {
-        Authorization: aatoken,
-        // Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJib2R5Ijoie1widXNlckluZm9cIjpcIjE1NTIxMzUzNjU3MzAwMzc3NjJcIixcInVzZXJOYW1lXCI6XCI1MjIxMjExOTkyMDQxNjMwMTVcIn0iLCJleHAiOjE2NTg5MzMxNzN9.Fwf_3vqIQlq01ev5Lw9r4HFfjGGHzClnVEYMlJHGqlw'
-      },
-    },
-    {
-      withTenant: false,
-      apiUrl: '',
-      isReturnNativeResponse: true,
-    },
-  );
-}
-export function saveWork(courseId: string, worksId: string, totalHour: number, studyTime: number) {
-  return defHttp.request<string>(
-    {
-      url: `/gzjxjy/front/api/study/save`,
-      method: RequestEnum.POST,
-      params: {
-        courseId,
-        worksId,
-        totalHour,
-        studyTime,
-      },
-      headers: {
-        'Content-Type': ContentTypeEnum.FORM_URLENCODED,
-        // Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJib2R5Ijoie1widXNlckluZm9cIjpcIjE1NTIxMzUzNjU3MzAwMzc3NjJcIixcInVzZXJOYW1lXCI6XCI1MjIxMjExOTkyMDQxNjMwMTVcIn0iLCJleHAiOjE2NTg5MzMxNzN9.Fwf_3vqIQlq01ev5Lw9r4HFfjGGHzClnVEYMlJHGqlw'
-        Authorization: aatoken,
-      },
-    },
-    {
-      withTenant: false,
-      apiUrl: '',
-      isReturnNativeResponse: true,
-    },
-  );
-}
-
 /**
  * @description: getUserInfoById
  */
