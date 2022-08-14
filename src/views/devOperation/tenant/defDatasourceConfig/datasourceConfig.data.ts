@@ -114,6 +114,11 @@ export const editFormSchema: FormSchema[] = [
           key: 'mysql5',
         },
         {
+          label: 'oracle',
+          value: 'oracle.jdbc.driver.OracleDriver',
+          key: 'oracle',
+        },
+        {
           label: 'sqlserver',
           value: 'com.microsoft.sqlserver.jdbc.SQLServerDriver',
           key: 'sqlserver',
