@@ -1,11 +1,11 @@
 <template>
   <div :class="prefixCls" class="relative w-full h-full px-4">
     <div class="flex items-center absolute right-4 top-4">
-      <AppDarkModeToggle class="enter-x mr-2" v-if="!sessionTimeout" />
+      <AppDarkModeToggle v-if="!sessionTimeout" class="enter-x mr-2" />
       <AppLocalePicker
-        class="text-white enter-x xl:text-gray-600"
-        :show-text="false"
         v-if="!sessionTimeout && showLocale"
+        :show-text="false"
+        class="text-white enter-x xl:text-gray-600"
       />
     </div>
 
@@ -16,12 +16,12 @@
     <div class="container relative h-full py-2 mx-auto sm:px-10">
       <div class="flex h-full">
         <div class="hidden min-h-full pl-4 mr-4 xl:flex xl:flex-col xl:w-6/12">
-          <AppLogo class="-enter-x" :applicationTitle="false" />
+          <AppLogo :applicationTitle="false" class="-enter-x" />
           <div class="my-auto">
             <img
               :alt="title"
-              src="../../../assets/svg/login-box-bg.svg"
               class="w-1/2 -mt-16 -enter-x"
+              src="../../../assets/svg/login-box-bg.svg"
             />
             <div class="mt-10 font-medium text-white -enter-x">
               <span class="inline-block mt-4 text-3xl"> {{ t('sys.login.signInTitle') }}</span>
@@ -49,11 +49,29 @@
           </div>
         </div>
       </div>
-      <div class="copyright">
+      <div class="copyright" style="bottom: 0; position: absolute; margin: 0 auto; width: 100%">
         <div style="padding: 20px 0">
-          <a target="_blank" href="https://beian.miit.gov.cn"
-            ><img src="../../../assets/images/gongan.png" /><span>黔ICP备2021004749号</span></a
+          <a href="https://beian.miit.gov.cn" target="_blank">
+            <img src="../../../assets/images/gongan.png" /><span>黔ICP备2021004749号</span>
+          </a>
+          |
+          <a
+            href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=52011502002216"
+            style="display: inline-block; text-decoration: none; height: 20px; line-height: 20px"
+            target="_blank"
           >
+            <img src="../../../assets/images/gongan.png" style="float: left" />
+            <p
+              style="
+                float: left;
+                height: 20px;
+                line-height: 20px;
+                margin: 0px 0px 0px 5px;
+                color: #939393;
+              "
+              >贵公网安备 52011502002216号</p
+            >
+          </a>
         </div>
       </div>
     </div>
