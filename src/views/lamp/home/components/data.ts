@@ -57,8 +57,14 @@ export const dynamicInfoItems: DynamicInfoItem[] = [
   {
     avatar: 'dynamic-avatar-1|svg',
     name: '4.10.0 已发布：',
-    date: '2022-08-15',
-    desc: `<a href="https://www.oschina.net/news/204848">《灯灯》4.10.0发布，适配Oracle、SQL Server</a>`,
+    date: '2022-08-16',
+    desc: `<a href="https://www.oschina.net/news/206683">《灯灯》4.10.0发布，适配Oracle、SQL Server</a>`,
+  },
+  {
+    avatar: 'dynamic-avatar-1|svg',
+    name: '4.10.0-beta.0 已发布：',
+    date: '2022-08-09',
+    desc: `<a href="https://www.oschina.net/news/205869">《灯灯》4.10.0-beta.0发布，适配SQL Server</a>`,
   },
   {
     avatar: 'dynamic-avatar-1|svg',
