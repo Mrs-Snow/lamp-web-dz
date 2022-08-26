@@ -56,6 +56,12 @@ export const navItems: NavItem[] = [
 export const dynamicInfoItems: DynamicInfoItem[] = [
   {
     avatar: 'dynamic-avatar-1|svg',
+    name: '4.11.0 即将发布：',
+    date: '2022-09-??',
+    desc: `<a href="https://www.oschina.net/news/206683">《灯灯》4.11.0即将发布，DATASOURCE_COLUMN模式中的COLUMN部分</a>`,
+  },
+  {
+    avatar: 'dynamic-avatar-1|svg',
     name: '4.10.0 已发布：',
     date: '2022-08-16',
     desc: `<a href="https://www.oschina.net/news/206683">《灯灯》4.10.0发布，适配Oracle、SQL Server</a>`,
