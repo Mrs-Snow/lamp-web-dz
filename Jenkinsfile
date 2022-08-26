@@ -63,6 +63,7 @@ pipeline {
                         sh "pnpm install --registry=https://registry.npmmirror.com"
                     }
                 }
+                sh "pnpm run fix-memory-limit"
                 sh "pnpm build:${PROFILES}:${MODE}"
             }
         }
