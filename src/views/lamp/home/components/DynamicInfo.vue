@@ -13,7 +13,7 @@
             <!-- eslint-disable-next-line -->
             <template #title> {{ item.name }} <span v-html="item.desc"> </span></template>
             <template #avatar>
-              <Icon :icon="item.avatar" :size="30" />
+              <Progress type="circle" :percent="item.percent" :width="40" />
             </template>
           </ListItemMeta>
         </ListItem>
@@ -23,9 +23,8 @@
 </template>
 <script lang="ts" setup>
   import { computed } from 'vue';
-  import { Card, List } from 'ant-design-vue';
+  import { Card, List, Progress } from 'ant-design-vue';
   import { dynamicInfoItems } from './data';
-  import { Icon } from '/@/components/Icon';
   import { useGlobSetting } from '/@/hooks/setting';
 
   const ListItem = List.Item;
