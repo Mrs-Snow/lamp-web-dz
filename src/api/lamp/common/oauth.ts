@@ -4,6 +4,7 @@ import {
   LoginParamVO,
   LoginResultVO,
   LogoutParams,
+  OrgResultVO,
   RegisterByEmailVO,
   RegisterByMobileVO,
 } from './model/userModel';
@@ -13,6 +14,7 @@ import { ServicePrefixEnum } from '/@/enums/commonEnum';
 
 import { ErrorMessageMode } from '/#/axios';
 import { AxiosRequestConfig } from 'axios';
+import { BaseOrgResultVO } from '/@/api/basic/user/model/baseOrgModel';
 
 export const Api = {
   // 登录
@@ -59,13 +61,22 @@ export const Api = {
     url: '/oauth/anyone/visible/resource',
   },
   // 切换当前企业
-  SwitchTenant: {
-    url: `${ServicePrefixEnum.OAUTH}/anyone/switchTenant`,
+  SwitchTenantAndOrg: {
+    url: `${ServicePrefixEnum.OAUTH}/anyone/switchTenantAndOrg`,
   },
   // 设置默认企业
   UpdateDefaultTenant: {
     url: `${ServicePrefixEnum.BASE}/anyone/updateDefaultTenant`,
   },
+  // 查询单位和部门
+  FindCompanyDept: {
+    url: `${ServicePrefixEnum.OAUTH}/anyone/findCompanyDept`,
+    method: 'GET',
+  } as AxiosRequestConfig,
+  FindDeptByCompany: {
+    url: `${ServicePrefixEnum.OAUTH}/anyone/findDeptByCompany`,
+    method: 'GET',
+  } as AxiosRequestConfig,
   // 检测员工是否拥有指定应用的权限
   CheckEmployeeHaveApplication: {
     url: `${ServicePrefixEnum.OAUTH}/anyone/checkEmployeeHaveApplication`,
@@ -100,6 +111,7 @@ export function registerByMobile(params: RegisterByMobileVO, mode: ErrorMessageM
     },
   );
 }
+
 export function registerByEmail(params: RegisterByEmailVO, mode: ErrorMessageMode = 'modal') {
   return defHttp.request<string>(
     {
@@ -127,6 +139,7 @@ export function sendSmsCode(mobile: string, templateCode: string) {
     },
   );
 }
+
 export function sendEmailCode(email: string, templateCode: string) {
   return defHttp.request<string>(
     {
@@ -179,10 +192,13 @@ export function doLogout(params: LogoutParams) {
   });
 }
 
-export function switchTenant(tenantId: string) {
-  return defHttp.get<LoginResultVO>({
-    ...Api.SwitchTenant,
-    params: { tenantId },
+export function switchTenantAndOrg(tenantId: string, companyId: string, deptId: string) {
+  return defHttp.put<LoginResultVO>({
+    ...Api.SwitchTenantAndOrg,
+    params: { tenantId, companyId, deptId },
+    headers: {
+      'Content-Type': ContentTypeEnum.FORM_URLENCODED,
+    },
   });
 }
 
@@ -193,6 +209,20 @@ export function updateDefaultTenant(tenantId: string) {
     headers: {
       'Content-Type': ContentTypeEnum.FORM_URLENCODED,
     },
+  });
+}
+
+export function findCompanyDept(tenantId: string) {
+  return defHttp.request<OrgResultVO>({
+    ...Api.FindCompanyDept,
+    params: { tenantId },
+  });
+}
+
+export function findDeptByCompany(tenantId: string, companyId: string) {
+  return defHttp.request<BaseOrgResultVO[]>({
+    ...Api.FindDeptByCompany,
+    params: { tenantId, companyId },
   });
 }
 

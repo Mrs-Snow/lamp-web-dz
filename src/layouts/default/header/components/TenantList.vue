@@ -117,7 +117,7 @@
       }
 
       async function switchTenant(tenantId: string) {
-        const userInfo = await userStore.switchTenant(tenantId);
+        const userInfo = await userStore.switchTenantAndOrg(tenantId, '', '');
         if (userInfo) {
           createMessage.success('切换成功');
         }

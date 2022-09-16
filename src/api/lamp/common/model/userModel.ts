@@ -1,3 +1,5 @@
+import { BaseOrgResultVO } from '/@/api/basic/user/model/baseOrgModel';
+
 export type GrantType = 'CAPTCHA' | 'PASSWORD' | 'MOBILE' | 'REFRESH_TOKEN';
 
 /**
@@ -24,6 +26,17 @@ export interface RegisterByMobileVO extends RegisterVO {
 }
 export interface RegisterByEmailVO extends RegisterVO {
   email: string;
+}
+
+export interface OrgResultVO {
+  // 当前租户下，所属单位
+  companyList: BaseOrgResultVO[];
+  // 当前租户下和单位下，所属部门
+  deptList: BaseOrgResultVO[];
+  // 当前单位ID
+  currentCompanyId: string;
+  // 当前部门ID
+  currentDeptId: string;
 }
 
 /**

@@ -28,7 +28,7 @@ import {
   loginApi,
   registerByEmail,
   registerByMobile,
-  switchTenant,
+  switchTenantAndOrg,
 } from '/@/api/lamp/common/oauth';
 
 import { useI18n } from '/@/hooks/web/useI18n';
@@ -151,9 +151,9 @@ export const useUserStore = defineStore({
       this.applicationId = '';
     },
 
-    async switchTenant(switchTenantId: string) {
+    async switchTenantAndOrg(switchTenantId: string, companyId: string, deptId: string) {
       try {
-        const data = await switchTenant(switchTenantId);
+        const data = await switchTenantAndOrg(switchTenantId, companyId, deptId);
         const { token, tenantId, refreshToken, expiration, applicationId } = data;
         // save token
         this.setToken(token);

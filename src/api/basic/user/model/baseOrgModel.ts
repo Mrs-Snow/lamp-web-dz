@@ -46,7 +46,7 @@ export interface BaseOrgResultVO {
   treePath?: string;
   state?: boolean;
   remarks?: string;
-  id?: string;
+  id: string;
   parentId?: string;
   sortValue?: number;
   createdTime?: string;

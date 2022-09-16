@@ -18,12 +18,6 @@
       />
       <!-- 面包屑 -->
       <LayoutBreadcrumb v-if="getShowContent && getShowBread" :theme="getHeaderTheme" />
-
-      <!-- 企业列表, NONE模式不显示 -->
-      <TenantList
-        v-if="globSetting.multiTenantType !== MultiTenantTypeEnum.NONE"
-        :theme="getHeaderTheme"
-      />
     </div>
     <!-- left end -->
 
@@ -49,6 +43,11 @@
           </p>
         </div>
       </div>
+      <TenantCompanyList
+        v-if="globSetting.multiTenantType !== MultiTenantTypeEnum.NONE"
+        :class="`${prefixCls}-action__item tenant-item`"
+      />
+
       <AppSearch :class="`${prefixCls}-action__item `" v-if="getShowSearch" />
 
       <ErrorAction v-if="getUseErrorHandle" :class="`${prefixCls}-action__item error-action`" />
@@ -95,10 +94,10 @@
   import {
     UserDropDown,
     LayoutBreadcrumb,
-    TenantList,
     FullScreen,
     Notify,
     ErrorAction,
+    TenantCompanyList,
   } from './components';
   import { useAppInject } from '/@/hooks/web/useAppInject';
   import { useDesign } from '/@/hooks/web/useDesign';
@@ -113,7 +112,6 @@
       AppLogo,
       LayoutTrigger,
       LayoutBreadcrumb,
-      TenantList,
       LayoutMenu,
       UserDropDown,
       AppLocalePicker,
@@ -121,6 +119,7 @@
       Notify,
       AppSearch,
       ErrorAction,
+      TenantCompanyList,
       SettingDrawer: createAsyncComponent(() => import('/@/layouts/default/setting/index.vue'), {
         loading: true,
       }),
