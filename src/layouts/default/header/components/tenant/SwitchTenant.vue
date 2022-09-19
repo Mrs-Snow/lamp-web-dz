@@ -5,23 +5,29 @@
     :min-height="300"
     title="切换企业和组织"
     v-bind="$attrs"
+    okText="切换"
     width="40%"
     @ok="handleSubmit"
     @register="registerModal"
   >
     <div class="md:flex enter-y">
       <div class="md:w-1/2">
-        <Card :bodyStyle="{ padding: 0 }" size="small" title="租户">
+        <Card :bodyStyle="{ padding: 0 }" size="small" title="企业">
           <RadioGroup v-model:value="formData.tenant" style="width: 100%" @change="changeTenant">
             <div class="pl-2">
               <List :data-source="getTenantList">
                 <template #renderItem="{ item }">
                   <ListItem style="cursor: pointer">
-                    <Radio :value="item.id">
+                    <Radio :value="item.id" :disabled="disabledItem(item)">
                       {{ getTenantName(item) }}
                     </Radio>
                     <template #actions>
-                      <a key="more" href="javascript:void(0)" @click="setDefaults(item, $event)">
+                      <a
+                        key="more"
+                        href="javascript:void(0)"
+                        v-if="!item.isDefault"
+                        @click="setDefaults(item, $event)"
+                      >
                         设为默认
                       </a>
                     </template>
@@ -66,11 +72,31 @@
         </Form>
       </div>
     </div>
+    <Alert message="注意事项">
+      <template #description>
+        <p>
+          1.【用户】：即账号，任何人在本平台都有一个唯一的用户数据，可理解为账号，通过手机号、身份证、登录账号等唯一信息来确定唯一性
+        </p>
+        <p>
+          2.【员工】：用户属于某个租户，他就是这个租户的员工，一个用户可以属于多个租户，用户和员工是一对多关系。
+          一个用户属于多个租户时，在用户表有1条数据，在员工表有多条数据。
+        </p>
+        <p>
+          3.
+          【企业】：即租户；1个用户可以属于多个企业，当用户属于多个企业，登录系统时，会进入默认企业。
+        </p>
+        <p>
+          4.
+          【单位】："员工"在某个"企业"下可以属于多个单位或部门；若给员工分配组织机构信息时，只为其分配了"部门"，这里会显示出该"部门"的上级单位。
+        </p>
+        <p> 5. 【部门】：部门必须挂在单位下，请勿将部门挂在根节点。 </p>
+      </template>
+    </Alert>
   </BasicModal>
 </template>
 <script lang="ts">
-  import { computed, defineComponent, reactive, unref } from 'vue';
-  import { Card, Form, List, Radio, Select } from 'ant-design-vue';
+  import { computed, defineComponent, reactive } from 'vue';
+  import { Card, Form, List, Radio, Select, Alert } from 'ant-design-vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useUserStore } from '/@/store/modules/user';
@@ -94,6 +120,7 @@
       ListItem: List.Item,
       Radio,
       RadioGroup: Radio.Group,
+      Alert,
     },
     emits: ['success', 'register'],
     setup(_, { emit }) {
@@ -122,11 +149,13 @@
       });
 
       async function loadOrgByTenant(tenantId: string) {
-        const org = await findCompanyDept(tenantId);
-        formData.currentCompanyId = org.currentCompanyId;
-        formData.currentDeptId = org.currentDeptId;
-        formState.companyList = org.companyList;
-        formState.deptList = org.deptList;
+        if (tenantId) {
+          const org = await findCompanyDept(tenantId);
+          formData.currentCompanyId = org.currentCompanyId;
+          formData.currentDeptId = org.currentDeptId;
+          formState.companyList = org.companyList;
+          formState.deptList = org.deptList;
+        }
       }
 
       async function changeTenant(e: ChangeEvent) {
@@ -141,7 +170,7 @@
       }
 
       function disabledItem(tenant: Recordable) {
-        return !tenant.state || !tenant.employeeState || unref(currentTenantId) === tenant.id;
+        return !tenant.state || !tenant.employeeState;
       }
 
       function getTenantName(tenant: Recordable) {
@@ -213,6 +242,7 @@
           onOk: async () => {
             try {
               await updateDefaultTenant(tenant.id as string);
+              userStore.getUserInfoAction();
             } catch (e) {}
           },
         });

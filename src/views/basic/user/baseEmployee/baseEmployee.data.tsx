@@ -25,10 +25,6 @@ export const columns = (): BasicColumn[] => {
       // width: 180,
     },
     {
-      title: '所属主部门',
-      dataIndex: 'mainOrg',
-    },
-    {
       title: '所属部门',
       dataIndex: 'orgNameList',
     },
@@ -211,25 +207,6 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       field: 'divider-selects3',
       component: 'Divider',
       label: '职位信息',
-    },
-    {
-      label: '所属主部门',
-      field: 'mainOrgId',
-      component: 'ApiTreeSelect',
-      componentProps: {
-        api: tree,
-        labelField: 'name',
-        valueField: 'id',
-        filterTreeNode: (input: string, treeNode: any) => {
-          return treeNode.name.toUpperCase().indexOf(input.toUpperCase()) >= 0;
-        },
-      },
-      dynamicDisabled: () => {
-        return [ActionEnum.VIEW].includes(type.value);
-      },
-      colProps: {
-        span: 12,
-      },
     },
     {
       label: '所属部门',

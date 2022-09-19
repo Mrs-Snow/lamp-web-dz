@@ -48,13 +48,6 @@
             </Tag>
           </span>
         </template>
-        <template v-if="column.dataIndex === 'mainOrg'">
-          <span>
-            <Tag v-if="record?.echoMap?.mainOrgId" class="mr-2" color="success">
-              {{ record?.echoMap?.mainOrgId }}
-            </Tag>
-          </span>
-        </template>
         <template v-if="column.dataIndex === 'action'">
           <TableAction
             :actions="[
@@ -293,13 +286,13 @@
       }
 
       function handleOrgSelect(_parent = {}, record = { id: '' }, childrenIds = []) {
-        searchInfo.mainOrgIdList = childrenIds;
+        searchInfo.orgIdList = childrenIds;
         currentOrg.value = record;
         reload();
       }
 
       function handleReset() {
-        searchInfo.mainOrgIdList = [];
+        searchInfo.orgIdList = [];
         currentOrg.value = {};
         reload();
       }
