@@ -20,7 +20,7 @@ pipeline {
     environment {
         // jenkins 上动态配置的参数
         // SERVER_SSH_HOST: 推送到那台服务器
-        // MODE: 租户模式 NONE、COLUMN、DATASOURCE_COLUMN
+        // MODE: 租户模式 none、column、datasource-column
 
         // 根据项目或部署服务器 可能需要更改一次的变量
         // jar名
@@ -70,7 +70,8 @@ pipeline {
 
         stage('压缩') {
             steps {
-                sh "mv dist ${JAR_NAME}"
+                sh "mkdir -p ./${JAR_NAME}"
+                sh "mv dist ./${JAR_NAME}"
                 sh "tar -zcvf ${JAR_NAME}.tgz ${JAR_NAME}"
             }
         }
