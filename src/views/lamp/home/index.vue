@@ -69,15 +69,10 @@
   import Driver from 'driver.js';
   import 'driver.js/dist/driver.min.css';
 
-  import { useGlobSetting } from '/@/hooks/setting';
-
   const loading = ref(false);
   const userStore = useUserStore();
   const { createSuccessModal } = useMessage();
   const { replace } = useRouter();
-  const globSetting = useGlobSetting();
-  const BASE_APP_ID = globSetting.baseApplicationId;
-  //const userinfo = computed(() => userStore.getUserInfo);
   const isUser = computed(
     () => userStore.getUserInfo?.employeeId && userStore.getUserInfo?.employeeId !== '0',
   );
@@ -91,6 +86,7 @@
 
   const driver = new Driver({
     allowClose: false, //禁止点击外部关闭
+    keyboardControl: false, // 是否允许通告键盘控制(escape关闭，箭头键用于移动)
     doneBtnText: '知道了', // 完成按钮标题
     closeBtnText: '跳过', // 关闭按钮标题
     nextBtnText: '下一步 &rarr;', // 下一步按钮标题
@@ -107,18 +103,39 @@
           // element: document.querySelector(`.${prefixVar}-layout-header-left`)!,
           stageBackground: 'rgb(255, 255, 255, 0.3)',
           popover: {
-            title: '当前企业',
+            title: '欢迎访问',
             description:
-              '欢迎体验《灯灯》SaaS快速开发平台 👋 <br/><span style="color: red;">首次使用，请认真阅读引导！</span> <br/> 当您属于多个企业时，可以在此切换当前企业。',
+              '👋👋👋 欢迎体验《灯灯》多租户快速开发平台 <br/><span style="color: red;">首次使用，请认真阅读引导！</span>',
             position: 'right',
           },
         },
         {
-          element: document.querySelector(`.${prefixVar}-layout-header-action`)!,
+          // element: `.${prefixVar}-layout-header-action__tenant-item`,
+          element: document.querySelector(`.${prefixVar}-layout-header-action__tenant-item`)!,
+          stageBackground: 'rgb(255, 255, 255, 0.3)',
+          popover: {
+            // title: '切换企业',
+            title: '<span style="color: red;">切换企业 和 组织机构</span>',
+            description: '当您属于多个企业或组织机构时，可以在此切换当前所属的企业和组织机构。',
+            position: 'bottom',
+          },
+        },
+        {
+          element: document.querySelector(`.${prefixVar}-layout-header-action__userinfo`)!,
           stageBackground: 'rgb(255, 255, 255, 0.3)',
           popover: {
             title: '用户功能区',
             description: '您可以在此修改您的个人信息。',
+            position: 'bottom-right',
+          },
+        },
+        {
+          element: document.querySelector(`.${prefixVar}-layout-header-action__setting`)!,
+          stageBackground: 'rgb(255, 255, 255, 0.3)',
+          popover: {
+            title: '前端布局设置',
+            description: '您可以在此修改系统的前端布局样式。',
+            position: 'bottom-right',
           },
         },
         {
@@ -162,7 +179,7 @@
           popover: {
             title: '欢迎访问',
             description:
-              '欢迎体验《灯灯》SaaS快速开发平台 👋<br/><span style="color: red;">首次使用，请认真阅读引导！</span>',
+              '👋👋👋 欢迎体验《灯灯》多租户快速开发平台 <br/> <span style="color: red;">首次使用，请认真阅读引导！</span>',
           },
         },
         {
@@ -182,25 +199,36 @@
           },
         },
         {
-          element: document.querySelector(`.${prefixVar}-layout-header-left`)!,
+          element: document.querySelector(`.${prefixVar}-layout-header-action__tenant-item`)!,
           stageBackground: 'rgb(255, 255, 255, 0.3)',
           popover: {
             title: '当前企业',
-            description: '当您属于多个企业时，可以在此切换当前企业。',
-            position: 'right',
+            description: '当您属于多个企业或组织机构时，可以在此切换当前所属的企业和组织机构。',
+            position: 'bottom',
           },
         },
         {
-          element: document.querySelector(`.${prefixVar}-layout-header-action`)!,
+          element: document.querySelector(`.${prefixVar}-layout-header-action__userinfo`)!,
           stageBackground: 'rgb(255, 255, 255, 0.3)',
           popover: {
             title: '用户功能区',
-            description: '您可以在此修改你的个人信息。',
+            description: '您可以在此修改您的个人信息。',
+            position: 'bottom-right',
+          },
+        },
+        {
+          element: document.querySelector(`.${prefixVar}-layout-header-action__setting`)!,
+          stageBackground: 'rgb(255, 255, 255, 0.3)',
+          popover: {
+            title: '前端布局设置',
+            description: '您可以在此修改系统的前端布局样式。',
+            position: 'bottom-right',
           },
         },
       ];
     }
-    if ((userStore.getApplicationId === BASE_APP_ID && !isDevMode()) || flag) {
+    // if (true) {
+    if (!isDevMode() || flag) {
       driver.reset();
       driver.defineSteps(steps);
       driver.start();
@@ -210,7 +238,7 @@
   onMounted(async () => {
     // 必须要setTimeout才能让document.querySelector正确选取某些元素？
     // 这里是否可以优化，知道的朋友欢迎pr
-    setTimeout(() => handleStart(), 1000);
+    setTimeout(() => handleStart(), 3000);
   });
 
   function handleTenant() {
