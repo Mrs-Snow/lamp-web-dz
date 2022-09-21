@@ -1,54 +1,56 @@
 <template>
-  <Dropdown :overlayClassName="`${prefixCls}-dropdown-overlay`" placement="bottomLeft">
-    <span :class="[prefixCls, `${prefixCls}--${theme}`]" class="flex">
-      <AvatarPreview
-        :errorTxt="getUserInfo?.nickName?.substring(0, 1)"
-        :fileId="getUserInfo?.avatarId"
-        :isDef="true"
-        :style="{ 'margin-right': '0.5rem' }"
-      />
-      <span :class="`${prefixCls}__info hidden md:block`">
-        <span :class="`${prefixCls}__name  `" class="truncate">
-          {{ getUserInfo.nickName }}
+  <div>
+    <Dropdown :overlayClassName="`${prefixCls}-dropdown-overlay`" placement="bottomLeft">
+      <span :class="[prefixCls, `${prefixCls}--${theme}`]" class="flex">
+        <AvatarPreview
+          :errorTxt="getUserInfo?.nickName?.substring(0, 1)"
+          :fileId="getUserInfo?.avatarId"
+          :isDef="true"
+          :style="{ 'margin-right': '0.5rem' }"
+        />
+        <span :class="`${prefixCls}__info hidden md:block`">
+          <span :class="`${prefixCls}__name  `" class="truncate">
+            {{ getUserInfo.nickName }}
+          </span>
         </span>
       </span>
-    </span>
 
-    <template #overlay>
-      <Menu @click="handleMenuClick">
-        <MenuItem
-          key="profile"
-          :text="t('layout.header.dropdownProfile')"
-          icon="ant-design:user-outlined"
-        />
-        <MenuItem
-          v-if="getShowDoc"
-          key="doc"
-          :text="t('layout.header.dropdownItemDoc')"
-          icon="ion:document-text-outline"
-        />
-        <MenuItem
-          v-if="getShowDoc"
-          key="vbenDoc"
-          icon="ion:document-text-outline"
-          text="前端文档"
-        />
-        <MenuDivider v-if="getShowDoc" />
-        <MenuItem
-          v-if="getUseLockPage"
-          key="lock"
-          :text="t('layout.header.tooltipLock')"
-          icon="ion:lock-closed-outline"
-        />
-        <MenuItem
-          key="logout"
-          :text="t('layout.header.dropdownItemLoginOut')"
-          icon="ion:power-outline"
-        />
-      </Menu>
-    </template>
-  </Dropdown>
-  <LockAction @register="register" />
+      <template #overlay>
+        <Menu @click="handleMenuClick">
+          <MenuItem
+            key="profile"
+            :text="t('layout.header.dropdownProfile')"
+            icon="ant-design:user-outlined"
+          />
+          <MenuItem
+            v-if="getShowDoc"
+            key="doc"
+            :text="t('layout.header.dropdownItemDoc')"
+            icon="ion:document-text-outline"
+          />
+          <MenuItem
+            v-if="getShowDoc"
+            key="vbenDoc"
+            icon="ion:document-text-outline"
+            text="前端文档"
+          />
+          <MenuDivider v-if="getShowDoc" />
+          <MenuItem
+            v-if="getUseLockPage"
+            key="lock"
+            :text="t('layout.header.tooltipLock')"
+            icon="ion:lock-closed-outline"
+          />
+          <MenuItem
+            key="logout"
+            :text="t('layout.header.dropdownItemLoginOut')"
+            icon="ion:power-outline"
+          />
+        </Menu>
+      </template>
+    </Dropdown>
+    <LockAction @register="register" />
+  </div>
 </template>
 <script lang="ts">
   // components

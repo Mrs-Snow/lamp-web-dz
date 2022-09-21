@@ -45,7 +45,7 @@
       </div>
       <TenantCompanyList
         v-if="globSetting.multiTenantType !== MultiTenantTypeEnum.NONE"
-        :class="`${prefixCls}-action__item tenant-item`"
+        :class="`${prefixCls}-action__item ${prefixCls}-action__tenant-item`"
       />
 
       <AppSearch :class="`${prefixCls}-action__item `" v-if="getShowSearch" />
@@ -63,9 +63,12 @@
         :class="`${prefixCls}-action__item`"
       />
 
-      <UserDropDown :theme="getHeaderTheme" />
+      <UserDropDown :theme="getHeaderTheme" :class="`${prefixCls}-action__userinfo`" />
 
-      <SettingDrawer v-if="getShowSetting" :class="`${prefixCls}-action__item`" />
+      <SettingDrawer
+        v-if="getShowSetting"
+        :class="`${prefixCls}-action__item ${prefixCls}-action__setting`"
+      />
     </div>
   </Header>
 </template>
