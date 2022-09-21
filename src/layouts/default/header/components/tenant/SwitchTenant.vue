@@ -96,7 +96,7 @@
 </template>
 <script lang="ts">
   import { computed, defineComponent, reactive } from 'vue';
-  import { Card, Form, List, Radio, Select, Alert } from 'ant-design-vue';
+  import { Alert, Card, Form, List, Radio, RadioGroup, Select } from 'ant-design-vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useUserStore } from '/@/store/modules/user';
@@ -119,13 +119,14 @@
       List,
       ListItem: List.Item,
       Radio,
-      RadioGroup: Radio.Group,
+      RadioGroup,
       Alert,
     },
     emits: ['success', 'register'],
     setup(_, { emit }) {
       const { createMessage, createConfirm } = useMessage();
       const userStore = useUserStore();
+
       const formData = reactive({
         tenant: '',
         currentCompanyId: '',
@@ -160,13 +161,13 @@
 
       async function changeTenant(e: ChangeEvent) {
         await loadOrgByTenant(e.target.value);
-        formData.currentCompanyId = formState.companyList?.[0].id;
-        formData.currentDeptId = formState.deptList?.[0].id;
+        formData.currentCompanyId = formState.companyList?.[0]?.id;
+        formData.currentDeptId = formState.deptList?.[0]?.id;
       }
 
       async function changeCompany(companyId: string) {
         formState.deptList = await findDeptByCompany(formData.tenant, companyId);
-        formData.currentDeptId = formState.deptList?.[0].id;
+        formData.currentDeptId = formState.deptList?.[0]?.id;
       }
 
       function disabledItem(tenant: Recordable) {

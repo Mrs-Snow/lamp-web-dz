@@ -55,10 +55,22 @@ export const navItems: NavItem[] = [
 
 export const dynamicInfoItems: DynamicInfoItem[] = [
   {
-    percent: 60,
-    name: '4.11.0 即将发布：',
-    date: '2022-09-??',
-    desc: `<a href="https://www.oschina.net/news/206683">《灯灯》4.11.0即将发布，DATASOURCE_COLUMN模式中的COLUMN部分</a>`,
+    percent: 0,
+    name: '4.13.0 即将发布：',
+    date: '2022-11-??',
+    desc: `<a href="###">录制配套视频</a>`,
+  },
+  {
+    percent: 0,
+    name: '4.12.0 即将发布：',
+    date: '2022-10-??',
+    desc: `<a href="###">优化、重构、CodeReview、缓存完善</a>`,
+  },
+  {
+    percent: 100,
+    name: '4.11.0 已发布：',
+    date: '2022-09-21',
+    desc: `<a href="https://www.oschina.net/news/211083/lamp-cloud-4-11-0-released">《灯灯》4.11.0即将发布，DATASOURCE_COLUMN模式中的COLUMN部分</a>`,
   },
   {
     percent: 100,
