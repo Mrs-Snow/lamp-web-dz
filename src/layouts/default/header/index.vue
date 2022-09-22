@@ -6,15 +6,15 @@
       <AppLogo
         v-if="getShowHeaderLogo || getIsMobile"
         :class="`${prefixCls}-logo`"
-        :theme="getHeaderTheme"
         :style="getLogoWidth"
+        :theme="getHeaderTheme"
       />
       <LayoutTrigger
         v-if="
           (getShowContent && getShowHeaderTrigger && !getSplit && !getIsMixSidebar) || getIsMobile
         "
-        :theme="getHeaderTheme"
         :sider="false"
+        :theme="getHeaderTheme"
       />
       <!-- 面包屑 -->
       <LayoutBreadcrumb v-if="getShowContent && getShowBread" :theme="getHeaderTheme" />
@@ -22,12 +22,12 @@
     <!-- left end -->
 
     <!-- menu start -->
-    <div :class="`${prefixCls}-menu`" v-if="getShowTopMenu && !getIsMobile">
+    <div v-if="getShowTopMenu && !getIsMobile" :class="`${prefixCls}-menu`">
       <LayoutMenu
         :isHorizontal="true"
-        :theme="getHeaderTheme"
-        :splitType="getSplitType"
         :menuMode="getMenuMode"
+        :splitType="getSplitType"
+        :theme="getHeaderTheme"
       />
     </div>
     <!-- menu-end -->
@@ -36,9 +36,9 @@
     <div :class="`${prefixCls}-action`">
       <div :class="`${prefixCls}-action__item tips-item`">
         <!-- 样式引用： https://zhuanlan.zhihu.com/p/372052468 -->
-        <div class="ad" v-if="globSetting.tips">
+        <div v-if="globSetting.tips" class="ad">
           <i class="iconfont">&#xe633;</i>
-          <p class="content" :title="globSetting.tips">
+          <p :title="globSetting.tips" class="content">
             <span>{{ globSetting.tips }} </span>
           </p>
         </div>
@@ -47,8 +47,9 @@
         v-if="globSetting.multiTenantType !== MultiTenantTypeEnum.NONE"
         :class="`${prefixCls}-action__item ${prefixCls}-action__tenant-item`"
       />
+      <CompanyList v-else :class="`${prefixCls}-action__item ${prefixCls}-action__tenant-item`" />
 
-      <AppSearch :class="`${prefixCls}-action__item `" v-if="getShowSearch" />
+      <AppSearch v-if="getShowSearch" :class="`${prefixCls}-action__item `" />
 
       <ErrorAction v-if="getUseErrorHandle" :class="`${prefixCls}-action__item error-action`" />
 
@@ -58,12 +59,12 @@
 
       <AppLocalePicker
         v-if="getShowLocalePicker"
+        :class="`${prefixCls}-action__item`"
         :reload="true"
         :showText="false"
-        :class="`${prefixCls}-action__item`"
       />
 
-      <UserDropDown :theme="getHeaderTheme" :class="`${prefixCls}-action__userinfo`" />
+      <UserDropDown :class="`${prefixCls}-action__userinfo`" :theme="getHeaderTheme" />
 
       <SettingDrawer
         v-if="getShowSetting"
@@ -73,16 +74,14 @@
   </Header>
 </template>
 <script lang="ts">
-  import { defineComponent, unref, computed } from 'vue';
+  import { computed, defineComponent, unref } from 'vue';
 
   import { propTypes } from '/@/utils/propTypes';
 
   import { Layout } from 'ant-design-vue';
-  import { AppLogo } from '/@/components/Application';
+  import { AppLocalePicker, AppLogo, AppSearch } from '/@/components/Application';
   import LayoutMenu from '../menu/index.vue';
   import LayoutTrigger from '../trigger/index.vue';
-
-  import { AppSearch } from '/@/components/Application';
 
   import { useGlobSetting } from '/@/hooks/setting';
   import { useHeaderSetting } from '/@/hooks/setting/useHeaderSetting';
@@ -92,15 +91,15 @@
   import { MenuModeEnum, MenuSplitTyeEnum } from '/@/enums/menuEnum';
   import { SettingButtonPositionEnum } from '/@/enums/appEnum';
   import { MultiTenantTypeEnum } from '/@/enums/biz/tenant';
-  import { AppLocalePicker } from '/@/components/Application';
 
   import {
-    UserDropDown,
-    LayoutBreadcrumb,
-    FullScreen,
-    Notify,
     ErrorAction,
+    FullScreen,
+    LayoutBreadcrumb,
+    Notify,
     TenantCompanyList,
+    CompanyList,
+    UserDropDown,
   } from './components';
   import { useAppInject } from '/@/hooks/web/useAppInject';
   import { useDesign } from '/@/hooks/web/useDesign';
@@ -123,6 +122,7 @@
       AppSearch,
       ErrorAction,
       TenantCompanyList,
+      CompanyList,
       SettingDrawer: createAsyncComponent(() => import('/@/layouts/default/setting/index.vue'), {
         loading: true,
       }),
@@ -229,6 +229,7 @@
 </script>
 <style lang="less">
   @import './index.less';
+
   @prefix-cls: ~'@{namespace}-layout-header';
 
   .@{prefix-cls} {

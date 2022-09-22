@@ -166,7 +166,7 @@
       }
 
       async function changeCompany(companyId: string) {
-        formState.deptList = await findDeptByCompany(formData.tenant, companyId);
+        formState.deptList = await findDeptByCompany(companyId, formData.tenant);
         formData.currentDeptId = formState.deptList?.[0]?.id;
       }
 
@@ -224,9 +224,9 @@
 
       async function switchTenant() {
         const userInfo = await userStore.switchTenantAndOrg(
-          formData.tenant,
           formData.currentCompanyId,
           formData.currentDeptId,
+          formData.tenant,
         );
         if (userInfo) {
           createMessage.success('切换成功');

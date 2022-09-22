@@ -192,7 +192,7 @@ export function doLogout(params: LogoutParams) {
   });
 }
 
-export function switchTenantAndOrg(tenantId: string, companyId: string, deptId: string) {
+export function switchTenantAndOrg(companyId: string, deptId: string, tenantId?: string) {
   return defHttp.put<LoginResultVO>({
     ...Api.SwitchTenantAndOrg,
     params: { tenantId, companyId, deptId },
@@ -212,14 +212,14 @@ export function updateDefaultTenant(tenantId: string) {
   });
 }
 
-export function findCompanyDept(tenantId: string) {
+export function findCompanyDept(tenantId?: string) {
   return defHttp.request<OrgResultVO>({
     ...Api.FindCompanyDept,
     params: { tenantId },
   });
 }
 
-export function findDeptByCompany(tenantId: string, companyId: string) {
+export function findDeptByCompany(companyId: string, tenantId?: string) {
   return defHttp.request<BaseOrgResultVO[]>({
     ...Api.FindDeptByCompany,
     params: { tenantId, companyId },
