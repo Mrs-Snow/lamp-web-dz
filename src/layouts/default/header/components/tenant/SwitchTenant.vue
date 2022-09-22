@@ -108,7 +108,7 @@
   import { BaseOrgResultVO } from '/@/api/basic/user/model/baseOrgModel';
 
   export default defineComponent({
-    name: 'DatasourceConfigEdit',
+    name: 'SwitchTenant',
     components: {
       BasicModal,
       Form,
