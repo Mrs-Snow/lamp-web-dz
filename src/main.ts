@@ -16,9 +16,9 @@ import { setupI18n } from '/@/locales/setupI18n';
 import { registerGlobComp } from '/@/components/registerGlobComp';
 import { registerThirdComp } from '/@/plugins/vxe-table';
 
-if (import.meta.env.DEV) {
-  import('ant-design-vue/dist/antd.less');
-}
+// if (import.meta.env.DEV) {
+//   import('ant-design-vue/dist/antd.less');
+// }
 
 async function bootstrap() {
   const app = createApp(App);
