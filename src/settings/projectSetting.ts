@@ -8,6 +8,7 @@ import {
   RouterTransitionEnum,
   SettingButtonPositionEnum,
   SessionTimeoutProcessingEnum,
+  TabsThemeEnum,
 } from '/@/enums/appEnum';
 import { SIDE_BAR_BG_COLOR_LIST, HEADER_PRESET_BG_COLOR_LIST } from './designSetting';
 
@@ -130,6 +131,8 @@ const setting: ProjectConfig = {
     showRedo: true,
     // Whether to show the collapse button
     showFold: true,
+    // 标签页样式
+    theme: TabsThemeEnum.CARD,
   },
 
   // Transition Setting
