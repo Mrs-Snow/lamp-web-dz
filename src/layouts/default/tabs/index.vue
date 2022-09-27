@@ -1,12 +1,12 @@
 <template>
   <div :class="getWrapClass">
     <Tabs
-      type="editable-card"
-      size="small"
+      :activeKey="activeKeyRef"
       :animated="false"
       :hideAdd="true"
       :tabBarGutter="3"
-      :activeKey="activeKeyRef"
+      size="small"
+      type="editable-card"
       @change="handleChange"
       @edit="handleEdit"
     >
@@ -18,9 +18,9 @@
         </TabPane>
       </template>
 
-      <template #rightExtra v-if="getShowRedo || getShowQuick">
+      <template v-if="getShowRedo || getShowQuick" #rightExtra>
         <TabRedo v-if="getShowRedo" />
-        <TabContent isExtra :tabItem="$route" v-if="getShowQuick" />
+        <TabContent v-if="getShowQuick" :tabItem="$route" isExtra />
         <FoldButton v-if="getShowFold" />
       </template>
     </Tabs>
@@ -28,8 +28,9 @@
 </template>
 <script lang="ts">
   import type { RouteLocationNormalized, RouteMeta } from 'vue-router';
+  import { useRouter } from 'vue-router';
 
-  import { defineComponent, computed, unref, ref } from 'vue';
+  import { computed, defineComponent, ref, unref } from 'vue';
 
   import { Tabs } from 'ant-design-vue';
   import TabContent from './components/TabContent.vue';
@@ -47,8 +48,6 @@
 
   import { REDIRECT_NAME } from '/@/router/constant';
   import { listenerRouteChange } from '/@/logics/mitt/routeChange';
-
-  import { useRouter } from 'vue-router';
 
   export default defineComponent({
     name: 'MultipleTabs',
@@ -70,7 +69,7 @@
 
       const { prefixCls } = useDesign('multiple-tabs');
       const go = useGo();
-      const { getShowQuick, getShowRedo, getShowFold } = useMultipleTabSetting();
+      const { getShowQuick, getShowRedo, getShowFold, getTabsTheme } = useMultipleTabSetting();
 
       const getTabsState = computed(() => {
         return tabStore.getTabList.filter((item) => !item.meta?.hideTab);
@@ -84,6 +83,7 @@
           {
             [`${prefixCls}--hide-close`]: unref(unClose),
           },
+          `${prefixCls}--theme-${unref(getTabsTheme)}`,
         ];
       });
 
@@ -126,7 +126,10 @@
 
         tabStore.closeTabByKey(targetKey, router);
       }
+
       return {
+        prefixCls,
+        unClose,
         getWrapClass,
         handleEdit,
         handleChange,
@@ -141,4 +144,6 @@
 </script>
 <style lang="less">
   @import './index.less';
+  @import './tabs.theme.card.less';
+  @import './tabs.theme.smooth.less';
 </style>

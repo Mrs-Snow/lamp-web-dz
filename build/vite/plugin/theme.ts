@@ -5,13 +5,13 @@
 import type { PluginOption } from 'vite';
 import path from 'path';
 import {
-  viteThemePlugin,
   antdDarkThemePlugin,
-  mixLighten,
   mixDarken,
+  mixLighten,
   tinycolor,
+  viteThemePlugin,
 } from 'vite-plugin-theme';
-import { getThemeColors, generateColors } from '../../config/themeConfig';
+import { generateColors, getThemeColors } from '../../config/themeConfig';
 import { generateModifyVars } from '../../generate/generateModifyVars';
 
 export function configThemePlugin(isBuild: boolean): PluginOption[] {
@@ -20,6 +20,9 @@ export function configThemePlugin(isBuild: boolean): PluginOption[] {
     mixLighten,
     tinycolor,
   });
+
+  // update-begin-修复编译后主题色切换不生效黑屏的问题-----------------------
+  // https://github.com/vbenjs/vue-vben-admin/issues/1445
   // 抽取出viteThemePlugin插件，下方会根据不同环境设置enforce
   const vite_theme_plugin = viteThemePlugin({
     resolveSelector: (s) => {
@@ -45,26 +48,23 @@ export function configThemePlugin(isBuild: boolean): PluginOption[] {
     },
     colorVariables: [...getThemeColors(), ...colors],
   });
-  //console.log('vite_theme_plugin:'+JSON.stringify(vite_theme_plugin));
   vite_theme_plugin.forEach(function (item) {
     //对vite:theme插件特殊配置
     if ('vite:theme' === item.name) {
-      //console.log(item);
       // 打包时去除enforce: "post"，vite 2.6.x适配，否则生成app-theme-style为空，因为async transform(code, id) {的code没有正确获取
       if (isBuild) {
         delete item.enforce;
       }
-      //console.log(item);
     }
   });
-  //console.log('vite_theme_plugin后:'+JSON.stringify(vite_theme_plugin));
+  // update-end-修复编译后主题色切换不生效黑屏的问题-----------------------
+
   const plugin = [
     vite_theme_plugin,
-    // 黑暗模式，颜色层穿透bug较多
     antdDarkThemePlugin({
       preloadFiles: [
         path.resolve(process.cwd(), 'node_modules/ant-design-vue/dist/antd.less'),
-        // path.resolve(process.cwd(), 'node_modules/ant-design-vue/dist/antd.dark.less'),
+        //path.resolve(process.cwd(), 'node_modules/ant-design-vue/dist/antd.dark.less'),
         path.resolve(process.cwd(), 'src/design/index.less'),
       ],
       filter: (id) => (isBuild ? !id.endsWith('antd.less') : true),
@@ -80,6 +80,7 @@ export function configThemePlugin(isBuild: boolean): PluginOption[] {
         // #8b949e
         'text-color-secondary': '#8b949e',
         'border-color-base': '#303030',
+        'header-light-bottom-border-color': '#303030',
         // 'border-color-split': '#30363d',
         'item-active-bg': '#111b26',
         'app-content-background': '#1e1e1e',
