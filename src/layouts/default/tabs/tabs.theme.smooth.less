@@ -6,6 +6,20 @@ html[data-theme='dark'] {
     .ant-tabs-tab {
       border: none !important;
     }
+
+    .ant-tabs.ant-tabs-card {
+      .ant-tabs-nav {
+        .ant-tabs-tab:not(.ant-tabs-tab-active) {
+          &:hover {
+            background-color: #606060;
+          }
+        }
+
+        .ant-tabs-tab-active {
+          background: #303030;
+        }
+      }
+    }
   }
 }
 
@@ -120,7 +134,7 @@ html[data-theme='light'] {
       .ant-tabs-tab:not(.ant-tabs-tab-active) {
         &:hover {
           color: inherit;
-          background-color: #606060;
+          background-color: #dee1e6;
         }
       }
 
@@ -128,7 +142,7 @@ html[data-theme='light'] {
         position: relative;
         padding: 0 30px 0 36px;
         color: @primary-color !important;
-        background: #303030;
+        background: #e8f4ff;
         border: 0;
         font-weight: inherit;
         z-index: 3;
