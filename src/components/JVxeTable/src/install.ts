@@ -1,19 +1,17 @@
 import type { App } from 'vue';
 
-// import 'ant-design-vue/dist/antd.less';
 //vexTable组件
-import VXETable from 'vxe-table';
-import XEUtils from 'xe-utils';
 import 'xe-utils';
-// import 'vxe-table/lib/style.css';
-import './vxe-table.scss';
+import XEUtils from 'xe-utils';
+import VXETable from 'vxe-table';
+import VXETablePluginAntd from 'vxe-table-plugin-antd';
+import 'vxe-table/lib/style.css';
 import zhCN from 'vxe-table/es/locale/lang/zh-CN';
 //vexTable(antd插件)
-import VXETablePluginAntd from 'vxe-table-plugin-antd';
 import 'vxe-table-plugin-antd/dist/style.css';
+import './style/index.less';
 
 // 按需加载的方式默认是不带国际化的，自定义国际化需要自行解析占位符 '{0}'，例如：
-
 VXETable.setup({
   i18n: (key, args) => XEUtils.toFormatString(XEUtils.get(zhCN, key), args),
   size: 'medium', // 全局尺寸 medium, small, mini
@@ -204,7 +202,8 @@ VXETable.setup({
   // }
 });
 
-export function registerThirdComp(app: App) {
+export function registerJVxeTable(app: App) {
+  // 注册插件
   VXETable.use(VXETablePluginAntd);
   app.use(VXETable);
 }

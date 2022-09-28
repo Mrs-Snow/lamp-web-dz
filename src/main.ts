@@ -14,7 +14,7 @@ import { setupStore } from '/@/store';
 import { setupGlobDirectives } from '/@/directives';
 import { setupI18n } from '/@/locales/setupI18n';
 import { registerGlobComp } from '/@/components/registerGlobComp';
-import { registerThirdComp } from '/@/plugins/vxe-table';
+import { registerThirdComp } from '/@/settings/registerThirdComp';
 
 if (import.meta.env.DEV) {
   import('ant-design-vue/dist/antd.less');
