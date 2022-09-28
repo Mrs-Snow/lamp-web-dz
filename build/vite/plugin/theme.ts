@@ -21,7 +21,7 @@ export function configThemePlugin(isBuild: boolean): PluginOption[] {
     tinycolor,
   });
 
-  // update-begin-修复编译后主题色切换不生效黑屏的问题-----------------------
+  // 修复编译后主题色切换不生效黑屏的问题-----------------------
   // https://github.com/vbenjs/vue-vben-admin/issues/1445
   // 抽取出viteThemePlugin插件，下方会根据不同环境设置enforce
   const vite_theme_plugin = viteThemePlugin({
@@ -57,7 +57,7 @@ export function configThemePlugin(isBuild: boolean): PluginOption[] {
       }
     }
   });
-  // update-end-修复编译后主题色切换不生效黑屏的问题-----------------------
+  // 修复编译后主题色切换不生效黑屏的问题-----------------------
 
   const plugin = [
     vite_theme_plugin,

@@ -132,7 +132,7 @@ const setting: ProjectConfig = {
     // Whether to show the collapse button
     showFold: true,
     // 标签页样式
-    theme: TabsThemeEnum.CARD,
+    theme: TabsThemeEnum.SMOOTH,
   },
 
   // Transition Setting

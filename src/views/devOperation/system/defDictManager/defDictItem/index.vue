@@ -1,14 +1,16 @@
 <template>
-  <vxe-grid ref="xGrid" v-bind="gridOptions" v-on="gridEvents">
-    <template #operate="{ row }">
-      <PopConfirmButton
-        circle
-        circleIcon="ant-design:delete-outlined"
-        title="确认删除吗？"
-        @confirm="removeRowEvent(row)"
-      />
-    </template>
-  </vxe-grid>
+  <div :class="prefixCls">
+    <vxe-grid ref="xGrid" v-bind="gridOptions" v-on="gridEvents">
+      <template #operate="{ row }">
+        <PopConfirmButton
+          circle
+          circleIcon="ant-design:delete-outlined"
+          title="确认删除吗？"
+          @confirm="removeRowEvent(row)"
+        />
+      </template>
+    </vxe-grid>
+  </div>
 </template>
 <script lang="ts">
   import { defineComponent, reactive, ref } from 'vue';
@@ -21,12 +23,14 @@
   import { getValidateRuleObj } from '/@/api/lamp/common/formValidateService';
   import { Api, page as pageRequest } from '/@/api/devOperation/system/defDictItem';
   import { columns, customFormSchemaRules, formItems } from './defDictItem.data';
+  import { useDesign } from '/@/hooks/web/useDesign';
 
   export default defineComponent({
     name: '修改代码配置',
     components: { PopConfirmButton },
     setup: function () {
       const { t } = useI18n();
+      const { prefixCls } = useDesign('j-vxe-table');
       const { createMessage } = useMessage();
       const dictId = ref<string>('');
 
@@ -191,6 +195,7 @@
         removeRowEvent,
         getRecordset,
         fullValidate,
+        prefixCls,
       };
     },
   });
