@@ -1,12 +1,12 @@
 <template>
-  <div :style="getPlaceholderDomStyle" v-if="getIsShowPlaceholderDom"></div>
-  <div :style="getWrapStyle" :class="getClass">
+  <div v-if="getIsShowPlaceholderDom" :style="getPlaceholderDomStyle"></div>
+  <div :class="getClass" :style="getWrapStyle">
     <LayoutHeader v-if="getShowInsetHeaderRef" />
     <MultipleTabs v-if="getShowTabs" />
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent, unref, computed, CSSProperties } from 'vue';
+  import { computed, CSSProperties, defineComponent, unref } from 'vue';
 
   import LayoutHeader from './index.vue';
   import MultipleTabs from '../tabs/index.vue';
@@ -18,10 +18,15 @@
   import { useAppInject } from '/@/hooks/web/useAppInject';
   import { useDesign } from '/@/hooks/web/useDesign';
   import { useLayoutHeight } from '../content/useContentViewHeight';
+  import { TabsThemeEnum } from '/@/enums/appEnum';
 
   const HEADER_HEIGHT = 48;
 
-  const TABS_HEIGHT = 32;
+  // 修改tab切换栏样式：更改高度
+  const TABS_HEIGHT = 30;
+  const TABS_HEIGHT_CARD = 50;
+  const TABS_HEIGHT_SMOOTH = 50;
+
   export default defineComponent({
     name: 'LayoutMultipleHeader',
     components: { LayoutHeader, MultipleTabs },
@@ -41,7 +46,7 @@
 
       const { getFullContent } = useFullContent();
 
-      const { getShowMultipleTab } = useMultipleTabSetting();
+      const { getShowMultipleTab, getTabsTheme } = useMultipleTabSetting();
 
       const getShowTabs = computed(() => {
         return unref(getShowMultipleTab) && !unref(getFullContent);
@@ -66,6 +71,18 @@
         return unref(getFixed) || unref(getShowFullHeaderRef);
       });
 
+      // 根据主题的不同，动态计算tabs高度
+      const getTabsThemeHeight = computed(() => {
+        let tabsTheme = unref(getTabsTheme);
+        if (tabsTheme === TabsThemeEnum.CARD) {
+          return TABS_HEIGHT_CARD;
+        } else if (tabsTheme === TabsThemeEnum.SMOOTH) {
+          return TABS_HEIGHT_SMOOTH;
+        } else {
+          return TABS_HEIGHT;
+        }
+      });
+
       const getPlaceholderDomStyle = computed((): CSSProperties => {
         let height = 0;
         if (
@@ -76,7 +93,7 @@
           height += HEADER_HEIGHT;
         }
         if (unref(getShowMultipleTab) && !unref(getFullContent)) {
-          height += TABS_HEIGHT;
+          height += unref(getTabsThemeHeight);
         }
         setHeaderHeight(height);
         return {
