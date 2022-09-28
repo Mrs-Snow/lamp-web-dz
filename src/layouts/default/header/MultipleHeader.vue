@@ -20,8 +20,12 @@
   import { useLayoutHeight } from '../content/useContentViewHeight';
   import { TabsThemeEnum } from '/@/enums/appEnum';
 
+  // 这几个参数跟 src/design/var/index.less 中的高度要一致
+  // @multiple-height: 30px;
+  // @multiple-card-height: 50px;
+  // @multiple-smooth-height: 50px;
+  // @header-height: 48px;
   const HEADER_HEIGHT = 48;
-
   // 修改tab切换栏样式：更改高度
   const TABS_HEIGHT = 30;
   const TABS_HEIGHT_CARD = 50;
