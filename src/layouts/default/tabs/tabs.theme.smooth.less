@@ -52,6 +52,7 @@ html[data-theme='light'] {
         transition: padding 0.3s;
         padding: 0 24px 0 30px;
         margin: 0 -14px 0 0 !important;
+        //noinspection Stylelint
         mask: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAANoAAAAkBAMAAAAdqzmBAAAAMFBMVEVHcEwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlTPQ5AAAAD3RSTlMAr3DvEM8wgCBA379gj5//tJBPAAAAnUlEQVRIx2NgAAM27fj/tAO/xBsYkIHyf9qCT8iWMf6nNQhAsk2f5rYheY7Dnua2/U+A28ZEe8v+F9Ax2v7/F4DbxkUH2wzgtvHTwbYPo7aN2jZq26hto7aN2jZq25Cy7Qvctnw62PYNbls9HWz7S8/G6//PsI6H4396gAUQy1je08W2jxDbpv6nD4gB2uWp+J9eYPsEhv/0BPS1DQBvoBLVZ3BppgAAAABJRU5ErkJggg==);
         mask-size: 100% 100%;
         position: relative;
@@ -100,6 +101,7 @@ html[data-theme='light'] {
             }
           }
         }
+
         > div {
           display: flex;
           justify-content: center;
@@ -111,14 +113,14 @@ html[data-theme='light'] {
         }
 
         &:first-child {
-          padding: 0 30px 0 30px !important;
+          padding: 0 30px !important;
         }
       }
 
       .ant-tabs-tab:not(.ant-tabs-tab-active) {
         &:hover {
           color: inherit;
-          background-color: #dee1e6;
+          background-color: #606060;
         }
       }
 
@@ -126,7 +128,7 @@ html[data-theme='light'] {
         position: relative;
         padding: 0 30px 0 36px;
         color: @primary-color !important;
-        background: #e8f4ff;
+        background: #303030;
         border: 0;
         font-weight: inherit;
         z-index: 3;
