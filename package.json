@@ -17,7 +17,7 @@
     "build:test": "cross-env vite build --mode test && esno ./build/script/postBuild.ts",
     "build:boot": "cross-env NODE_ENV=production vite build --mode boot && esno ./build/script/postBuild.ts",
     "build:prod": "cross-env NODE_ENV=production vite build && esno ./build/script/postBuild.ts",
-    "fix-memory-limit": "cross-env LIMIT=8192 increase-memory-limit",
+    "fix-memory-limit": "cross-env LIMIT=4096 increase-memory-limit",
     "build:prod:none": "cross-env NODE_ENV=production VITE_GLOB_MULTI_TENANT_TYPE=NONE vite build && esno ./build/script/postBuild.ts",
     "build:prod:column": "cross-env NODE_ENV=production VITE_GLOB_MULTI_TENANT_TYPE=COLUMN vite build && esno ./build/script/postBuild.ts",
     "build:prod:datasource": "cross-env NODE_ENV=production NODE_OPTIONS=--max-old-space-size=4096 VITE_GLOB_MULTI_TENANT_TYPE=DATASOURCE_COLUMN vite build && esno ./build/script/postBuild.ts",
