@@ -58,7 +58,8 @@ pipeline {
         stage('pnpm 构建') {
             steps {
                 script {
-                    echo "是否执行yarn install:  ${IS_INSTALL}"
+                    echo "是否执行 pnpm install:  ${IS_INSTALL}"
+                    sh 'rm -rf pnpm-lock.yaml'
                     if("${IS_INSTALL}" == "true") {
                         sh "pnpm install --registry=https://registry.npmmirror.com"
                     }
