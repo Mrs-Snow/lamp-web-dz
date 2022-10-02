@@ -6,12 +6,13 @@ export type GrantType = 'CAPTCHA' | 'PASSWORD' | 'MOBILE' | 'REFRESH_TOKEN';
  * @description: Login interface parameters
  */
 export interface LoginParamVO {
-  username: string;
-  password: string;
+  username?: string;
+  password?: string;
   code?: string;
   key?: string;
   grantType: GrantType;
   refreshToken?: string;
+  mobile?: string;
 }
 
 export interface RegisterVO {

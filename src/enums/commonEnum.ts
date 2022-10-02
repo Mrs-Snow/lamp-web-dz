@@ -147,4 +147,6 @@ export enum MsgTemplateCodeEnum {
   REGISTER_EMAIL = 'REGISTER_EMAIL',
   //手机登录短信
   MOBILE_LOGIN = 'MOBILE_LOGIN',
+  MOBILE_EDIT = 'MOBILE_EDIT',
+  EMAIL_EDIT = 'EMAIL_EDIT',
 }

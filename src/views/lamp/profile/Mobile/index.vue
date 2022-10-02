@@ -1,10 +1,10 @@
 <template>
   <BasicModal
-    v-bind="$attrs"
-    @register="registerModal"
-    :title="t(`common.title.edit`)"
     :maskClosable="false"
+    :title="t(`common.title.edit`)"
+    v-bind="$attrs"
     @ok="handleSubmit"
+    @register="registerModal"
   >
     <BasicForm @register="register" />
   </BasicModal>
@@ -15,26 +15,37 @@
 
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { useUserStore } from '/@/store/modules/user';
   import { BasicForm, useForm } from '/@/components/Form';
   import { getValidateRules } from '/@/api/lamp/common/formValidateService';
-  import { formSchema } from './pwd.data';
-  import { Api, updatePassword } from '/@/api/lamp/profile/userInfo';
+  import { formSchema } from './data';
+  import { Api, updateMobile } from '/@/api/lamp/profile/userInfo';
+  import { sendSmsCode } from '/@/api/lamp/common/oauth';
+  import { MsgTemplateCodeEnum } from '/@/enums/commonEnum';
 
   export default defineComponent({
-    name: 'Password',
+    name: 'EditMobile',
     components: { BasicForm, BasicModal },
     emits: ['success', 'register'],
     setup(_, { emit }) {
       const { createMessage } = useMessage();
       const { t } = useI18n();
-      const userStore = useUserStore();
 
-      const [register, { validate, resetFields, updateSchema }] = useForm({
-        name: 'passwordForm',
+      async function handleSendCode() {
+        try {
+          const data = await validate(['mobile']);
+          // templateCode 参数需要 提前在消息模板中配置
+          await sendSmsCode(data.mobile, MsgTemplateCodeEnum.MOBILE_EDIT);
+          return true;
+        } catch (e) {
+          return false;
+        }
+      }
+
+      const [register, { validate, resetFields, setFieldsValue, updateSchema }] = useForm({
+        name: 'mobileForm',
         labelWidth: 100,
         showActionButtonGroup: false,
-        schemas: formSchema,
+        schemas: formSchema(handleSendCode),
         actionColOptions: {
           span: 23,
         },
@@ -44,8 +55,10 @@
       const [registerModal, { setModalProps, closeModal }] = useModalInner(async (_) => {
         await resetFields();
         setModalProps({ confirmLoading: false });
-
-        getValidateRules(Api.UpdatePassword).then((rules) => {
+        setFieldsValue({
+          templateCode: MsgTemplateCodeEnum.MOBILE_EDIT,
+        });
+        getValidateRules(Api.UpdateMobile).then((rules) => {
           rules && rules.length > 0 && updateSchema(rules);
         });
       });
@@ -54,9 +67,7 @@
         try {
           const params = await validate();
           setModalProps({ confirmLoading: true });
-          const { id } = userStore.getUserInfo;
-          params.id = id;
-          await updatePassword(params);
+          await updateMobile(params);
 
           createMessage.success(t(`common.tips.updateSuccess`));
 

@@ -21,6 +21,7 @@ export const formSchema: FormSchema[] = [
     label: '新密码',
     component: 'StrengthMeter',
     componentProps: {
+      autocomplete: 'off',
       placeholder: '新密码',
     },
   },

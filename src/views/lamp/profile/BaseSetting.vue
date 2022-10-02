@@ -35,7 +35,7 @@
 
   import { FileBizTypeEnum } from '/@/enums/commonEnum';
   import { updateBaseInfo, updateAvatar } from '/@/api/lamp/profile/userInfo';
-  import { baseSetschemas } from './data';
+  import { userInfoSchemas } from './Userinfo/data';
   import { useUserStore } from '/@/store/modules/user';
   import { uploadToDef } from '/@/api/lamp/file/upload';
 
@@ -54,8 +54,9 @@
       const userStore = useUserStore();
 
       const [register, { setFieldsValue, validate }] = useForm({
+        name: 'userInfoForm',
         labelWidth: 120,
-        schemas: baseSetschemas,
+        schemas: userInfoSchemas,
         showActionButtonGroup: false,
       });
 

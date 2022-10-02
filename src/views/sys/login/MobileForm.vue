@@ -5,9 +5,9 @@
       <FormItem name="grantType">
         <Input v-model:value="formData.grantType" :hidden="true" size="large" />
       </FormItem>
-      <FormItem class="enter-x" name="username">
+      <FormItem class="enter-x" name="mobile">
         <Input
-          v-model:value="formData.username"
+          v-model:value="formData.mobile"
           :placeholder="t('sys.login.mobile')"
           class="fix-auto-fill"
           size="large"
@@ -57,7 +57,7 @@
       message: '请填写验证码',
       trigger: 'change',
     },
-    username: {
+    mobile: {
       required: true,
       message: '请填写手机号',
       trigger: 'change',
@@ -68,7 +68,7 @@
   const loading = ref(false);
 
   const formData = reactive({
-    username: '',
+    mobile: '',
     grantType: 'MOBILE',
     code: '',
   });
@@ -80,9 +80,9 @@
   async function handleSendCode() {
     const form = unref(formRef);
     try {
-      const data = await form.validateFields(['username']);
+      const data = await form.validateFields(['mobile']);
       // templateCode 参数需要 提前在消息模板中配置
-      await sendSmsCode(data.username, MsgTemplateCodeEnum.MOBILE_LOGIN);
+      await sendSmsCode(data.mobile, MsgTemplateCodeEnum.MOBILE_LOGIN);
       return true;
     } catch (e) {
       return false;
