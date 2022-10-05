@@ -60,7 +60,7 @@ export const updateDefApp = (applicationId: string) =>
     },
   });
 
-export const getDefApp = () => defHttp.request<string>({ ...Api.GetDefApp });
+export const getDefApp = () => defHttp.request<DefApplicationResultVO>({ ...Api.GetDefApp });
 
 export const findMyApplication = (name?: string) =>
   defHttp.request<DefApplicationResultVO[]>({

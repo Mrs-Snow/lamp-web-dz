@@ -22,9 +22,11 @@ export interface RegisterVO {
   confirmPassword: GrantType;
   nickName?: string;
 }
+
 export interface RegisterByMobileVO extends RegisterVO {
   mobile: string;
 }
+
 export interface RegisterByEmailVO extends RegisterVO {
   email: string;
 }
@@ -44,23 +46,12 @@ export interface OrgResultVO {
  * @description: Login interface return value
  */
 export interface LoginResultVO {
-  userId: string;
-  employeeId: string;
   tenantId: string;
   token: string;
   uuid: string;
-  tokenType: string;
   refreshToken: string;
-  applicationId: string;
-  // name: string;
-  // account: string;
-  // avatarId: string;
-  // workDescribe: string;
-  // expireMillis: string;
-  // homePath: string;
   expire: string;
   expiration: string;
-  userStatus: string;
 }
 
 /**
@@ -68,16 +59,4 @@ export interface LoginResultVO {
  */
 export interface LogoutParams {
   token: string;
-}
-
-/**
- * @description: Get user information
- */
-export interface GetUserInfoByUserIdParams {
-  userId: string | number;
-}
-
-export interface RoleInfo {
-  roleName: string;
-  value: string;
 }

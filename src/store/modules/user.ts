@@ -14,30 +14,13 @@ import {
   USER_INFO_KEY,
 } from '/@/enums/cacheEnum';
 import { getAuthCache, setAuthCache } from '/@/utils/auth';
-import type {
-  LoginParamVO,
-  LogoutParams,
-  RegisterByEmailVO,
-  RegisterByMobileVO,
-} from '/@/api/lamp/common/model/userModel';
+import type { LoginParamVO, LogoutParams } from '/@/api/lamp/common/model/userModel';
 
-import {
-  doLogout,
-  getUserInfoById,
-  loadCaptcha,
-  loginApi,
-  registerByEmail,
-  registerByMobile,
-  switchTenantAndOrg,
-} from '/@/api/lamp/common/oauth';
-
-import { useI18n } from '/@/hooks/web/useI18n';
-import { useMessage } from '/@/hooks/web/useMessage';
+import { getUserInfoById, loginApi, logout, switchTenantAndOrg } from '/@/api/lamp/common/oauth';
 import { router } from '/@/router';
 import { usePermissionStore } from '/@/store/modules/permission';
 import { RouteRecordRaw } from 'vue-router';
 import { PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
-import { h } from 'vue';
 import { useTabs } from '/@/hooks/web/useTabs';
 import { useGlobSetting } from '/@/hooks/setting';
 
@@ -154,13 +137,13 @@ export const useUserStore = defineStore({
     async switchTenantAndOrg(companyId: string, deptId: string, switchTenantId?: string) {
       try {
         const data = await switchTenantAndOrg(companyId, deptId, switchTenantId);
-        const { token, tenantId, refreshToken, expiration, applicationId } = data;
+        const { token, tenantId, refreshToken, expiration } = data;
         // save token
         this.setToken(token);
         this.setRefreshToken(refreshToken);
         this.setExpireTime(expiration);
         this.setTenantId(tenantId);
-        this.setApplicationId(applicationId ?? DEF_APP_ID);
+
         this.setSessionTimeout(false);
         const permissionStore = usePermissionStore();
         permissionStore.resetState();
@@ -187,14 +170,13 @@ export const useUserStore = defineStore({
       try {
         const { goHome = true, mode, ...loginParams } = params;
         const data = await loginApi(loginParams, mode);
-        const { token, tenantId, refreshToken, expiration, applicationId } = data;
+        const { token, tenantId, refreshToken, expiration } = data;
 
         // save token
         this.setToken(token);
         this.setRefreshToken(refreshToken);
         this.setExpireTime(expiration);
         this.setTenantId(tenantId);
-        this.setApplicationId(applicationId ?? DEF_APP_ID);
 
         return this.afterLoginAction(mode, goHome);
       } catch (error) {
@@ -232,52 +214,9 @@ export const useUserStore = defineStore({
     async getUserInfoAction(mode: ErrorMessageMode = 'none'): Promise<DefUserInfoResultVO> {
       const userInfo = await getUserInfoById(mode);
       this.setUserInfo(userInfo);
+      this.setApplicationId(userInfo?.defApplication?.id ?? DEF_APP_ID);
       return userInfo;
     },
-
-    async loadCaptcha(key: string): Promise<string | ''> {
-      try {
-        const res = await loadCaptcha(key).catch((e) => {
-          const { createMessage } = useMessage();
-          if (e.toString().indexOf('429') !== -1) {
-            createMessage.error('获取验证码过于频繁，请1分钟后再试');
-          } else {
-            createMessage.error('加载验证码失败');
-          }
-        });
-        if (res.byteLength <= 100) {
-          const { createMessage } = useMessage();
-          createMessage.error('系统维护中，请稍微再试~');
-          return '';
-        }
-        return (
-          'data:image/png;base64,' +
-          btoa(new Uint8Array(res).reduce((data, byte) => data + String.fromCharCode(byte), ''))
-        );
-      } catch (error) {
-        console.error(error);
-        return '';
-      }
-    },
-
-    /**
-     * @description: register
-     */
-    async registerByMobile(params: RegisterByMobileVO): Promise<string> {
-      try {
-        return await registerByMobile(params);
-      } catch (error) {
-        return Promise.reject(error);
-      }
-    },
-    async registerByEmail(params: RegisterByEmailVO): Promise<string> {
-      try {
-        return await registerByEmail(params);
-      } catch (error) {
-        return Promise.reject(error);
-      }
-    },
-
     /**
      * @description: logout
      */
@@ -286,7 +225,7 @@ export const useUserStore = defineStore({
         const param: LogoutParams = {
           token: this.getToken,
         };
-        await doLogout(param).finally(() => {
+        await logout(param).finally(() => {
           this.setToken('');
           this.setSessionTimeout(false);
           goLogin && router.push(PageEnum.BASE_LOGIN);
@@ -296,22 +235,6 @@ export const useUserStore = defineStore({
         this.setSessionTimeout(false);
         goLogin && router.push(PageEnum.BASE_LOGIN);
       }
-    },
-
-    /**
-     * @description: Confirm before logging out
-     */
-    confirmLoginOut() {
-      const { createConfirm } = useMessage();
-      const { t } = useI18n();
-      createConfirm({
-        iconType: 'warning',
-        title: () => h('span', t('sys.app.logoutTip')),
-        content: () => h('span', t('sys.app.logoutMessage')),
-        onOk: async () => {
-          await this.logout(true);
-        },
-      });
     },
   },
 });

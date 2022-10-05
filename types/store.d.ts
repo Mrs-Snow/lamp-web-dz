@@ -54,6 +54,10 @@ export interface BeforeMiniState {
 
 export interface DefUserInfoResultVO {
   echoMap: Recordable;
+  createdTime: string;
+  createdBy: string;
+  updatedTime: string;
+  updatedBy: string;
   id: string;
   username: string;
   nickName: string;
@@ -67,16 +71,12 @@ export interface DefUserInfoResultVO {
   nation: string;
   education: string;
   state: boolean;
+  avatarId?: string;
   workDescribe: string;
   employeeId: string;
   tenantId: string;
-  createdTime: string;
-  createdBy: string;
-  updatedTime: string;
-  updatedBy: string;
   baseEmployee: BaseEmployeeResultVO;
   tenantList: Tenant[];
   defApplication: DefApplicationResultVO;
   homePath?: string;
-  avatarId?: string;
 }

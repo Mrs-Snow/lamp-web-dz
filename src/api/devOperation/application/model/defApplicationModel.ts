@@ -56,7 +56,7 @@ export interface DefApplicationResultVO {
   url?: string;
   isVisible?: boolean;
   sortValue?: number;
-  id?: string;
+  id: string;
   createdBy?: string;
   createdTime?: string;
   updatedBy?: string;

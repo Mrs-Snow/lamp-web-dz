@@ -67,8 +67,7 @@
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { LoginStateEnum, useFormRules, useFormValid, useLoginState } from './useLogin';
-  import { useUserStore } from '/@/store/modules/user';
-  import { sendSmsCode } from '/@/api/lamp/common/oauth';
+  import { registerByMobile, sendSmsCode } from '/@/api/lamp/common/oauth';
   import { MsgTemplateCodeEnum } from '/@/enums/commonEnum';
 
   const FormItem = Form.Item;
@@ -79,7 +78,6 @@
 
   const formRef = ref();
   const loading = ref(false);
-  const userStore = useUserStore();
 
   const formData = reactive({
     password: '',
@@ -111,7 +109,7 @@
     if (!data) return;
     try {
       data.key = MsgTemplateCodeEnum.REGISTER_SMS;
-      const username = await userStore.registerByMobile(data);
+      const username = await registerByMobile(data);
       notification.success({
         message: '注册成功',
         description: `注册成功,请使用${username}登录系统`,

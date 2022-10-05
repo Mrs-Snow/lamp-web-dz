@@ -68,8 +68,7 @@
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { LoginStateEnum, useFormValid, useLoginState } from './useLogin';
-  import { useUserStore } from '/@/store/modules/user';
-  import { sendEmailCode } from '/@/api/lamp/common/oauth';
+  import { registerByEmail, sendEmailCode } from '/@/api/lamp/common/oauth';
   import { MsgTemplateCodeEnum } from '/@/enums/commonEnum';
 
   const FormItem = Form.Item;
@@ -80,7 +79,6 @@
 
   const formRef = ref();
   const loading = ref(false);
-  const userStore = useUserStore();
 
   const formData = reactive({
     password: '',
@@ -141,7 +139,7 @@
     if (!data) return;
     try {
       data.key = MsgTemplateCodeEnum.REGISTER_EMAIL;
-      const username = await userStore.registerByEmail(data);
+      const username = await registerByEmail(data);
       notification.success({
         message: '注册成功',
         description: `注册成功,请使用${username}登录系统`,

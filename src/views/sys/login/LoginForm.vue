@@ -44,11 +44,18 @@
         </FormItem>
 
         <img
-          v-show="true"
+          v-if="formState.captchaSrc"
           :src="formState.captchaSrc"
           alt="captcha"
           class="code-image"
-          @click="loadCaptcha"
+          @click="buildCaptcha"
+        />
+        <img
+          v-else
+          alt="captcha"
+          class="code-image"
+          src="../../../assets/images/captcha_404.png"
+          @click="buildCaptcha"
         />
       </ACol>
     </ARow>
@@ -129,6 +136,8 @@
   import { randomNum } from '/@/utils';
   import { MultiTenantTypeEnum } from '/@/enums/biz/tenant';
 
+  import { loadCaptcha } from '/@/api/lamp/common/oauth';
+
   const ACol = Col;
   const ARow = Row;
   const FormItem = Form.Item;
@@ -150,7 +159,7 @@
     devFlag.value = '(dev)';
   }
   onMounted(() => {
-    loadCaptcha();
+    buildCaptcha();
   });
 
   const formData = reactive({
@@ -159,7 +168,6 @@
     code: '',
     grantType: globSetting.showCaptcha === 'true' ? 'CAPTCHA' : 'PASSWORD',
     key: randomNum(24, 16),
-    verify: undefined,
   });
   const formState = reactive({
     loading: false,
@@ -168,16 +176,38 @@
     showCaptcha: globSetting.showCaptcha === 'true',
   });
 
-  // 加载验证码
-  async function loadCaptcha() {
-    formData.code = '';
-    const captcha = await userStore.loadCaptcha(formData.key);
-    formState.captchaSrc = captcha;
-  }
-
   const { validForm } = useFormValid(formRef);
 
   const getShow = computed(() => unref(getLoginState) === LoginStateEnum.LOGIN);
+
+  // 生成验证码
+  async function buildCaptcha() {
+    try {
+      formData.code = '';
+
+      const res = await loadCaptcha(formData.key).catch((e) => {
+        const { createMessage } = useMessage();
+        if (e.toString().indexOf('429') !== -1) {
+          createMessage.error('获取验证码过于频繁，请1分钟后再试');
+        } else {
+          createMessage.error('加载验证码失败');
+        }
+        formState.captchaSrc = '';
+      });
+      if (res.byteLength <= 100) {
+        const { createMessage } = useMessage();
+        createMessage.error('系统维护中，请稍微再试~');
+        return '';
+      }
+      formState.captchaSrc =
+        'data:image/png;base64,' +
+        btoa(new Uint8Array(res).reduce((data, byte) => data + String.fromCharCode(byte), ''));
+    } catch (error) {
+      console.error(error);
+      formState.captchaSrc = '';
+      return '';
+    }
+  }
 
   async function handleLogin() {
     const data = await validForm();
@@ -192,10 +222,10 @@
           duration: 3,
         });
       } else {
-        await loadCaptcha();
+        await buildCaptcha();
       }
     } catch (error) {
-      await loadCaptcha();
+      await buildCaptcha();
     } finally {
       formState.loading = false;
     }

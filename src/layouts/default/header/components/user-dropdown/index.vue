@@ -58,7 +58,7 @@
   import { useRouter } from 'vue-router';
   import type { MenuInfo } from 'ant-design-vue/lib/menu/src/interface';
 
-  import { computed, defineComponent, ref } from 'vue';
+  import { computed, defineComponent, h, ref } from 'vue';
 
   import { DOC_URL, VBEN_DOC_URL } from '/@/settings/siteSetting';
 
@@ -66,6 +66,7 @@
   import { useHeaderSetting } from '/@/hooks/setting/useHeaderSetting';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useDesign } from '/@/hooks/web/useDesign';
+  import { useMessage } from '/@/hooks/web/useMessage';
   import { useModal } from '/@/components/Modal';
   import { AvatarPreview } from '/@/components/AvatarPreview';
 
@@ -109,7 +110,16 @@
 
       //  login out
       function handleLoginOut() {
-        userStore.confirmLoginOut();
+        const { createConfirm } = useMessage();
+        const { t } = useI18n();
+        createConfirm({
+          iconType: 'warning',
+          title: () => h('span', t('sys.app.logoutTip')),
+          content: () => h('span', t('sys.app.logoutMessage')),
+          onOk: async () => {
+            await userStore.logout(true);
+          },
+        });
       }
 
       // open doc
