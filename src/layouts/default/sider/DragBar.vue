@@ -8,14 +8,14 @@
   import { useMenuSetting } from '/@/hooks/setting/useMenuSetting';
 
   export default defineComponent({
-    name: 'DargBar',
+    name: 'DragBar',
     props: {
       mobile: Boolean,
     },
     setup(props) {
       const { getMiniWidthNumber, getCollapsed, getCanDrag } = useMenuSetting();
 
-      const { prefixCls } = useDesign('darg-bar');
+      const { prefixCls } = useDesign('drag-bar');
       const getDragBarStyle = computed(() => {
         if (unref(getCollapsed)) {
           return { left: `${unref(getMiniWidthNumber)}px` };
@@ -41,7 +41,7 @@
   });
 </script>
 <style lang="less" scoped>
-  @prefix-cls: ~'@{namespace}-darg-bar';
+  @prefix-cls: ~'@{namespace}-drag-bar';
 
   .@{prefix-cls} {
     position: absolute;
