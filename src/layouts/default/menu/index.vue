@@ -68,6 +68,7 @@
       const getIsShowLogo = computed(() => unref(getShowLogo) && unref(getIsSidebarType));
 
       const getUseScroll = computed(() => {
+        // 垂直菜单 且 （左侧菜单模式 或 拆分类型为left或none）
         return (
           !unref(getIsHorizontal) &&
           (unref(getIsSidebarType) ||
@@ -160,6 +161,7 @@
         return (
           <>
             {renderHeader()}
+            {<div>unref(getUseScroll)</div>}
             {unref(getUseScroll) ? (
               <ScrollContainer style={unref(getWrapperStyle)}>{() => renderMenu()}</ScrollContainer>
             ) : (
