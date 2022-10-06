@@ -5,7 +5,7 @@
       <!-- logo -->
       <AppLogo
         v-if="getShowHeaderLogo || getIsMobile"
-        :class="`${prefixCls}-logo`"
+        :class="`${prefixCls}-logo ${getMenuType}-logo`"
         :style="getLogoWidth"
         :theme="getHeaderTheme"
       />
@@ -140,6 +140,7 @@
         getIsMixMode,
         getMenuWidth,
         getIsMixSidebar,
+        getMenuType,
       } = useMenuSetting();
       const { getUseErrorHandle, getShowSettingButton, getSettingButtonPosition } =
         useRootSetting();
@@ -213,6 +214,7 @@
         getMenuMode,
         getShowTopMenu,
         getShowLocalePicker,
+        getMenuType,
         getShowFullScreen,
         getShowNotice,
         getUseErrorHandle,

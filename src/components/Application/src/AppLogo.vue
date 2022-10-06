@@ -85,16 +85,24 @@
     cursor: pointer;
     transition: all 0.2s ease;
 
+    &.mix-logo {
+      background-color: var(--sider-dark-bg-color);
+    }
+
     &.light {
-      border-bottom: 1px solid @border-color-base;
+      //border-bottom: 1px solid @border-color-base;
     }
 
     &.collapsed-show-title {
       padding-left: 20px;
     }
 
-    &.light &__title {
+    &.top-menu-logo.light &__title {
       color: @primary-color;
+    }
+
+    &.mix-logo.light &__title {
+      color: #fff !important;
     }
 
     &.dark &__title {

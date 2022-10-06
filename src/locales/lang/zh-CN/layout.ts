@@ -43,9 +43,9 @@ export default {
     menuTriggerTop: '顶部',
     // menu type
     menuTypeSidebar: '左侧菜单模式',
-    menuTypeMixSidebar: '左侧菜单混合模式',
     menuTypeMix: '顶部菜单混合模式',
     menuTypeTopMenu: '顶部菜单模式',
+    menuTypeMixSidebar: '左侧菜单混合模式',
 
     on: '开',
     off: '关',

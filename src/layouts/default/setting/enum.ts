@@ -139,22 +139,25 @@ export const routerTransitionOptions = [
 
 export const menuTypeList = [
   {
+    // 左侧菜单模式
     title: t('layout.setting.menuTypeSidebar'),
     mode: MenuModeEnum.INLINE,
     type: MenuTypeEnum.SIDEBAR,
   },
   {
+    // 顶部菜单混合模式
     title: t('layout.setting.menuTypeMix'),
     mode: MenuModeEnum.INLINE,
     type: MenuTypeEnum.MIX,
   },
-
   {
+    // 顶部菜单模式
     title: t('layout.setting.menuTypeTopMenu'),
     mode: MenuModeEnum.HORIZONTAL,
     type: MenuTypeEnum.TOP_MENU,
   },
   {
+    // 左侧菜单混合模式
     title: t('layout.setting.menuTypeMixSidebar'),
     mode: MenuModeEnum.INLINE,
     type: MenuTypeEnum.MIX_SIDEBAR,
