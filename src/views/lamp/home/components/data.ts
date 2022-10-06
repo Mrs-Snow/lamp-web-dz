@@ -61,8 +61,8 @@ export const dynamicInfoItems: DynamicInfoItem[] = [
     desc: `<a href="###">录制配套视频</a>`,
   },
   {
-    percent: 10,
-    name: '4.12.0 正在进行：',
+    percent: 30,
+    name: '4.12.x 正在进行：',
     date: '2022-10-??',
     desc: `<a href="###">优化前后端代码、重构前后端代码、CodeReview、缓存完善</a>`,
   },
