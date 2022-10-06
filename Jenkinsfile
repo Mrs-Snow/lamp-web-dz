@@ -59,8 +59,8 @@ pipeline {
             steps {
                 script {
                     echo "是否执行 pnpm install:  ${IS_INSTALL}"
-                    sh 'rm -rf pnpm-lock.yaml'
                     if("${IS_INSTALL}" == "true") {
+                        sh 'rm -rf pnpm-lock.yaml && rm -rf node_modules'
                         sh "pnpm install --registry=https://registry.npmmirror.com"
                     }
                 }
