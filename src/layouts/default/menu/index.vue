@@ -161,7 +161,6 @@
         return (
           <>
             {renderHeader()}
-            {<div>unref(getUseScroll)</div>}
             {unref(getUseScroll) ? (
               <ScrollContainer style={unref(getWrapperStyle)}>{() => renderMenu()}</ScrollContainer>
             ) : (

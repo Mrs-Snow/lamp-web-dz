@@ -44,6 +44,11 @@ export function useSplitMenu(splitType: Ref<MenuSplitTyeEnum>) {
       if (!parentPath) {
         parentPath = await getCurrentParentPath(currentActiveMenu);
       }
+      if (!parentPath) {
+        const menus = await getMenus();
+        parentPath = menus[0] && menus[0].path;
+      }
+      // console.log('parentPath', parentPath, path);
       parentPath && throttleHandleSplitLeftMenu(parentPath);
     },
     {
