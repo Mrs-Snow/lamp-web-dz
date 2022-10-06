@@ -26,7 +26,7 @@ export function handler(event: HandlerEnum, value: any): DeepPartial<ProjectConf
   switch (event) {
     case HandlerEnum.CHANGE_LAYOUT:
       const { mode, type, split } = value;
-      const splitOpt = split === undefined ? { split } : {};
+      // const splitOpt = split === undefined ? { split } : {};
 
       return {
         menuSetting: {
@@ -35,7 +35,8 @@ export function handler(event: HandlerEnum, value: any): DeepPartial<ProjectConf
           collapsed: false,
           show: true,
           hidden: false,
-          ...splitOpt,
+          // ...splitOpt,
+          split,
         },
       };
 

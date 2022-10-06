@@ -13,7 +13,7 @@ import {
 
 import { AppDarkModeToggle } from '/@/components/Application';
 
-import { MenuTypeEnum, TriggerEnum } from '/@/enums/menuEnum';
+import { MenuModeEnum, MenuTypeEnum, TriggerEnum } from '/@/enums/menuEnum';
 
 import { useRootSetting } from '/@/hooks/setting/useRootSetting';
 import { useMenuSetting } from '/@/hooks/setting/useMenuSetting';
@@ -94,7 +94,8 @@ export default defineComponent({
       getShowSearch,
     } = useHeaderSetting();
 
-    const { getShowMultipleTab, getShowQuick, getShowRedo, getShowFold, getTabsTheme } = useMultipleTabSetting();
+    const { getShowMultipleTab, getShowQuick, getShowRedo, getShowFold, getTabsTheme } =
+      useMultipleTabSetting();
 
     const getShowMenuRef = computed(() => {
       return unref(getShowMenu) && !unref(getIsHorizontal);
@@ -109,7 +110,7 @@ export default defineComponent({
               baseHandler(HandlerEnum.CHANGE_LAYOUT, {
                 mode: item.mode,
                 type: item.type,
-                split: unref(getIsHorizontal) ? false : undefined,
+                split: item.mode === MenuModeEnum.INLINE && item.type === MenuTypeEnum.MIX,
               });
             }}
             def={unref(getMenuType)}
@@ -306,7 +307,12 @@ export default defineComponent({
             event={HandlerEnum.TABS_SHOW}
             def={unref(getShowMultipleTab)}
           />
-          <SelectItem title={t('layout.setting.tabsTheme')} event={HandlerEnum.TABS_THEME} def={unref(getTabsTheme)} options={tabsThemeOptions} />
+          <SelectItem
+            title={t('layout.setting.tabsTheme')}
+            event={HandlerEnum.TABS_THEME}
+            def={unref(getTabsTheme)}
+            options={tabsThemeOptions}
+          />
 
           <SwitchItem
             title={t('layout.setting.tabsRedoBtn')}

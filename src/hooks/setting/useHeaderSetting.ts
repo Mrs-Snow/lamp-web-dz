@@ -71,6 +71,7 @@ export function useHeaderSetting() {
   });
 
   const getShowHeaderLogo = computed(() => {
+    // 不是 左侧菜单模式 和 左侧菜单混合模式 则在 header 显示logo
     return unref(getShowLogo) && !unref(getIsSidebarType) && !unref(getIsMixSidebar);
   });
 
