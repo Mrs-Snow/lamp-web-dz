@@ -23,9 +23,11 @@ export function useSplitMenu(splitType: Ref<MenuSplitTyeEnum>) {
     () => unref(splitType) !== MenuSplitTyeEnum.LEFT && !unref(getIsHorizontal),
   );
 
-  const getSplitLeft = computed(
+  const getNotSplitLeft = computed(
     () => !unref(getSplit) || unref(splitType) !== MenuSplitTyeEnum.LEFT,
   );
+
+  const getSplitLeft = computed(() => unref(splitType) === MenuSplitTyeEnum.LEFT);
 
   const getSpiltTop = computed(() => unref(splitType) === MenuSplitTyeEnum.TOP);
 
@@ -48,7 +50,7 @@ export function useSplitMenu(splitType: Ref<MenuSplitTyeEnum>) {
         const menus = await getMenus();
         parentPath = menus[0] && menus[0].path;
       }
-      // console.log('parentPath', parentPath, path);
+
       parentPath && throttleHandleSplitLeftMenu(parentPath);
     },
     {
@@ -78,7 +80,7 @@ export function useSplitMenu(splitType: Ref<MenuSplitTyeEnum>) {
 
   // 处理左侧分割后的菜单
   async function handleSplitLeftMenu(parentPath: string) {
-    if (unref(getSplitLeft) || unref(getIsMobile)) return;
+    if (unref(getNotSplitLeft) || unref(getIsMobile)) return;
 
     // spilt mode left
     const children = await getChildrenMenus(parentPath);
@@ -110,6 +112,20 @@ export function useSplitMenu(splitType: Ref<MenuSplitTyeEnum>) {
 
       menusRef.value = shallowMenus;
       return;
+    }
+
+    if (unref(getSplitLeft)) {
+      const { path, meta } = unref(currentRoute);
+      let parentPath = await getCurrentParentPath(path);
+      if (!parentPath) {
+        const currentActiveMenu = meta.currentActiveMenu as string;
+        parentPath = await getCurrentParentPath(currentActiveMenu);
+      }
+      if (!parentPath) {
+        const menus = await getMenus();
+        parentPath = menus[0] && menus[0].path;
+      }
+      parentPath && throttleHandleSplitLeftMenu(parentPath);
     }
   }
 
