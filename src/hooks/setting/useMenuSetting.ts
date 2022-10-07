@@ -1,6 +1,6 @@
 import type { MenuSetting } from '/#/config';
 
-import { computed, unref, ref } from 'vue';
+import { computed, ref, unref } from 'vue';
 
 import { useAppStore } from '/@/store/modules/app';
 
@@ -61,6 +61,14 @@ export function useMenuSetting() {
 
   const getIsTopMenu = computed(() => unref(getMenuType) === MenuTypeEnum.TOP_MENU);
 
+  const getIsMixSidebar = computed(() => {
+    return unref(getMenuType) === MenuTypeEnum.MIX_SIDEBAR;
+  });
+
+  const getIsMixMode = computed(() => {
+    return unref(getMenuMode) === MenuModeEnum.INLINE && unref(getMenuType) === MenuTypeEnum.MIX;
+  });
+
   const getCollapsedShowTitle = computed(() => appStore.getMenuSetting.collapsedShowTitle);
 
   const getShowTopMenu = computed(() => {
@@ -81,14 +89,6 @@ export function useMenuSetting() {
 
   const getIsHorizontal = computed(() => {
     return unref(getMenuMode) === MenuModeEnum.HORIZONTAL;
-  });
-
-  const getIsMixSidebar = computed(() => {
-    return unref(getMenuType) === MenuTypeEnum.MIX_SIDEBAR;
-  });
-
-  const getIsMixMode = computed(() => {
-    return unref(getMenuMode) === MenuModeEnum.INLINE && unref(getMenuType) === MenuTypeEnum.MIX;
   });
 
   const getRealWidth = computed(() => {
@@ -131,6 +131,7 @@ export function useMenuSetting() {
       collapsed: !unref(getCollapsed),
     });
   }
+
   return {
     setMenuSetting,
 

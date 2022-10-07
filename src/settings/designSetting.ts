@@ -4,7 +4,7 @@ export const prefixCls = 'lamp';
 
 export const darkMode = ThemeEnum.LIGHT;
 
-// app theme preset color
+// 主图按钮预设颜色
 export const APP_PRESET_COLOR_LIST: string[] = [
   '#0960bd',
   '#0084f4',
@@ -17,7 +17,7 @@ export const APP_PRESET_COLOR_LIST: string[] = [
   '#ff9800',
 ];
 
-// header preset color
+// 头部预设颜色
 export const HEADER_PRESET_BG_COLOR_LIST: string[] = [
   '#ffffff',
   '#151515',
@@ -32,7 +32,7 @@ export const HEADER_PRESET_BG_COLOR_LIST: string[] = [
   '#383f45',
 ];
 
-// sider preset color
+// 菜单栏预定颜色
 export const SIDE_BAR_BG_COLOR_LIST: string[] = [
   '#001529',
   '#212121',

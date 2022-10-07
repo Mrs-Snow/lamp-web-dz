@@ -1,5 +1,5 @@
 <template>
-  <Header :class="getHeaderClass">
+  <Header :class="getHeaderClass" :style="getHeaderStyle">
     <!-- left start -->
     <div :class="`${prefixCls}-left`">
       <!-- logo -->
@@ -93,12 +93,12 @@
   import { MultiTenantTypeEnum } from '/@/enums/biz/tenant';
 
   import {
+    CompanyList,
     ErrorAction,
     FullScreen,
     LayoutBreadcrumb,
     Notify,
     TenantCompanyList,
-    CompanyList,
     UserDropDown,
   } from './components';
   import { useAppInject } from '/@/hooks/web/useAppInject';
@@ -141,6 +141,7 @@
         getMenuWidth,
         getIsMixSidebar,
         getMenuType,
+        getRealWidth,
       } = useMenuSetting();
       const { getUseErrorHandle, getShowSettingButton, getSettingButtonPosition } =
         useRootSetting();
@@ -159,6 +160,19 @@
       const { getShowLocalePicker } = useLocale();
 
       const { getIsMobile } = useAppInject();
+
+      const getHeaderStyle = computed(() => {
+        if (!unref(getIsMixMode)) {
+          return {};
+        }
+
+        const left = `${unref(getRealWidth)}px`;
+        return {
+          left,
+          width: `calc(100% - ${left})`,
+          transition: 'all 0.2s',
+        };
+      });
 
       const getHeaderClass = computed(() => {
         const theme = unref(getHeaderTheme);
@@ -225,6 +239,7 @@
         globSetting,
         getShowSearch,
         MultiTenantTypeEnum,
+        getHeaderStyle,
       };
     },
   });

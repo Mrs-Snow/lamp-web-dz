@@ -178,7 +178,7 @@ export const useUserStore = defineStore({
         this.setExpireTime(expiration);
         this.setTenantId(tenantId);
 
-        return this.afterLoginAction(mode, goHome);
+        return this.afterLoginAction(mode, true, goHome);
       } catch (error) {
         return Promise.reject(error);
       }
@@ -186,11 +186,12 @@ export const useUserStore = defineStore({
 
     async afterLoginAction(
       mode: ErrorMessageMode,
+      isSetAppId = false,
       goHome?: boolean,
     ): Promise<DefUserInfoResultVO | null> {
       if (!this.getToken) return null;
       // get user info
-      const userInfo = await this.getUserInfoAction(mode);
+      const userInfo = await this.getUserInfoAction(mode, isSetAppId);
 
       const sessionTimeout = this.sessionTimeout;
       if (sessionTimeout) {
@@ -211,10 +212,15 @@ export const useUserStore = defineStore({
     },
 
     // 刷新时加载用户信息
-    async getUserInfoAction(mode: ErrorMessageMode = 'none'): Promise<DefUserInfoResultVO> {
+    async getUserInfoAction(
+      mode: ErrorMessageMode = 'none',
+      isSetAppId = false,
+    ): Promise<DefUserInfoResultVO> {
       const userInfo = await getUserInfoById(mode);
       this.setUserInfo(userInfo);
-      this.setApplicationId(userInfo?.defApplication?.id ?? DEF_APP_ID);
+      if (isSetAppId) {
+        this.setApplicationId(userInfo?.defApplication?.id ?? DEF_APP_ID);
+      }
       return userInfo;
     },
     /**

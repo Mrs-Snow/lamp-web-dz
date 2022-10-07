@@ -1,7 +1,6 @@
 <script lang="tsx">
-  import type { PropType, CSSProperties } from 'vue';
-
-  import { computed, defineComponent, unref, toRef } from 'vue';
+  import type { CSSProperties, PropType } from 'vue';
+  import { computed, defineComponent, toRef, unref } from 'vue';
   import { BasicMenu } from '/@/components/Menu';
   import { SimpleMenu } from '/@/components/SimpleMenu';
   import { AppLogo } from '/@/components/Application';
@@ -49,6 +48,7 @@
         getAccordion,
         getIsHorizontal,
         getIsSidebarType,
+        getIsMixMode,
         getSplit,
       } = useMenuSetting();
       const { getShowLogo } = useRootSetting();
@@ -65,7 +65,12 @@
 
       const getComputedMenuTheme = computed(() => props.theme || unref(getMenuTheme));
 
-      const getIsShowLogo = computed(() => unref(getShowLogo) && unref(getIsSidebarType));
+      // 需要显示logo 且是 左侧菜单模式 或 mix 模式
+      const getIsShowLogo = computed(
+        () =>
+          unref(getShowLogo) &&
+          (unref(getIsSidebarType) || (unref(getIsMixMode) && !props.isHorizontal)),
+      );
 
       const getUseScroll = computed(() => {
         // 垂直菜单 且 （左侧菜单模式 或 拆分类型为left或none）
@@ -106,6 +111,7 @@
           onMenuClick: handleMenuClick,
         };
       });
+
       /**
        * click menu
        * @param menu

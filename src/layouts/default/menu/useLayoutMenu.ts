@@ -76,7 +76,7 @@ export function useSplitMenu(splitType: Ref<MenuSplitTyeEnum>) {
     },
   );
 
-  // Handle left menu split
+  // 处理左侧分割后的菜单
   async function handleSplitLeftMenu(parentPath: string) {
     if (unref(getSplitLeft) || unref(getIsMobile)) return;
 
@@ -84,7 +84,10 @@ export function useSplitMenu(splitType: Ref<MenuSplitTyeEnum>) {
     const children = await getChildrenMenus(parentPath);
 
     if (!children || !children.length) {
-      setMenuSetting({ hidden: true });
+      // setMenuSetting({ hidden: true });
+      // menusRef.value = [];
+
+      setMenuSetting({ hidden: false });
       menusRef.value = [];
       return;
     }
