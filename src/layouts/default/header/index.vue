@@ -169,7 +169,8 @@
         const left = `${unref(getRealWidth)}px`;
         return {
           left,
-          width: `calc(100% - ${left})`,
+          // 加1像素是因为 vben 作者为何会在 .lamp-layout-header样式中增加1像素的左偏移： margin-left: -1px;
+          width: `calc(100% - ${left} + 1px)`,
           transition: 'all 0.2s',
         };
       });
