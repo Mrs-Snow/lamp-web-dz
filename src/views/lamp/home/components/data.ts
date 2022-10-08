@@ -61,10 +61,16 @@ export const dynamicInfoItems: DynamicInfoItem[] = [
     desc: `<a href="###">录制配套视频</a>`,
   },
   {
-    percent: 30,
+    percent: 40,
     name: '4.12.x 正在进行：',
     date: '2022-10-??',
     desc: `<a href="###">优化前后端代码、重构前后端代码、CodeReview、缓存完善</a>`,
+  },
+  {
+    percent: 100,
+    name: '4.12.1-beta 已发布：',
+    date: '2022-10-08',
+    desc: `<a href="https://www.oschina.net/news/212811">《灯灯》4.12.1-beta已发布，认证服务重构 & 前端项目优化</a>`,
   },
   {
     percent: 100,
