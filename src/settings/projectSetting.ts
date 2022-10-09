@@ -1,16 +1,16 @@
 import type { ProjectConfig } from '/#/config';
-import { MenuTypeEnum, MenuModeEnum, TriggerEnum, MixSidebarTriggerEnum } from '/@/enums/menuEnum';
+import { MenuModeEnum, MenuTypeEnum, MixSidebarTriggerEnum, TriggerEnum } from '/@/enums/menuEnum';
 import { CacheTypeEnum } from '/@/enums/cacheEnum';
 import {
   ContentEnum,
   PermissionModeEnum,
-  ThemeEnum,
   RouterTransitionEnum,
-  SettingButtonPositionEnum,
   SessionTimeoutProcessingEnum,
+  SettingButtonPositionEnum,
   TabsThemeEnum,
+  ThemeEnum,
 } from '/@/enums/appEnum';
-import { SIDE_BAR_BG_COLOR_LIST, HEADER_PRESET_BG_COLOR_LIST } from './designSetting';
+import { HEADER_PRESET_BG_COLOR_LIST, SIDE_BAR_BG_COLOR_LIST } from './designSetting';
 
 // ! You need to clear the browser cache after the change
 const setting: ProjectConfig = {
@@ -170,7 +170,7 @@ const setting: ProjectConfig = {
   // Whether to open back to top
   useOpenBackTop: true,
 
-  //  Is it possible to embed iframe pages
+  // 是否可以嵌入iframe页面
   canEmbedIFramePage: true,
 
   // Whether to delete unclosed messages and notify when switching the interface
