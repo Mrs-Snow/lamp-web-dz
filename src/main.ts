@@ -20,6 +20,12 @@ import { registerThirdComp } from '/@/settings/registerThirdComp';
 //   import('ant-design-vue/dist/antd.less');
 // }
 
+import { isDevMode } from './utils/env';
+
+if (isDevMode()) {
+  import('ant-design-vue/es/style');
+}
+
 async function bootstrap() {
   const app = createApp(App);
 
