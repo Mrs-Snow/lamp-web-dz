@@ -1,24 +1,24 @@
 <template>
   <Form
-    v-bind="getBindValue"
-    :class="getFormClass"
     ref="formElRef"
+    :class="getFormClass"
     :model="formModel"
+    v-bind="getBindValue"
     @keypress.enter="handleEnterPress"
   >
     <Row v-bind="getRow">
       <slot name="formHeader"></slot>
       <template v-for="schema in getSchema" :key="schema.field">
         <FormItem
-          :tableAction="tableAction"
-          :formActionType="formActionType"
-          :schema="schema"
-          :formProps="getProps"
           :allDefaultValues="defaultValueRef"
+          :formActionType="formActionType"
           :formModel="formModel"
+          :formProps="getProps"
+          :schema="schema"
           :setFormModel="setFormModel"
+          :tableAction="tableAction"
         >
-          <template #[item]="data" v-for="item in Object.keys($slots)">
+          <template v-for="item in Object.keys($slots)" #[item]="data">
             <slot :name="item" v-bind="data || {}"></slot>
           </template>
         </FormItem>
@@ -26,8 +26,8 @@
 
       <FormAction v-bind="getFormActionBindProps" @toggle-advanced="handleToggleAdvanced">
         <template
-          #[item]="data"
           v-for="item in ['resetBefore', 'submitBefore', 'advanceBefore', 'advanceAfter']"
+          #[item]="data"
         >
           <slot :name="item" v-bind="data || {}"></slot>
         </template>
@@ -40,8 +40,7 @@
   import type { FormActionType, FormProps, FormSchema } from './types/form';
   import type { AdvanceState } from './types/hooks';
   import type { Ref } from 'vue';
-
-  import { defineComponent, reactive, ref, computed, unref, onMounted, watch, nextTick } from 'vue';
+  import { computed, defineComponent, nextTick, onMounted, reactive, ref, unref, watch } from 'vue';
   import { Form, Row } from 'ant-design-vue';
   import FormItem from './components/FormItem.vue';
   import FormAction from './components/FormAction.vue';
@@ -49,7 +48,6 @@
   import { dateItemType, simpleComponents } from './helper';
   import { dateUtil } from '/@/utils/dateUtil';
 
-  // import { cloneDeep } from 'lodash-es';
   import { deepMerge } from '/@/utils';
 
   import { useFormValues } from './hooks/useFormValues';
@@ -62,7 +60,6 @@
 
   import { basicProps } from './props';
   import { useDesign } from '/@/hooks/web/useDesign';
-  import { cloneDeep } from 'lodash-es';
 
   export default defineComponent({
     name: 'BasicForm',
@@ -132,14 +129,23 @@
             }
           }
         }
+
+        // cloneDeep 会导致bug： https://github.com/vbenjs/vue-vben-admin/pull/1935
+        // if (unref(getProps).showAdvancedButton) {
+        //   return cloneDeep(
+        //     schemas.filter(
+        //       (schema) => !simpleComponents.includes(schema.component),
+        //     ) as FormSchema[],
+        //   );
+        // } else {
+        //   return cloneDeep(schemas as FormSchema[]);
+        // }
         if (unref(getProps).showAdvancedButton) {
-          return cloneDeep(
-            schemas.filter(
-              (schema) => !simpleComponents.includes(schema.component),
-            ) as FormSchema[],
-          );
+          return schemas.filter(
+            (schema) => !simpleComponents.includes(schema.component),
+          ) as FormSchema[];
         } else {
-          return cloneDeep(schemas as FormSchema[]);
+          return schemas as FormSchema[];
         }
       });
 
