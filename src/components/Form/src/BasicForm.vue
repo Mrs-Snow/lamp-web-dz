@@ -1,9 +1,10 @@
 <template>
+  <!-- 一定要先 v-bind ，在model 否则表单校验有问题 -->
   <Form
     ref="formElRef"
     :class="getFormClass"
-    :model="formModel"
     v-bind="getBindValue"
+    :model="formModel"
     @keypress.enter="handleEnterPress"
   >
     <Row v-bind="getRow">
