@@ -138,6 +138,8 @@ export enum DictEnum {
   AREA_SOURCE = 'TENANT_AREA_SOURCE',
   DictionaryType_Global_EDUCATION = 'GLOBAL_EDUCATION',
   DictionaryType_Global_DATA_TYPE = 'DATA_TYPE',
+
+  TENANT_LOGIN_STATUS = 'TENANT_LOGIN_STATUS',
 }
 
 export enum MsgTemplateCodeEnum {

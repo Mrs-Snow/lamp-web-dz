@@ -1,10 +1,10 @@
-import { Ref } from 'vue';
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
-import { ActionEnum } from '/@/enums/commonEnum';
+import { DictEnum } from '/@/enums/commonEnum';
 import { DropMenu } from '/@/components/Dropdown/src/typing';
 import { Badge } from 'ant-design-vue';
 import { LoginStatusEnum } from '/@/enums/biz/tenant';
+import { dictComponentProps } from '/@/utils/lamp/common';
 
 const { t } = useI18n();
 // 列表页字段
@@ -119,7 +119,7 @@ export const searchFormSchema = (): FormSchema[] => {
 };
 
 // 编辑页字段
-export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
+export const editFormSchema = (_): FormSchema[] => {
   return [
     {
       field: 'id',
@@ -155,89 +155,59 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       label: t('devOperation.system.defLoginLog.requestIp'),
       field: 'requestIp',
       component: 'Input',
-      dynamicDisabled: () => {
-        return [ActionEnum.VIEW].includes(type.value);
-      },
     },
     {
       label: t('devOperation.system.defLoginLog.nickName'),
       field: 'nickName',
       component: 'Input',
-      dynamicDisabled: () => {
-        return [ActionEnum.VIEW].includes(type.value);
-      },
     },
     {
       label: t('devOperation.system.defLoginLog.username'),
       field: 'username',
       component: 'Input',
-      dynamicDisabled: () => {
-        return [ActionEnum.VIEW].includes(type.value);
-      },
     },
     {
       label: t('devOperation.system.defLoginLog.status'),
       field: 'status',
-      component: 'Input',
-      dynamicDisabled: () => {
-        return [ActionEnum.VIEW].includes(type.value);
+      component: 'ApiSelect',
+      componentProps: {
+        ...dictComponentProps(DictEnum.TENANT_LOGIN_STATUS),
       },
     },
     {
       label: t('devOperation.system.defLoginLog.description'),
       field: 'description',
       component: 'Input',
-      dynamicDisabled: () => {
-        return [ActionEnum.VIEW].includes(type.value);
-      },
     },
     {
       label: t('devOperation.system.defLoginLog.loginDate'),
       field: 'loginDate',
       component: 'Input',
-      dynamicDisabled: () => {
-        return [ActionEnum.VIEW].includes(type.value);
-      },
     },
     {
       label: t('devOperation.system.defLoginLog.ua'),
       field: 'ua',
-      component: 'Input',
-      dynamicDisabled: () => {
-        return [ActionEnum.VIEW].includes(type.value);
-      },
+      component: 'InputTextArea',
     },
     {
       label: t('devOperation.system.defLoginLog.browser'),
       field: 'browser',
       component: 'Input',
-      dynamicDisabled: () => {
-        return [ActionEnum.VIEW].includes(type.value);
-      },
     },
     {
       label: t('devOperation.system.defLoginLog.browserVersion'),
       field: 'browserVersion',
       component: 'Input',
-      dynamicDisabled: () => {
-        return [ActionEnum.VIEW].includes(type.value);
-      },
     },
     {
       label: t('devOperation.system.defLoginLog.operatingSystem'),
       field: 'operatingSystem',
       component: 'Input',
-      dynamicDisabled: () => {
-        return [ActionEnum.VIEW].includes(type.value);
-      },
     },
     {
       label: t('devOperation.system.defLoginLog.location'),
       field: 'location',
       component: 'Input',
-      dynamicDisabled: () => {
-        return [ActionEnum.VIEW].includes(type.value);
-      },
     },
   ];
 };
