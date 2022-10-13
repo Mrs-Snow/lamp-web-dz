@@ -153,6 +153,7 @@ export const editFormSchema = (_type: Ref<ActionEnum>): FormSchema[] => {
       label: t('basic.msg.extendInterfaceLogging.errorMsg'),
       field: 'errorMsg',
       component: 'Input',
+      slot: 'errorMsg',
     },
     {
       label: t('basic.msg.extendInterfaceLogging.bizId'),
