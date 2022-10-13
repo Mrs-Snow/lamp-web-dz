@@ -119,6 +119,15 @@ export const columns = (): BasicColumn[] => {
 export const searchFormSchema = (): FormSchema[] => {
   return [
     {
+      field: 'type',
+      label: t('basic.system.baseOperationLog.type'),
+      component: 'ApiSelect',
+      componentProps: {
+        ...enumComponentProps(EnumEnum.LogType),
+      },
+      colProps: { span: 8 },
+    },
+    {
       field: 'description',
       label: t('basic.system.baseOperationLog.description'),
       component: 'Input',

@@ -1,11 +1,11 @@
 import { Badge } from 'ant-design-vue';
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
-import { DictEnum } from '/@/enums/commonEnum';
+import { DictEnum, EnumEnum } from '/@/enums/commonEnum';
 import { DropMenu } from '/@/components/Dropdown/src/typing';
 
 import { LoginStatusEnum } from '/@/enums/biz/tenant';
-import { dictComponentProps } from '/@/utils/lamp/common';
+import { dictComponentProps, enumComponentProps } from '/@/utils/lamp/common';
 
 const { t } = useI18n();
 // 列表页字段
@@ -86,6 +86,15 @@ export const columns = (): BasicColumn[] => {
 
 export const searchFormSchema = (): FormSchema[] => {
   return [
+    {
+      label: t('devOperation.system.defLoginLog.status'),
+      field: 'status',
+      component: 'ApiSelect',
+      componentProps: {
+        ...enumComponentProps(EnumEnum.LoginStatusEnum),
+      },
+      colProps: { span: 8 },
+    },
     {
       label: t('devOperation.system.defLoginLog.requestIp'),
       field: 'requestIp',

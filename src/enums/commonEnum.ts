@@ -88,6 +88,7 @@ export enum EnumEnum {
   Sex = 'Sex',
   AuthorizeType = 'AuthorizeType',
   LogType = 'LogType',
+  LoginStatusEnum = 'LoginStatusEnum',
   DataScopeType = 'DataScopeType',
   HttpMethod = 'HttpMethod',
 
