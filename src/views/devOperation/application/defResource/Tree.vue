@@ -182,7 +182,7 @@
       // 悬停图标
       const actionList: TreeActionItem[] = [
         {
-          auth: [RoleEnum.RESOURCE_ADD, RoleEnum.APPLICATION_RESOURCE_ADD],
+          auth: [RoleEnum.RESOURCE_MOVE, RoleEnum.APPLICATION_RESOURCE_MOVE],
           authMode: PermModeEnum.HasAny,
           render: (node) => {
             return h(DragOutlined, {
@@ -273,7 +273,7 @@
             icon: 'ant-design:plus-square-outlined',
           },
           {
-            auth: [RoleEnum.RESOURCE_ADD, RoleEnum.APPLICATION_RESOURCE_ADD],
+            auth: [RoleEnum.RESOURCE_MOVE, RoleEnum.APPLICATION_RESOURCE_MOVE],
             authMode: PermModeEnum.HasAny,
             label: t('common.title.move'),
             handler: () => {

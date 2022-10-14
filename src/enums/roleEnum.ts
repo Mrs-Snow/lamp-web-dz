@@ -40,9 +40,11 @@ export enum RoleEnum {
   APPLICATION_IS_VISIBLE = 'tenant:application:application:isVisible',
   // 应用资源
   APPLICATION_RESOURCE_ADD = 'tenant:application:application:resource:add',
+  APPLICATION_RESOURCE_MOVE = 'tenant:application:application:resource:move',
   APPLICATION_RESOURCE_EDIT = 'tenant:application:application:resource:edit',
   APPLICATION_RESOURCE_DELETE = 'tenant:application:application:resource:delete',
   // 资源
+  RESOURCE_MOVE = 'tenant:application:resource:move',
   RESOURCE_ADD = 'tenant:application:resource:add',
   RESOURCE_EDIT = 'tenant:application:resource:edit',
   RESOURCE_DELETE = 'tenant:application:resource:delete',
