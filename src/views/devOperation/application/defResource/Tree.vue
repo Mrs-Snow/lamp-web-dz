@@ -27,6 +27,9 @@
       >
         {{ t('common.title.delete') }}
       </a-button>
+      <a-button class="mr-2" preIcon="ant-design:reload-outlined" @click="fetch()">
+        {{ t('common.redo') }}
+      </a-button>
     </div>
     <BasicTree
       ref="treeRef"
@@ -45,12 +48,13 @@
     >
       <template #titleBefore="item">
         <template v-if="item.echoMap?.resourceType">
-          <Tag :color="getResourceTagColor(item?.resourceType)">
+          <Tag :color="getResourceTagColor(item?.resourceType)" :title="item.treePath">
             {{ item.echoMap?.resourceType }}
           </Tag>
         </template>
       </template>
     </BasicTree>
+    <MoveModal @register="registerModal" @success="handleSuccess" />
   </div>
 </template>
 <script lang="ts">
@@ -67,16 +71,23 @@
     TreeActionType,
     TreeItem,
   } from '/@/components/Tree';
+  import {
+    DeleteOutlined,
+    DragOutlined,
+    EditOutlined,
+    PlusSquareOutlined,
+  } from '@ant-design/icons-vue';
   import { eachTree, findNodeByKey } from '/@/utils/helper/treeHelper';
   import { getResourceTagColor } from '/@/utils/color';
   import { query } from '/@/api/devOperation/application/defApplication';
   import { remove, tree } from '/@/api/devOperation/application/defResource';
   import { ResourceTypeEnum } from '/@/enums/biz/tenant';
+  import { useModal } from '/@/components/Modal';
+  import MoveModal from './Move.vue';
 
   export default defineComponent({
     name: 'DefResourceManagement',
-    components: { BasicTree, Select, Tag },
-
+    components: { BasicTree, Select, Tag, MoveModal },
     emits: ['select', 'add', 'edit', 'change'],
     setup(_, { emit }) {
       const { t } = useI18n();
@@ -90,6 +101,7 @@
         appDisabled: false,
       });
       const applicationRef = reactive<Recordable>({ value: '', label: '' });
+      const [registerModal, { openModal }] = useModal();
 
       function getTree() {
         const tree = unref(treeRef);
@@ -160,8 +172,30 @@
         }
       }
 
+      function handleMove(current = {}) {
+        openModal(true, {
+          applicationId: applicationRef.value,
+          current,
+        });
+      }
+
       // 悬停图标
       const actionList: TreeActionItem[] = [
+        {
+          auth: [RoleEnum.RESOURCE_ADD, RoleEnum.APPLICATION_RESOURCE_ADD],
+          authMode: PermModeEnum.HasAny,
+          render: (node) => {
+            return h(DragOutlined, {
+              class: 'ml-2',
+              title: t('common.title.move'),
+              onClick: (e: Event) => {
+                e?.stopPropagation();
+                e?.preventDefault();
+                handleMove(findNodeByKey(node.id, treeData.value));
+              },
+            });
+          },
+        },
         {
           auth: [RoleEnum.RESOURCE_ADD, RoleEnum.APPLICATION_RESOURCE_ADD],
           authMode: PermModeEnum.HasAny,
@@ -173,60 +207,52 @@
             ].includes(node.resourceType);
           },
           render: (node) => {
-            return h(
-              'a',
-              {
-                class: 'ml-2',
-                onClick: (e: Event) => {
-                  e?.stopPropagation();
-                  e?.preventDefault();
-                  emit('add', findNodeByKey(node.id, treeData.value), {
-                    applicationId: applicationRef.value,
-                    applicationName: applicationRef.label,
-                  });
-                },
+            return h(PlusSquareOutlined, {
+              class: 'ml-2',
+              title: t('common.title.add'),
+              onClick: (e: Event) => {
+                e?.stopPropagation();
+                e?.preventDefault();
+                emit('add', findNodeByKey(node.id, treeData.value), {
+                  applicationId: applicationRef.value,
+                  applicationName: applicationRef.label,
+                });
               },
-              t('common.title.add'),
-            );
+            });
           },
         },
         {
           auth: [RoleEnum.RESOURCE_EDIT, RoleEnum.APPLICATION_RESOURCE_EDIT],
           authMode: PermModeEnum.HasAny,
           render: (node) => {
-            return h(
-              'a',
-              {
-                class: 'ml-2',
-                onClick: (e: Event) => {
-                  e?.stopPropagation();
-                  e?.preventDefault();
-                  const current = findNodeByKey(node?.id, treeData.value);
-                  const parent = findNodeByKey(node?.parentId, treeData.value);
-                  current.applicationName = applicationRef.label;
-                  emit('edit', parent, current);
-                },
+            return h(EditOutlined, {
+              class: 'ml-2',
+              title: t('common.title.edit'),
+              onClick: (e: Event) => {
+                e?.stopPropagation();
+                e?.preventDefault();
+                const current = findNodeByKey(node?.id, treeData.value);
+                const parent = findNodeByKey(node?.parentId, treeData.value);
+                current.applicationName = applicationRef.label;
+                emit('edit', parent, current);
               },
-              t('common.title.edit'),
-            );
+            });
           },
         },
         {
           auth: [RoleEnum.RESOURCE_DELETE, RoleEnum.APPLICATION_RESOURCE_DELETE],
           authMode: PermModeEnum.HasAny,
           render: (node) => {
-            return h(
-              'a',
-              {
-                class: 'ml-2',
-                onClick: (e: Event) => {
-                  e?.stopPropagation();
-                  e?.preventDefault();
-                  batchDelete([node.id]);
-                },
+            return h(DeleteOutlined, {
+              class: 'ml-2',
+              title: t('common.title.delete'),
+              style: { color: '#ED6F6F' },
+              onClick: (e: Event) => {
+                e?.stopPropagation();
+                e?.preventDefault();
+                batchDelete([node.id]);
               },
-              t('common.title.delete'),
-            );
+            });
           },
         },
       ];
@@ -245,6 +271,15 @@
               });
             },
             icon: 'ant-design:plus-square-outlined',
+          },
+          {
+            auth: [RoleEnum.RESOURCE_ADD, RoleEnum.APPLICATION_RESOURCE_ADD],
+            authMode: PermModeEnum.HasAny,
+            label: t('common.title.move'),
+            handler: () => {
+              handleMove(findNodeByKey(unref(node).id, treeData.value));
+            },
+            icon: 'ant-design:drag-outlined',
           },
           {
             label: t('common.title.edit'),
@@ -312,6 +347,10 @@
         emit('change', value, label);
       }
 
+      async function handleSuccess() {
+        await fetch();
+      }
+
       return {
         t,
         RoleEnum,
@@ -329,6 +368,8 @@
         data,
         applicationRef,
         treeLoading,
+        registerModal,
+        handleSuccess,
       };
     },
   });

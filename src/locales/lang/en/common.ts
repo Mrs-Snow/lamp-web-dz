@@ -28,6 +28,7 @@ export default {
     addChildren: 'Add Children',
     edit: 'Edit',
     copy: 'Copy',
+    move: 'Move',
     delete: 'Delete',
     query: 'Query',
     import: 'Import',

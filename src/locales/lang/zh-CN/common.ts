@@ -24,6 +24,7 @@ export default {
   },
   title: {
     add: '新增',
+    move: '移动',
     addRoot: '新增根节点',
     addChildren: '新增子节点',
     edit: '编辑',
