@@ -143,6 +143,7 @@
                 window.open(item.url);
               } else {
                 userStore.setApplicationId(item.id as string);
+                userStore.setApplicationName(item.name as string);
                 await userStore.getUserInfoAction();
                 await refreshMenu();
                 const { closeAll } = useTabs(router);

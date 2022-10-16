@@ -3,9 +3,9 @@
  * @Description: logo component
 -->
 <template>
-  <div class="anticon" :class="getAppLogoClass" @click="goHome">
+  <div :class="getAppLogoClass" class="anticon" @click="goHome">
     <img src="../../../assets/images/logo.png" />
-    <div class="ml-2 truncate md:opacity-100" :class="getTitleClass" v-show="showTitle">
+    <div v-show="showTitle" :class="getTitleClass" class="ml-2 truncate md:opacity-100">
       {{ newTitle }}
     </div>
   </div>
@@ -60,10 +60,10 @@
   ]);
 
   watch(
-    () => userStore.getUserInfo?.defApplication?.name,
+    () => userStore.getApplicationName,
     () => {
       if (props.applicationTitle) {
-        newTitle.value = userStore.getUserInfo?.defApplication?.name ?? title;
+        newTitle.value = userStore.getApplicationName ?? title;
       } else {
         newTitle.value = title;
       }

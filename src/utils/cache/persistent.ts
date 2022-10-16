@@ -5,30 +5,32 @@ import type { RouteLocationNormalized } from 'vue-router';
 import { createLocalStorage, createSessionStorage } from '/@/utils/cache';
 import { Memory } from './memory';
 import {
-  TOKEN_KEY,
-  REFRESH_TOKEN_KEY,
-  TENANT_ID_KEY,
-  PERM_CODE_KEY,
-  PERM_KEY,
-  EXPIRE_TIME_KEY,
-  USER_INFO_KEY,
-  ROLES_KEY,
-  LOCK_INFO_KEY,
-  PROJ_CFG_KEY,
   APP_LOCAL_CACHE_KEY,
   APP_SESSION_CACHE_KEY,
-  MULTIPLE_TABS_KEY,
   APPLICATION_ID_KEY,
+  APPLICATION_NAME_KEY,
+  EXPIRE_TIME_KEY,
+  LOCK_INFO_KEY,
+  MULTIPLE_TABS_KEY,
+  PERM_CODE_KEY,
+  PERM_KEY,
+  PROJ_CFG_KEY,
+  REFRESH_TOKEN_KEY,
+  ROLES_KEY,
+  TENANT_ID_KEY,
+  TOKEN_KEY,
+  USER_INFO_KEY,
 } from '/@/enums/cacheEnum';
 import { DEFAULT_CACHE_TIME } from '/@/settings/encryptionSetting';
 import { toRaw } from 'vue';
-import { pick, omit } from 'lodash-es';
+import { omit, pick } from 'lodash-es';
 
 interface BasicStore {
   [TOKEN_KEY]: string | number | null | undefined;
   [REFRESH_TOKEN_KEY]: string | number | null | undefined;
   [TENANT_ID_KEY]: string | number | null | undefined;
   [APPLICATION_ID_KEY]: string | number | null | undefined;
+  [APPLICATION_NAME_KEY]: string | null | undefined;
   [PERM_CODE_KEY]: Recordable;
   [PERM_KEY]: Recordable;
   [EXPIRE_TIME_KEY]: string | number | null | undefined;
@@ -93,6 +95,7 @@ export class Persistent {
     sessionMemory.remove(key);
     immediate && ss.set(APP_SESSION_CACHE_KEY, sessionMemory.getCache);
   }
+
   static clearSession(immediate = false): void {
     sessionMemory.clear();
     immediate && ss.clear();

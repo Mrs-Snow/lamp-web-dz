@@ -6,6 +6,7 @@ import { RoleEnum } from '/@/enums/roleEnum';
 import { PageEnum } from '/@/enums/pageEnum';
 import {
   APPLICATION_ID_KEY,
+  APPLICATION_NAME_KEY,
   EXPIRE_TIME_KEY,
   REFRESH_TOKEN_KEY,
   ROLES_KEY,
@@ -37,6 +38,7 @@ interface UserState {
   expireTime?: string;
   tenantId?: string;
   applicationId: string;
+  applicationName: string;
 }
 
 export const useUserStore = defineStore({
@@ -58,14 +60,18 @@ export const useUserStore = defineStore({
     tenantId: '',
     // 应用id
     applicationId: '',
+    applicationName: '',
   }),
   getters: {
+    // 当前用户信息
     getUserInfo(): DefUserInfoResultVO {
       return this.userInfo || getAuthCache<DefUserInfoResultVO>(USER_INFO_KEY) || {};
     },
+    // 当前用户的Token
     getToken(): string {
       return this.token || getAuthCache<string>(TOKEN_KEY);
     },
+    // 在lamp项目中没用
     getRoleList(): RoleEnum[] {
       return this.roleList.length > 0 ? this.roleList : getAuthCache<RoleEnum[]>(ROLES_KEY);
     },
@@ -81,12 +87,17 @@ export const useUserStore = defineStore({
     getExpireTime(): string {
       return this.expireTime || getAuthCache<string>(EXPIRE_TIME_KEY);
     },
-    // 4.0.0 存储的是租户id
+    // 当前租户ID
     getTenantId(): string {
       return this.tenantId || getAuthCache<string>(TENANT_ID_KEY);
     },
+    // 当前应用ID
     getApplicationId(): string {
       return this.applicationId || getAuthCache<string>(APPLICATION_ID_KEY);
+    },
+    // 当前应用名称
+    getApplicationName(): string {
+      return this.applicationName || getAuthCache<string>(APPLICATION_NAME_KEY);
     },
   },
   actions: {
@@ -114,6 +125,10 @@ export const useUserStore = defineStore({
     setApplicationId(info: string) {
       this.applicationId = info;
       setAuthCache(APPLICATION_ID_KEY, info);
+    },
+    setApplicationName(info: string) {
+      this.applicationName = info;
+      setAuthCache(APPLICATION_NAME_KEY, info);
     },
     setExpireTime(info: string) {
       this.expireTime = info;
@@ -220,6 +235,7 @@ export const useUserStore = defineStore({
       this.setUserInfo(userInfo);
       if (isSetAppId) {
         this.setApplicationId(userInfo?.defApplication?.id ?? DEF_APP_ID);
+        this.setApplicationName(userInfo?.defApplication?.name ?? '');
       }
       return userInfo;
     },
