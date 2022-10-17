@@ -5,7 +5,7 @@ import legacy from '@vitejs/plugin-legacy';
 import purgeIcons from 'vite-plugin-purge-icons';
 import windiCSS from 'vite-plugin-windicss';
 import VitePluginCertificate from 'vite-plugin-mkcert';
-import vueSetupExtend from 'vite-plugin-vue-setup-extend';
+//import vueSetupExtend from 'vite-plugin-vue-setup-extend';
 import { configHtmlPlugin } from './html';
 import { configPwaConfig } from './pwa';
 import { configMockPlugin } from './mock';
@@ -15,7 +15,6 @@ import { configVisualizerConfig } from './visualizer';
 import { configThemePlugin } from './theme';
 import { configImageminPlugin } from './imagemin';
 import { configSvgIconsPlugin } from './svgSprite';
-import { configVxeTableThemePlugin } from './theme-vxe-table';
 
 export function createVitePlugins(viteEnv: ViteEnv, isBuild: boolean) {
   const {
@@ -32,7 +31,7 @@ export function createVitePlugins(viteEnv: ViteEnv, isBuild: boolean) {
     // have to
     vueJsx(),
     // support name
-    vueSetupExtend(),
+    //vueSetupExtend(),
     VitePluginCertificate({
       source: 'coding',
     }),
@@ -78,8 +77,6 @@ export function createVitePlugins(viteEnv: ViteEnv, isBuild: boolean) {
     // vite-plugin-pwa
     vitePlugins.push(configPwaConfig(viteEnv));
   }
-
-  vitePlugins.push(configVxeTableThemePlugin());
 
   return vitePlugins;
 }

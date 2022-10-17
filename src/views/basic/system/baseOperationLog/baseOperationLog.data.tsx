@@ -1,12 +1,13 @@
-import { Ref } from 'vue';
+import { h } from 'vue';
 import { Badge, Tag } from 'ant-design-vue';
 import { dateUtil } from '/@/utils/dateUtil';
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { enumComponentProps } from '/@/utils/lamp/common';
-import { ActionEnum, EnumEnum } from '/@/enums/commonEnum';
+import { EnumEnum } from '/@/enums/commonEnum';
 import { DropMenu } from '/@/components/Dropdown/src/typing';
 import { LogTypeEnum } from '/@/enums/biz/base';
+import { JsonPreview } from '/@/components/CodeEditor';
 
 const { t } = useI18n();
 // 列表页字段
@@ -118,6 +119,15 @@ export const columns = (): BasicColumn[] => {
 export const searchFormSchema = (): FormSchema[] => {
   return [
     {
+      field: 'type',
+      label: t('basic.system.baseOperationLog.type'),
+      component: 'ApiSelect',
+      componentProps: {
+        ...enumComponentProps(EnumEnum.LogType),
+      },
+      colProps: { span: 8 },
+    },
+    {
       field: 'description',
       label: t('basic.system.baseOperationLog.description'),
       component: 'Input',
@@ -157,7 +167,7 @@ export const searchFormSchema = (): FormSchema[] => {
 };
 
 // 编辑页字段
-export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
+export const editFormSchema = (_): FormSchema[] => {
   return [
     {
       field: 'id',
@@ -169,16 +179,10 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       label: t('basic.system.baseOperationLog.requestIp'),
       field: 'requestIp',
       component: 'Input',
-      dynamicDisabled: () => {
-        return [ActionEnum.VIEW].includes(type.value);
-      },
     },
     {
       label: t('basic.system.baseOperationLog.type'),
       field: 'type',
-      dynamicDisabled: () => {
-        return [ActionEnum.VIEW].includes(type.value);
-      },
       component: 'ApiSelect',
       componentProps: {
         ...enumComponentProps(EnumEnum.LogType),
@@ -188,60 +192,79 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       label: t('basic.system.baseOperationLog.userName'),
       field: 'userName',
       component: 'Input',
-      dynamicDisabled: () => {
-        return [ActionEnum.VIEW].includes(type.value);
-      },
     },
     {
       label: t('basic.system.baseOperationLog.description'),
       field: 'description',
       component: 'InputTextArea',
-      dynamicDisabled: () => {
-        return [ActionEnum.VIEW].includes(type.value);
-      },
-    },
-    {
-      label: t('basic.system.baseOperationLog.classPath'),
-      field: 'classPath',
-      component: 'Input',
-      dynamicDisabled: () => {
-        return [ActionEnum.VIEW].includes(type.value);
-      },
-    },
-    {
-      label: t('basic.system.baseOperationLog.actionMethod'),
-      field: 'actionMethod',
-      component: 'Input',
-      dynamicDisabled: () => {
-        return [ActionEnum.VIEW].includes(type.value);
-      },
     },
     {
       label: t('basic.system.baseOperationLog.requestUri'),
       field: 'requestUri',
       component: 'Input',
-      dynamicDisabled: () => {
-        return [ActionEnum.VIEW].includes(type.value);
-      },
     },
     {
       label: t('basic.system.baseOperationLog.httpMethod'),
       field: 'httpMethod',
-      dynamicDisabled: () => {
-        return [ActionEnum.VIEW].includes(type.value);
-      },
       component: 'ApiSelect',
       componentProps: {
         ...enumComponentProps(EnumEnum.HttpMethod),
       },
     },
     {
+      label: t('basic.system.baseOperationLog.classPath'),
+      field: 'classPath',
+      component: 'Input',
+    },
+    {
+      label: t('basic.system.baseOperationLog.actionMethod'),
+      field: 'actionMethod',
+      component: 'Input',
+    },
+    {
+      label: '参数',
+      field: 'params',
+      component: 'InputTextArea',
+      render: ({ model, field }) => {
+        try {
+          const obj = JSON.parse(model[field]);
+          if (obj) {
+            return h(JsonPreview, { data: obj });
+          } else {
+            return h('div', model[field]);
+          }
+        } catch (e) {
+          return h('div', model[field]);
+        }
+      },
+    },
+    {
+      label: '返回结果',
+      field: 'result',
+      component: 'InputTextArea',
+      render: ({ model, field }) => {
+        try {
+          const obj = JSON.parse(model[field]);
+          if (obj) {
+            return h(JsonPreview, { data: obj });
+          } else {
+            return h('div', model[field]);
+          }
+        } catch (e) {
+          return h('div', model[field]);
+        }
+      },
+    },
+    {
+      label: '异常日志',
+      field: 'exDetail',
+      component: 'InputTextArea',
+      slot: 'exDetail',
+    },
+    {
       label: t('basic.system.baseOperationLog.startTime'),
       field: 'startTime',
       component: 'DatePicker',
-      dynamicDisabled: () => {
-        return [ActionEnum.VIEW].includes(type.value);
-      },
       componentProps: {
         format: 'YYYY-MM-DD HH:mm:ss',
         valueFormat: 'YYYY-MM-DD HH:mm:ss',
@@ -252,9 +275,6 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       label: t('basic.system.baseOperationLog.finishTime'),
       field: 'finishTime',
       component: 'DatePicker',
-      dynamicDisabled: () => {
-        return [ActionEnum.VIEW].includes(type.value);
-      },
       componentProps: {
         format: 'YYYY-MM-DD HH:mm:ss',
         valueFormat: 'YYYY-MM-DD HH:mm:ss',
@@ -265,17 +285,11 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
       label: t('basic.system.baseOperationLog.consumingTime'),
       field: 'consumingTime',
       component: 'Input',
-      dynamicDisabled: () => {
-        return [ActionEnum.VIEW].includes(type.value);
-      },
     },
     {
       label: t('basic.system.baseOperationLog.ua'),
       field: 'ua',
-      component: 'Input',
-      dynamicDisabled: () => {
-        return [ActionEnum.VIEW].includes(type.value);
-      },
+      component: 'InputTextArea',
     },
   ];
 };

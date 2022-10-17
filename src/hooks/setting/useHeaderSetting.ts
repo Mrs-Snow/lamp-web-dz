@@ -71,7 +71,10 @@ export function useHeaderSetting() {
   });
 
   const getShowHeaderLogo = computed(() => {
-    return unref(getShowLogo) && !unref(getIsSidebarType) && !unref(getIsMixSidebar);
+    // 只有Top 模式，才显示Header部分的logo
+    return unref(getShowLogo) && unref(getIsTopMenu);
+    // 不是 左侧菜单模式 和 左侧菜单混合模式 则在 header 显示logo
+    // return unref(getShowLogo) && !unref(getIsSidebarType) && !unref(getIsMixSidebar);
   });
 
   const getShowContent = computed(() => {

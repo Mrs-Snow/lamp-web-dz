@@ -1,11 +1,11 @@
 import { dateUtil } from '/@/utils/dateUtil';
 import { RuleObject } from 'ant-design-vue/lib/form/interface';
 import type { ConstraintInfo, FieldValidatorDesc } from './model/formValidateModel';
-import type { Rule, FormSchema } from '/@/components/Form/src/types/form';
+import type { FormSchema, Rule } from '/@/components/Form/src/types/form';
 import { ServicePrefixEnum } from '/@/enums/commonEnum';
 import { defHttp } from '/@/utils/http/axios';
 import type { AxiosRequestConfig } from 'axios';
-import { VxeTablePropTypes, VxeTableDefines } from 'vxe-table';
+import { VxeTableDefines, VxeTablePropTypes } from 'vxe-table';
 
 export enum RuleType {
   append,
@@ -294,13 +294,10 @@ function transformationRules(data: FieldValidatorDesc[]): Partial<FormSchema>[] 
 }
 
 function enhanceCustomRules(
-  formSchemaRules: Partial<FormSchema>[],
-  customFormSchemaRules?: Partial<FormSchemaExt>[],
+  formSchemaRules = [] as Partial<FormSchema>[],
+  customFormSchemaRules = [] as Partial<FormSchemaExt>[],
 ): Map<string, Rule[]> {
-  if (!customFormSchemaRules) {
-    return {} as Map<string, Rule[]>;
-  }
-  if (!formSchemaRules) {
+  if (!formSchemaRules && !customFormSchemaRules) {
     return {} as Map<string, Rule[]>;
   }
   const map = new Map<string, Rule[]>();

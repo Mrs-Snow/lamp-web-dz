@@ -145,10 +145,10 @@
       height: 100%;
     }
 
-    &--mix {
-      top: @header-height;
-      height: calc(100% - @header-height);
-    }
+    //&--mix {
+    //  top: @header-height;
+    //  height: calc(100% - @header-height);
+    //}
 
     &.ant-layout-sider-dark {
       background-color: @sider-dark-bg-color;

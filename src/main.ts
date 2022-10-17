@@ -14,10 +14,16 @@ import { setupStore } from '/@/store';
 import { setupGlobDirectives } from '/@/directives';
 import { setupI18n } from '/@/locales/setupI18n';
 import { registerGlobComp } from '/@/components/registerGlobComp';
-import { registerThirdComp } from '/@/plugins/vxe-table';
+import { registerThirdComp } from '/@/settings/registerThirdComp';
 
-if (import.meta.env.DEV) {
-  import('ant-design-vue/dist/antd.less');
+// if (import.meta.env.DEV) {
+//   import('ant-design-vue/dist/antd.less');
+// }
+
+import { isDevMode } from './utils/env';
+
+if (isDevMode()) {
+  import('ant-design-vue/es/style');
 }
 
 async function bootstrap() {

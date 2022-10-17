@@ -88,6 +88,7 @@ export enum EnumEnum {
   Sex = 'Sex',
   AuthorizeType = 'AuthorizeType',
   LogType = 'LogType',
+  LoginStatusEnum = 'LoginStatusEnum',
   DataScopeType = 'DataScopeType',
   HttpMethod = 'HttpMethod',
 
@@ -138,6 +139,8 @@ export enum DictEnum {
   AREA_SOURCE = 'TENANT_AREA_SOURCE',
   DictionaryType_Global_EDUCATION = 'GLOBAL_EDUCATION',
   DictionaryType_Global_DATA_TYPE = 'DATA_TYPE',
+
+  TENANT_LOGIN_STATUS = 'TENANT_LOGIN_STATUS',
 }
 
 export enum MsgTemplateCodeEnum {
@@ -147,4 +150,6 @@ export enum MsgTemplateCodeEnum {
   REGISTER_EMAIL = 'REGISTER_EMAIL',
   //手机登录短信
   MOBILE_LOGIN = 'MOBILE_LOGIN',
+  MOBILE_EDIT = 'MOBILE_EDIT',
+  EMAIL_EDIT = 'EMAIL_EDIT',
 }

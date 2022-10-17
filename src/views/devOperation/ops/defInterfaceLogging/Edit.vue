@@ -7,7 +7,18 @@
     @ok="handleSubmit"
     @register="registerModel"
   >
-    <BasicForm @register="registerForm" />
+    <BasicForm @register="registerForm">
+      <template #errorMsg="{ model, field }">
+        <codemirror
+          v-model="model[field]"
+          :autofocus="true"
+          :extensions="logExtensions"
+          :indent-with-tab="true"
+          :style="{ height: '200px' }"
+          :tab-size="2"
+        />
+      </template>
+    </BasicForm>
   </BasicModal>
 </template>
 <script lang="ts">
@@ -17,15 +28,18 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { ActionEnum } from '/@/enums/commonEnum';
   import { editFormSchema } from './defInterfaceLogging.data';
+  import { Codemirror } from 'vue-codemirror';
+  import { java } from '@codemirror/lang-java';
+  import { oneDark } from '@codemirror/theme-one-dark';
 
   export default defineComponent({
     name: '编辑接口执行日志记录维护',
-    components: { BasicModal, BasicForm },
+    components: { BasicModal, BasicForm, Codemirror },
     emits: ['success', 'register'],
     setup() {
       const { t } = useI18n();
       const type = ref<ActionEnum>(ActionEnum.ADD);
-
+      const logExtensions = [java(), oneDark];
       const [registerForm, { setFieldsValue, resetFields, resetSchema }] = useForm({
         name: 'DefInterfaceLoggingEdit',
         labelWidth: 100,
@@ -57,7 +71,7 @@
         close();
       }
 
-      return { type, t, registerModel, registerForm, handleSubmit };
+      return { type, t, logExtensions, registerModel, registerForm, handleSubmit };
     },
   });
 </script>

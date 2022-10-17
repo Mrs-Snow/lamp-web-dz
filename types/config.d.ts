@@ -41,6 +41,7 @@ export interface MultiTabsSetting {
   canDrag: boolean;
   showRedo: boolean;
   showFold: boolean;
+  theme: string;
 }
 
 export interface HeaderSetting {
@@ -128,7 +129,7 @@ export interface ProjectConfig {
   useErrorHandle: boolean;
   // Whether to open back to top
   useOpenBackTop: boolean;
-  // Is it possible to embed iframe pages
+  // 是否可以嵌入iframe页面
   canEmbedIFramePage: boolean;
   // Whether to delete unclosed messages and notify when switching the interface
   closeMessageOnSwitch: boolean;

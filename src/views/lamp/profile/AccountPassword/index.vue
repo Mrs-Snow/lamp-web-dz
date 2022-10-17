@@ -22,7 +22,7 @@
   import { Api, updatePassword } from '/@/api/lamp/profile/userInfo';
 
   export default defineComponent({
-    name: 'ChangePassword2',
+    name: 'Password',
     components: { BasicForm, BasicModal },
     emits: ['success', 'register'],
     setup(_, { emit }) {
@@ -31,10 +31,14 @@
       const userStore = useUserStore();
 
       const [register, { validate, resetFields, updateSchema }] = useForm({
-        size: 'large',
+        name: 'passwordForm',
         labelWidth: 100,
         showActionButtonGroup: false,
         schemas: formSchema,
+        actionColOptions: {
+          span: 23,
+        },
+        baseColProps: { span: 24 },
       });
 
       const [registerModal, { setModalProps, closeModal }] = useModalInner(async (_) => {

@@ -126,6 +126,7 @@ export const AfterVbenRoutes: AppRouteModule[] = [
       icon: 'ant-design:table-outlined',
       title: '静态示例',
     },
+    redirect: '/about/index',
     children: routeModuleList,
   },
 ];

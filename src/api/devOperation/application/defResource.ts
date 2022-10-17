@@ -1,12 +1,12 @@
 import {
+  DefResourcePageQuery,
+  DefResourceResultVO,
   DefResourceSaveVO,
   DefResourceUpdateVO,
-  DefResourceResultVO,
-  DefResourcePageQuery,
 } from './model/defResourceModel';
 import { PageParams, PageResult } from '/@/api/model/baseModel';
 import { defHttp } from '/@/utils/http/axios';
-import { RequestEnum } from '/@/enums/httpEnum';
+import { ContentTypeEnum, RequestEnum } from '/@/enums/httpEnum';
 import { ServicePrefixEnum } from '/@/enums/commonEnum';
 import type { AxiosRequestConfig } from 'axios';
 
@@ -20,6 +20,11 @@ export const Api = {
   Tree: {
     url: `${ServicePrefixEnum.TENANT}/${MODULAR}/tree`,
     method: RequestEnum.POST,
+  } as AxiosRequestConfig,
+  Move: {
+    url: `${ServicePrefixEnum.TENANT}/${MODULAR}/moveResource`,
+    method: RequestEnum.PUT,
+    headers: { 'Content-Type': ContentTypeEnum.FORM_URLENCODED },
   } as AxiosRequestConfig,
   Get: (id: string) => {
     return {
@@ -59,6 +64,9 @@ export const Api = {
 
 export const tree = (params?: DefResourcePageQuery) =>
   defHttp.request<DefResourceResultVO>({ ...Api.Tree, params });
+
+export const move = (id: string, parentId: string) =>
+  defHttp.request<boolean>({ ...Api.Move, params: { id, parentId } });
 
 export const page = (params: PageParams<DefResourcePageQuery>) =>
   defHttp.request<PageResult<DefResourceResultVO>>({ ...Api.Page, params });

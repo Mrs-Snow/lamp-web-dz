@@ -1,53 +1,56 @@
 <template>
-  <div v-if="batch"
-    >批量操作暂不支持修改字段，如果确实需要个性化修改字典配置，请单个修改后在生成！</div
-  >
-  <vxe-grid v-else ref="xGrid" v-bind="gridOptions">
-    <template #operate="{ row }">
-      <template v-if="$refs.xGrid.isActiveByRow(row)">
-        <a-button
-          title="保存"
-          status="primary"
+  <div v-if="batch">
+    批量操作暂不支持修改字段，如果确实需要个性化修改字典配置，请单个修改后在生成！
+  </div>
+  <div v-else :class="prefixCls">
+    <vxe-grid ref="xGrid" v-bind="gridOptions">
+      <template #operate="{ row }">
+        <template v-if="$refs.xGrid.isActiveByRow(row)">
+          <a-button
+            circle
+            circleIcon="ant-design:save-outlined"
+            status="primary"
+            title="保存"
+            @click="saveRowEvent(row)"
+          />
+          <a-button
+            circle
+            circleIcon="ant-design:close-circle-outlined"
+            title="取消"
+            @click="cancelRowEvent(row)"
+          />
+        </template>
+        <template v-else>
+          <a-button
+            circle
+            circleIcon="ant-design:edit-outlined"
+            title="编辑"
+            @click="editRowEvent(row)"
+          />
+        </template>
+        <PopConfirmButton
           circle
-          circleIcon="ant-design:save-outlined"
-          @click="saveRowEvent(row)"
+          circleIcon="ant-design:delete-outlined"
+          title="确认删除吗？"
+          @confirm="removeRowEvent(row)"
         />
-        <a-button
-          title="取消"
+        <PopConfirmButton
           circle
-          circleIcon="ant-design:close-circle-outlined"
-          @click="cancelRowEvent(row)"
+          circleIcon="ant-design:cloud-sync-outlined"
+          title="确认同步吗？"
+          @confirm="syncRowEvent(row)"
         />
       </template>
-      <template v-else>
-        <a-button
-          title="编辑"
-          circle
-          circleIcon="ant-design:edit-outlined"
-          @click="editRowEvent(row)"
-        />
-      </template>
-      <PopConfirmButton
-        title="确认删除吗？"
-        circle
-        circleIcon="ant-design:delete-outlined"
-        @confirm="removeRowEvent(row)"
-      />
-      <PopConfirmButton
-        title="确认同步吗？"
-        circle
-        circleIcon="ant-design:cloud-sync-outlined"
-        @confirm="syncRowEvent(row)"
-      />
-    </template>
-  </vxe-grid>
+    </vxe-grid>
+  </div>
 </template>
 <script lang="ts">
-  import { defineComponent, ref, reactive } from 'vue';
+  import { defineComponent, reactive, ref } from 'vue';
   import { VxeGridInstance, VxeGridProps, VxeTablePropTypes } from 'vxe-table';
 
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
+  import { useDesign } from '/@/hooks/web/useDesign';
   import { PopConfirmButton } from '/@/components/Button';
   import { RoleEnum } from '/@/enums/roleEnum';
   import { ActionEnum, VALIDATE_API } from '/@/enums/commonEnum';
@@ -59,7 +62,7 @@
     syncField,
     update as updateColumn,
   } from '/@/api/devOperation/developer/defGenTableColumn';
-  import { columns, formItems, customFormSchemaRules } from './defGenTableColumnVxe.data';
+  import { columns, customFormSchemaRules, formItems } from './defGenTableColumnVxe.data';
 
   export default defineComponent({
     name: '修改代码配置',
@@ -67,6 +70,7 @@
     setup: function () {
       const { t } = useI18n();
       const { createMessage } = useMessage();
+      const { prefixCls } = useDesign('j-vxe-table');
       const tableId = ref<string>('');
       const batch = ref<boolean>(false);
 
@@ -231,6 +235,7 @@
         editRowEvent,
         syncRowEvent,
         batch,
+        prefixCls,
       };
     },
   });

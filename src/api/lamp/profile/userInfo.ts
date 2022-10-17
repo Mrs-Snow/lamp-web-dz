@@ -2,6 +2,8 @@ import { defHttp } from '/@/utils/http/axios';
 import {
   DefUserAvatarUpdateVO,
   DefUserBaseInfoUpdateVO,
+  DefUserEmailUpdateVO,
+  DefUserMobileUpdateVO,
   DefUserPasswordUpdateVO,
 } from './model/userInfoModel';
 import { ContentTypeEnum, RequestEnum } from '/@/enums/httpEnum';
@@ -20,15 +22,23 @@ export const Api = {
     method: RequestEnum.GET,
   } as AxiosRequestConfig,
   UpdateAvatar: {
-    url: `${ServicePrefixEnum.TENANT}/anyone/avatar`,
+    url: `${ServicePrefixEnum.OAUTH}/anyone/avatar`,
     method: RequestEnum.PUT,
   } as AxiosRequestConfig,
   UpdatePassword: {
-    url: `${ServicePrefixEnum.TENANT}/anyone/password`,
+    url: `${ServicePrefixEnum.OAUTH}/anyone/password`,
+    method: RequestEnum.PUT,
+  } as AxiosRequestConfig,
+  UpdateEmail: {
+    url: `${ServicePrefixEnum.OAUTH}/anyone/email`,
+    method: RequestEnum.PUT,
+  } as AxiosRequestConfig,
+  UpdateMobile: {
+    url: `${ServicePrefixEnum.OAUTH}/anyone/mobile`,
     method: RequestEnum.PUT,
   } as AxiosRequestConfig,
   UpdateBaseInfo: {
-    url: `${ServicePrefixEnum.TENANT}/anyone/baseInfo`,
+    url: `${ServicePrefixEnum.OAUTH}/anyone/baseInfo`,
     method: RequestEnum.PUT,
   } as AxiosRequestConfig,
   UpdateDefApp: {
@@ -50,7 +60,7 @@ export const updateDefApp = (applicationId: string) =>
     },
   });
 
-export const getDefApp = () => defHttp.request<string>({ ...Api.GetDefApp });
+export const getDefApp = () => defHttp.request<DefApplicationResultVO>({ ...Api.GetDefApp });
 
 export const findMyApplication = (name?: string) =>
   defHttp.request<DefApplicationResultVO[]>({
@@ -67,6 +77,12 @@ export const updateAvatar = (params: DefUserAvatarUpdateVO) =>
 
 export const updatePassword = (params: DefUserPasswordUpdateVO) =>
   defHttp.request<boolean>({ ...Api.UpdatePassword, params });
+
+export const updateEmail = (params: DefUserMobileUpdateVO) =>
+  defHttp.request<boolean>({ ...Api.UpdateEmail, params });
+
+export const updateMobile = (params: DefUserEmailUpdateVO) =>
+  defHttp.request<boolean>({ ...Api.UpdateMobile, params });
 
 export const updateBaseInfo = (params: DefUserBaseInfoUpdateVO) =>
   defHttp.request<boolean>({ ...Api.UpdateBaseInfo, params });

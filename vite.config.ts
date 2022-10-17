@@ -70,13 +70,10 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       cssTarget: 'chrome80',
       outDir: OUTPUT_DIR,
       // minify: 'terser',
-      /**
-       * 当 minify=“minify:'terser'” 解开注释
-       * Uncomment when minify="minify:'terser'"
-       */
       // terserOptions: {
       //   compress: {
       //     keep_infinity: true,
+      //     // Used to delete console in production environment
       //     drop_console: VITE_DROP_CONSOLE,
       //   },
       // },
@@ -105,6 +102,9 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
 
     // 引入第三方的配置
     optimizeDeps: {
+      esbuildOptions: {
+        target: 'es2020',
+      },
       // @iconify/iconify: The dependency is dynamically and virtually loaded by @purge-icons/generated, so it needs to be specified explicitly
       include: [
         '@vue/runtime-core',

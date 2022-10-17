@@ -131,7 +131,7 @@ export const editFormSchema = (type: Ref<ActionEnum>): FormSchema[] => {
         span: 12,
       },
       dynamicDisabled: () => {
-        return [ActionEnum.EDIT, ActionEnum.VIEW].includes(type.value);
+        return [ActionEnum.VIEW].includes(type.value);
       },
     },
     {

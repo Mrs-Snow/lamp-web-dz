@@ -182,7 +182,7 @@ export function loadCaptcha(key: String) {
 /**
  * @description: user logout api
  */
-export function doLogout(params: LogoutParams) {
+export function logout(params: LogoutParams) {
   return defHttp.post<boolean>({
     ...Api.Logout,
     params,

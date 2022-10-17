@@ -9,6 +9,8 @@ export const REFRESH_TOKEN_KEY = 'REFRESH__TOKEN__';
 export const TENANT_ID_KEY = 'TENANT__ID__';
 // 应用id key
 export const APPLICATION_ID_KEY = 'APPLICATION__ID__';
+// 应用名称
+export const APPLICATION_NAME_KEY = 'APPLICATION__NAME__';
 // 用户信息 key
 export const USER_INFO_KEY = 'USER__INFO__';
 

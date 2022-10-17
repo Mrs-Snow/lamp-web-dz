@@ -1,11 +1,11 @@
 <template>
-  <Header :class="getHeaderClass">
+  <Header :class="getHeaderClass" :style="getHeaderStyle">
     <!-- left start -->
     <div :class="`${prefixCls}-left`">
       <!-- logo -->
       <AppLogo
         v-if="getShowHeaderLogo || getIsMobile"
-        :class="`${prefixCls}-logo`"
+        :class="`${prefixCls}-logo ${getMenuType}-logo`"
         :style="getLogoWidth"
         :theme="getHeaderTheme"
       />
@@ -93,12 +93,12 @@
   import { MultiTenantTypeEnum } from '/@/enums/biz/tenant';
 
   import {
+    CompanyList,
     ErrorAction,
     FullScreen,
     LayoutBreadcrumb,
     Notify,
     TenantCompanyList,
-    CompanyList,
     UserDropDown,
   } from './components';
   import { useAppInject } from '/@/hooks/web/useAppInject';
@@ -140,6 +140,8 @@
         getIsMixMode,
         getMenuWidth,
         getIsMixSidebar,
+        getMenuType,
+        getRealWidth,
       } = useMenuSetting();
       const { getUseErrorHandle, getShowSettingButton, getSettingButtonPosition } =
         useRootSetting();
@@ -158,6 +160,20 @@
       const { getShowLocalePicker } = useLocale();
 
       const { getIsMobile } = useAppInject();
+
+      const getHeaderStyle = computed(() => {
+        if (!unref(getIsMixMode)) {
+          return {};
+        }
+
+        const left = `${unref(getRealWidth)}px`;
+        return {
+          left,
+          // 加1像素是因为 vben 作者为何会在 .lamp-layout-header样式中增加1像素的左偏移： margin-left: -1px;
+          width: `calc(100% - ${left} + 1px)`,
+          transition: 'all 0.2s',
+        };
+      });
 
       const getHeaderClass = computed(() => {
         const theme = unref(getHeaderTheme);
@@ -213,6 +229,7 @@
         getMenuMode,
         getShowTopMenu,
         getShowLocalePicker,
+        getMenuType,
         getShowFullScreen,
         getShowNotice,
         getUseErrorHandle,
@@ -223,6 +240,7 @@
         globSetting,
         getShowSearch,
         MultiTenantTypeEnum,
+        getHeaderStyle,
       };
     },
   });

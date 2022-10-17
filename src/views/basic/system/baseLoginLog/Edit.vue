@@ -34,7 +34,6 @@
         actionColOptions: {
           span: 23,
         },
-        disabled: true,
       });
 
       const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(async (data) => {

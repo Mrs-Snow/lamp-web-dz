@@ -1,10 +1,10 @@
-import { ContentEnum, RouterTransitionEnum } from '/@/enums/appEnum';
+import { ContentEnum, RouterTransitionEnum, TabsThemeEnum } from '/@/enums/appEnum';
 import {
   MenuModeEnum,
   MenuTypeEnum,
+  MixSidebarTriggerEnum,
   TopMenuAlignEnum,
   TriggerEnum,
-  MixSidebarTriggerEnum,
 } from '/@/enums/menuEnum';
 
 import { useI18n } from '/@/hooks/web/useI18n';
@@ -42,6 +42,7 @@ export enum HandlerEnum {
   TABS_SHOW_REDO,
   TABS_SHOW,
   TABS_SHOW_FOLD,
+  TABS_THEME,
 
   LOCK_TIME,
   FULL_CONTENT,
@@ -58,6 +59,22 @@ export enum HandlerEnum {
   OPEN_PAGE_LOADING,
   OPEN_ROUTE_TRANSITION,
 }
+
+// 标签页样式
+export const tabsThemeOptions = [
+  {
+    value: TabsThemeEnum.SMOOTH,
+    label: t('layout.setting.tabsThemeSmooth'),
+  },
+  {
+    value: TabsThemeEnum.CARD,
+    label: t('layout.setting.tabsThemeCard'),
+  },
+  {
+    value: TabsThemeEnum.SIMPLE,
+    label: t('layout.setting.tabsThemeSimple'),
+  },
+];
 
 export const contentModeOptions = [
   {
@@ -122,22 +139,25 @@ export const routerTransitionOptions = [
 
 export const menuTypeList = [
   {
+    // 左侧菜单模式
     title: t('layout.setting.menuTypeSidebar'),
     mode: MenuModeEnum.INLINE,
     type: MenuTypeEnum.SIDEBAR,
   },
   {
+    // 顶部菜单混合模式
     title: t('layout.setting.menuTypeMix'),
     mode: MenuModeEnum.INLINE,
     type: MenuTypeEnum.MIX,
   },
-
   {
+    // 顶部菜单模式
     title: t('layout.setting.menuTypeTopMenu'),
     mode: MenuModeEnum.HORIZONTAL,
     type: MenuTypeEnum.TOP_MENU,
   },
   {
+    // 左侧菜单混合模式
     title: t('layout.setting.menuTypeMixSidebar'),
     mode: MenuModeEnum.INLINE,
     type: MenuTypeEnum.MIX_SIDEBAR,

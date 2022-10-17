@@ -43,9 +43,9 @@ export default {
     menuTriggerTop: '顶部',
     // menu type
     menuTypeSidebar: '左侧菜单模式',
-    menuTypeMixSidebar: '左侧菜单混合模式',
     menuTypeMix: '顶部菜单混合模式',
     menuTypeTopMenu: '顶部菜单模式',
+    menuTypeMixSidebar: '左侧菜单混合模式',
 
     on: '开',
     off: '关',
@@ -89,6 +89,10 @@ export default {
     tabsQuickBtn: '标签页快捷按钮',
     tabsRedoBtn: '标签页刷新按钮',
     tabsFoldBtn: '标签页折叠按钮',
+    tabsTheme: '标签页样式',
+    tabsThemeSmooth: '圆滑',
+    tabsThemeCard: '卡片',
+    tabsThemeSimple: '极简',
     sidebar: '左侧菜单',
     header: '顶栏',
     footer: '页脚',

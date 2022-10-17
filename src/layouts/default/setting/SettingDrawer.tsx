@@ -1,19 +1,19 @@
-import { defineComponent, computed, unref } from 'vue';
+import { computed, defineComponent, unref } from 'vue';
 import { BasicDrawer } from '/@/components/Drawer/index';
 import { Divider } from 'ant-design-vue';
 import {
-  TypePicker,
-  ThemeColorPicker,
+  InputItem,
+  InputNumberItem,
+  SelectItem,
   SettingFooter,
   SwitchItem,
-  SelectItem,
-  InputNumberItem,
-  InputItem,
+  ThemeColorPicker,
+  TypePicker,
 } from './components';
 
 import { AppDarkModeToggle } from '/@/components/Application';
 
-import { MenuTypeEnum, TriggerEnum } from '/@/enums/menuEnum';
+import { MenuModeEnum, MenuTypeEnum, TriggerEnum } from '/@/enums/menuEnum';
 
 import { useRootSetting } from '/@/hooks/setting/useRootSetting';
 import { useMenuSetting } from '/@/hooks/setting/useMenuSetting';
@@ -26,19 +26,20 @@ import { useI18n } from '/@/hooks/web/useI18n';
 import { baseHandler } from './handler';
 
 import {
-  HandlerEnum,
   contentModeOptions,
-  topMenuAlignOptions,
   getMenuTriggerOptions,
-  routerTransitionOptions,
+  HandlerEnum,
   menuTypeList,
   mixSidebarTriggerOptions,
+  routerTransitionOptions,
+  tabsThemeOptions,
+  topMenuAlignOptions,
 } from './enum';
 
 import {
+  APP_PRESET_COLOR_LIST,
   HEADER_PRESET_BG_COLOR_LIST,
   SIDE_BAR_BG_COLOR_LIST,
-  APP_PRESET_COLOR_LIST,
 } from '/@/settings/designSetting';
 
 const { t } = useI18n();
@@ -93,7 +94,8 @@ export default defineComponent({
       getShowSearch,
     } = useHeaderSetting();
 
-    const { getShowMultipleTab, getShowQuick, getShowRedo, getShowFold } = useMultipleTabSetting();
+    const { getShowMultipleTab, getShowQuick, getShowRedo, getShowFold, getTabsTheme } =
+      useMultipleTabSetting();
 
     const getShowMenuRef = computed(() => {
       return unref(getShowMenu) && !unref(getIsHorizontal);
@@ -108,7 +110,7 @@ export default defineComponent({
               baseHandler(HandlerEnum.CHANGE_LAYOUT, {
                 mode: item.mode,
                 type: item.type,
-                split: unref(getIsHorizontal) ? false : undefined,
+                split: item.mode === MenuModeEnum.INLINE && item.type === MenuTypeEnum.MIX,
               });
             }}
             def={unref(getMenuType)}
@@ -225,6 +227,7 @@ export default defineComponent({
             def={unref(getMenuFixed)}
             disabled={!unref(getShowMenuRef) || unref(getIsMixSidebar)}
           />
+
           <SelectItem
             title={t('layout.setting.mixSidebarTrigger')}
             event={HandlerEnum.MENU_TRIGGER_MIX_SIDEBAR}
@@ -303,6 +306,12 @@ export default defineComponent({
             title={t('layout.setting.tabs')}
             event={HandlerEnum.TABS_SHOW}
             def={unref(getShowMultipleTab)}
+          />
+          <SelectItem
+            title={t('layout.setting.tabsTheme')}
+            event={HandlerEnum.TABS_THEME}
+            def={unref(getTabsTheme)}
+            options={tabsThemeOptions}
           />
 
           <SwitchItem

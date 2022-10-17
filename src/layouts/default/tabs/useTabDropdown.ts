@@ -1,9 +1,8 @@
 import type { TabContentProps } from './types';
+import { MenuEventEnum } from './types';
 import type { DropMenu } from '/@/components/Dropdown';
 import type { ComputedRef } from 'vue';
-
-import { computed, unref, reactive } from 'vue';
-import { MenuEventEnum } from './types';
+import { computed, reactive, unref } from 'vue';
 import { useMultipleTabStore } from '/@/store/modules/multipleTab';
 import { RouteLocationNormalized, useRouter } from 'vue-router';
 import { useTabs } from '/@/hooks/web/useTabs';
@@ -34,11 +33,10 @@ export function useTabDropdown(tabContentProps: TabContentProps, getIsTabs: Comp
     const { meta } = unref(getTargetTab);
     const { path } = unref(currentRoute);
 
+    // Refresh button
     const curItem = state.current;
 
     const isCurItem = curItem ? curItem.path === path : false;
-
-    // Refresh button
     const index = state.currentIndex;
     const refreshDisabled = !isCurItem;
     // Close left
@@ -136,5 +134,6 @@ export function useTabDropdown(tabContentProps: TabContentProps, getIsTabs: Comp
         break;
     }
   }
+
   return { getDropMenuList, handleMenuEvent, handleContextMenu };
 }

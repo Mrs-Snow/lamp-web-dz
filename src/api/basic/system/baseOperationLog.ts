@@ -1,8 +1,8 @@
 import {
+  BaseOperationLogPageQuery,
+  BaseOperationLogResultVO,
   BaseOperationLogSaveVO,
   BaseOperationLogUpdateVO,
-  BaseOperationLogResultVO,
-  BaseOperationLogPageQuery,
 } from './model/baseOperationLogModel';
 import { PageParams, PageResult } from '/@/api/model/baseModel';
 import { defHttp } from '/@/utils/http/axios';
@@ -37,10 +37,17 @@ export const Api = {
     url: `${ServicePrefixEnum.BASE}/${MODULAR}/clear`,
     method: RequestEnum.DELETE,
   } as AxiosRequestConfig,
+  Detail: {
+    url: `${ServicePrefixEnum.BASE}/${MODULAR}/detail`,
+    method: RequestEnum.GET,
+  } as AxiosRequestConfig,
 };
 
 export const page = (params: PageParams<BaseOperationLogPageQuery>) =>
   defHttp.request<PageResult<BaseOperationLogResultVO>>({ ...Api.Page, params });
+
+export const detail = (id: string) =>
+  defHttp.request<BaseOperationLogResultVO>({ ...Api.Detail, params: { id } });
 
 export const query = (params: BaseOperationLogPageQuery) =>
   defHttp.request<BaseOperationLogResultVO[]>({ ...Api.Query, params });

@@ -21,7 +21,6 @@ import { primaryColor } from '../../build/config/themeConfig';
 import { Persistent } from '/@/utils/cache/persistent';
 import { deepMerge } from '/@/utils';
 import { ThemeEnum } from '/@/enums/appEnum';
-import { watchChangeTheme } from '/@/logics/theme/theme-vxe-table';
 
 // Initial project configuration
 export function initAppConfigStore() {
@@ -59,8 +58,6 @@ export function initAppConfigStore() {
     headerBgColor && updateHeaderBgColor(headerBgColor);
     bgColor && updateSidebarBgColor(bgColor);
   }
-
-  watchChangeTheme();
 
   // init store
   localeStore.initLocale();

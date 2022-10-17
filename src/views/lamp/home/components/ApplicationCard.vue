@@ -81,21 +81,26 @@
   export default defineComponent({
     components: { Card, CardGrid, Empty, ThumbUrl, Tag },
     props: {
+      // 应用标题
       title: propTypes.string.def('我的应用'),
+      // 是否可以修改默认应用
       updateDef: propTypes.bool.def(false),
+      // 应用描述
       description: propTypes.string.def('暂未开通任何应用, 联系您公司管理员开通'),
+      // 查询我的应用的接口
       api: {
         type: Function as PropType<PromiseFn>,
         default: null,
         required: true,
       },
+      // 点击应用后的回调
       handleClick: {
         type: Function as PropType<() => void>,
         default: null,
       },
     },
     emits: ['more'],
-    setup(props, { emit }) {
+    setup: function (props, { emit }) {
       const { createMessage, createConfirm } = useMessage();
       const { refreshMenu } = usePermission();
       const { replace } = useRouter();
@@ -138,6 +143,7 @@
                 window.open(item.url);
               } else {
                 userStore.setApplicationId(item.id as string);
+                userStore.setApplicationName(item.name as string);
                 await userStore.getUserInfoAction();
                 await refreshMenu();
                 const { closeAll } = useTabs(router);
@@ -169,7 +175,8 @@
         try {
           applicationList.value = await props.api();
           if (props.updateDef) {
-            defApplicationId.value = await getDefApp();
+            const defApp = await getDefApp();
+            defApplicationId.value = defApp?.id;
           }
         } finally {
           loading.value = false;
