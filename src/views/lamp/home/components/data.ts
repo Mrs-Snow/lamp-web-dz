@@ -61,10 +61,16 @@ export const dynamicInfoItems: DynamicInfoItem[] = [
     desc: `<a href="###">录制配套视频</a>`,
   },
   {
-    percent: 40,
+    percent: 50,
     name: '4.12.x 正在进行：',
     date: '2022-10-??',
     desc: `<a href="###">优化前后端代码、重构前后端代码、CodeReview、缓存完善</a>`,
+  },
+  {
+    percent: 100,
+    name: '4.12.2 已发布：',
+    date: '2022-10-17',
+    desc: `<a href="https://www.oschina.net/news/213894/lamp-cloud-4-12-2-released">《灯灯》4.12.2 已发布，资源维护优化、代码优化</a>`,
   },
   {
     percent: 100,
