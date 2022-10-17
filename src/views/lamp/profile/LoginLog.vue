@@ -1,5 +1,5 @@
 <template>
-  <CollapseContainer title="登录日志" :canExpan="false">
+  <CollapseContainer :canExpan="false" title="登录日志">
     <a-timeline mode="left">
       <a-timeline-item v-for="(item, index) of loginLogList" :key="index">
         <Card :title="'登录时间：' + item.createdTime">
@@ -19,19 +19,19 @@
             <Icon icon="ant-design:windows-outlined" />
             {{ t('devOperation.system.defLoginLog.operatingSystem') }}：{{ item.operatingSystem }}
           </p>
-        </Card></a-timeline-item
-      >
+        </Card>
+      </a-timeline-item>
     </a-timeline>
   </CollapseContainer>
 </template>
 <script lang="ts">
   import { defineComponent, onMounted, ref } from 'vue';
-  import { Timeline, Card } from 'ant-design-vue';
+  import { Card, Timeline } from 'ant-design-vue';
   import { Icon } from '/@/components/Icon';
   import { CollapseContainer } from '/@/components/Container/index';
   import { useUserStore } from '/@/store/modules/user';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { page } from '/@/api/basic/system/baseLoginLog';
+  import { anyonePage } from '/@/api/basic/system/baseLoginLog';
 
   export default defineComponent({
     name: 'MyLoginLog',
@@ -47,7 +47,7 @@
       const userStore = useUserStore();
       const { t } = useI18n();
       onMounted(async () => {
-        const list = await page({
+        const list = await anyonePage({
           current: 1,
           size: 10,
           model: { userId: userStore.getUserInfo.id },
