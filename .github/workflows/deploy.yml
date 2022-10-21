@@ -44,7 +44,7 @@ jobs:
       - name: deployments
         uses: burnett01/rsync-deployments@4.1
         with:
-          # 1这里是 rsync 的参数 switches: -avzh --delete --exclude="" --include="" --filter=""
+          # 这里是 rsync 的参数 switches: -avzh --delete --exclude="" --include="" --filter=""
           switches: -avzh
           path: dist/
           remote_path: /data_prod/webapp/lamp-web-pro-datasource/dist/
