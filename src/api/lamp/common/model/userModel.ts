@@ -1,4 +1,5 @@
 import { BaseOrgResultVO } from '/@/api/basic/user/model/baseOrgModel';
+import { Tenant } from '/@/api/devOperation/tenant/model/tenantModel';
 
 export type GrantType = 'CAPTCHA' | 'PASSWORD' | 'MOBILE' | 'REFRESH_TOKEN';
 
@@ -40,6 +41,7 @@ export interface OrgResultVO {
   currentCompanyId: string;
   // 当前部门ID
   currentDeptId: string;
+  tenantList: Tenant[];
 }
 
 /**
