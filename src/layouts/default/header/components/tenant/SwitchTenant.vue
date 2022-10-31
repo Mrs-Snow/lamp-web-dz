@@ -15,7 +15,7 @@
         <Card :bodyStyle="{ padding: 0 }" size="small" title="企业">
           <RadioGroup v-model:value="formData.tenant" style="width: 100%" @change="changeTenant">
             <div class="pl-2">
-              <List :data-source="getTenantList">
+              <List :data-source="formState.tenantList">
                 <template #renderItem="{ item }">
                   <ListItem style="cursor: pointer">
                     <Radio :value="item.id" :disabled="disabledItem(item)">
@@ -106,6 +106,7 @@
     updateDefaultTenant,
   } from '/@/api/lamp/common/oauth';
   import { BaseOrgResultVO } from '/@/api/basic/user/model/baseOrgModel';
+  import { Tenant } from '/@/api/devOperation/tenant/model/tenantModel';
 
   export default defineComponent({
     name: 'SwitchTenant',
@@ -135,10 +136,9 @@
       const formState = reactive({
         companyList: [] as BaseOrgResultVO[],
         deptList: [] as BaseOrgResultVO[],
+        tenantList: [] as Tenant[],
       });
 
-      // 我拥有的企业
-      const getTenantList = computed(() => userStore.getUserInfo?.tenantList);
       // 当前企业id
       const currentTenantId = computed(() => userStore.getTenantId);
 
@@ -156,6 +156,7 @@
           formData.currentDeptId = org.currentDeptId;
           formState.companyList = org.companyList;
           formState.deptList = org.deptList;
+          formState.tenantList = org.tenantList;
         }
       }
 
@@ -194,9 +195,7 @@
       }
 
       function switchTenantConfirm() {
-        const tenant = userStore.getUserInfo?.tenantList?.find(
-          (item) => item.id === formData.tenant,
-        );
+        const tenant = formState.tenantList?.find((item) => item.id === formData.tenant);
         if (!tenant) {
           createMessage.error('无法切换该企业，请选择正常的企业');
           throw Error('无法切换该企业，请选择正常的企业');
@@ -266,7 +265,6 @@
         formData,
         formState,
         currentTenantId,
-        getTenantList,
         getTenantName,
         switchTenantConfirm,
         setDefaults,

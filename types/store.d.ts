@@ -1,5 +1,4 @@
 import { BaseEmployeeResultVO } from '/@/api/basic/user/model/baseEmployeeModel';
-import { Tenant } from '/@/api/devOperation/tenant/model/tenantModel';
 import { DefApplicationResultVO } from '/@/api/devOperation/application/model/defApplicationModel';
 import { ErrorTypeEnum } from '/@/enums/exceptionEnum';
 import { MenuModeEnum, MenuTypeEnum } from '/@/enums/menuEnum';
@@ -76,7 +75,6 @@ export interface DefUserInfoResultVO {
   employeeId: string;
   tenantId: string;
   baseEmployee: BaseEmployeeResultVO;
-  tenantList: Tenant[];
   defApplication: DefApplicationResultVO;
   homePath?: string;
 }
