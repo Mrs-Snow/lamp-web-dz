@@ -91,6 +91,8 @@
 
           if (itemRef.checkAll || itemRef.indeterminate) {
             appResourceMap[itemRef.application.id] = checkeds;
+          } else {
+            appResourceMap[itemRef.application.id] = [];
           }
         }
         formData.applicationResourceMap = appResourceMap;
