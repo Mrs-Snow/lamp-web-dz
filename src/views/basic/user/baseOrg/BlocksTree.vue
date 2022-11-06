@@ -10,11 +10,11 @@
         >
           切换
         </a-button>
-        <a-button v-hasAnyPermission="[RoleEnum.ORG_SWITCH]" class="mr-2" @click="handleAdd()">
+        <a-button v-hasAnyPermission="[RoleEnum.ORG_ADD]" class="mr-2" @click="handleAdd()">
           新增
         </a-button>
         <a-button
-          v-hasAnyPermission="[RoleEnum.ORG_SWITCH]"
+          v-hasAnyPermission="[RoleEnum.ORG_EDIT]"
           :disabled="isEmpty(state.current.id) || isNullOrUnDef(state.current.id)"
           class="mr-2"
           @click="handleEdit()"
@@ -22,7 +22,7 @@
           编辑
         </a-button>
         <a-button
-          v-hasAnyPermission="[RoleEnum.ORG_SWITCH]"
+          v-hasAnyPermission="[RoleEnum.ORG_DELETE]"
           :disabled="isEmpty(state.current.id) || isNullOrUnDef(state.current.id)"
           class="mr-2"
           @click="handleDelete()"

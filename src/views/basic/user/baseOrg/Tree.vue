@@ -178,7 +178,7 @@
             },
           },
           {
-            // auth: RoleEnum.ORG_EDIT,
+            auth: RoleEnum.ORG_BIND_ROLE,
             render: (node) => {
               return h(
                 'a',

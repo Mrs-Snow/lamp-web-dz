@@ -141,6 +141,7 @@ export enum RoleEnum {
   ORG_EDIT = 'basic:user:org:edit',
   ORG_DELETE = 'basic:user:org:delete',
   ORG_SWITCH = 'basic:user:org:switch',
+  ORG_BIND_ROLE = 'basic:user:org:bind',
 
   // 岗位维护
   POSITION_ADD = 'basic:user:position:add',
