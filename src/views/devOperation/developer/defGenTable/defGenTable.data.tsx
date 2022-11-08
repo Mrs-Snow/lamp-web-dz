@@ -111,23 +111,23 @@ export const importSearchFormSchema = (dsChange: Fn, setFieldsValue): FormSchema
       },
       colProps: { span: 6 },
     },
-    {
-      field: 'name',
-      label: t('devOperation.developer.defGenTable.tableName'),
-      component: 'Input',
-      colProps: { span: 6 },
-    },
-    {
-      field: 'comment',
-      label: t('devOperation.developer.defGenTable.tableComment'),
-      component: 'Input',
-      colProps: { span: 6 },
-    },
-    {
-      field: 'createTimeRange',
-      label: t('lamp.common.createdTime'),
-      component: 'RangePicker',
-      colProps: { span: 6 },
-    },
+    // {
+    //   field: 'name',
+    //   label: t('devOperation.developer.defGenTable.tableName'),
+    //   component: 'Input',
+    //   colProps: { span: 6 },
+    // },
+    // {
+    //   field: 'comment',
+    //   label: t('devOperation.developer.defGenTable.tableComment'),
+    //   component: 'Input',
+    //   colProps: { span: 6 },
+    // },
+    // {
+    //   field: 'createTimeRange',
+    //   label: t('lamp.common.createdTime'),
+    //   component: 'RangePicker',
+    //   colProps: { span: 6 },
+    // },
   ];
 };
