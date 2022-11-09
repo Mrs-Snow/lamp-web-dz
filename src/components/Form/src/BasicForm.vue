@@ -11,6 +11,7 @@
       <slot name="formHeader"></slot>
       <template v-for="schema in getSchema" :key="schema.field">
         <FormItem
+          :isAdvanced="fieldsIsAdvancedMap[schema.field]"
           :allDefaultValues="defaultValueRef"
           :formActionType="formActionType"
           :formModel="formModel"
@@ -116,9 +117,9 @@
       const getSchema = computed((): FormSchema[] => {
         const schemas: FormSchema[] = unref(schemaRef) || (unref(getProps).schemas as any);
         for (const schema of schemas) {
-          const { defaultValue, component } = schema;
+          const { defaultValue, component, isHandleDateDefaultValue = true } = schema;
           // handle date type
-          if (defaultValue && dateItemType.includes(component)) {
+          if (isHandleDateDefaultValue && defaultValue && dateItemType.includes(component)) {
             if (!Array.isArray(defaultValue)) {
               schema.defaultValue = dateUtil(defaultValue);
             } else {
@@ -150,7 +151,7 @@
         }
       });
 
-      const { handleToggleAdvanced } = useAdvanced({
+      const { handleToggleAdvanced, fieldsIsAdvancedMap } = useAdvanced({
         advanceState,
         emit,
         getProps,
@@ -183,7 +184,7 @@
         updateSchema,
         resetSchema,
         appendSchemaByField,
-        removeSchemaByFiled,
+        removeSchemaByField,
         resetFields,
         scrollToField,
       } = useFormEvents({
@@ -278,7 +279,7 @@
         updateSchema,
         resetSchema,
         setProps,
-        removeSchemaByFiled,
+        removeSchemaByField,
         appendSchemaByField,
         clearValidate,
         validateFields,
@@ -309,6 +310,7 @@
         getFormActionBindProps: computed(
           (): Recordable => ({ ...getProps.value, ...advanceState }),
         ),
+        fieldsIsAdvancedMap,
         ...formActionType,
       };
     },

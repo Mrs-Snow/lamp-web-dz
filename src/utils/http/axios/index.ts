@@ -21,6 +21,7 @@ import { Base64 } from 'js-base64';
 import { router } from '/@/router';
 import { AxiosRetry } from '/@/utils/http/axios/axiosRetry';
 import { MultiTenantTypeEnum } from '/@/enums/biz/tenant';
+import axios from 'axios';
 
 const globSetting = useGlobSetting();
 const urlPrefix = globSetting.urlPrefix;
@@ -209,6 +210,10 @@ const transform: AxiosTransform = {
     const errorMessageMode = config?.requestOptions?.errorMessageMode || 'none';
     const err: string = error?.toString?.() ?? '';
     let errMessage = '';
+
+    if (axios.isCancel(error)) {
+      return Promise.reject(error);
+    }
 
     try {
       if (code === 'ECONNABORTED' && message.indexOf('timeout') !== -1) {

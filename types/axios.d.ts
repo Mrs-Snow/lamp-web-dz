@@ -1,4 +1,5 @@
 export type ErrorMessageMode = 'none' | 'modal' | 'message' | undefined;
+export type SuccessMessageMode = ErrorMessageMode;
 
 export interface RequestOptions {
   // 将请求参数拼接到url
@@ -17,6 +18,8 @@ export interface RequestOptions {
   urlPrefix?: string;
   // 错误消息提示类型
   errorMessageMode?: ErrorMessageMode;
+  // Success message prompt type
+  successMessageMode?: SuccessMessageMode;
   // 是否添加时间戳
   joinTime?: boolean;
   ignoreCancelToken?: boolean;

@@ -149,8 +149,8 @@
           {
             label: t('common.title.edit'),
             handler: () => {
-              const current = findNodeByKey(unref(node.$attrs)?.id, treeData.value);
-              const parent = findNodeByKey(unref(node.$attrs)?.parentId, treeData.value);
+              const current = findNodeByKey(unref(node)?.id, treeData.value);
+              const parent = findNodeByKey(unref(node)?.parentId, treeData.value);
               emit('edit', parent, current);
             },
             icon: 'ant-design:edit-outlined',

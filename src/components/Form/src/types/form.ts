@@ -7,7 +7,7 @@ import type { TableActionType } from '/@/components/Table/src/types/table';
 import type { RowProps } from 'ant-design-vue/lib/grid/Row';
 import { RuleType } from '/@/api/lamp/common/formValidateService';
 
-export type FieldMapToTime = [string, [string, string], string?][];
+export type FieldMapToTime = [string, [string, string], (string | [string, string])?][];
 
 export type Rule = RuleObject & {
   trigger?: 'blur' | 'change' | ['change', 'blur'];
@@ -34,7 +34,7 @@ export interface FormActionType {
   updateSchema: (data: Partial<FormSchema> | Partial<FormSchema>[]) => Promise<void>;
   resetSchema: (data: Partial<FormSchema> | Partial<FormSchema>[]) => Promise<void>;
   setProps: (formProps: Partial<FormProps>) => Promise<void>;
-  removeSchemaByFiled: (field: string | string[]) => Promise<void>;
+  removeSchemaByField: (field: string | string[]) => Promise<void>;
   appendSchemaByField: (
     schema: FormSchema,
     prefixField: string | undefined,
@@ -179,6 +179,10 @@ export interface FormSchema {
 
   // 默认值
   defaultValue?: any;
+
+  // 是否自动处理与时间相关组件的默认值
+  isHandleDateDefaultValue?: boolean;
+
   isAdvanced?: boolean;
 
   // Matching details components
