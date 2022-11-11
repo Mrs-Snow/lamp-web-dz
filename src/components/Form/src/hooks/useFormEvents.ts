@@ -1,13 +1,13 @@
 import type { ComputedRef, Ref } from 'vue';
-import type { FormProps, FormSchema, FormActionType } from '../types/form';
+import { nextTick, toRaw, unref } from 'vue';
+import type { FormActionType, FormProps, FormSchema } from '../types/form';
 import type { NamePath } from 'ant-design-vue/lib/form/interface';
-import { unref, toRaw, nextTick } from 'vue';
-import { isArray, isFunction, isObject, isString, isDef, isNullOrUnDef } from '/@/utils/is';
+import { isArray, isDef, isFunction, isNullOrUnDef, isObject, isString } from '/@/utils/is';
 import { deepMerge } from '/@/utils';
 import {
   dateItemType,
-  handleInputNumberValue,
   defaultValueComponents,
+  handleInputNumberValue,
   simpleComponents,
 } from '../helper';
 import { dateUtil } from '/@/utils/dateUtil';
@@ -130,7 +130,7 @@ export function useFormEvents({
       fieldList = [fields];
     }
     for (const field of fieldList) {
-      _removeSchemaByFeild(field, schemaList);
+      _removeSchemaByField(field, schemaList);
     }
     schemaRef.value = schemaList;
   }
@@ -138,7 +138,7 @@ export function useFormEvents({
   /**
    * @description: Delete based on field name
    */
-  function _removeSchemaByFeild(field: string, schemaList: FormSchema[]): void {
+  function _removeSchemaByField(field: string, schemaList: FormSchema[]): void {
     if (isString(field)) {
       const index = schemaList.findIndex((schema) => schema.field === field);
       if (index !== -1) {
@@ -216,16 +216,33 @@ export function useFormEvents({
       return;
     }
     const schema: FormSchema[] = [];
+
+    const updateMap = new Map();
     updateData.forEach((item) => {
-      unref(getSchema).forEach((val) => {
-        if (val.field === item.field) {
-          const newSchema = deepMerge(val, item);
-          schema.push(newSchema as FormSchema);
-        } else {
-          schema.push(val);
-        }
-      });
+      updateMap.set(item.field, item);
     });
+
+    unref(getSchema).forEach((val) => {
+      if (updateMap.has(val.field)) {
+        const item = updateMap.get(val.field);
+        const newSchema = deepMerge(val, item);
+        schema.push(newSchema as FormSchema);
+      } else {
+        schema.push(val);
+      }
+    });
+
+    // updateData.forEach((item) => {
+    //   unref(getSchema).forEach((val) => {
+    //     if (val.field === item.field) {
+    //       const newSchema = deepMerge(val, item);
+    //       schema.push(newSchema as FormSchema);
+    //     } else {
+    //       schema.push(val);
+    //     }
+    //   });
+    // });
+
     // bug不能设置默认值， 否则参数值永远不对
     // _setDefaultValue(schema);
 
