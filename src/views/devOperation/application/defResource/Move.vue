@@ -79,12 +79,22 @@
           treeData.value,
           (item, parent) => {
             item.key = item.id;
-            item.title = item.name;
+
             item.keyLinks = [...(parent.keyLinks || []), item.id];
             item.disabled =
               item.id === unref(current).parentId ||
               item.id === unref(current).id ||
               item.treePath.includes('/' + unref(current).id + '/');
+            if (item.id === unref(current).parentId) {
+              item.title = item.name + '(不能移动到他的父节点)';
+            } else if (item.id === unref(current).id) {
+              item.title = item.name + '(不能移动到他自己下)';
+            } else if (item.treePath.includes('/' + unref(current).id + '/')) {
+              item.title = item.name + '(不能移动到他的子孙节点)';
+            } else {
+              item.title = item.name;
+            }
+
             item.slots = { titleBefore: 'titleBefore' };
             return item;
           },
