@@ -61,7 +61,7 @@ export const dynamicInfoItems: DynamicInfoItem[] = [
     desc: `<a href="###">录制配套视频</a>`,
   },
   {
-    percent: 90,
+    percent: 100,
     name: '4.12.3 已发布：',
     date: '2022-11-16',
     desc: `<a href="https://www.oschina.net/news/217926/lamp-4-12-3-released">《灯灯》4.12.3 已发布，增加经常使用接口的缓存、按阿里代码规范、FindBug规范扫描代码，并修复beta版本的bug</a>`,
