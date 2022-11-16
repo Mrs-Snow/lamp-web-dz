@@ -209,9 +209,9 @@
       );
 
       watch(
-        () => userStore.getUserInfo?.defApplication?.name,
+        () => userStore.getApplicationName,
         () => {
-          newTitle.value = userStore.getUserInfo?.defApplication?.name ?? title;
+          newTitle.value = userStore.getApplicationName ?? title;
         },
         { immediate: true },
       );
@@ -408,6 +408,7 @@
           }
         }
       }
+
       .@{prefix-cls}-menu-list {
         &__content {
           box-shadow: 0 0 4px 0 rgb(0 0 0 / 10%);
@@ -424,6 +425,7 @@
         }
       }
     }
+
     @border-color: @sider-dark-lighten-bg-color;
 
     &.dark {
@@ -436,6 +438,7 @@
           border-right: 1px solid @border-color;
         }
       }
+
       .@{prefix-cls}-menu-list {
         background-color: @sider-dark-bg-color;
 
@@ -476,6 +479,7 @@
         &:hover {
           color: @white;
         }
+
         // &:hover,
         &--active {
           font-weight: 700;
