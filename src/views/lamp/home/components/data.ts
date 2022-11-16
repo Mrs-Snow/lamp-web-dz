@@ -57,14 +57,14 @@ export const dynamicInfoItems: DynamicInfoItem[] = [
   {
     percent: 0,
     name: '4.13.0 尚未开始：',
-    date: '2022-11-??',
+    date: '2022-12-??',
     desc: `<a href="###">录制配套视频</a>`,
   },
   {
     percent: 90,
-    name: '4.12.x 正在进行：',
-    date: '2022-11-？？',
-    desc: `<a href="###">优化前后端代码、重构前后端代码、CodeReview、缓存完善</a>`,
+    name: '4.12.3 已发布：',
+    date: '2022-11-16',
+    desc: `<a href="https://www.oschina.net/news/217926/lamp-4-12-3-released">《灯灯》4.12.3 已发布，增加经常使用接口的缓存、按阿里代码规范、FindBug规范扫描代码，并修复beta版本的bug</a>`,
   },
   {
     percent: 100,
