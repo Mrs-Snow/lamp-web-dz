@@ -36,7 +36,7 @@ const setting: ProjectConfig = {
   themeColor: '#0084f4',
 
   // Website gray mode, open for possible mourning dates
-  grayMode: false,
+  grayMode: true,
 
   // Color Weakness Mode
   colorWeak: false,
