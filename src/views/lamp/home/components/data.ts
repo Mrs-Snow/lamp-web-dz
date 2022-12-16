@@ -62,6 +62,18 @@ export const dynamicInfoItems: DynamicInfoItem[] = [
   },
   {
     percent: 100,
+    name: '4.12.5 已发布：',
+    date: '2022-11-16',
+    desc: `<a href="https://www.oschina.net/news/220558">《灯灯》4.12.5 已发布，升级Spring Boot 2.7.6</a>`,
+  },
+  {
+    percent: 100,
+    name: '4.12.4 已发布：',
+    date: '2022-11-16',
+    desc: `<a href="https://www.oschina.net/news/218618">《灯灯》4.12.4 已发布，调整 cloud 版本，lamp-oauth-userinfo 模块依赖关系 </a>`,
+  },
+  {
+    percent: 100,
     name: '4.12.3 已发布：',
     date: '2022-11-16',
     desc: `<a href="https://www.oschina.net/news/217926/lamp-4-12-3-released">《灯灯》4.12.3 已发布，增加经常使用接口的缓存、按阿里代码规范、FindBug规范扫描代码，并修复beta版本的bug</a>`,
