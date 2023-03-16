@@ -56,8 +56,8 @@ export const navItems: NavItem[] = [
 export const dynamicInfoItems: DynamicInfoItem[] = [
   {
     percent: 0,
-    name: '4.13.0 尚未开始：',
-    date: '2022-12-??',
+    name: '4.13.0 正在进行中：',
+    date: '尽快',
     desc: `<a href="###">录制配套视频</a>`,
   },
   {
