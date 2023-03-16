@@ -42,7 +42,7 @@
     },
     props: {
       value: {
-        type: Array as PropType<any[]>,
+        type: Array,
       },
       api: {
         type: Function as PropType<(arg?: Recordable) => Promise<Option[]>>,
@@ -177,9 +177,9 @@
         { deep: true },
       );
 
-      function handleChange(value, selectedOptions) {
-        emitData.value = value;
-        emit('defaultChange', value, selectedOptions);
+      function handleChange(keys, args) {
+        emitData.value = args;
+        emit('defaultChange', keys, args);
       }
 
       function handleRenderDisplay({ labels, selectedOptions }) {

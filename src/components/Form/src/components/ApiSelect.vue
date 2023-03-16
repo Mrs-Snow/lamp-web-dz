@@ -1,20 +1,20 @@
 <template>
   <Select
-    v-model:value="state"
-    :options="getOptions"
+    @dropdown-visible-change="handleFetch"
     v-bind="$attrs"
     @change="handleChange"
-    @dropdown-visible-change="handleFetch"
+    :options="getOptions"
+    v-model:value="state"
   >
-    <template v-for="item in Object.keys($slots)" #[item]="data">
+    <template #[item]="data" v-for="item in Object.keys($slots)">
       <slot :name="item" v-bind="data || {}"></slot>
     </template>
-    <template v-if="loading" #suffixIcon>
+    <template #suffixIcon v-if="loading">
       <LoadingOutlined spin />
     </template>
-    <template v-if="loading" #notFoundContent>
+    <template #notFoundContent v-if="loading">
       <span>
-        <LoadingOutlined class="mr-1" spin />
+        <LoadingOutlined spin class="mr-1" />
         {{ t('component.form.apiSelectNotFound') }}
       </span>
     </template>
@@ -52,10 +52,7 @@
         default: null,
       },
       // api params
-      params: {
-        type: [Object, String] as PropType<Recordable | string>,
-        default: () => ({}),
-      },
+      params: propTypes.any.def({}),
       // support xxx.xxx.xx
       resultField: propTypes.string.def(''),
       labelField: propTypes.string.def('label'),
@@ -156,9 +153,9 @@
         emit('options-change', unref(getOptions));
       }
 
-      function handleChange(value, ...options) {
-        emitData.value = options;
-        emit('change', value, ...options);
+      function handleChange(_, ...args) {
+        emitData.value = args;
+        // emit('change', value, ...args);
       }
 
       return { state, attrs, getOptions, loading, t, handleFetch, handleChange };

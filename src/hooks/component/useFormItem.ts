@@ -1,5 +1,5 @@
 import type { UnwrapRef, Ref, WritableComputedRef, DeepReadonly } from 'vue';
-import { reactive, readonly, computed, watchEffect, unref } from 'vue';
+import { reactive, readonly, computed, getCurrentInstance, watchEffect, unref, toRaw } from 'vue';
 
 import { isEqual } from 'lodash-es';
 
@@ -13,9 +13,12 @@ export function useRuleFormItem<T extends Recordable, K extends keyof T, V = Unw
 export function useRuleFormItem<T extends Recordable>(
   props: T,
   key: keyof T = 'value',
-  _changeEvent = 'change',
+  changeEvent = 'change',
   emitData?: Ref<any[]>,
 ) {
+  const instance = getCurrentInstance();
+  const emit = instance?.emit;
+
   const innerState = reactive({
     value: props[key],
   });
@@ -57,6 +60,9 @@ export function useRuleFormItem<T extends Recordable>(
       // emit?.(_changeEvent, value, ...(toRaw(unref(emitData)) || []));
       // nextTick(() => {
       //   emit?.(changeEvent, value, ...(toRaw(unref(emitData)) || []));
+      // });
+      // setTimeout(() => {
+      emit?.(changeEvent, value, ...(toRaw(unref(emitData)) || []));
       // });
     },
   });

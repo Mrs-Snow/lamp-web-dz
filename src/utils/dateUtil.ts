@@ -16,17 +16,11 @@ const DATE_TIME_FORMAT = 'YYYY-MM-DD HH:mm:ss';
 const DATE_FORMAT = 'YYYY-MM-DD';
 const TIME_FORMAT = 'HH:mm:ss';
 
-export function formatToDateTime(
-  date: dayjs.Dayjs | undefined = undefined,
-  format = DATE_TIME_FORMAT,
-): string {
+export function formatToDateTime(date?: dayjs.ConfigType, format = DATE_TIME_FORMAT): string {
   return dayjs(date).format(format);
 }
 
-export function formatToDate(
-  date: dayjs.Dayjs | undefined = undefined,
-  format = DATE_FORMAT,
-): string {
+export function formatToDate(date?: dayjs.ConfigType, format = DATE_FORMAT): string {
   return dayjs(date).format(format);
 }
 

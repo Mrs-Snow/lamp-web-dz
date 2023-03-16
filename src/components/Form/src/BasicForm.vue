@@ -1,9 +1,9 @@
 <template>
   <!-- 一定要先 v-bind ，在model 否则表单校验有问题 -->
   <Form
-    ref="formElRef"
-    :class="getFormClass"
     v-bind="getBindValue"
+    :class="getFormClass"
+    ref="formElRef"
     :model="formModel"
     @keypress.enter="handleEnterPress"
   >
@@ -12,15 +12,15 @@
       <template v-for="schema in getSchema" :key="schema.field">
         <FormItem
           :isAdvanced="fieldsIsAdvancedMap[schema.field]"
-          :allDefaultValues="defaultValueRef"
-          :formActionType="formActionType"
-          :formModel="formModel"
-          :formProps="getProps"
-          :schema="schema"
-          :setFormModel="setFormModel"
           :tableAction="tableAction"
+          :formActionType="formActionType"
+          :schema="schema"
+          :formProps="getProps"
+          :allDefaultValues="defaultValueRef"
+          :formModel="formModel"
+          :setFormModel="setFormModel"
         >
-          <template v-for="item in Object.keys($slots)" #[item]="data">
+          <template #[item]="data" v-for="item in Object.keys($slots)">
             <slot :name="item" v-bind="data || {}"></slot>
           </template>
         </FormItem>
@@ -28,8 +28,8 @@
 
       <FormAction v-bind="getFormActionBindProps" @toggle-advanced="handleToggleAdvanced">
         <template
-          v-for="item in ['resetBefore', 'submitBefore', 'advanceBefore', 'advanceAfter']"
           #[item]="data"
+          v-for="item in ['resetBefore', 'submitBefore', 'advanceBefore', 'advanceAfter']"
         >
           <slot :name="item" v-bind="data || {}"></slot>
         </template>
@@ -42,7 +42,8 @@
   import type { FormActionType, FormProps, FormSchema } from './types/form';
   import type { AdvanceState } from './types/hooks';
   import type { Ref } from 'vue';
-  import { computed, defineComponent, nextTick, onMounted, reactive, ref, unref, watch } from 'vue';
+
+  import { defineComponent, reactive, ref, computed, unref, onMounted, watch, nextTick } from 'vue';
   import { Form, Row } from 'ant-design-vue';
   import FormItem from './components/FormItem.vue';
   import FormAction from './components/FormAction.vue';
@@ -62,6 +63,7 @@
 
   import { basicProps } from './props';
   import { useDesign } from '/@/hooks/web/useDesign';
+  import { isFunction, isArray } from '/@/utils/is';
 
   export default defineComponent({
     name: 'BasicForm',
@@ -251,8 +253,11 @@
         propsRef.value = deepMerge(unref(propsRef) || {}, formProps);
       }
 
-      function setFormModel(key: string, value: any) {
+      function setFormModel(key: string, value: any, schema: FormSchema) {
         formModel[key] = value;
+        if (isFunction(schema.dynamicRules) || isArray(schema.rules)) {
+          return;
+        }
         // 加上这段代码会导致表单校验执行2次
         // const { validateTrigger } = unref(getBindValue);
         // if (!validateTrigger || validateTrigger === 'change') {

@@ -78,7 +78,7 @@
   const tinymceProps = {
     options: {
       type: Object as PropType<Partial<RawEditorSettings>>,
-      default: {},
+      default: () => ({}),
     },
     value: {
       type: String,
