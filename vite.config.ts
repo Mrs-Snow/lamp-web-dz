@@ -8,6 +8,7 @@ import { createProxy } from './build/vite/proxy';
 import { wrapperEnv } from './build/utils';
 import { createVitePlugins } from './build/vite/plugin';
 import { OUTPUT_DIR } from './build/constant';
+import { include, exclude } from './build/vite/optimize';
 
 function pathResolve(dir: string) {
   return resolve(process.cwd(), '.', dir);
@@ -28,39 +29,33 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
   const viteEnv = wrapperEnv(env);
 
   const { VITE_PORT, VITE_PUBLIC_PATH, VITE_PROXY, VITE_DROP_CONSOLE } = viteEnv;
-
   console.log('mode=%s, root=%s, env=%s', mode, root, env);
   const isBuild = command === 'build';
 
   return {
-    // 在生产中服务时的基本公共路径
     base: VITE_PUBLIC_PATH,
     root,
+    server: {
+      https: false,
+      open: true, //自动打开
+      // Listening on all local IPs
+      host: true,
+      port: VITE_PORT,
+      // Load proxy configuration from .env
+      proxy: createProxy(VITE_PROXY),
+    },
     resolve: {
       alias: [
         {
           find: 'vue-i18n',
           replacement: 'vue-i18n/dist/vue-i18n.cjs.js',
         },
-        // /@/xxxx => src/xxxx
+        // @/xxxx => src/xxxx
         {
-          find: /\/@\//,
+          find: /\@\//,
           replacement: pathResolve('src') + '/',
         },
-        // /#/xxxx => types/xxxx
-        {
-          find: /\/#\//,
-          replacement: pathResolve('types') + '/',
-        },
       ],
-    },
-    server: {
-      https: false,
-      // Listening on all local IPs
-      host: true,
-      port: VITE_PORT,
-      // Load proxy configuration from .env
-      proxy: createProxy(VITE_PROXY),
     },
     esbuild: {
       drop: VITE_DROP_CONSOLE ? ['console', 'debugger'] : [],
@@ -70,10 +65,13 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       cssTarget: 'chrome80',
       outDir: OUTPUT_DIR,
       // minify: 'terser',
+      /**
+       * 当 minify=“minify:'terser'” 解开注释
+       * Uncomment when minify="minify:'terser'"
+       */
       // terserOptions: {
       //   compress: {
       //     keep_infinity: true,
-      //     // Used to delete console in production environment
       //     drop_console: VITE_DROP_CONSOLE,
       //   },
       // },
@@ -82,14 +80,7 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       chunkSizeWarningLimit: 2000,
     },
     define: {
-      // setting vue-i18-next
-      // Suppress warning
-      __INTLIFY_PROD_DEVTOOLS__: false,
       __APP_INFO__: JSON.stringify(__APP_INFO__),
-      //新增以下变量
-      __COLOR_PLUGIN_OUTPUT_FILE_NAME__: undefined,
-      __PROD__: true,
-      __COLOR_PLUGIN_OPTIONS__: {},
     },
 
     css: {
@@ -102,21 +93,8 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
     },
 
     // The vite plugin used by the project. The quantity is large, so it is separately extracted and managed
-    plugins: createVitePlugins(viteEnv, isBuild),
+    plugins: createVitePlugins(mode, viteEnv, isBuild),
 
-    // 引入第三方的配置
-    optimizeDeps: {
-      esbuildOptions: {
-        target: 'es2020',
-      },
-      // @iconify/iconify: The dependency is dynamically and virtually loaded by @purge-icons/generated, so it needs to be specified explicitly
-      include: [
-        '@vue/runtime-core',
-        '@vue/shared',
-        '@iconify/iconify',
-        'ant-design-vue/es/locale/zh_CN',
-        'ant-design-vue/es/locale/en_US',
-      ],
-    },
+    optimizeDeps: { include, exclude },
   };
 };
