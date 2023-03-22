@@ -8,7 +8,6 @@ import { createProxy } from './build/vite/proxy';
 import { wrapperEnv } from './build/utils';
 import { createVitePlugins } from './build/vite/plugin';
 import { OUTPUT_DIR } from './build/constant';
-import { include, exclude } from './build/vite/optimize';
 
 function pathResolve(dir: string) {
   return resolve(process.cwd(), '.', dir);
@@ -37,7 +36,7 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
     root,
     server: {
       https: false,
-      open: true, //自动打开
+      open: false, //自动打开
       // Listening on all local IPs
       host: true,
       port: VITE_PORT,
@@ -63,6 +62,7 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
     build: {
       target: 'es2015',
       cssTarget: 'chrome80',
+      cssCodeSplit: true, // 如果设置为false，整个项目中的所有 CSS 将被提取到一个 CSS 文件中
       outDir: OUTPUT_DIR,
       // minify: 'terser',
       /**
@@ -77,7 +77,7 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       // },
       // Turning off brotliSize display can slightly reduce packaging time
       reportCompressedSize: false,
-      chunkSizeWarningLimit: 2000,
+      chunkSizeWarningLimit: 500,
     },
     define: {
       __APP_INFO__: JSON.stringify(__APP_INFO__),
@@ -95,6 +95,6 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
     // The vite plugin used by the project. The quantity is large, so it is separately extracted and managed
     plugins: createVitePlugins(mode, viteEnv, isBuild),
 
-    optimizeDeps: { include, exclude },
+    //optimizeDeps: { include, exclude },
   };
 };

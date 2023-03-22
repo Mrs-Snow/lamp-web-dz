@@ -28,6 +28,12 @@ const include = [
   'ant-design-vue/es/locale/zh_CN',
   'ant-design-vue/es/locale/en_US',
   'vite-plugin-windicss',
+  'vue3-blocks-tree',
+  'xe-utils',
+  'vxe-table',
+  'vxe-table-plugin-antd',
+  'vxe-table-plugin-export-xlsx',
+  'sass',
 ];
 
 const exclude = ['@iconify/json'];

@@ -16,6 +16,8 @@ import { configVisualizerConfig } from './visualizer';
 import { configThemePlugin } from './theme';
 import { configSvgIconsPlugin } from './svgSprite';
 import { isProdFn } from '../../utils';
+import OptimizationPersist from 'vite-plugin-optimize-persist';
+import PkgConfig from 'vite-plugin-package-config';
 
 export function createVitePlugins(mode: string, viteEnv: ViteEnv, isBuild: boolean) {
   const {
@@ -24,6 +26,9 @@ export function createVitePlugins(mode: string, viteEnv: ViteEnv, isBuild: boole
     VITE_BUILD_COMPRESS,
     VITE_BUILD_COMPRESS_DELETE_ORIGIN_FILE,
   } = viteEnv;
+
+  PkgConfig();
+  OptimizationPersist();
 
   const vitePlugins: (PluginOption | PluginOption[])[] = [
     // have to
