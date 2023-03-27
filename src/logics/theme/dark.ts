@@ -1,6 +1,5 @@
-import { darkCssIsReady, loadDarkThemeCss } from '@kirklin/vite-plugin-vben-theme/es/client';
+import { darkCssIsReady, loadDarkThemeCss } from 'vite-vue-plugin-theme/es/client';
 import { addClass, hasClass, removeClass } from '@/utils/domUtils';
-
 export async function updateDarkTheme(mode: string | null = 'light') {
   const htmlRoot = document.getElementById('htmlRoot');
   if (!htmlRoot) {

@@ -1,10 +1,11 @@
-import 'virtual:windi-base.css';
-import 'virtual:windi-components.css';
-import '/@/design/index.less';
+import 'uno.css';
+import 'virtual:unocss-devtools';
+import '@/design/index.less';
 import '/@/components/VxeTable/src/css/index.scss';
-import 'virtual:windi-utilities.css';
+//import 'virtual:windi-utilities.css';
 // Register icon sprite
 import 'virtual:svg-icons-register';
+import 'ant-design-vue/dist/antd.variable.min.css';
 import App from './App.vue';
 import { createApp } from 'vue';
 import { initAppConfigStore } from '/@/logics/initAppConfig';
@@ -24,7 +25,7 @@ import { registerThirdComp } from '/@/settings/registerThirdComp';
 import { isDevMode } from './utils/env';
 
 if (isDevMode()) {
-  import('ant-design-vue/es/style');
+  import('ant-design-vue/dist/antd.less');
 }
 
 async function bootstrap() {

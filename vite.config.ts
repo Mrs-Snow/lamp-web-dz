@@ -60,7 +60,7 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       drop: VITE_DROP_CONSOLE ? ['console', 'debugger'] : [],
     },
     build: {
-      target: 'es2015',
+      target: 'esnext',
       cssTarget: 'chrome80',
       cssCodeSplit: true, // 如果设置为false，整个项目中的所有 CSS 将被提取到一个 CSS 文件中
       outDir: OUTPUT_DIR,
@@ -77,7 +77,7 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       // },
       // Turning off brotliSize display can slightly reduce packaging time
       reportCompressedSize: false,
-      chunkSizeWarningLimit: 500,
+      chunkSizeWarningLimit: 2000,
     },
     define: {
       __APP_INFO__: JSON.stringify(__APP_INFO__),

@@ -1,9 +1,8 @@
 import { PluginOption } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
-import legacy from '@vitejs/plugin-legacy';
 import progress from 'vite-plugin-progress';
-import windiCSS from 'vite-plugin-windicss';
+import Unocss from 'unocss/vite';
 import purgeIcons from 'vite-plugin-purge-icons';
 import VitePluginCertificate from 'vite-plugin-mkcert';
 import vueSetupExtend from 'unplugin-vue-setup-extend-plus/vite';
@@ -20,12 +19,7 @@ import OptimizationPersist from 'vite-plugin-optimize-persist';
 import PkgConfig from 'vite-plugin-package-config';
 
 export function createVitePlugins(mode: string, viteEnv: ViteEnv, isBuild: boolean) {
-  const {
-    VITE_USE_MOCK,
-    VITE_LEGACY,
-    VITE_BUILD_COMPRESS,
-    VITE_BUILD_COMPRESS_DELETE_ORIGIN_FILE,
-  } = viteEnv;
+  const { VITE_USE_MOCK, VITE_BUILD_COMPRESS, VITE_BUILD_COMPRESS_DELETE_ORIGIN_FILE } = viteEnv;
 
   PkgConfig();
   OptimizationPersist();
@@ -44,11 +38,8 @@ export function createVitePlugins(mode: string, viteEnv: ViteEnv, isBuild: boole
     }),
   ];
 
-  // vite-plugin-windicss
-  vitePlugins.push(windiCSS());
-
-  // @vitejs/plugin-legacy
-  VITE_LEGACY && isBuild && vitePlugins.push(legacy());
+  // Unocss
+  vitePlugins.push(Unocss());
 
   // vite-plugin-html
   vitePlugins.push(configHtmlPlugin(viteEnv, isBuild));
@@ -62,7 +53,7 @@ export function createVitePlugins(mode: string, viteEnv: ViteEnv, isBuild: boole
   // vite-plugin-purge-icons
   vitePlugins.push(purgeIcons());
 
-  // vite-plugin-style-import
+  // vite-vue-plugin-style-import
   if (isProdFn(mode)) {
     vitePlugins.push(configStyleImportPlugin(isBuild));
   }

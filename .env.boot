@@ -30,8 +30,6 @@ VITE_GLOB_TIPS = 后端采用lamp-boot-plus
 # Whether to enable image compression
 VITE_USE_IMAGEMIN = true
 
-# use pwa
+# 打包是否开启pwa功能
 VITE_USE_PWA = false
 
-# Is it compatible with older browsers
-VITE_LEGACY = false
