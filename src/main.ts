@@ -5,7 +5,6 @@ import '/@/components/VxeTable/src/css/index.scss';
 //import 'virtual:windi-utilities.css';
 // Register icon sprite
 import 'virtual:svg-icons-register';
-import 'ant-design-vue/dist/antd.variable.min.css';
 import App from './App.vue';
 import { createApp } from 'vue';
 import { initAppConfigStore } from '/@/logics/initAppConfig';

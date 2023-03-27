@@ -66,7 +66,7 @@
                 float: left;
                 height: 20px;
                 line-height: 20px;
-                margin: 0px 0px 0px 5px;
+                margin: 0 0 0 5px;
                 color: #939393;
               "
               >贵公网安备 52011502002216号</p
@@ -114,7 +114,7 @@
       background-color: @dark-bg;
 
       &::before {
-        background-image: url(/@/assets/svg/login-bg-dark.svg);
+        background-image: url('/@/assets/svg/login-bg-dark.svg');
       }
 
       .ant-input,
@@ -122,7 +122,7 @@
         background-color: #232a3b;
       }
 
-      .ant-btn:not(.ant-btn-link):not(.ant-btn-primary) {
+      .ant-btn:not(.ant-btn-link, .ant-btn-primary) {
         border: 1px solid #4a5569;
       }
 
@@ -145,6 +145,7 @@
   .@{prefix-cls} {
     min-height: 100%;
     overflow: hidden;
+
     @media (max-width: @screen-xl) {
       background-color: #293146;
 
@@ -160,11 +161,12 @@
       width: 100%;
       height: 100%;
       margin-left: -48%;
-      background-image: url(/@/assets/svg/login-bg.svg);
+      background-image: url('/@/assets/svg/login-bg.svg');
       background-position: 100%;
       background-repeat: no-repeat;
       background-size: auto 100%;
       content: '';
+
       @media (max-width: @screen-xl) {
         display: none;
       }

@@ -546,14 +546,14 @@
         font-size: 18px;
         color: @primary-color;
         border-bottom: 1px solid rgb(238 238 238);
-        opacity: 0%;
+        opacity: 0;
         transition: unset;
         align-items: center;
         justify-content: space-between;
 
         &.show {
           min-width: 130px;
-          opacity: 100%;
+          opacity: 1;
           transition: all 0.5s ease;
         }
 

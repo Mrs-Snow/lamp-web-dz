@@ -196,7 +196,7 @@
     &--mobile {
       .@{logo-prefix-cls} {
         &__title {
-          opacity: 100%;
+          opacity: 1;
         }
       }
     }
