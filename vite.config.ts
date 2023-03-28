@@ -8,7 +8,7 @@ import { createProxy } from './build/vite/proxy';
 import { wrapperEnv } from './build/utils';
 import { createVitePlugins } from './build/vite/plugin';
 import { OUTPUT_DIR } from './build/constant';
-
+import { include, exclude } from './build/vite/optimize'
 function pathResolve(dir: string) {
   return resolve(process.cwd(), '.', dir);
 }
@@ -95,6 +95,6 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
     // The vite plugin used by the project. The quantity is large, so it is separately extracted and managed
     plugins: createVitePlugins(mode, viteEnv, isBuild),
 
-    //optimizeDeps: { include, exclude },
+    optimizeDeps: { include, exclude },
   };
 };
