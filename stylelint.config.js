@@ -22,7 +22,7 @@ module.exports = {
       true,
       {
         ignoreAtRules: [
-          'unocss',
+          'tailwind',
           'apply',
           'variants',
           'responsive',

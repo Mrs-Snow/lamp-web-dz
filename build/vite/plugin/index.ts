@@ -2,7 +2,7 @@ import { PluginOption } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import progress from 'vite-plugin-progress';
-import Unocss from 'unocss/vite';
+import windiCSS from 'vite-plugin-windicss'
 import purgeIcons from 'vite-plugin-purge-icons';
 import VitePluginCertificate from 'vite-plugin-mkcert';
 import vueSetupExtend from 'unplugin-vue-setup-extend-plus/vite';
@@ -14,15 +14,12 @@ import { configStyleImportPlugin } from './styleImport';
 import { configVisualizerConfig } from './visualizer';
 import { configThemePlugin } from './theme';
 import { configSvgIconsPlugin } from './svgSprite';
-import { isProdFn } from '../../utils';
-import OptimizationPersist from 'vite-plugin-optimize-persist';
-import PkgConfig from 'vite-plugin-package-config';
 
-export function createVitePlugins(mode: string, viteEnv: ViteEnv, isBuild: boolean) {
+
+export function createVitePlugins(viteEnv: ViteEnv, isBuild: boolean) {
   const { VITE_USE_MOCK, VITE_BUILD_COMPRESS, VITE_BUILD_COMPRESS_DELETE_ORIGIN_FILE } = viteEnv;
 
-  PkgConfig();
-  OptimizationPersist();
+
 
   const vitePlugins: (PluginOption | PluginOption[])[] = [
     // have to
@@ -39,7 +36,7 @@ export function createVitePlugins(mode: string, viteEnv: ViteEnv, isBuild: boole
   ];
 
   // Unocss
-  vitePlugins.push(Unocss());
+  vitePlugins.push(windiCSS());
 
   // vite-plugin-html
   vitePlugins.push(configHtmlPlugin(viteEnv, isBuild));
@@ -53,10 +50,7 @@ export function createVitePlugins(mode: string, viteEnv: ViteEnv, isBuild: boole
   // vite-plugin-purge-icons
   vitePlugins.push(purgeIcons());
 
-  // vite-vue-plugin-style-import
-  if (isProdFn(mode)) {
-    vitePlugins.push(configStyleImportPlugin(isBuild));
-  }
+
 
   // rollup-plugin-visualizer
   vitePlugins.push(configVisualizerConfig());
@@ -66,10 +60,11 @@ export function createVitePlugins(mode: string, viteEnv: ViteEnv, isBuild: boole
 
   // The following plugins only work in the production environment
   if (isBuild) {
+
+    vitePlugins.push(configStyleImportPlugin(isBuild));
+
     // rollup-plugin-gzip
-    vitePlugins.push(
-      configCompressPlugin(VITE_BUILD_COMPRESS, VITE_BUILD_COMPRESS_DELETE_ORIGIN_FILE),
-    );
+    vitePlugins.push(configCompressPlugin(VITE_BUILD_COMPRESS, VITE_BUILD_COMPRESS_DELETE_ORIGIN_FILE));
 
     // vite-plugin-pwa
     vitePlugins.push(configPwaConfig(viteEnv));

@@ -2,7 +2,6 @@ const include = [
   'qs',
   'vue',
   'less',
-  'unocss',
   'axios',
   'pinia',
   'dayjs',
@@ -33,6 +32,7 @@ const include = [
   'vxe-table-plugin-antd',
   'vxe-table-plugin-export-xlsx',
   'sass',
+  'vite-plugin-windicss'
 ];
 
 const exclude = ['@iconify/json'];
