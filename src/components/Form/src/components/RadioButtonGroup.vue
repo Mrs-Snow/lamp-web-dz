@@ -20,7 +20,7 @@
 </template>
 <script lang="ts">
   import { defineComponent, PropType, computed, ref } from 'vue';
-  import { Radio, RadioGroup, RadioButton } from 'ant-design-vue';
+  import { Radio } from 'ant-design-vue';
   import { isString } from '/@/utils/is';
   import { useRuleFormItem } from '/@/hooks/component/useFormItem';
   import { useAttrs } from '/@/hooks/core/useAttrs';
@@ -31,7 +31,9 @@
   export default defineComponent({
     name: 'RadioButtonGroup',
     components: {
-      Radio, RadioGroup, RadioButton
+      Radio,
+      RadioGroup: Radio.Group,
+      RadioButton: Radio.Button,
     },
     props: {
       value: {
