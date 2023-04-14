@@ -352,6 +352,10 @@ export const getValidateRules = async (
       }
     }
     try {
+      if (!formValidateApi.url) {
+        return resolve([]);
+      }
+
       const key = formValidateApi.url + formValidateApi.method;
       if (ruleMap.has(key)) {
         return resolve(ruleMap.get(key));
@@ -392,6 +396,10 @@ export const getValidateRuleObj = async (
       }
     }
     try {
+      if (!formValidateApi.url) {
+        return resolve([]);
+      }
+
       const key = formValidateApi.url + formValidateApi.method;
       if (ruleObjMap.has(key)) {
         return resolve(ruleObjMap.get(key));
