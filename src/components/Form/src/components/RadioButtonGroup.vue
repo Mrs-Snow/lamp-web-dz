@@ -2,7 +2,7 @@
  * @Description:It is troublesome to implement radio button group in the form. So it is extracted independently as a separate component
 -->
 <template>
-  <RadioGroup v-bind="attrs" v-model:value="state" button-style="solid">
+  <RadioGroup v-bind="attrs" v-model:value="state">
     <template v-for="item in getOptions" :key="`${item.value}`">
       <RadioButton
         v-if="props.isBtn"
@@ -20,7 +20,7 @@
 </template>
 <script lang="ts">
   import { defineComponent, PropType, computed, ref } from 'vue';
-  import { Radio } from 'ant-design-vue';
+  import { Radio, RadioGroup, RadioButton } from 'ant-design-vue';
   import { isString } from '/@/utils/is';
   import { useRuleFormItem } from '/@/hooks/component/useFormItem';
   import { useAttrs } from '/@/hooks/core/useAttrs';
@@ -31,9 +31,7 @@
   export default defineComponent({
     name: 'RadioButtonGroup',
     components: {
-      RadioGroup: Radio.Group,
-      RadioButton: Radio.Button,
-      Radio,
+      Radio, RadioGroup, RadioButton
     },
     props: {
       value: {
