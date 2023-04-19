@@ -6,6 +6,7 @@ import { ServicePrefixEnum } from '/@/enums/commonEnum';
 import { defHttp } from '/@/utils/http/axios';
 import type { AxiosRequestConfig } from 'axios';
 import { VxeTableDefines, VxeTablePropTypes } from 'vxe-table';
+import { useMessage } from '/@/hooks/web/useMessage';
 
 export enum RuleType {
   append,
@@ -26,6 +27,8 @@ ruleTypeMap.set('Array', 'array');
 ruleTypeMap.set('Date', 'date');
 ruleTypeMap.set('DateTime', 'date');
 ruleTypeMap.set('Time', 'date');
+
+const { createMessage } = useMessage();
 
 /**
  * 时间与当前时间进行比较， 不存在的情况默认都是比较成功 返回true
@@ -330,6 +333,7 @@ function enhanceCustomRules(
 const ruleMap = new Map();
 const ruleObjMap = new Map();
 
+
 /**
  * 从后端获取某个接口基于 Hibernate Validator 注解生成的参数校验规则
  * @param Api url和method
@@ -353,6 +357,7 @@ export const getValidateRules = async (
     }
     try {
       if (!formValidateApi.url) {
+        createMessage.error('ServicePrefixEnum枚举类未正确配置！');
         return resolve([]);
       }
 
@@ -397,6 +402,7 @@ export const getValidateRuleObj = async (
     }
     try {
       if (!formValidateApi.url) {
+        createMessage.error('ServicePrefixEnum枚举类未正确配置！');
         return resolve([]);
       }
 
