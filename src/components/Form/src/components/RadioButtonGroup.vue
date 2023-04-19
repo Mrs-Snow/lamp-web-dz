@@ -2,21 +2,21 @@
  * @Description:It is troublesome to implement radio button group in the form. So it is extracted independently as a separate component
 -->
 <template>
-  <a-radio-group v-bind="attrs" v-model:value="state">
+  <RadioGroup v-bind="attrs" v-model:value="state">
     <template v-for="item in getOptions" :key="`${item.value}`">
-      <a-radio-button
+      <RadioButton
         v-if="props.isBtn"
         :value="item.value"
         :disabled="item.disabled"
         @click="handleClick(item)"
       >
         {{ item.label }}
-      </a-radio-button>
+      </RadioButton>
       <Radio v-else :value="item.value" :disabled="item.disabled">
         {{ item.label }}
       </Radio>
     </template>
-  </a-radio-group>
+  </RadioGroup>
 </template>
 <script lang="ts">
   import { defineComponent, PropType, computed, ref } from 'vue';
@@ -31,8 +31,8 @@
   export default defineComponent({
     name: 'RadioButtonGroup',
     components: {
-      ARadioGroup: RadioGroup,
-      [Radio.Button.name]: Radio.Button,
+      RadioGroup,
+      RadioButton: Radio.Button,
       Radio,
     },
     props: {
