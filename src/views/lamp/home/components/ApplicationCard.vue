@@ -150,9 +150,9 @@
                 await closeAll();
                 createMessage.success(`成功切换到应用：[${item.name}]`);
 
-                setTimeout(() => {
-                  // location.reload();
-                  replace({ path: PageEnum.BASE_HOME });
+                setTimeout(async () => {
+                  location.reload();
+                  // await router.replace({ path: PageEnum.BASE_HOME });
                 }, 200);
               }
             },

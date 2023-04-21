@@ -16,6 +16,7 @@ import { RoleEnum, PermModeEnum } from '/@/enums/roleEnum';
 import { intersection } from 'lodash-es';
 import { isArray } from '/@/utils/is';
 import { useMultipleTabStore } from '/@/store/modules/multipleTab';
+import { PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
 
 /**
  * maxList是否包含minList
@@ -161,6 +162,7 @@ export function usePermission() {
     routes.forEach((route) => {
       router.addRoute(route as unknown as RouteRecordRaw);
     });
+    router.addRoute(PAGE_NOT_FOUND_ROUTE as unknown as RouteRecordRaw);
     permissionStore.setLastBuildMenuTime();
     closeAll();
   }
@@ -320,7 +322,7 @@ export function usePermission() {
    * refresh menu data
    */
   async function refreshMenu() {
-    resume();
+    await resume();
   }
 
   return {
