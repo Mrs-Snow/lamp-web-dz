@@ -62,10 +62,16 @@ export const navItems: NavItem[] = [
 
 export const dynamicInfoItems: DynamicInfoItem[] = [
   {
-    percent: 30,
+    percent: 50,
     name: '4.13.x 正在进行中：',
     date: '尽快',
     desc: ` <a target="_blank" href="https://tangyh.top">基于4.13.0版本 录制视频 & 编写全新文档</a>`,
+  },
+  {
+    percent: 100,
+    name: '4.13.1 已发布：',
+    date: '2023年05月15日',
+    desc: ` <a target="_blank" href="https://mp.weixin.qq.com/s?__biz=MzAxMDY2NDMxNA==&mid=2649866415&idx=1&sn=13ea2cba897f5031fada2922660d0ccf&chksm=834980bab43e09ac58c4ce8320877a78d3a756f728bdc25196db546cca263c5a218e13a7cd32&token=1240525616&lang=zh_CN#rd">优化功能、修复bug</a>`,
   },
   {
     percent: 100,
