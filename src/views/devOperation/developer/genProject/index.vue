@@ -1,7 +1,6 @@
 <template>
   <PageWrapper
     contentClass="flex"
-    contentFullHeight
     dense
     fixedHeight
     title="为lamp-cloud或lamp-boot项目新建新服务"
@@ -12,7 +11,7 @@
         <a-button @click="resetFields"> 清空</a-button>
         <a-button class="!ml-4" @click="resetForm"> 重置</a-button>
         <a-button class="!ml-4" type="primary" @click="handleSubmit">本地生成</a-button>
-        <a-button class="!ml-4" type="primary" @click="handleDownload">立即下载</a-button>
+        <a-button class="!ml-4" type="primary" @click="handleDownload">远程下载</a-button>
       </div>
       <BasicTitle line span>注意事项</BasicTitle>
       <Alert message="注意事项" show-icon>
@@ -28,9 +27,9 @@
           </p>
           <p>
             4. {本地生成}
-            适用于开发者本机启动项目后，直接将"代码"生成在开发者所在电脑，部署在测试环境上的系统，无法将代码生成在开发者电脑。
+            适用于开发者本地启动项目后，直接将"代码"生成在开发者所在电脑的“输出路径”所在目录。
           </p>
-          <p> 5. {立即下载} 适用于测试环境启动项目后，开发者将生成的代码下载到开发者的电脑。 </p>
+          <p> 5. {远程下载} 适用于测试环境启动项目后，开发者将生成的代码下载到开发者的电脑。 </p>
         </template>
       </Alert>
     </div>
@@ -50,7 +49,7 @@
       <a-button @click="resetFields"> 清空</a-button>
       <a-button @click="resetForm"> 重置</a-button>
       <a-button type="primary" @click="handleSubmit">本地生成</a-button>
-      <a-button type="primary" @click="handleDownload">立即下载</a-button>
+      <a-button type="primary" @click="handleDownload">远程下载</a-button>
     </template>
   </PageWrapper>
 </template>
