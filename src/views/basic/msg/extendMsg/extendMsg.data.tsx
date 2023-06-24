@@ -40,6 +40,11 @@ export const columns = (): BasicColumn[] => {
       dataIndex: 'author',
     },
     {
+      title: t('basic.msg.extendMsg.sendTime'),
+      dataIndex: 'sendTime',
+      width: 180,
+    },
+    {
       title: t('lamp.common.createdTime'),
       dataIndex: 'createdTime',
       sorter: true,

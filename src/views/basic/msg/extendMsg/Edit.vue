@@ -92,6 +92,10 @@
           const params = await validate();
           params.draft = draft;
 
+          if(unref(type) === ActionEnum.COPY) {
+            params.id = null;
+          }
+
           openFullLoading();
           await publish(params);
           createMessage.success(t(`common.tips.${type.value}Success`));
