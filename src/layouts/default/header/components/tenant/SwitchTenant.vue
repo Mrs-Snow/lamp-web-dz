@@ -150,14 +150,12 @@
       });
 
       async function loadOrgByTenant(tenantId: string) {
-        if (tenantId) {
-          const org = await findCompanyDept(tenantId);
-          formData.currentCompanyId = org.currentCompanyId;
-          formData.currentDeptId = org.currentDeptId;
-          formState.companyList = org.companyList;
-          formState.deptList = org.deptList;
-          formState.tenantList = org.tenantList;
-        }
+        const org = await findCompanyDept(tenantId);
+        formData.currentCompanyId = org.currentCompanyId;
+        formData.currentDeptId = org.currentDeptId;
+        formState.companyList = org.companyList;
+        formState.deptList = org.deptList;
+        formState.tenantList = org.tenantList;
       }
 
       async function changeTenant(e: ChangeEvent) {
