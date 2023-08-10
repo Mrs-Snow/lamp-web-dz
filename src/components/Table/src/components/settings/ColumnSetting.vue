@@ -268,8 +268,8 @@
         state.checkAll = checkedList.length === len;
         const sortList = unref(plainSortOptions).map((item) => item.value);
         checkedList.sort((prev, next) => {
-          const prevIndex = isArray(prev) ? sortList.findIndex((item) => join(item, '.') === join(prev, '.')) : sortList.indexOf(prev)
-          const nextIndex = isArray(next) ? sortList.findIndex((item) => join(item, '.') === join(next, '.')) : sortList.indexOf(next)
+          const prevIndex = isArray(prev) ? sortList.findIndex((item) => isArray(item) && join(item, '.') === join(prev, '.')) : sortList.indexOf(prev)
+          const nextIndex = isArray(next) ? sortList.findIndex((item) => isArray(item) && join(item, '.') === join(next, '.')) : sortList.indexOf(next)
           return prevIndex - nextIndex;
         });
         setColumns(checkedList);
