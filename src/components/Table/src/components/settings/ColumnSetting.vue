@@ -119,9 +119,9 @@
   import { useTableContext } from '../../hooks/useTableContext';
   import { useDesign } from '/@/hooks/web/useDesign';
   // import { useSortable } from '/@/hooks/web/useSortable';
-  import { isFunction, isNullAndUnDef } from '/@/utils/is';
+  import { isFunction, isNullAndUnDef, isString } from '/@/utils/is';
   import { getPopupContainer as getParentContainer } from '/@/utils';
-  import { cloneDeep, omit } from 'lodash-es';
+  import { cloneDeep, omit, join } from 'lodash-es';
   import Sortablejs from 'sortablejs';
   import type Sortable from 'sortablejs';
 
@@ -317,10 +317,26 @@
 
               plainSortOptions.value = columns;
 
+              const newList = []
+              for (const o of state.checkedList) {
+                if (isString(o)) {
+                  newList.push(o)
+                } else {
+                  newList.push(join(o, '.'))
+                }
+              }
+
               setColumns(
                 columns
                   .map((col: Options) => col.value)
-                  .filter((value: string) => state.checkedList.includes(value)),
+                  .filter((value: string) => {
+                    if (isString(value)) {
+                      return state.checkedList.includes(value)
+                    } else {
+                      const vStr = join(value, '.')
+                      return newList.includes(vStr)
+                    }
+                  }),
               );
             },
           });
