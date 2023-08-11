@@ -211,7 +211,9 @@
   });
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
+  @prefix-cls: ~'@{namespace}-myApplication';
+
   .appDisabled {
     color: rgb(0 0 0 / 75%);
     background-color: #f5f5f5;
@@ -222,5 +224,11 @@
   [data-theme='dark'] .appDisabled {
     color: rgb(255 255 255 / 30%);
     background-color: rgb(255 255 255 / 8%);
+  }
+
+  .@{prefix-cls} {
+    .ant-card-head .ant-card-head-wrapper .ant-card-head-title {
+      color: red;
+    }
   }
 </style>

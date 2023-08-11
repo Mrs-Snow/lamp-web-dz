@@ -8,7 +8,7 @@
         <ApplicationCard
           :api="findMyApplication"
           :class="['enter-y', myAppCls]"
-          title="我的应用 (点击应用进行切换应用，体验不同应用的功能)"
+          title="我的应用 (员工、部门、角色管理等功能在基础平台)"
           @more="handleStart(true)"
         />
         <DynamicInfo :loading="loading" class="!my-4 enter-y" />
