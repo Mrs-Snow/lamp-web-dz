@@ -3,6 +3,7 @@ import {
   ExtendMsgUpdateVO,
   ExtendMsgResultVO,
   ExtendMsgPageQuery,
+  ExtendMsgSendVO,
 } from './model/extendMsgModel';
 import { PageParams, PageResult } from '/@/api/model/baseModel';
 import { defHttp } from '/@/utils/http/axios';
@@ -48,6 +49,10 @@ export const Api = {
     url: `${ServicePrefix}/${MODULAR}/query`,
     method: RequestEnum.POST,
   } as AxiosRequestConfig,
+  SendByTemplate: {
+    url: `${ServicePrefix}/${MODULAR}/sendByTemplate`,
+    method: RequestEnum.POST,
+  } as AxiosRequestConfig,
   Get: (id: string) => {
     return {
       url: `${ServicePrefix}/${MODULAR}/${id}`,
@@ -81,6 +86,11 @@ export const save = (params: ExtendMsgSaveVO) =>
 export const publish = (params: ExtendMsgSaveVO) =>
   defHttp.request<boolean>({
     ...Api.Publish,
+    params,
+  });
+export const sendByTemplate = (params: ExtendMsgSendVO) =>
+  defHttp.request<boolean>({
+    ...Api.SendByTemplate,
     params,
   });
 

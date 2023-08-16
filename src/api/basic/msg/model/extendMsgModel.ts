@@ -23,7 +23,17 @@ export interface ExtendMsgSaveVO {
   bizId?: string; // 业务ID
   bizType?: string; // 业务类型
   draft?: boolean; // 是否草稿
-  recipientList?: string[];
+  recipientList?: string[]; // 接收人
+}
+
+export interface ExtendMsgSendVO {
+  templateCode?: string; // 模板标识
+  paramList?: string[]; // 参数
+  sendTime?: string; // 发送时间
+  bizId?: string; // 业务ID
+  bizType?: string; // 业务类型
+  author?: string; // 发布人姓名
+  recipientList?: string[]; // 接收人
 }
 
 export interface ExtendMsgUpdateVO {
