@@ -66,33 +66,6 @@ export const editFormSchema = (): FormSchema[] => {
 }
 
 // 前端自定义表单验证规则
-export const customFormSchemaRules = (getFieldsValue: () => Recordable): Partial<FormSchemaExt>[] => {
-  return [
-    // {
-    //   field: 'paramList',
-    //   type: RuleType.append,
-    //   rules: [
-    //     {
-    //       trigger: ['change', 'blur'],
-    //       async validator(_, value) {
-    //         if (value === undefined) {
-    //           return Promise.reject('不能为空')
-    //         }
-    //         const raw = toRaw(value)
-    //         if (isArray(raw)) {
-    //           if (raw.length > 0) {
-    //             return Promise.resolve()
-    //           } else {
-    //             return Promise.reject('不能为空')
-    //           }
-    //         }
-    //         if (value) {
-    //           return Promise.resolve()
-    //         }
-    //         return Promise.reject('不能为空')
-    //       }
-    //     }
-    //   ]
-    // }
-  ]
+export const customFormSchemaRules = (): Partial<FormSchemaExt>[] => {
+  return []
 }

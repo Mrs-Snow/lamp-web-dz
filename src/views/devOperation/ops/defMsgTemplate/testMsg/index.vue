@@ -41,7 +41,7 @@ export default defineComponent({
     const { createMessage } = useMessage()
     const paramListRef = ref()
     const recipientListRef = ref()
-    const [registerForm, { setFieldsValue, getFieldsValue, resetFields, updateSchema, validate, resetSchema }] = useForm({
+    const [registerForm, { setFieldsValue, resetFields, updateSchema, validate, resetSchema }] = useForm({
       name: 'DefMsgTemplateEdit',
       labelWidth: 100,
       schemas: editFormSchema(),
@@ -79,7 +79,7 @@ export default defineComponent({
       unref(recipientListRef).initData()
 
       let validateApi = Api.SendByTemplate
-      await getValidateRules(validateApi, customFormSchemaRules(getFieldsValue)).then(async (rules) => {
+      await getValidateRules(validateApi, customFormSchemaRules()).then(async (rules) => {
         rules && rules.length > 0 && (await updateSchema(rules))
       })
     })
