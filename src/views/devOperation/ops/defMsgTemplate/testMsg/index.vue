@@ -1,12 +1,12 @@
 <template>
   <BasicModal
     v-bind="$attrs"
+    width="800px"
     @register="registerModel"
     title="测试消息"
     :maskClosable="false"
     @ok="handleSubmit"
     :keyboard="true"
-    defaultFullscreen
   >
     <BasicForm @register="registerForm">
       <template #paramList="{ model, field }">

@@ -8,7 +8,6 @@ import { FormSchemaExt, RuleType } from '/@/api/lamp/common/formValidateService'
 import { MsgTemplateTypeEnum } from '/@/enums/biz/base'
 import { check } from '/@/api/devOperation/ops/defMsgTemplate'
 import { query } from '/@/api/devOperation/ops/defInterface'
-import { Rule } from '/@/components/Form'
 
 const { t } = useI18n()
 // 列表页字段
@@ -178,12 +177,8 @@ export const editFormSchema = (_type: Ref<ActionEnum>): FormSchema[] => {
       ifShow: ({ values }) => {
         return values.type === MsgTemplateTypeEnum.SMS
       },
-      dynamicRules: ({ values }) => {
-        const rules: Rule[] = []
-        if (values.type === MsgTemplateTypeEnum.SMS) {
-          rules.push({ required: true, message: '不能为空', ruleType: RuleType.append })
-        }
-        return rules
+      required: ({ values }) => {
+        return values.type === MsgTemplateTypeEnum.SMS
       }
     },
     {
@@ -193,12 +188,8 @@ export const editFormSchema = (_type: Ref<ActionEnum>): FormSchema[] => {
       ifShow: ({ values }) => {
         return values.type === MsgTemplateTypeEnum.SMS
       },
-      dynamicRules: ({ values }) => {
-        const rules: Rule[] = []
-        if (values.type === MsgTemplateTypeEnum.SMS) {
-          rules.push({ required: true, message: '不能为空', ruleType: RuleType.append })
-        }
-        return rules
+      required: ({ values }) => {
+        return values.type === MsgTemplateTypeEnum.SMS
       }
     },
     {
@@ -209,6 +200,9 @@ export const editFormSchema = (_type: Ref<ActionEnum>): FormSchema[] => {
         ...dictComponentProps(DictEnum.EchoDictType_Base_NOTICE_TARGET)
       },
       ifShow: ({ values }) => {
+        return values.type === MsgTemplateTypeEnum.NOTICE
+      },
+      required: ({ values }) => {
         return values.type === MsgTemplateTypeEnum.NOTICE
       }
     },
@@ -222,6 +216,9 @@ export const editFormSchema = (_type: Ref<ActionEnum>): FormSchema[] => {
       },
       ifShow: ({ values }) => {
         return values.type === MsgTemplateTypeEnum.NOTICE
+      },
+      required: ({ values }) => {
+        return values.type === MsgTemplateTypeEnum.NOTICE
       }
     },
     {
@@ -233,6 +230,9 @@ export const editFormSchema = (_type: Ref<ActionEnum>): FormSchema[] => {
       },
       ifShow: ({ values }) => {
         return values.type === MsgTemplateTypeEnum.NOTICE
+      },
+      required: ({ values }) => {
+        return values.type === MsgTemplateTypeEnum.NOTICE
       }
     },
     {
@@ -240,6 +240,9 @@ export const editFormSchema = (_type: Ref<ActionEnum>): FormSchema[] => {
       field: 'url',
       component: 'Input',
       ifShow: ({ values }) => {
+        return values.type === MsgTemplateTypeEnum.NOTICE
+      },
+      required: ({ values }) => {
         return values.type === MsgTemplateTypeEnum.NOTICE
       }
     }
