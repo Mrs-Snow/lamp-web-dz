@@ -69,6 +69,12 @@ export const dynamicInfoItems: DynamicInfoItem[] = [
   },
   {
     percent: 100,
+    name: '4.14.2 已发布：',
+    date: '2023年08月18日',
+    desc: ` <a target="_blank" href="https://tangyh.top/upgrade/4.x%E7%89%88%E6%9C%AC%E5%8D%87%E7%BA%A7%E6%97%A5%E5%BF%97.html#_4-14-2-2023%E5%B9%B408%E6%9C%8818%E6%97%A511-11-08">新增 测试消息发送 页面</a>`,
+  },
+  {
+    percent: 100,
     name: '4.14.1 已发布：',
     date: '2023年07月25日',
     desc: ` <a target="_blank" href="https://tangyh.top/upgrade/4.x%E7%89%88%E6%9C%AC%E5%8D%87%E7%BA%A7%E6%97%A5%E5%BF%97.html#_4-14-1-2023%E5%B9%B407%E6%9C%8825%E6%97%A508-52-46">重要修复bug</a>`,
