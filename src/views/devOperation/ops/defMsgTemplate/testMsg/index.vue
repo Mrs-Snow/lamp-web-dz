@@ -3,7 +3,7 @@
     v-bind="$attrs"
     width="800px"
     @register="registerModel"
-    title="测试消息"
+    title="测试发送消息"
     :maskClosable="false"
     @ok="handleSubmit"
     :keyboard="true"
