@@ -62,10 +62,16 @@ export const navItems: NavItem[] = [
 
 export const dynamicInfoItems: DynamicInfoItem[] = [
   {
-    percent: 80,
-    name: '4.14.x 正在进行中：',
+    percent: 100,
+    name: '4.15.0：',
     date: '尽快',
-    desc: ` <a target="_blank" href="https://tangyh.top">基于4.14.x版本 录制视频</a>`,
+    desc: ` <a target="_blank" href="https://tangyh.top">适配jdk17</a>`,
+  },
+  {
+    percent: 100,
+    name: '4.x系列讲解视频',
+    date: '2023年11月17日',
+    desc: `讲解视频第一版已完成，欢迎大家观看后提出意见，后续根据意见补录，<a target="_blank" href="https://gitee.com/dromara/lamp-cloud/issues/I6NT95">点我看视频</a>`,
   },
   {
     percent: 100,
