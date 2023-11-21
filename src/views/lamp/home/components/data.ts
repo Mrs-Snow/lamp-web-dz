@@ -69,7 +69,7 @@ export const dynamicInfoItems: DynamicInfoItem[] = [
   },
   {
     percent: 100,
-    name: '4.x系列讲解视频',
+    name: '4.14完结',
     date: '2023年11月17日',
     desc: `讲解视频第一版已完成，欢迎大家观看后提出意见，后续根据意见补录，<a target="_blank" href="https://gitee.com/dromara/lamp-cloud/issues/I6NT95">点我看视频</a>`,
   },
