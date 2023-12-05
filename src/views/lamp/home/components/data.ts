@@ -62,9 +62,9 @@ export const navItems: NavItem[] = [
 
 export const dynamicInfoItems: DynamicInfoItem[] = [
   {
-    percent: 100,
+    percent: 80,
     name: '4.15.0：',
-    date: '尽快',
+    date: '正在开发中...',
     desc: ` <a target="_blank" href="https://tangyh.top">适配jdk17</a>`,
   },
   {

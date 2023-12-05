@@ -242,9 +242,9 @@ export const editFormSchema = (_type: Ref<ActionEnum>): FormSchema[] => {
       ifShow: ({ values }) => {
         return values.type === MsgTemplateTypeEnum.NOTICE
       },
-      required: ({ values }) => {
-        return values.type === MsgTemplateTypeEnum.NOTICE
-      }
+      // required: ({ values }) => {
+      //   return values.type === MsgTemplateTypeEnum.NOTICE
+      // }
     }
   ]
 }

@@ -29,9 +29,7 @@
             <div class="mt-5 font-normal text-white text-md dark:text-gray-500 -enter-x">
               {{ t('sys.login.signInDesc') }} <br />
               内置超级管理员账号： lamp/lamp <br />
-              普通租户管理员账号： test1/lamp <br />
-              普通管理员账号：test2/lamp <br />
-              普通用户账号：test33/123456 <br />
+              更多的账号以及他们拥有什么权限，请登录系统查看 <br />
               新建的员工或用户登录名为用户名、手机号、 <br />邮箱、身份证，密码为：123456
             </div>
           </div>
