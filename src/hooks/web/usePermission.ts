@@ -156,7 +156,7 @@ export function usePermission() {
    */
   async function resume() {
     const tabStore = useMultipleTabStore();
-    tabStore.clearCacheTabs();
+    tabStore.resetState();
     resetRouter();
     const routes = await permissionStore.buildRoutesAction();
     routes.forEach((route) => {
