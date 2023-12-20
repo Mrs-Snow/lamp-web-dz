@@ -8,7 +8,7 @@ export enum MenuTypeEnum {
   MIX_SIDEBAR = 'mix-sidebar',
   // 顶部菜单混合模式
   MIX = 'mix',
-  // top menu
+  // 顶部菜单模式
   TOP_MENU = 'top-menu',
 }
 

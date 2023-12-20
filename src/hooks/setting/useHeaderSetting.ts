@@ -64,6 +64,7 @@ export function useHeaderSetting() {
 
   const getShowNotice = computed(() => appStore.getHeaderSetting.showNotice);
 
+  // 不是水平菜单 && 显示需要面包屑 && 不分割菜单
   const getShowBread = computed(() => {
     return (
       unref(getMenuMode) !== MenuModeEnum.HORIZONTAL && unref(getShowBreadCrumb) && !unref(getSplit)
@@ -77,6 +78,7 @@ export function useHeaderSetting() {
     // return unref(getShowLogo) && !unref(getIsSidebarType) && !unref(getIsMixSidebar);
   });
 
+  // 显示面包屑 或
   const getShowContent = computed(() => {
     return unref(getShowBread) || unref(getShowHeaderTrigger);
   });

@@ -61,6 +61,7 @@ export function useMenuSetting() {
 
   const getIsTopMenu = computed(() => unref(getMenuType) === MenuTypeEnum.TOP_MENU);
 
+  // 左侧菜单混合模式
   const getIsMixSidebar = computed(() => {
     return unref(getMenuType) === MenuTypeEnum.MIX_SIDEBAR;
   });
@@ -75,6 +76,7 @@ export function useMenuSetting() {
     return unref(getMenuMode) === MenuModeEnum.HORIZONTAL || unref(getSplit);
   });
 
+  // 显示头部Trigger：顶部菜单模式 或 不显示菜单 或 菜单隐藏
   const getShowHeaderTrigger = computed(() => {
     if (
       unref(getMenuType) === MenuTypeEnum.TOP_MENU ||
