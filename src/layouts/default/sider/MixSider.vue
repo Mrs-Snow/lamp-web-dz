@@ -68,6 +68,7 @@
           mixSider
           @menu-click="handleMenuClick"
         />
+
       </ScrollContainer>
       <div
         v-show="getShowDragBar && openMenu"
@@ -202,6 +203,7 @@
         [() => permissionStore.getLastBuildMenuTime, () => permissionStore.getBackMenuList],
         async () => {
           menuModules.value = await getShallowMenus();
+          childrenMenus.value = [];
         },
         {
           immediate: true,
