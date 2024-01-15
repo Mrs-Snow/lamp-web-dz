@@ -70,6 +70,14 @@ export function useMenuSetting() {
     return unref(getMenuMode) === MenuModeEnum.INLINE && unref(getMenuType) === MenuTypeEnum.MIX;
   });
 
+  const getIsMixModeAndSplit = computed(() => {
+    return (
+      unref(getMenuMode) === MenuModeEnum.INLINE &&
+      unref(getMenuType) === MenuTypeEnum.MIX &&
+      unref(getSplit)
+    );
+  });
+
   const getCollapsedShowTitle = computed(() => appStore.getMenuSetting.collapsedShowTitle);
 
   const getShowTopMenu = computed(() => {
@@ -107,8 +115,8 @@ export function useMenuSetting() {
     return siderHidden
       ? 0
       : collapsedShowTitle
-      ? SIDE_BAR_SHOW_TIT_MINI_WIDTH
-      : SIDE_BAR_MINI_WIDTH;
+        ? SIDE_BAR_SHOW_TIT_MINI_WIDTH
+        : SIDE_BAR_MINI_WIDTH;
   });
 
   const getCalcContentWidth = computed(() => {
@@ -116,9 +124,9 @@ export function useMenuSetting() {
       unref(getIsTopMenu) || !unref(getShowMenu) || (unref(getSplit) && unref(getMenuHidden))
         ? 0
         : unref(getIsMixSidebar)
-        ? (unref(getCollapsed) ? SIDE_BAR_MINI_WIDTH : SIDE_BAR_SHOW_TIT_MINI_WIDTH) +
+          ? (unref(getCollapsed) ? SIDE_BAR_MINI_WIDTH : SIDE_BAR_SHOW_TIT_MINI_WIDTH) +
           (unref(getMixSideFixed) && unref(mixSideHasChildren) ? unref(getRealWidth) : 0)
-        : unref(getRealWidth);
+          : unref(getRealWidth);
 
     return `calc(100% - ${unref(width)}px)`;
   });
@@ -164,6 +172,7 @@ export function useMenuSetting() {
     getMenuBgColor,
     getShowSidebar,
     getIsMixMode,
+    getIsMixModeAndSplit,
     getIsMixSidebar,
     getCloseMixSidebarOnChange,
     getMixSideTrigger,
