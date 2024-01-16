@@ -231,8 +231,8 @@
       async function resetValidate() {
         clearValidate();
       }
-      function getFormValues() {
-        const values = getFieldsValue();
+      async function getFormValues() {
+        const values = await getFieldsValue();
         createMessage.success('values:' + JSON.stringify(values));
       }
       function setFormValues() {

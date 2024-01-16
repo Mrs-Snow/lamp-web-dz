@@ -99,7 +99,7 @@
             const { validate, getFieldsValue } = item.Form[1];
             await validate();
             // 表单已支持多级key
-            deepMerge(values, getFieldsValue());
+            deepMerge(values, await getFieldsValue());
           }
 
           console.log('submit values: ', values);

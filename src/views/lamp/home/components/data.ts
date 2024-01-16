@@ -65,13 +65,13 @@ export const dynamicInfoItems: DynamicInfoItem[] = [
     percent: 10,
     name: '4.16.0-java17',
     date: '开发中...',
-    desc: `none 版本改造`,
+    desc: `<a target="_blank" href="https://www.oschina.net/news/275912">none 模式首次开源</a>`,
   },
   {
     percent: 100,
     name: '4.15.0-java17',
     date: '2023年12月28日',
-    desc: ` <a target="_blank" href="https://tangyh.top">适配jdk17</a>`,
+    desc: `<a target="_blank" href="https://www.oschina.net/news/273069/lamp-cloud-4-15-0-java17-released">适配jdk17</a>`,
   },
   {
     percent: 100,
