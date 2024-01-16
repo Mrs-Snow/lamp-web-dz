@@ -49,7 +49,7 @@
         },
       });
 
-      function getFormValues() {
+      async function getFormValues() {
         console.log(getForm().getFieldsValue());
       }
 
