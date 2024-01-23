@@ -117,7 +117,8 @@
       }
 
       async function batchDelete(ids: string[]) {
-        const model = await getForm().getFieldsValue();
+        const form = await getForm();
+        const model = await form.getFieldsValue();
         await remove(model?.tenantId, ids);
         createMessage.success(t('common.tips.deleteSuccess'));
         handleSuccess();
