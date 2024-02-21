@@ -174,11 +174,13 @@
         },
       });
 
-      function handleInitData(record: Recordable) {
+      function handleInitData(record: Recordable, e: Event) {
+        e?.stopPropagation();
         openInitModal(true, { record });
       }
 
-      function handleLinkDataSource(record: Recordable) {
+      function handleLinkDataSource(record: Recordable, e: Event) {
+        e?.stopPropagation();
         openLinkDrawer(true, { record });
       }
 
@@ -188,21 +190,24 @@
         });
       }
 
-      function handleView(record: Recordable) {
+      function handleView(record: Recordable, e: Event) {
+        e?.stopPropagation();
         replace({
           name: RouteEnum.TENANT_VIEW,
           params: { id: record.id },
         });
       }
 
-      function handleEdit(record: Recordable) {
+      function handleEdit(record: Recordable, e: Event) {
+        e?.stopPropagation();
         openDrawer(true, {
           record,
           type: ActionEnum.EDIT,
         });
       }
 
-      function handleDelete(record: Recordable) {
+      function handleDelete(record: Recordable, e: Event) {
+        e?.stopPropagation();
         if (record.readonly) {
           createMessage.warn('内置超级租户，禁止删除');
           return;
@@ -221,11 +226,13 @@
         reload();
       }
 
-      function handleBindUser(record: Recordable) {
+      function handleBindUser(record: Recordable, e: Event) {
+        e?.stopPropagation();
         openModal(true, { record });
       }
 
-      function handleToExamine(record: Recordable) {
+      function handleToExamine(record: Recordable, e: Event) {
+        e?.stopPropagation();
         openToExamineModal(true, { record });
       }
 
