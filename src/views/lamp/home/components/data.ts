@@ -62,20 +62,20 @@ export const navItems: NavItem[] = [
 
 export const dynamicInfoItems: DynamicInfoItem[] = [
   {
-    percent: 50,
-    name: '4.16.0：',
-    date: '正在开发中...',
-    desc: ` <a target="_blank" href="https://tangyh.top">4.x系列基于jdk17的none模式开源，停止3.x版本新功能开发</a>`,
+    percent: 100,
+    name: '4.16.0-java17/4.16.0',
+    date: '2024年1月15日',
+    desc: `<a target="_blank" href="https://www.oschina.net/news/275912">4.x系列基于jdk17的none模式开源，停止3.x版本新功能开发</a>`,
   },
   {
     percent: 100,
-    name: '4.15.0：',
-    date: '2023-12-28',
-    desc: ` <a target="_blank" href="https://www.oschina.net/news/273069/lamp-cloud-4-15-0-java17-released">适配jdk17</a>`,
+    name: '4.15.0-java17',
+    date: '2023年12月28日',
+    desc: `<a target="_blank" href="https://www.oschina.net/news/273069/lamp-cloud-4-15-0-java17-released">适配jdk17</a>`,
   },
   {
     percent: 100,
-    name: '4.14完结',
+    name: '4.14.x 视频适配版已完结',
     date: '2023年11月17日',
     desc: `讲解视频第一版已完成，欢迎大家观看后提出意见，后续根据意见补录，<a target="_blank" href="https://gitee.com/dromara/lamp-cloud/issues/I6NT95">点我看视频</a>`,
   },
