@@ -114,7 +114,27 @@ export const usePermissionStore = defineStore({
     },
     // 加载资源
     async changePermissionCode() {
-      const visibleResource = await findResourceList();
+      const userStore = useUserStore();
+      const appStore = useAppStoreWithOut();
+      const applicationId = userStore.getApplicationId;
+      const getMenuMode = computed(() => appStore.getMenuSetting.mode);
+      const getMenuType = computed(() => appStore.getMenuSetting.type);
+      const getSplit = computed(() => appStore.getMenuSetting.split);
+
+      const isMixModeAndSplit = computed(() => {
+        return (
+          unref(getMenuMode) === MenuModeEnum.INLINE &&
+          unref(getMenuType) === MenuTypeEnum.MIX &&
+          unref(getSplit)
+        );
+      });
+      let visibleResource = {} as VisibleResourceVO;
+      if (unref(isMixModeAndSplit)) {
+        visibleResource = await findResourceList();
+      } else {
+        visibleResource = await findResourceList(applicationId);
+      }
+
       this.setVisibleResource(visibleResource);
     },
 
@@ -257,7 +277,7 @@ export const usePermissionStore = defineStore({
             console.error(error);
           }
 
-          // 动态引入组件
+          // 1. 动态引入组件
           routeList = transformObjToRoute(routeList);
 
           const isNotNone = MULTI_TENANT_TYPE !== MultiTenantTypeEnum.NONE; // 非NONE模式
@@ -270,17 +290,19 @@ export const usePermissionStore = defineStore({
             ...(isDevOper ? AfterVbenRoutes : []),
           ];
 
+          // 2. 添加前端静态路由
           routeList = [...BeforeRoutes, ...routeList, ...afterRouteList];
 
-          //  后台路由转菜单结构
+          // 3. 后台路由转菜单结构
           const backMenuList = transformRouteToMenu(routeList);
           this.setBackMenuList(backMenuList);
 
           // remove meta.ignoreRoute item
-          // 删除 meta.ignoreRoute 项
+          // 4. 删除 meta.ignoreRoute 项
           routeList = filter(routeList, routeRemoveIgnoreFilter);
           routeList = routeList.filter(routeRemoveIgnoreFilter);
 
+          // 5. 将多级路由转换为 2 级路由
           routeList = flatMultiLevelRoutes(routeList);
           routes = [PAGE_NOT_FOUND_ROUTE, ...routeList];
           break;
