@@ -1,6 +1,7 @@
 // axios配置  可自行根据项目进行更改，只需更改该文件即可，其他文件可以不动
 // The axios configuration can be changed according to the project, just change the file, other files can be left unchanged
 
+import { computed, unref } from 'vue';
 import type { AxiosResponse } from 'axios';
 import { clone } from 'lodash-es';
 import type { RequestOptions, Result } from '/#/axios';
@@ -22,6 +23,8 @@ import { router } from '/@/router';
 import { AxiosRetry } from '/@/utils/http/axios/axiosRetry';
 import { MultiTenantTypeEnum } from '/@/enums/biz/tenant';
 import axios from 'axios';
+import { useAppStoreWithOut } from '/@/store/modules/app';
+import { MenuModeEnum, MenuTypeEnum } from '/@/enums/menuEnum';
 
 const globSetting = useGlobSetting();
 const urlPrefix = globSetting.urlPrefix;
@@ -176,7 +179,22 @@ const transform: AxiosTransform = {
       (config as Recordable).headers[tenantIdKey] = getTenantId();
     }
 
-    (config as Recordable).headers[applicationIdKey] = getApplicationId();
+    const appStore = useAppStoreWithOut();
+    const getMenuMode = computed(() => appStore.getMenuSetting.mode);
+    const getMenuType = computed(() => appStore.getMenuSetting.type);
+    const getSplit = computed(() => appStore.getMenuSetting.split);
+
+    const isMixModeAndSplit = computed(() => {
+      return (
+        unref(getMenuMode) === MenuModeEnum.INLINE &&
+        unref(getMenuType) === MenuTypeEnum.MIX &&
+        unref(getSplit)
+      );
+    });
+
+    if (!unref(isMixModeAndSplit)) {
+      (config as Recordable).headers[applicationIdKey] = getApplicationId();
+    }
 
     // 添加客户端信息
     (config as Recordable).headers[authorizationKey] = `${Base64.encode(
