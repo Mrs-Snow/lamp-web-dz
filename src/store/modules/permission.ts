@@ -18,13 +18,13 @@ import { ERROR_LOG_ROUTE, PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
 
 import { filter } from '/@/utils/helper/treeHelper';
 
-import { findMenuList, findAllMenuList, findResourceList } from '/@/api/lamp/common/oauth';
+import { findResourceList } from '/@/api/lamp/common/oauth';
 import { VisibleResourceVO } from '/@/api/lamp/common/model/menuModel';
 
 import { useMessage } from '/@/hooks/web/useMessage';
 import { PageEnum } from '/@/enums/pageEnum';
 
-import { BeforeRoutes } from '/@/router/routes/index';
+import { BeforeRoutes } from '/@/router/routes';
 import { MultiTenantTypeEnum } from '/@/enums/biz/tenant';
 import { MenuModeEnum, MenuTypeEnum } from '/@/enums/menuEnum';
 
@@ -113,7 +113,7 @@ export const usePermissionStore = defineStore({
       this.visibleResource = {} as VisibleResourceVO;
     },
     // 加载资源
-    async changePermissionCode() {
+    async changePermissionCode(): Promise<AppRouteRecordRaw[]> {
       const userStore = useUserStore();
       const appStore = useAppStoreWithOut();
       const applicationId = userStore.getApplicationId;
@@ -136,6 +136,7 @@ export const usePermissionStore = defineStore({
       }
 
       this.setVisibleResource(visibleResource);
+      return visibleResource.routerList;
     },
 
     // 构建路由
@@ -254,25 +255,7 @@ export const usePermissionStore = defineStore({
           // 这个功能可能只需要执行一次，实际项目可以自己放在合适的时间
           let routeList: AppRouteRecordRaw[] = [];
           try {
-            await this.changePermissionCode();
-
-            const getMenuMode = computed(() => appStore.getMenuSetting.mode);
-            const getMenuType = computed(() => appStore.getMenuSetting.type);
-            const getSplit = computed(() => appStore.getMenuSetting.split);
-
-            const isMixModeAndSplit = computed(() => {
-              return (
-                unref(getMenuMode) === MenuModeEnum.INLINE &&
-                unref(getMenuType) === MenuTypeEnum.MIX &&
-                unref(getSplit)
-              );
-            });
-
-            if (unref(isMixModeAndSplit)) {
-              routeList = (await findAllMenuList()) as AppRouteRecordRaw[];
-            } else {
-              routeList = (await findMenuList({ applicationId })) as AppRouteRecordRaw[];
-            }
+            routeList = await this.changePermissionCode();
           } catch (error) {
             console.error(error);
           }

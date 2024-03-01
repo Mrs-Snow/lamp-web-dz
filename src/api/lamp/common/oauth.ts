@@ -248,7 +248,7 @@ export const findAllMenuList = () => {
 export function findResourceList(applicationId?: string) {
   return defHttp.get<VisibleResourceVO>({
     ...Api.FindResourceList,
-    params: { applicationId },
+    params: { type: 'LAMP_WEB_PRO_VBEN', applicationId },
   });
 }
 
