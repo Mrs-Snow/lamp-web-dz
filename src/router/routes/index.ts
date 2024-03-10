@@ -74,6 +74,7 @@ export const BeforeRoutes: AppRouteRecordRaw[] = [
     redirect: '/profile/index',
     meta: {
       title: '个人中心',
+      component: 'lamp/profile/index',
       hideMenu: true,
     },
     children: [
