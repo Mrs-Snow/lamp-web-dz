@@ -51,6 +51,7 @@ export const BeforeRoutes: AppRouteRecordRaw[] = [
     meta: {
       icon: 'bx:bx-home',
       hideMenu: true,
+      component: 'lamp/home/index',
       title: t('routes.dashboard.welcome'),
     },
     children: [
