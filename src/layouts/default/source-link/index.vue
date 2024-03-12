@@ -50,7 +50,7 @@
     position: fixed;
     right: 3px;
     bottom: 20px;
-    z-index: 9999;
+    z-index: 200;
     .fs-source-link {
       text-align: left;
       cursor: pointer;
