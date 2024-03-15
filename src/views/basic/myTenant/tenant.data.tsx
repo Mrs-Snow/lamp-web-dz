@@ -158,7 +158,6 @@ export const editFormSchema = (_: Ref<ActionEnum>): FormSchema[] => {
         multiple: false,
         maxNumber: 1,
         accept: ['image/*', '.xlsx', 'docx'],
-        isDef: true,
       },
       colProps: {
         span: 12,

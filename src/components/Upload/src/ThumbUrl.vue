@@ -39,8 +39,6 @@
       preview: propTypes.bool.def(true),
       placeholder: propTypes.bool.def(false),
       fallback: propTypes.string.def(errImg),
-      // 是否从默认库 查询附件. 若传了api，优先从传入的api中查询；没有传递api，则根据此参数，从内置接口查询
-      isDef: propTypes.bool.def(false),
       api: {
         type: Function as PropType<PromiseFn>,
         default: null,

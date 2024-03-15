@@ -134,8 +134,6 @@
       default: () => uploadFile,
       required: false,
     },
-    // 是否上传到到默认库。 设置为true，文件将调用 asyncFindDefUrlById 加载异步文件
-    isDef: { type: Boolean, default: false },
     // 后台接口 接收文件的参数名
     name: {
       type: String as PropType<string>,

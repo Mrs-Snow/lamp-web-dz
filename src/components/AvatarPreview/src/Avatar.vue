@@ -19,7 +19,6 @@
       src: propTypes.string.def(''),
       fileId: propTypes.string.def(''),
       errorTxt: propTypes.string.def(''),
-      isDef: propTypes.bool.def(false),
     },
     setup(props) {
       const attrs = useAttrs();

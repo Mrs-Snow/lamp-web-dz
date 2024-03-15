@@ -75,7 +75,6 @@ export const editFormSchema = (_): FormSchema[] => {
       field: 'appendixIcon',
       component: 'CropperAvatar',
       componentProps: {
-        isDef: true,
         showBtn: false,
         uploadParams: { bizType: FileBizTypeEnum.DEF_APPLICATION_LOGO },
       },

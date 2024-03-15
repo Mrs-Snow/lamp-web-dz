@@ -11,7 +11,6 @@
             :uploadApi="uploadFile"
             :uploadParams="{ bizType: FileBizTypeEnum.BASE_USER_AVATAR }"
             :value="avatarId"
-            :isDef="true"
             btnText="更换头像"
             :btnProps="{ preIcon: 'ant-design:cloud-upload-outlined' }"
             @change="handleUpdateAvatar"
