@@ -17,12 +17,7 @@
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import {
-    ActionEnum,
-    ServicePrefixEnum,
-    FileBizTypeEnum,
-    VALIDATE_API,
-  } from '/@/enums/commonEnum';
+  import { ActionEnum, FileBizTypeEnum, VALIDATE_API } from '/@/enums/commonEnum';
   import { Api, save, update } from '/@/api/devOperation/application/defApplication';
   import { getValidateRules } from '/@/api/lamp/common/formValidateService';
   import { listByBizId } from '/@/api/lamp/file/upload';
@@ -57,9 +52,7 @@
           // 赋值
           const record = { ...data?.record };
           const appendixIcons = await listByBizId({
-            prefix: ServicePrefixEnum.TENANT,
             bizId: record.id,
-            isDef: true,
             bizType: FileBizTypeEnum.DEF_APPLICATION_LOGO,
           });
           record.appendixIcon = appendixIcons?.[0];

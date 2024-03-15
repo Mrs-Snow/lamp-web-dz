@@ -25,7 +25,7 @@
   } from '/@/enums/commonEnum';
   import { Api, save, update } from '/@/api/devOperation/tenant/myTenant';
   import { getValidateRules } from '/@/api/lamp/common/formValidateService';
-  import { listByBizId } from '/@/api/lamp/file/upload';
+  import { listFileByBizId } from '/@/api/lamp/file/upload';
   import { customFormSchemaRules, editFormSchema } from './tenant.data';
 
   export default defineComponent({
@@ -67,11 +67,9 @@
           }
           record.area = area;
 
-          const logos = await listByBizId({
-            prefix: ServicePrefixEnum.TENANT,
+          const logos = await listFileByBizId({
             bizId: record.id,
             bizType: FileBizTypeEnum.DEF_TENANT_LOGO,
-            isDef: true,
           });
           record.logos = logos;
           await setFieldsValue(record);

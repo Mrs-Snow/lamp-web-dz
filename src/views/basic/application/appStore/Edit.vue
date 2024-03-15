@@ -16,8 +16,8 @@
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { ActionEnum, ServicePrefixEnum, FileBizTypeEnum } from '/@/enums/commonEnum';
-  import { listByBizId } from '/@/api/lamp/file/upload';
+  import { ActionEnum, FileBizTypeEnum } from '/@/enums/commonEnum';
+  import { listFileByBizId } from '/@/api/lamp/file/upload';
   import { editFormSchema } from './defApplication.data';
 
   export default defineComponent({
@@ -46,10 +46,8 @@
 
         // 赋值
         const record = { ...data?.record };
-        const appendixIcons = await listByBizId({
-          prefix: ServicePrefixEnum.TENANT,
+        const appendixIcons = await listFileByBizId({
           bizId: record.id,
-          isDef: true,
           bizType: FileBizTypeEnum.DEF_APPLICATION_LOGO,
         });
         record.appendixIcon = appendixIcons?.[0];

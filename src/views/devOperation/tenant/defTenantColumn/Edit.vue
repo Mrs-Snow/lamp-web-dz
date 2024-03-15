@@ -17,15 +17,10 @@
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import {
-    ActionEnum,
-    ServicePrefixEnum,
-    FileBizTypeEnum,
-    VALIDATE_API,
-  } from '/@/enums/commonEnum';
+  import { ActionEnum, FileBizTypeEnum, VALIDATE_API } from '/@/enums/commonEnum';
   import { Api, save, update } from '/@/api/devOperation/tenant/tenant';
   import { getValidateRules } from '/@/api/lamp/common/formValidateService';
-  import { listByBizId } from '/@/api/lamp/file/upload';
+  import { listFileByBizId } from '/@/api/lamp/file/upload';
   import { customFormSchemaRules, editFormSchema } from './tenant.data';
 
   export default defineComponent({
@@ -68,13 +63,12 @@
           }
           record.area = area;
 
-          const logos = await listByBizId({
-            prefix: ServicePrefixEnum.TENANT,
+          const logos = await listFileByBizId({
             bizId: record.id,
             bizType: FileBizTypeEnum.DEF_TENANT_LOGO,
-            isDef: true,
           });
           record.logos = logos;
+          record.logo = logos[0]?.id;
           await setFieldsValue(record);
         }
 
@@ -96,6 +90,9 @@
               params.provinceId = params.area?.[0];
               params.cityId = params.area?.[1];
               params.districtId = params.area?.[2];
+            }
+            if (params.logos) {
+              params.logo = params.logos[0]?.id;
             }
 
             if (unref(type) === ActionEnum.EDIT) {

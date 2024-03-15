@@ -1,4 +1,4 @@
-import { AppendixSaveVO } from '/@/api/lamp/file/model/uploadModel';
+import { FileResultVO } from '/@/api/lamp/file/model/uploadModel';
 
 export interface TenantPageQuery {
   name: string;
@@ -48,7 +48,8 @@ export interface TenantSaveDTO {
   createdName?: string;
   expirationTime?: string;
   describe?: string;
-  logos?: AppendixSaveVO[];
+  logo?: string;
+  logos?: FileResultVO[];
 }
 
 export interface TenantUpdateDTO {
@@ -71,7 +72,8 @@ export interface TenantUpdateDTO {
   createdName?: string;
   expirationTime?: string;
   describe?: string;
-  logos?: AppendixSaveVO[];
+  logo?: string;
+  logos?: FileResultVO[];
 }
 
 export interface Tenant {
@@ -106,7 +108,8 @@ export interface Tenant {
 
   employeeState: boolean;
   isDefault: boolean;
-  logos?: AppendixSaveVO[];
+  logo?: string;
+  logos?: FileResultVO[];
   area?: string[];
 }
 

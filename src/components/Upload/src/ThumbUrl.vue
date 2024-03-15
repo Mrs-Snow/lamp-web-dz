@@ -22,7 +22,7 @@
   import { Image } from 'ant-design-vue';
   import { Base64 } from 'js-base64';
   import { propTypes } from '/@/utils/propTypes';
-  import { asyncFindDefUrlById, asyncFindUrlById } from '/@/api/lamp/file/upload';
+  import { asyncFindUrlById } from '/@/api/lamp/file/upload';
   import { errImg } from '/@/utils/file/base64Conver';
   import { useGlobSetting } from '/@/hooks/setting';
 
@@ -75,7 +75,7 @@
           return;
         }
 
-        const api = props.api ?? (props.isDef ? asyncFindDefUrlById : asyncFindUrlById);
+        const api = props.api ?? asyncFindUrlById;
         api(props.fileId).then((res) => {
           if (res.code === 0) {
             realSrc.value = res.data as string;

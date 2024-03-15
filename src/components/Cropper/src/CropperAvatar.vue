@@ -40,7 +40,7 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import type { ButtonProps } from '/@/components/Button';
   import Icon from '/@/components/Icon';
-  import { asyncFindUrlById, asyncFindDefUrlById } from '/@/api/lamp/file/upload';
+  import { asyncFindUrlById } from '/@/api/lamp/file/upload';
   import { FileResultVO } from '/@/api/lamp/file/model/uploadModel';
 
   const props = {
@@ -112,7 +112,7 @@
         if (!props.value.id) {
           return;
         }
-        const api = props.isDef ? asyncFindDefUrlById : asyncFindUrlById;
+        const api = asyncFindUrlById;
         api(props.value.id).then((res) => {
           if (res.code === 0) {
             realSrc.value = res.data as string;

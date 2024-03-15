@@ -36,7 +36,7 @@
 
         <BasicUpload
           v-hasAnyPermission="[RoleEnum.TENANT_SYSTEM_FILE_UPLOAD]"
-          :api="uploadToDef"
+          :api="uploadFile"
           :maxNumber="10"
           :maxSize="20"
           :showPreviewButton="false"
@@ -95,7 +95,7 @@
   import { useModal } from '/@/components/Modal';
   import ThumbUrl from '/@/components/Upload/src/ThumbUrl.vue';
   import { download, page, remove } from '/@/api/devOperation/system/defFile';
-  import { uploadToDef } from '/@/api/lamp/file/upload';
+  import { uploadFile } from '/@/api/lamp/file/upload';
   import { columns, searchFormSchema } from './baseFile.data';
   import EditModal from './Edit.vue';
 
@@ -224,7 +224,7 @@
         handleSuccess,
         handleBatchDelete,
         handleBatchDownload,
-        uploadToDef,
+        uploadFile,
         handleChange: (list: string[]) => {
           createMessage.info(`已上传${list.length}个文件`);
           handleSuccess();

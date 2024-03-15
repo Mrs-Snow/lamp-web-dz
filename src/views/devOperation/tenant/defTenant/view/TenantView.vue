@@ -9,9 +9,9 @@
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { get } from '/@/api/devOperation/tenant/tenant';
-  import { listByBizId } from '/@/api/lamp/file/upload';
+  import { listFileByBizId } from '/@/api/lamp/file/upload';
   import { editFormSchema } from '../tenant.data';
-  import { ActionEnum, FileBizTypeEnum, ServicePrefixEnum } from '/@/enums/commonEnum';
+  import { ActionEnum, FileBizTypeEnum } from '/@/enums/commonEnum';
 
   export default defineComponent({
     name: 'TenantView',
@@ -52,11 +52,9 @@
         }
         record.area = area;
 
-        const logos = await listByBizId({
-          prefix: ServicePrefixEnum.TENANT,
+        const logos = await listFileByBizId({
           bizId: data?.id,
           bizType: FileBizTypeEnum.DEF_TENANT_LOGO,
-          isDef: true,
         });
         record.logos = logos;
         setFieldsValue({ ...record });

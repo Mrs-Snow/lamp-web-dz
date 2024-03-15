@@ -1,12 +1,12 @@
 import { Ref, h } from 'vue';
 import { dateUtil } from '/@/utils/dateUtil';
 import { BasicColumn, FormSchema } from '/@/components/Table';
-import { DescItem } from '/@/components/Description/index';
+import { DescItem } from '/@/components/Description';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { ActionEnum, FileBizTypeEnum } from '/@/enums/commonEnum';
 import { TenantStatusEnum } from '/@/enums/biz/tenant';
 import { Tag, Badge, Switch } from 'ant-design-vue';
-import { RuleType, FormSchemaExt } from '/@/api/lamp/common/formValidateService';
+import { FormSchemaExt } from '/@/api/lamp/common/formValidateService';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { updateState } from '/@/api/devOperation/tenant/tenant';
 import { stateFilters } from '/@/utils/lamp/common';
@@ -189,7 +189,6 @@ export const editFormSchema = (_: Ref<ActionEnum>): FormSchema[] => {
         multiple: false,
         maxNumber: 1,
         accept: ['image/*', '.xlsx', 'docx'],
-        isDef: true,
       },
       colProps: {
         span: 12,
@@ -431,25 +430,25 @@ export const customFormSchemaRules = (_: Ref<ActionEnum>): Partial<FormSchemaExt
     //     },
     //   ],
     // },
-    {
-      field: 'logos',
-      rules: [
-        {
-          validator(_, value) {
-            if (value) {
-              if (value.length > 1) {
-                return Promise.reject('只能上传一个文件');
-              } else {
-                return Promise.resolve();
-              }
-            } else {
-              return Promise.resolve();
-            }
-          },
-        },
-      ],
-      type: RuleType.cover,
-    },
+    // {
+    //   field: 'logos',
+    //   rules: [
+    //     {
+    //       validator(_, value) {
+    //         if (value) {
+    //           if (value.length > 1) {
+    //             return Promise.reject('只能上传一个文件');
+    //           } else {
+    //             return Promise.resolve();
+    //           }
+    //         } else {
+    //           return Promise.resolve();
+    //         }
+    //       },
+    //     },
+    //   ],
+    //   type: RuleType.cover,
+    // },
   ];
 };
 
