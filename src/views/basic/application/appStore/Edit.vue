@@ -17,7 +17,7 @@
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { ActionEnum, FileBizTypeEnum } from '/@/enums/commonEnum';
-  import { listFileByBizId } from '/@/api/lamp/file/upload';
+  import { listByBizId } from '/@/api/lamp/file/upload';
   import { editFormSchema } from './defApplication.data';
 
   export default defineComponent({
@@ -46,11 +46,11 @@
 
         // 赋值
         const record = { ...data?.record };
-        const appendixIcons = await listFileByBizId({
+        const appendixIcons = await listByBizId({
           bizId: record.id,
           bizType: FileBizTypeEnum.DEF_APPLICATION_LOGO,
         });
-        record.appendixIcon = appendixIcons?.[0];
+        record.appendixIcon = appendixIcons?.[0]?.id;
         await setFieldsValue(record);
       });
 

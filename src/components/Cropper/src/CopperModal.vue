@@ -214,7 +214,7 @@
               ...uploadParam,
               file: blob,
             });
-            emit('uploadSuccess', { source: previewSource.value, data: result?.data?.data?.id });
+            emit('uploadSuccess', { source: previewSource.value, data: result?.data?.data });
             closeModal();
           } finally {
             setModalProps({ confirmLoading: false });

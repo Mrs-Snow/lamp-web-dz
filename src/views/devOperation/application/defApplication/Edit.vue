@@ -55,7 +55,7 @@
             bizId: record.id,
             bizType: FileBizTypeEnum.DEF_APPLICATION_LOGO,
           });
-          record.appendixIcon = appendixIcons?.[0];
+          record.appendixIcon = appendixIcons?.[0]?.id;
           await setFieldsValue(record);
         }
 
