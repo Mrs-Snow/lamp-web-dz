@@ -1,4 +1,5 @@
 import { FileResultVO } from '/@/api/lamp/file/model/uploadModel';
+import { BaseOrgResultVO } from '/@/api/basic/user/model/baseOrgModel';
 
 export interface TenantPageQuery {
   name: string;
@@ -111,6 +112,7 @@ export interface Tenant {
   logo?: string;
   logos?: FileResultVO[];
   area?: string[];
+  orgList?: BaseOrgResultVO[];
 }
 
 export interface DefTenantInitVO {

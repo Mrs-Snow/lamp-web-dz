@@ -4,6 +4,7 @@
     destroyOnClose
     @register="register"
     title="Modal Title"
+    :maskClosable="false"
     :helpMessage="['提示1', '提示2']"
     @visible-change="handleShow"
   >
@@ -42,7 +43,7 @@
           loading.value = true;
           setModalProps({ loading: true, confirmLoading: true });
           setTimeout(() => {
-            lines.value = Math.round(Math.random() * 30 + 5);
+            lines.value = Math.round(Math.random() * 100 + 5);
             loading.value = false;
             setModalProps({ loading: false, confirmLoading: false });
           }, 3000);
@@ -50,7 +51,7 @@
       }
 
       function setLines() {
-        lines.value = Math.round(Math.random() * 20 + 10);
+        lines.value = Math.round(Math.random() * 100 + 10);
       }
       return { register, loading, handleShow, lines, setLines };
     },
