@@ -3,7 +3,7 @@
     <Row :gutter="[16, 16]">
       <Col :span="8">
         <BasicTree title="基础示例，默认展开第一层" :treeData="treeData" defaultExpandLevel="1">
-          <template #title> 123123 </template>
+          <template #title="item"> 插槽渲染： {{ item.title }} </template>
         </BasicTree>
       </Col>
       <Col :span="8">
